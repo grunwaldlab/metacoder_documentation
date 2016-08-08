@@ -2,20 +2,20 @@ name: "MetacodeR"
 output_dir: "."
 navbar:
   title: "MetacodeR"
-  href: vignettes/index.html
+  href: index.html
   left:
     - text: "Vignettes"
       menu:
         - text: "Parsing input files"
-          href: vignettes/vignette_01_extracting_taxonomy_data.html
+          href: vignettes--01--extracting_taxonomy_data.html
         - text: "Heat tree plotting"
-          href: vignettes/vignette_02_plotting_taxonomic_data.html
+          href: vignettes--02--plotting_taxonomic_data.html
     - text: "Publication"
       menu:
         - text: "Human microbiome"
-          href: publication_analyses/human_microbiome/16s_human_microbiome_example.html
+          href: publication--05--16s_human_microbiome.html
         - text: "TARA Oceans"
-          href: publication_analyses/tara_oceans/tara_oceans.html
+          href: publication--06--tara_oceans.html
 output:
   html_document:
     toc: true

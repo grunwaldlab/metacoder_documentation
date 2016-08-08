@@ -10,6 +10,20 @@ source("settings.R")
 
 **NOTE:** This analysis requires at least 10Gb of RAM to run. 
 
+## Parameters
+
+```{r silva_parameters}
+max_taxonomy_depth <- 4
+min_seq_count <- NULL
+just_bacteria <- TRUE
+max_mismatch <- 10 # percentage mismatch tolerated in pcr
+pcr_success_cutoff <- 0.80 # Used to subset for graphing
+forward_primer = c("515F" = "GTGYCAGCMGCCGCGGTAA")
+reverse_primer = c("806R" = "GGACTACNVGGGTWTCTAAT")
+pcr_success_color_scale = c("red", "orange", "yellow", "green", "cyan")
+```
+
+
 ## Parse database
 
 The code below parses and subsets the entire SILVA non-redundant reference database.

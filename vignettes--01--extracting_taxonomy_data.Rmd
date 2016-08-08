@@ -1,14 +1,10 @@
 ---
 title: "Extracting taxonomy information from metadata"
-output:
-  html_document:
-    toc: false
-    css: custom.css
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(metacoder)
-source("knitr_settings.R")
+source("settings.R")
 ```
 
 ## Introduction

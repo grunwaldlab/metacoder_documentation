@@ -1,3 +1,7 @@
 .Rproj.user
 .Rhistory
 .RData
+*.html
+raw_input
+results
+site_libs

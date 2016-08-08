@@ -1,59 +1,42 @@
 ---
 title: "Human microbiome example"
-output: html_document
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r hmp_setup, echo=FALSE, warning=FALSE, message=FALSE}
+library(metacoder)
 library(knitr)
-source("knitr_settings.R")
+options(width = 120)
+set.seed(1)
+opts_chunk$set(cache = TRUE, dev='png', fig.width = 7, fig.height = 7, warning = FALSE, message = FALSE, dpi = 300, cache.lazy=FALSE)
 ```
 
+## Requirements 
 
-### Analyses parameters
+**NOTE:** This analysis requires at least 10Gb of RAM to run. 
 
-```{r}
-output_folder <- "human_microbiome_results"
+## Analyses parameters
+
+```{r hmp_parameters}
+output_folder <- getwd()
 output_format <- ".pdf"
 ```
 
-### Create output directory
 
-```{r}
-dir.create(output_folder, showWarnings = FALSE)
-```
+## Parsing taxonomic data
 
-
-### Parsing taxonomic data
-
-The code below downloads a compressed archive and uncompresses it:
-
-```{r}
-download_and_extract <- function(url) {
-  temp_dir_path <- tempdir()
-  local_file_path <- file.path(temp_dir_path, basename(url))
-  download.file(url = url, destfile = local_file_path, quiet = TRUE)
-  unzipped_path <- R.utils::gunzip(local_file_path, overwrite = TRUE)
-  unzipped_path[1]
-}
-```
-
-```{r, warning=FALSE, message=FALSE}
-library(metacoder)
-v13_data <- parse_hmp_qiime(otu_file = "http://downloads.hmpdacc.org/data/HMQCP/otu_table_psn_v13.txt.gz",
-                            mapping_file = "http://downloads.hmpdacc.org/data/HMQCP/v13_map_uniquebyPSN.txt.bz2")
+```{r hmp_parse, warning=FALSE, message=FALSE}
 v35_data <- parse_hmp_qiime(otu_file = "http://downloads.hmpdacc.org/data/HMQCP/otu_table_psn_v35.txt.gz",
                             mapping_file = "http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.txt.bz2")
 ```
 
 
-### Plot of everything
+## Plot of everything
 
-```{r}
+```{r hmp_plot_all}
 calculate_abundance <- function(data) {
   mutate_taxa(data, abundance = vapply(obs(data), function(i) sum(data$obs_data[i, colnames(data$obs_data) %in% data$mapping$sample_id]), numeric(1)))
 }
 
-v13_data <- calculate_abundance(v13_data)
 v35_data <- calculate_abundance(v35_data)
 
 
@@ -70,20 +53,18 @@ plot_all <- function(data, output_name, seed = 1) {
          node_label_max = 100,
          overlap_avoidance = 1,
          # initial_layout = "re", layout = "da",
-         output_file = file.path(output_folder, paste0(output_name, "--seed_", seed, output_format)))
+         output_file = file.path(output_folder, paste0(output_name, output_format)))
 }
 
-
-plot_all(v13_data, "hmp--v13--all_data")
 plot_all(v35_data, "hmp--v35--all_data")
 ```
 
 
 
 
-### Plot body site differences
+## Plot body site differences
 
-```{r}
+```{r hmp_plot_diff}
 calculate_prop <- function(data, site) {
   sample_cols <- as.character(unlist(data$mapping[data$mapping$body_site == site, "sample_id"]))
   sample_cols <- sample_cols[sample_cols %in% colnames(data$obs_data)]
@@ -129,27 +110,18 @@ plot_body_site_diff <- function(data, site_1, site_2, output_name, seed = 1) {
          # initial_layout = "re", layout = "da",
          # maxiter = 20, fineiter = 20,
          # margin_size = c(0.001, 0.001),
-         output_file = file.path(output_folder, paste0(output_name, "--", site_1, "_vs_", site_2, "--seed_", seed, output_format)))
+         output_file = file.path(output_folder, paste0(output_name, "--", site_1, "_vs_", site_2, output_format)))
 }
 
-plot_body_site_diff(v13_data, "Throat", "Saliva", "hmp--v13")
 plot_body_site_diff(v35_data, "Throat", "Saliva", "hmp--v35")
-
-plot_body_site_diff(v13_data, "Supragingival_plaque", "Subgingival_plaque", "hmp--v13")
 plot_body_site_diff(v35_data,  "Supragingival_plaque", "Subgingival_plaque", "hmp--v35")
-
-
-plot_body_site_diff(v13_data, "Anterior_nares", "Buccal_mucosa", "hmp--v13")
 plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
-
 ```
 
 
+## Plot body site difference matrix
 
-
-
-
-```{r}
+```{r hmp_diff_matrix, eval = FALSE}
 plot_body_site_diff_small <- function(data, site_1, site_2, seed = 1) {
   # calculate each site data
   data <- calculate_body_site_abundance(data, site_1)

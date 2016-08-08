@@ -2,7 +2,7 @@
 title: "MetacodeR"
 author: "Zachary S. L. Foster and Niklaus J. Grünwald"
 date: "`r Sys.Date()`"
-output: html_document
+output: md_document
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}

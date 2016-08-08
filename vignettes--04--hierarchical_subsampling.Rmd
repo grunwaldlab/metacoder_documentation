@@ -1,16 +1,9 @@
 ---
 title: "Creating a taxonomically balanced sequence set"
-output:
-  html_document:
-    toc: false
-    css: custom.css
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-library(ape)
-library(metacoder)
-library(knitr)
-source("knitr_settings.R")
+source("settings.R")
 ```
 
 ## Introduction
@@ -41,6 +34,7 @@ Depending on the goal, this might or might not be a problem.
 The overrepresentation of Agaricales is likely a bigger problem. 
 
 ```{r all_data}
+library(metacoder)
 plot(unite_ex_data_3,
      node_size = n_obs,
      node_color = n_obs,

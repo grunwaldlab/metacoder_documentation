@@ -1,15 +1,9 @@
 ---
 title: "Manipulating taxonomic data"
-output:
-  html_document:
-    toc: false
-    css: custom.css
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-library(metacoder)
-library(knitr)
-source("knitr_settings.R")
+source("settings.R")
 ```
 
 
@@ -30,6 +24,7 @@ For each `dplyr` verb, there are two functions in metacodeR, one that manipulate
 Often, there are many shared ranks in the taxonomic hierarchy that can make effective visualization difficult:
 
 ```{r}
+library(metacoder)
 set.seed(2)
 plot(genbank_ex_data,
      node_size = n_obs,

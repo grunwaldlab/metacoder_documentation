@@ -1,25 +1,21 @@
 ---
 title: "Tara oceans example"
-output: html_document
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-library(metacoder)
+```{r hmp_setup, echo=FALSE, warning=FALSE, message=FALSE}
+source("settings.R")
 ```
 
+## Requirements 
 
-## Analyses parameters
-
-```{r}
-output_folder <- getwd()
-output_format <- ".pdf"
-```
+**NOTE:** This analysis requires at least 10Gb of RAM to run. 
 
 ## Parsing taxonomic data
 
 The code below downloads the compressed data to a temporary directory:
 
-```{r}
+```{r tara_download}
+library(metacoder)
 data_url <- "http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W5_OTU_occurences.tsv.zip"
 temp_dir_path <- tempdir()
 local_file_path <- file.path(temp_dir_path, basename(data_url))
@@ -28,7 +24,7 @@ download.file(url = data_url, destfile = local_file_path, quiet = TRUE)
 
 Next we will uncompress the archive and identify the fasta file.
 
-```{r}
+```{r tara_uncompress}
 # Get contents of zip archive
 unpacked_file_paths <- unzip(local_file_path, list = TRUE)
 # Uncompress archive
@@ -38,14 +34,14 @@ unpacked_file_path <- file.path(temp_dir_path,
                                 unpacked_file_paths[grepl("tsv$", unpacked_file_paths)])
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r tara_parse, warning=FALSE, message=FALSE}
 data <- parse_taxonomy_table(unpacked_file_path, taxon_col = c("class" = -9), class_sep = "\\|")
 ```
 
 
 ## Getting sample data
 
-```{r}
+```{r tara_parse_sample}
 data_url <- "http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W1_Sample_parameters.xls"
 temp_dir_path <- tempdir()
 local_file_path <- file.path(temp_dir_path, basename(data_url))
@@ -56,7 +52,7 @@ sample_data <- readxl::read_excel(local_file_path)
 
 ## Caluculate read abundance per taxon
 
-```{r}
+```{r tara_calculate_abundance}
 sample_columns <- sample_data[["PANGAEA ACCESSION NUMBER"]]
 data <- mutate_taxa(data,
                     read_counts = vapply(obs(data),
@@ -66,7 +62,7 @@ data <- mutate_taxa(data,
 
 ## Plot read and OTU abundance
 
-```{r}
+```{r tara_plot_all}
 seed = 9 #9, 10, 12 is good
 set.seed(seed)
 taxa_patterns_to_hide <- paste0("^", c("[X]+", "X\\+sp\\.", "NA", "root", "\\*", "sp\\.", "sp"), "$")
@@ -109,17 +105,16 @@ data %>%
 
 ## Plot propotion of OTUs identified 
 
-```{r}
+```{r tara_calc_identified}
 data <- mutate_obs(data, pid = as.numeric(pid))
 data <- mutate_taxa(data, mean_pid = vapply(obs(data),
                                             function(x) mean(data$obs_data$pid[x], na.rm = TRUE), numeric(1)))
 # Percentage of OTUs with less than 90% idententiy
 data <- mutate_taxa(data, percent_known = vapply(obs(data),
                                                  function(x) sum(data$obs_data$pid[x] >= 90, na.rm = TRUE) / length(x) * 100, numeric(1)))
-
 ```
 
-```{r}
+```{r tara_plot_all_identified}
 seed = 1
 set.seed(seed)
 taxa_patterns_to_hide <- paste0("^", c("[X]+", "X\\+sp\\.", "NA", "root", "\\*", "sp\\.", "sp"), "$")
@@ -156,7 +151,7 @@ data %>%
 
 ### Just Metazoa
 
-```{r}
+```{r tara_plot_metazoa_identified}
 seed = 1
 set.seed(seed)
 taxa_patterns_to_hide <- paste0("^", c("[X]+", "X\\+sp\\.", "NA", "root", "\\*", "sp\\.", "sp"), "$")
