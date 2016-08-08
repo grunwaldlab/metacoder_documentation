@@ -5,3 +5,5 @@
 raw_input
 results
 site_libs
+*_cache/**
+*_files/**
