@@ -14,14 +14,6 @@ opts_chunk$set(cache = TRUE, dev='png', fig.width = 7, fig.height = 7, warning =
 
 **NOTE:** This analysis requires at least 10Gb of RAM to run. 
 
-## Analyses parameters
-
-```{r hmp_parameters}
-output_folder <- getwd()
-output_format <- ".pdf"
-```
-
-
 ## Parsing taxonomic data
 
 ```{r hmp_parse, warning=FALSE, message=FALSE}
