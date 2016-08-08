@@ -1,0 +1,25 @@
+name: "MetacodeR"
+output_dir: "."
+navbar:
+  title: "MetacodeR"
+  href: vignettes/index.html
+  left:
+    - text: "Vignettes"
+      menu:
+        - text: "Parsing input files"
+          href: vignettes/vignette_01_extracting_taxonomy_data.html
+        - text: "Heat tree plotting"
+          href: vignettes/vignette_02_plotting_taxonomic_data.html
+    - text: "Publication"
+      menu:
+        - text: "Human microbiome"
+          href: publication_analyses/human_microbiome/16s_human_microbiome_example.html
+        - text: "TARA Oceans"
+          href: publication_analyses/tara_oceans/tara_oceans.html
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+    toc_depth: 2
+    theme: flatly
