@@ -4,22 +4,39 @@ navbar:
   title: "MetacodeR"
   href: index.html
   left:
-    - text: "Vignettes"
+    - text: "Tutorials"
       menu:
         - text: "Parsing input files"
           href: vignettes--01--extracting_taxonomy_data.html
         - text: "Heat tree plotting"
           href: vignettes--02--plotting_taxonomic_data.html
-    - text: "Publication"
+        - text: "Subsetting"
+          href: vignettes--03--manipulating_taxonomic_data.html
+        - text: "Sampling"
+          href: vignettes--04--hierarchical_subsampling.html
+    - text: "Publication Analyses"
       menu:
         - text: "Human microbiome"
           href: publication--05--16s_human_microbiome.html
         - text: "TARA Oceans"
           href: publication--06--tara_oceans.html
+        - text: "In silico PCR: SILVA"
+          href: publication--01--silva.html
+        - text: "In silico PCR: RDP"
+          href: publication--02--rdp.html
+        - text: "In silico PCR: Greengenes"
+          href: publication--03--greengenes.html
+        - text: "In silico PCR: Comparing databases"
+          href: publication--04--16s_database_comparision.html
+    - text: "Presentation"
+      href: presentation/metacoder_presentation.pdf
+    - text: "GitHub Repository"
+      href: https://github.com/grunwaldlab/metacoder
+
 output:
   html_document:
     toc: true
     toc_float:
       collapsed: false
     toc_depth: 2
-    theme: flatly
+    theme: flatly  ## Choose from http://bootswatch.com/

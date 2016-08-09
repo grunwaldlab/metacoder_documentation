@@ -1,5 +1,5 @@
 ---
-title: "MetacodeR"
+title: "An R package for metabarcoding research"
 author: "Zachary S. L. Foster and Niklaus J. Grünwald"
 date: "`r Sys.Date()`"
 ---
@@ -8,7 +8,7 @@ date: "`r Sys.Date()`"
 source("settings.R")
 ```
 
-## An R package for metabarcoding research planning and analysis
+## Introduction
 
 Metabarcoding is revolutionizing microbial ecology and presenting new challenges:
 
@@ -22,11 +22,11 @@ MetacodeR is an R package that attempts to addresses these issues:
 * Community diversity can be visualized by color and size in a tree plot.
 * Primer specificity can be estimated with *in silico* PCR.
 
-### Documentation
+## Documentation
 
 Documentation is under construction at http://grunwaldlab.github.io/metacoder.
 
-### Download the current version
+## Installation
 
 While this project is in development it can be installed through Github:
 
@@ -37,14 +37,14 @@ If you've built the vignettes, you can browse them with:
 
     browseVignettes(package="metacoder")
     
-### Dependencies
+## Dependencies
 
 The function that runs *in silico* PCR requires `primersearch` from the EMBOSS `r citep("10.1093/bib/3.1.87")` tool kit to be installed. 
 This is not an R package, so it is not automatically installed.
 Type `?primersearch` after installing and loading MetcodeR for installation instructions.
 
 
-### Extracting taxonomic data
+## Extracting taxonomic data
 
 Most databases have a unique file format and taxonomic hierarchy/nomenclature.
 Taxonomic data can be extracted from any file format using the **extract_taxonomy** function.
@@ -105,7 +105,7 @@ taxon_data(data)
 
 There is corresponding `obs_data` function and `obs_funcs` list, but they are not used in this case.
 
-### Metadiversity Plots
+## Heat trees
 
 The hierarchical nature of taxonomic data makes it difficult to plot effectively.
 Most often, bar charts, stacked bar charts, or pie graphs are used, but these are ineffective when plotting many taxa or multiple ranks.
@@ -144,7 +144,7 @@ Note that `plot` is a generic R function that works differently depending on wha
 MetacodeR supplies the function **plot_taxonomy**, which is used when plot is given the type of data outputted by `extract_taxonomy`.
 To see the long list of available plotting options, type `?plot_taxonomy`.
 
-### Subsetting
+## Subsetting
 
 Taxonomic data in the form used in metacodeR can be manipulated using functions inspired by `dplyr`.
 For example, taxa can be subset using `filter_taxa`.
@@ -190,7 +190,7 @@ filter_taxa(data, n_supertaxa < 4) %>%
 
 There is also a `filter_obs` function which can filter out observations and the taxa they are assigned to.
 
-### Sampling
+## Sampling
 
 When calculating statistics for taxa, the amount of data should be balanced across taxa and there should be enough data per taxon to provide unbiased estimates.
 Random samples from large reference databases are biased towards overrepresented taxa.
@@ -226,7 +226,7 @@ sample_n_obs(subsetted, size = 1000, taxon_weight = 1 / n_obs, unobserved = FALS
 ```
 
 
-### In silico PCR
+## In silico PCR
 
 The function **primersearch** is a wrapper for an EMBOSS tool that implements *in silico* PCR.
 The code below estimates the coverage of the universal prokaryotic primer pair 515F/806R `r citep("10.1128/mSystems.00009-15")`: 
@@ -273,9 +273,9 @@ the_last_plot <- .Last.value
 ggplot2::ggsave(file = "in_silico_pcr_2.svg", plot = the_last_plot, bg = "transparent")
 ```
 
-### Differential Metadiversity Plots
+## Differential heat trees
 
-We can use what we call **Differential Metadiversity Plots** to compare the values of treatments such as:
+We can use what we call **differential heat trees** to compare the values of treatments such as:
 
 * the relative abundance of taxa in two communities
 * the coverages of different primer pairs
@@ -321,7 +321,7 @@ the_last_plot <- .Last.value
 ggplot2::ggsave(file = "in_silico_pcr_3.svg", plot = the_last_plot, bg = "transparent")
 ```
 
-### Plans for future development
+## Future development
 
 MetacodeR is under active development and many new features are planned.
 Some improvements that are being worked on include:
@@ -333,19 +333,19 @@ Some improvements that are being worked on include:
 
 To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
 
-### Error reports, comments, and contributions
+## Feedback
 
 We would like to hear about users' thoughts on the package and any errors they run into.
 Please report bugs and comments on the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
 We also welcome contributions via a Github [pull request](https://help.github.com/articles/using-pull-requests/).
 
-### Aknowledgements
+## Aknowledgements
 
 We thank Tom Sharpton for sharing his metagenomics expertise and advising us.
 MetacodeR's major dependencies are taxize, igraph, and ggplot2.
 
 
-### References
+## References
 
 ```{r home_bibliography, results = 'asis', echo=FALSE}
 bibliography()

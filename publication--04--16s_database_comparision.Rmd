@@ -8,11 +8,11 @@ source("settings.R")
 
 ## Run individual analyses
 
-```{r run_all}
+```{r run_all, eval = FALSE}
 library(rmarkdown)
-render(input = "01--silva.Rmd")
-render(input = "02--rdp.Rmd")
-render(input = "03--greengenes.Rmd")
+render(input = "publication--01--silva.Rmd")
+render(input = "publication--02--rdp.Rmd")
+render(input = "publication--03--greengenes.Rmd")
 ```
 
 
@@ -27,7 +27,7 @@ load(file.path(output_folder, "greengenes_data.RData"))
 
 ## Combine plots
 
-```{r combine}
+```{r combine_old, fig.width = 7.5, fig.height = 10, eval = FALSE}
 combo_plot <- gridExtra::grid.arrange(ncol = 2, nrow = 3,
                                       top = "All data                                                           Not amplified        ",
                                       left = "SILVA                                                      RDP                                                              Greengenes",
@@ -38,3 +38,13 @@ ggplot2::ggsave(file.path(output_folder, "figure_2--16s_database_comparison.pdf"
                 combo_plot, width = 7.5, height = 10)
 ```
 
+
+```{r combine, fig.width = 7.5, fig.height = 10}
+combo_plot <- cowplot::plot_grid(silva_plot_all, silva_plot_pcr_fail,
+                                 rdp_plot_all, rdp_plot_pcr_fail,
+                                 greengenes_plot_all, greengenes_plot_pcr_fail,
+                                 ncol = 2, nrow = 3,
+                                 labels = LETTERS[1:6])
+cowplot::save_plot(file.path(output_folder, "figure_2--16s_database_comparison.pdf"), 
+                   combo_plot, base_width = 7.5, base_height = 10)
+```

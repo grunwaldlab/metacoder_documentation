@@ -6,11 +6,12 @@ output_folder <- "results"
 output_format <- ".pdf"
 
 # display
-options(width = 120)
+options(width = 100)
 set.seed(1)
 
 # Knitr settings
 library(knitr)
+library(grid)
 opts_chunk$set(cache = TRUE, dev='png', fig.width = 7, fig.height = 7, warning = FALSE, message = FALSE, dpi = 300, cache.lazy=FALSE)
 
 # Citation settings
