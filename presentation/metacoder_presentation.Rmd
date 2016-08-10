@@ -255,13 +255,13 @@ gridExtra::grid.arrange(ncol = 2, nrow = 1,
 
 ```{r}
 library(metacoder)
-seqs <- ape::read.FASTA("trainset14_032015.rdp.fasta") 
+seqs <- seqinr::read.fasta("trainset14_032015.rdp.fasta") 
 ```
 
 ```{r, warning = FALSE, message = FALSE}
 cat(names(seqs)[1]) 
 data <- extract_taxonomy(seqs,
-                         regex = "^([a-zA-Z0-9_]+)[\t ]+(.*)$", 
+                         regex = "^>([a-zA-Z0-9_]+)[\t ]+(.*)$", 
                          key = c(rdp_id = "obs_info", "class"),
                          class_sep = ";")
 ```
@@ -340,10 +340,10 @@ filter_taxa(pcr, name == "Bacteria", subtaxa = TRUE) %>%
 pcr_2 <- primersearch(sampled, forward = "GTGCCAGCMGCCGCGGTAA",
                       reverse = "AGGGTTGCGCTCGTTG",
                       pair_name = "515F_1100R", mismatch = 10)
-pcr$taxon_data$count_amp_2 <- taxon_data(pcr_2, "count_amplified")[[1]]
-pcr$taxon_data$prop_diff <- taxon_data(pcr, "prop_amplified")[[1]] -
-  taxon_data(pcr_2, "prop_amplified")[[1]]
 taxon_data(pcr, row_subset = 1:7)
+pcr <- mutate_taxa(pcr,
+                   count_amp_2 = taxon_data(pcr_2, col_subset = "count_amplified")[[1]],
+                   prop_diff = prop_amplified - taxon_data(pcr_2, col_subset = "prop_amplified")[[1]])
 ```
 
 
