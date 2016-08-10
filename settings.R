@@ -12,7 +12,8 @@ set.seed(1)
 # Knitr settings
 library(knitr)
 library(grid)
-opts_chunk$set(cache = TRUE, dev='png', fig.width = 7, fig.height = 7, warning = FALSE, message = FALSE, dpi = 300, cache.lazy=FALSE)
+opts_chunk$set(cache = TRUE, dev='png', fig.width = 7, fig.height = 7, warning = FALSE, message = FALSE, 
+               dpi = 300, cache.lazy = FALSE, autodep = TRUE)
 
 # Citation settings
 library(knitcitations)
