@@ -2,9 +2,15 @@
 title: "Comparing 16S databases"
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 source("settings.R")
+opts_chunk$set(cache = FALSE)
 ```
+
+## Requirements 
+
+**NOTE:** This analysis requires at least 10Gb of RAM to run. 
+
 
 ## Run individual analyses
 
@@ -47,4 +53,5 @@ combo_plot <- cowplot::plot_grid(silva_plot_all, silva_plot_pcr_fail,
                                  labels = LETTERS[1:6])
 cowplot::save_plot(file.path(output_folder, "figure_2--16s_database_comparison.pdf"), 
                    combo_plot, base_width = 7.5, base_height = 10)
+print(combo_plot)
 ```

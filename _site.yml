@@ -29,7 +29,7 @@ navbar:
         - text: "In silico PCR: Comparing databases"
           href: publication--04--16s_database_comparision.html
     - text: "Presentation"
-      href: presentation/metacoder_presentation.pdf
+      href: presentation_page.html
     - text: "GitHub Repository"
       href: https://github.com/grunwaldlab/metacoder
 

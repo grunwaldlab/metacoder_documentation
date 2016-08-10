@@ -10,6 +10,8 @@ source("settings.R")
 
 **NOTE:** This analysis requires at least 10Gb of RAM to run. 
 
+## Parameters
+
 ```{r greengenes_parameters}
 max_taxonomy_depth <- 4
 min_seq_count <- NULL
@@ -30,7 +32,7 @@ Since taxonomy inforamtion is needed for creating the `taxmap` data structure, w
 ### Parse taxonomy file
 
 ```{r greengenes_taxonomy}
-gg_taxonomy_path <- "databases/gg_13_5_taxonomy.txt"
+gg_taxonomy_path <- file.path(input_folder, "gg_13_5_taxonomy.txt")
 gg_taxonomy <- readLines(gg_taxonomy_path)
 print(gg_taxonomy[1:5])
 ```
@@ -53,7 +55,7 @@ print(greengenes)
 Next we will parse the sequence file so we can add it to the `obs_data` table of the `greengenes` object.
 
 ```{r greengenes_sequence}
-gg_sequence_path <- "databases/gg_13_5.fasta"
+gg_sequence_path <- file.path(input_folder, "gg_13_5.fasta")
 substr(readLines(gg_sequence_path, n = 10), 1, 100)
 ```
 
@@ -99,7 +101,7 @@ Although Greengenes is such a large database (`r nrow(greengenes$taxa_data)` tax
 ```{r greengenes_plot_all}
 system.time(greengenes_plot_all <- plot(greengenes, 
                                         node_size = n_obs,
-                                        node_size_range = c(0.0005, 0.012),
+                                        node_size_range = c(0.0005, 0.012) * 2,
                                         edge_size_range = c(0.0005, 0.012),
                                         node_size_interval = c(1, 3000000),
                                         edge_size_interval = c(1, 3000000),
