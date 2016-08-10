@@ -2,12 +2,8 @@
 title: "Human microbiome example"
 ---
 
-```{r hmp_setup, echo=FALSE, warning=FALSE, message=FALSE}
-library(metacoder)
-library(knitr)
-options(width = 120)
-set.seed(1)
-opts_chunk$set(cache = TRUE, dev='png', fig.width = 7, fig.height = 7, warning = FALSE, message = FALSE, dpi = 300, cache.lazy=FALSE)
+```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE}
+source("settings.R")
 ```
 
 ## Requirements 
@@ -17,6 +13,7 @@ opts_chunk$set(cache = TRUE, dev='png', fig.width = 7, fig.height = 7, warning =
 ## Parsing taxonomic data
 
 ```{r hmp_parse, warning=FALSE, message=FALSE}
+library(metacoder)
 v35_data <- parse_hmp_qiime(otu_file = "http://downloads.hmpdacc.org/data/HMQCP/otu_table_psn_v35.txt.gz",
                             mapping_file = "http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.txt.bz2")
 ```
@@ -113,58 +110,70 @@ plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
 
 ## Plot body site difference matrix
 
-```{r hmp_diff_matrix, eval = FALSE}
-plot_body_site_diff_small <- function(data, site_1, site_2, seed = 1) {
-  # calculate each site data
-  data <- calculate_body_site_abundance(data, site_1)
-  data <- calculate_body_site_abundance(data, site_2)
-   
-  # filter out taxa without reads in either site
-  data <- filter_taxa(data,
-                      data$taxon_data[[paste0(site_1, "_prop")]] != 0 | data$taxon_data[[paste0(site_2, "_prop")]] != 0,
-                      supertaxa = TRUE)
-  
-  # calculate scaled site difference
-  prop_1 <- data$taxon_data[[paste0(site_1, "_prop")]]
-  prop_2 <- data$taxon_data[[paste0(site_2, "_prop")]]
-  data$taxon_data$scaled_prop_diff <- (prop_1 - prop_2) / mean(c(prop_1, prop_2))
-  
-  # plot
-  set.seed(seed)
-  data %>%
-    filter_taxa(abundance >= 100) %>%
-    filter_taxa(n_supertaxa <= 4) %>%
-    plot(node_size_axis_label = "Number of OTUs",
-         node_size = n_obs,
-         node_color_axis_label = paste0(site_1, " only    Both    ", site_2, " only"),
-         node_color = scaled_prop_diff,
-         node_color_range = diverging_palette(),
-         node_color_trans = "area",
-         node_color_interval = round(max(abs(range(scaled_prop_diff)))) * c(-1, 1),
-         edge_color_interval = round(max(abs(range(scaled_prop_diff)))) * c(-1, 1),
-         node_label = name,
-         node_label_max = 50,
-         overlap_avoidance = 1)
-         # initial_layout = "re", layout = "da",
-         # maxiter = 20, fineiter = 20,
-         # margin_size = c(0.001, 0.001),
-         # output_file = file.path(output_folder, paste0(output_name, "--", site_1, "_vs_", site_2, "--seed_", seed, output_format)))
-}
-
-
-body_sites <- c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa")
-
+```{r hmp_diff_matrix, fig.width = 7.5, fig.height = 7.5}
+# Identify pairs of treatments to compare
+body_sites <- c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares")
 combinations <- t(combn(seq_along(body_sites), 2))
 
-layout_matrix <- matrix(rep(NA, (length(body_sites))^2), nrow = length(body_sites))
-for (index in 1:nrow(combinations)) {
-  layout_matrix[combinations[index,1], combinations[index,2]] <- index
+# Make reduced taxonomy for plotting
+v35_reduced <- v35_data
+v35_reduced <- filter_taxa(v35_reduced, n_supertaxa < 4)
+
+# Calculate significant body site differneces
+apply(combinations, MARGIN = 1, function(i) {
+  v35_reduced$taxon_data[[paste0(body_sites[i], collapse = "-")]] <<- calculate_prop_diff(v35_reduced, body_sites[i[1]],  body_sites[i[2]])
+})
+site_diff_cols <- apply(combinations, MARGIN = 1, function(i) paste0(body_sites[i], collapse = "-"))
+
+# Remove data not needed for plotting
+is_diff <- apply(v35_reduced$taxon_data[ , site_diff_cols], MARGIN = 1, function(a_row) any(a_row != 0))
+v35_reduced <- filter_taxa(v35_reduced, is_diff, supertaxa = TRUE) # remove taxa with no differences
+v35_reduced$obs_data <- v35_reduced$obs_data[, c("obs_taxon_ids", "otu_id")] # remove per-otu data since it is big
+
+# Make individual plots
+plot_body_site_diff_small <- function(data, diff_col, seed = 1) {
+  set.seed(seed)
+  mutate_taxa(data, diff_col = data$taxon_data[[diff_col]]) %>%
+    # filter_taxa(is_diff, supertaxa = TRUE) %>%
+    plot(node_size = n_obs,
+         node_color = diff_col,
+         node_color_range = diverging_palette(),
+         node_color_trans = "linear",
+         node_color_interval = c(-0.5, 0.5),
+         edge_color_interval = c(-0.5, 0.5),
+         # node_label = ifelse(abs(diff_col) > 0.01, name, NA),
+         # node_label_max = 50,
+         overlap_avoidance = 0.5,
+         node_size_axis_label = "Number of OTUs",
+         node_color_axis_label = "Median proportion difference",
+         make_legend = FALSE)
 }
 
-bs_combinations <- t(apply(combinations, MARGIN = 1, function(x) body_sites[x]))
 
-plots <- lapply(1:nrow(bs_combinations),
-                function(i) plot_body_site_diff_small(v35_data, bs_combinations[i, 1], bs_combinations[i, 2]))
-do.call(gridExtra::grid.arrange, ncol = length(body_sites) - 1, nrow =  length(body_sites) - 1,
+sub_plots <- lapply(site_diff_cols, function(x) plot_body_site_diff_small(v35_reduced, x))
+key_plot <- plot(v35_reduced,
+                 node_size = n_obs,
+                 node_color = "#DDDDDD",
+                 node_color_range = diverging_palette(),
+                 node_color_trans = "linear",
+                 node_color_interval = c(-0.5, 0.5),
+                 edge_color_interval = c(-0.5, 0.5),
+                 node_label = ifelse(n_obs > 2000, name, NA),
+                 node_label_max = 500,
+                 edge_label = ifelse(n_obs > 2000, NA, name),
+                 edge_label_max = 500,
+                 edge_label_size_range = c(0.01, 0.02),
+                 overlap_avoidance = 0.5,
+                 node_size_axis_label = "Number of OTUs",
+                 node_color_axis_label = "Median proportion difference")
+
+matrix_plot <- ggdraw(plot_grid(plotlist = plots[layout_matrix], label_size = 8,
+                                nrow = nrow(layout_matrix), 
+                                ncol = ncol(layout_matrix), 
+                                labels = site_diff_cols[layout_matrix])) + 
+  draw_plot(key_plot, x = 0.5, y = 0, width = 0.5, height = 0.5)
+
+save_plot(file.path(output_folder, "figure_3--hmp_matrix_plot.pdf"), 
+          matrix_plot, base_width = 7.5, base_height = 7.5)
+print(matrix_plot)
 ```
-
