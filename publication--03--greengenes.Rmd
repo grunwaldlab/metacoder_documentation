@@ -39,6 +39,7 @@ Note that there are some ranks with no names.
 These will be removed after parsing the file since they provide no information and an uniform-length taxonomy is not needed.
 
 ```{r greengenes_taxonomy_parse}
+library(metacoder)
 # Parse taxonomy file
 system.time(greengenes <- extract_taxonomy(input = gg_taxonomy, key = c(id = "obs_info", "class"), regex = "^([0-9]+)\t(.*)$", class_sep = "; ", class_regex = "^([a-z]{1})__(.*)$", class_key = c(rank = "taxon_info", "name")))
 # Remove data for ranks with no information
