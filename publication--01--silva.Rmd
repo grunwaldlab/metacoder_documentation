@@ -30,6 +30,7 @@ The code below parses and subsets the entire SILVA non-redundant reference datab
 The object made is quite large.
 
 ```{r load_silva}
+library(metacoder)
 file_path <- file.path(input_folder, "SILVA_123.1_SSURef_Nr99_tax_silva.fasta")
 system.time(silva <- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE), 
                                       regex = "^(.*?) (.*)$",
