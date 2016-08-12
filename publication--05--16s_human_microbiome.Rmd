@@ -180,15 +180,38 @@ key_plot <- plot(v35_reduced,
 
 
 ```{r hmp_matrix_main_plot}
-calc_subplot_coords <- function(a_matrix, x1 = 0, y1 = 1, x2 = 1, y2 = 1) {
+calc_subplot_coords <- function(a_matrix, x1 = 0, y1 = 0, x2 = 1, y2 = 1) {
+  # lowerleft = c(x1, y1), upperright = c(x2, y2)
   x_coords <- seq(from = x1, to = x2, length.out = ncol(a_matrix) + 1)[- (ncol(a_matrix) + 1)]
   y_coords <- seq(from = y1, to = y2, length.out = nrow(a_matrix) + 1)[- (nrow(a_matrix) + 1)]
   do.call(rbind, lapply(1:ncol(a_matrix), function(x) data.frame(plot_index = a_matrix[, x],
                                                                  x = x_coords[x], 
-                                                                 y = y_coords[1:nrow(a_matrix)])))
+                                                                 y = rev(y_coords))))
 }
 
+# remove empty column/row
+layout_matrix <- layout_matrix[! apply(layout_matrix, MARGIN = 1, function(x) all(is.na(x))), ]
+layout_matrix <- layout_matrix[ ,! apply(layout_matrix, MARGIN = 2, function(x) all(is.na(x)))]
 
+# Get subplot layout data
+matrix_data <- calc_subplot_coords(layout_matrix, x1 = 0, y1 = 0, x2 = 0.9, y2 = 0.9)
+matrix_data$site <- site_diff_cols[layout_matrix]
+matrix_data <- tidyr::separate(matrix_data, site, c("site_1", "site_2"), "-")
+
+# Make label data
+named_row <- which(apply(layout_matrix, MARGIN = 1, function(x) all(!is.na(x))))
+named_col <- which(apply(layout_matrix, MARGIN = 2, function(x) all(!is.na(x))))
+horz_label_data <- matrix_data[match(layout_matrix[named_row, ], matrix_data$plot_index), ]
+vert_label_data <- matrix_data[match(layout_matrix[, named_col], matrix_data$plot_index), ]
+subgraph_width <- abs(horz_label_data$x[1] - horz_label_data$x[2])
+subgraph_height <- abs(vert_label_data$y[1] - vert_label_data$y[2])
+horz_label_data$label_x <- horz_label_data$x + subgraph_width / 2 # center of label
+horz_label_data$label_y <- 0.9 # bottom of label
+vert_label_data$label_x <- 0.9 # bottom of rotated label 
+vert_label_data$label_y <- vert_label_data$y + subgraph_height / 2 # center of rotated label 
+
+
+# Make plot
 matrix_plot <- ggdraw(plot_grid(plotlist = plots[layout_matrix], label_size = 8,
                                 nrow = nrow(layout_matrix), 
                                 ncol = ncol(layout_matrix), 
