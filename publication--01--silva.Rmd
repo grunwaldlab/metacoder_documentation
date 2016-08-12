@@ -2,8 +2,11 @@
 title: Graphing the SILVA database
 ---
 
-```{r silva_setup, echo=FALSE, warning=FALSE, message=FALSE}
-source("settings.R")
+```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+knitr::read_chunk("settings.R")
+```
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 ```
 
 ## Requirements 
@@ -12,15 +15,10 @@ source("settings.R")
 
 ## Parameters
 
-```{r silva_parameters}
-max_taxonomy_depth <- 4
-min_seq_count <- NULL
-just_bacteria <- TRUE
-max_mismatch <- 10 # percentage mismatch tolerated in pcr
-pcr_success_cutoff <- 0.80 # Used to subset for graphing
-forward_primer = c("515F" = "GTGYCAGCMGCCGCGGTAA")
-reverse_primer = c("806R" = "GGACTACNVGGGTWTCTAAT")
-pcr_success_color_scale = c("red", "orange", "yellow", "green", "cyan")
+```{r io_settings, cache=FALSE}
+```
+
+```{r database_comparison_settings, cache=FALSE}
 ```
 
 
@@ -44,16 +42,27 @@ print(silva)
 ```{r subset_silva}
 if (! is.null(max_taxonomy_depth)) {
   system.time(silva <- filter_taxa(silva, n_supertaxa <= max_taxonomy_depth))
-  print(silva)
 }
 if (! is.null(min_seq_count)) {
   system.time(silva <- filter_taxa(silva, n_obs >= min_seq_count))
-  print(silva)
 }
 if (just_bacteria) {
   system.time(silva <- filter_taxa(silva, name == "Bacteria", subtaxa = TRUE))
-  print(silva)
 }
+if (! is.null(min_seq_length)) {
+  system.time(silva <- filter_obs(silva, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+}
+print(silva)
+```
+
+
+## Remove chloroplast sequences
+
+These are not bacterial and will bias the *in silico* PCR results.
+
+```{r greengenes_rm_chloro}
+system.time(silva <- filter_taxa(silva, name == "Chloroplast", subtaxa = TRUE, invert = TRUE))
+print(silva)
 ```
 
 
@@ -112,10 +121,10 @@ system.time(silva_plot_pcr_fail <- silva_pcr %>%
               plot(node_size = n_obs - count_amplified,
                    node_label = name,
                    node_color = prop_amplified,
-                   node_size_range = c(0.0005, 0.012),
-                   edge_size_range = c(0.0005, 0.012),
-                   node_size_interval = c(1, 1000000),
-                   edge_size_interval = c(1, 1000000),
+#                    node_size_range = c(0.0005, 0.012) * 2,
+#                    edge_size_range = c(0.0005, 0.012),
+#                    node_size_interval = c(1, 1000000),
+#                    edge_size_interval = c(1, 1000000),
                    edge_color_interval = c(0, 1),
                    node_color_range =  pcr_success_color_scale,
                    node_color_trans = "linear",

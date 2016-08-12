@@ -2,23 +2,24 @@
 title: Graphing the RDP database
 ---
 
-```{r rdp_setup, echo=FALSE, warning=FALSE, message=FALSE}
-source("settings.R")
+
+```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+knitr::read_chunk("settings.R")
+```
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 ```
 
 ## Requirements 
 
-**NOTE:** This analysis requires at least 16Gb of RAM to run. 
+**NOTE:** This analysis requires at least 10Gb of RAM to run. 
 
-```{r rdp_parameters}
-max_taxonomy_depth <- 4
-min_seq_count <- NULL
-just_bacteria <- TRUE
-max_mismatch <- 10 # percentage mismatch tolerated in pcr
-pcr_success_cutoff <- 0.80 # Used to subset for graphing
-forward_primer = c("515F" = "GTGYCAGCMGCCGCGGTAA")
-reverse_primer = c("806R" = "GGACTACNVGGGTWTCTAAT")
-pcr_success_color_scale = c("red", "orange", "yellow", "green", "cyan")
+## Parameters
+
+```{r io_settings, cache=FALSE}
+```
+
+```{r database_comparison_settings, cache=FALSE}
 ```
 
 
@@ -43,16 +44,17 @@ print(rdp)
 ```{r subset_rdp}
 if (! is.null(max_taxonomy_depth)) {
   system.time(rdp <- filter_taxa(rdp, n_supertaxa <= max_taxonomy_depth))
-  print(rdp)
 }
 if (! is.null(min_seq_count)) {
   system.time(rdp <- filter_taxa(rdp, n_obs >= min_seq_count))
-  print(rdp)
 }
 if (just_bacteria) {
   system.time(rdp <- filter_taxa(rdp, name == "Bacteria", subtaxa = TRUE))
-  print(rdp)
 }
+if (! is.null(min_seq_length)) {
+  system.time(rdp <- filter_obs(rdp, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+}
+print(rdp)
 ```
 
 
@@ -65,13 +67,13 @@ Although RDP is such a large database (`r nrow(rdp$taxa_data)` taxa) that graphi
 system.time(rdp_plot_all <- plot(rdp,
                              node_size = n_obs,
                              node_color = n_obs,
-                             node_label = name,
-                             node_size_range = c(0.0005, 0.012) * 2,
-                             edge_size_range = c(0.0005, 0.012),
-                             node_size_interval = c(1, 3000000),
-                             edge_size_interval = c(1, 3000000),
-                             node_color_interval = c(1, 3000000),
-                             edge_color_interval = c(1, 3000000),
+#                              node_label = name,
+#                              node_size_range = c(0.0005, 0.012) * 2,
+#                              edge_size_range = c(0.0005, 0.012),
+#                              node_size_interval = c(1, 3000000),
+#                              edge_size_interval = c(1, 3000000),
+#                              node_color_interval = c(1, 3000000),
+#                              edge_color_interval = c(1, 3000000),
                              node_label_max = 150,
                              node_color_axis_label = "Sequence count",
                              make_legend = TRUE,
@@ -109,10 +111,10 @@ system.time(rdp_plot_pcr_fail <- rdp_pcr %>%
               plot(node_size = n_obs - count_amplified,
                    node_label = name,
                    node_color = prop_amplified,
-                   node_size_range = c(0.0005, 0.012) * 2,
-                   edge_size_range = c(0.0005, 0.012),
-                   node_size_interval = c(1, 1000000),
-                   edge_size_interval = c(1, 1000000),
+#                    node_size_range = c(0.0005, 0.012) * 2,
+#                    edge_size_range = c(0.0005, 0.012),
+#                    node_size_interval = c(1, 1000000),
+#                    edge_size_interval = c(1, 1000000),
                    edge_color_interval = c(0, 1),
                    node_color_range =  pcr_success_color_scale,
                    node_color_trans = "linear",
