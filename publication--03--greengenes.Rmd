@@ -78,18 +78,25 @@ greengenes <- mutate_obs(greengenes, sequence = unlist(gg_sequences)[as.characte
 This will make graphing a little more understandable by removing some taxa, but no sequence information will be removed. 
 
 ```{r greengenes_subset}
-if (! is.null(max_taxonomy_depth)) {
-  system.time(greengenes <- filter_taxa(greengenes, n_supertaxa <= max_taxonomy_depth))
-}
 if (! is.null(min_seq_count)) {
   system.time(greengenes <- filter_taxa(greengenes, n_obs >= min_seq_count))
 }
 if (just_bacteria) {
   system.time(greengenes <- filter_taxa(greengenes, name == "Bacteria", subtaxa = TRUE))
 }
-if (! is.null(min_seq_length)) {
-  system.time(greengenes <- filter_obs(greengenes, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+if (! is.null(max_taxonomy_depth)) {
+  system.time(greengenes <- filter_taxa(greengenes, n_supertaxa <= max_taxonomy_depth))
 }
+print(greengenes)
+```
+
+
+## Remove chloroplast sequences
+
+These are not bacterial and will bias the *in silico* PCR results.
+
+```{r greengenes_rm_chloro}
+system.time(greengenes <- filter_taxa(greengenes, name == "Chloroplast", subtaxa = TRUE, invert = TRUE))
 print(greengenes)
 ```
 
@@ -101,12 +108,12 @@ Although Greengenes is such a large database (`r nrow(greengenes$taxa_data)` tax
 ```{r greengenes_plot_all}
 system.time(greengenes_plot_all <- plot(greengenes, 
                                         node_size = n_obs,
-                                        node_size_range = c(0.0005, 0.012) * 2,
-                                        edge_size_range = c(0.0005, 0.012),
-                                        node_size_interval = c(1, 3000000),
-                                        edge_size_interval = c(1, 3000000),
-                                        node_color_interval = c(1, 3000000),
-                                        edge_color_interval = c(1, 3000000),
+                                        # node_size_range = c(0.0005, 0.012) * 2,
+                                        # edge_size_range = c(0.0005, 0.012),
+                                        # node_size_interval = c(1, 3000000),
+                                        # edge_size_interval = c(1, 3000000),
+                                        # node_color_interval = c(1, 3000000),
+                                        # edge_color_interval = c(1, 3000000),
                                         node_color = n_obs,
                                         node_label = name,
                                         node_label_max = 150,
@@ -117,6 +124,13 @@ print(greengenes_plot_all)
 
 
 ## PCR
+
+```{r greengenes_length_filter}
+if (! is.null(min_seq_length)) {
+  system.time(greengenes <- filter_obs(greengenes, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+}
+print(greengenes)
+```
 
 ```{r greengenes_pcr}
 system.time(greengenes_pcr <- primersearch(greengenes,
@@ -133,6 +147,8 @@ system.time(greengenes_plot_pcr_all <- plot(greengenes_pcr,
                                        node_color_range =  pcr_success_color_scale,
                                        node_color_trans = "linear",
                                        node_label_max = 150,
+                                       edge_color_interval = c(0, 1),
+                                       node_color_interval = c(0, 1),
                                        node_color_axis_label = "Proportion PCR success",
                                        node_size_axis_label = "Sequence count",
                                        output_file = file.path(output_folder, paste0("greengenes--pcr_all", output_format))))

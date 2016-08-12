@@ -28,7 +28,7 @@ knitr::read_chunk("settings.R")
 The code below parses and subsets the entire RDP non-redundant reference database.
 The object made is quite large.
 
-```{r load_rdp}
+```{r rdp_load}
 library(metacoder)
 file_path <- file.path(input_folder, "rdp_current_Bacteria_unaligned.fa")
 system.time(rdp <- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE),
@@ -41,22 +41,28 @@ print(rdp)
 
 ## Subset
 
-```{r subset_rdp}
-if (! is.null(max_taxonomy_depth)) {
-  system.time(rdp <- filter_taxa(rdp, n_supertaxa <= max_taxonomy_depth))
-}
+```{r rdp_subset}
 if (! is.null(min_seq_count)) {
   system.time(rdp <- filter_taxa(rdp, n_obs >= min_seq_count))
 }
 if (just_bacteria) {
   system.time(rdp <- filter_taxa(rdp, name == "Bacteria", subtaxa = TRUE))
 }
-if (! is.null(min_seq_length)) {
-  system.time(rdp <- filter_obs(rdp, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+if (! is.null(max_taxonomy_depth)) {
+  system.time(rdp <- filter_taxa(rdp, n_supertaxa <= max_taxonomy_depth))
 }
 print(rdp)
 ```
 
+
+## Remove chloroplast sequences
+
+These are not bacterial and will bias the *in silico* PCR results.
+
+```{r rdp_rm_chloro}
+system.time(rdp <- filter_taxa(rdp, name == "Chloroplast", subtaxa = TRUE, invert = TRUE))
+print(rdp)
+```
 
 
 ## Plot whole database
@@ -67,7 +73,7 @@ Although RDP is such a large database (`r nrow(rdp$taxa_data)` taxa) that graphi
 system.time(rdp_plot_all <- plot(rdp,
                              node_size = n_obs,
                              node_color = n_obs,
-#                              node_label = name,
+                             node_label = name,
 #                              node_size_range = c(0.0005, 0.012) * 2,
 #                              edge_size_range = c(0.0005, 0.012),
 #                              node_size_interval = c(1, 3000000),
@@ -84,6 +90,13 @@ print(rdp_plot_all)
 
 ## PCR
 
+```{r rdp_length_filter}
+if (! is.null(min_seq_length)) {
+  system.time(rdp <- filter_obs(rdp, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+}
+print(rdp)
+```
+
 ```{r rdp_pcr}
 system.time(rdp_pcr <- primersearch(rdp,
                                       forward = forward_primer,
@@ -93,15 +106,17 @@ system.time(rdp_pcr <- primersearch(rdp,
 
 ```{r rdp_plot_pcr_all}
 system.time(rdp_plot_pcr_all <- plot(rdp_pcr,
-                                       node_size = n_obs,
-                                       node_label = name,
-                                       node_color = prop_amplified,
-                                       node_color_range =  pcr_success_color_scale,
-                                       node_color_trans = "linear",
-                                       node_label_max = 150,
-                                       node_color_axis_label = "Proportion PCR success",
-                                       node_size_axis_label = "Sequence count",
-                                       output_file = file.path(output_folder, paste0("rdp--pcr_all", output_format))))
+                                     node_size = n_obs,
+                                     node_label = name,
+                                     node_color = prop_amplified,
+                                     node_color_range =  pcr_success_color_scale,
+                                     node_color_trans = "linear",
+                                     node_label_max = 150,
+                                     edge_color_interval = c(0, 1),
+                                     node_color_interval = c(0, 1),
+                                     node_color_axis_label = "Proportion PCR success",
+                                     node_size_axis_label = "Sequence count",
+                                     output_file = file.path(output_folder, paste0("rdp--pcr_all", output_format))))
 print(rdp_plot_pcr_all)
 ```
 

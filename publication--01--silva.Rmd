@@ -27,7 +27,7 @@ knitr::read_chunk("settings.R")
 The code below parses and subsets the entire SILVA non-redundant reference database.
 The object made is quite large.
 
-```{r load_silva}
+```{r silva_load}
 library(metacoder)
 file_path <- file.path(input_folder, "SILVA_123.1_SSURef_Nr99_tax_silva.fasta")
 system.time(silva <- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE), 
@@ -39,18 +39,15 @@ print(silva)
 
 ## Subset
 
-```{r subset_silva}
-if (! is.null(max_taxonomy_depth)) {
-  system.time(silva <- filter_taxa(silva, n_supertaxa <= max_taxonomy_depth))
-}
+```{r silva_subset}
 if (! is.null(min_seq_count)) {
   system.time(silva <- filter_taxa(silva, n_obs >= min_seq_count))
 }
 if (just_bacteria) {
   system.time(silva <- filter_taxa(silva, name == "Bacteria", subtaxa = TRUE))
 }
-if (! is.null(min_seq_length)) {
-  system.time(silva <- filter_obs(silva, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+if (! is.null(max_taxonomy_depth)) {
+  system.time(silva <- filter_taxa(silva, n_supertaxa <= max_taxonomy_depth))
 }
 print(silva)
 ```
@@ -60,7 +57,7 @@ print(silva)
 
 These are not bacterial and will bias the *in silico* PCR results.
 
-```{r greengenes_rm_chloro}
+```{r silva_rm_chloro}
 system.time(silva <- filter_taxa(silva, name == "Chloroplast", subtaxa = TRUE, invert = TRUE))
 print(silva)
 ```
@@ -74,12 +71,12 @@ Although SILVA is such a large database (`r nrow(silva$taxa_data)` taxa) that gr
 system.time(silva_plot_all <- plot(silva,
                                    node_size = n_obs,
                                    node_color = n_obs,
-                                   node_size_range = c(0.0005, 0.012) * 2,
-                                   edge_size_range = c(0.0005, 0.012),
-                                   node_size_interval = c(1, 3000000),
-                                   edge_size_interval = c(1, 3000000),
-                                   node_color_interval = c(1, 3000000),
-                                   edge_color_interval = c(1, 3000000),
+                                   # node_size_range = c(0.0005, 0.012) * 2,
+                                   # edge_size_range = c(0.0005, 0.012),
+                                   # node_size_interval = c(1, 3000000),
+                                   # edge_size_interval = c(1, 3000000),
+                                   # node_color_interval = c(1, 3000000),
+                                   # edge_color_interval = c(1, 3000000),
                                    node_label = name,
                                    node_label_max = 150,
                                    node_color_axis_label = "Sequence count",
@@ -90,6 +87,14 @@ print(silva_plot_all)
 
 
 ## PCR
+
+```{r silva_length_filter}
+if (! is.null(min_seq_length)) {
+  system.time(silva <- filter_obs(silva, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+}
+print(silva)
+```
+
 
 ```{r silva_pcr}
 # Replace all u with t so in silico PCR works
@@ -108,6 +113,8 @@ system.time(silva_plot_pcr_all <- plot(silva_pcr,
                                        node_color = prop_amplified,
                                        node_color_range =  pcr_success_color_scale,
                                        node_color_trans = "linear",
+                                       edge_color_interval = c(0, 1),
+                                       node_color_interval = c(0, 1),
                                        node_label_max = 150,
                                        node_color_axis_label = "Proportion PCR success",
                                        node_size_axis_label = "Sequence count",

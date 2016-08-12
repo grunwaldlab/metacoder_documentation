@@ -110,10 +110,15 @@ plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
 
 ## Plot body site difference matrix
 
-```{r hmp_diff_matrix, fig.width = 7.5, fig.height = 7.5}
+```{r hmp_matrix_calc}
 # Identify pairs of treatments to compare
 body_sites <- c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares")
 combinations <- t(combn(seq_along(body_sites), 2))
+
+layout_matrix <- matrix(rep(NA, (length(body_sites))^2), nrow = length(body_sites))
+for (index in 1:nrow(combinations)) {
+  layout_matrix[combinations[index,1], combinations[index,2]] <- index
+}
 
 # Make reduced taxonomy for plotting
 v35_reduced <- v35_data
@@ -129,7 +134,11 @@ site_diff_cols <- apply(combinations, MARGIN = 1, function(i) paste0(body_sites[
 is_diff <- apply(v35_reduced$taxon_data[ , site_diff_cols], MARGIN = 1, function(a_row) any(a_row != 0))
 v35_reduced <- filter_taxa(v35_reduced, is_diff, supertaxa = TRUE) # remove taxa with no differences
 v35_reduced$obs_data <- v35_reduced$obs_data[, c("obs_taxon_ids", "otu_id")] # remove per-otu data since it is big
+```
 
+
+
+```{r hmp_matrix_subplots, fig.width = 7.5, fig.height = 7.5}
 # Make individual plots
 plot_body_site_diff_small <- function(data, diff_col, seed = 1) {
   set.seed(seed)
@@ -165,7 +174,20 @@ key_plot <- plot(v35_reduced,
                  edge_label_size_range = c(0.01, 0.02),
                  overlap_avoidance = 0.5,
                  node_size_axis_label = "Number of OTUs",
-                 node_color_axis_label = "Median proportion difference")
+                 node_color_axis_label = "Median proportion difference",
+                 make_legend = FALSE)
+```
+
+
+```{r hmp_matrix_main_plot}
+calc_subplot_coords <- function(a_matrix, x1 = 0, y1 = 1, x2 = 1, y2 = 1) {
+  x_coords <- seq(from = x1, to = x2, length.out = ncol(a_matrix) + 1)[- (ncol(a_matrix) + 1)]
+  y_coords <- seq(from = y1, to = y2, length.out = nrow(a_matrix) + 1)[- (nrow(a_matrix) + 1)]
+  do.call(rbind, lapply(1:ncol(a_matrix), function(x) data.frame(plot_index = a_matrix[, x],
+                                                                 x = x_coords[x], 
+                                                                 y = y_coords[1:nrow(a_matrix)])))
+}
+
 
 matrix_plot <- ggdraw(plot_grid(plotlist = plots[layout_matrix], label_size = 8,
                                 nrow = nrow(layout_matrix), 
@@ -176,4 +198,6 @@ matrix_plot <- ggdraw(plot_grid(plotlist = plots[layout_matrix], label_size = 8,
 save_plot(file.path(output_folder, "figure_3--hmp_matrix_plot.pdf"), 
           matrix_plot, base_width = 7.5, base_height = 7.5)
 print(matrix_plot)
+
 ```
+
