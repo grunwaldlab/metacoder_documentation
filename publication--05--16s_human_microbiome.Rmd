@@ -2,9 +2,26 @@
 title: "Human microbiome example"
 ---
 
-```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE}
-source("settings.R")
+```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+knitr::read_chunk("settings.R")
 ```
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```
+
+## Requirements 
+
+**NOTE:** This analysis requires at least 10Gb of RAM to run. 
+
+## Parameters
+
+```{r io_settings, cache=FALSE}
+```
+
+```{r hmp_parameters}
+matrix_plot_depth <- 4
+```
+
 
 ## Requirements 
 
@@ -18,17 +35,26 @@ v35_data <- parse_hmp_qiime(otu_file = "http://downloads.hmpdacc.org/data/HMQCP/
                             mapping_file = "http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.txt.bz2")
 ```
 
+## Read abundance
+
+I will calculate read abundance per taxon for later graphing and filtering.
+
+```{r hmp_calc_abundance}
+calculate_abundance <- function(data) {
+  obs_samples <- colnames(data$obs_data) %in% data$mapping$sample_id
+  mutate_taxa(data,
+              abundance = vapply(obs(data), 
+                                 function(i) sum(data$obs_data[i, obs_samples]), numeric(1)))
+}
+v35_data <- calculate_abundance(v35_data)
+```
+
 
 ## Plot of everything
 
+To get an idea of how the data looks overall I will make a plot showing OTU and read abundance of all the data combined.
+
 ```{r hmp_plot_all}
-calculate_abundance <- function(data) {
-  mutate_taxa(data, abundance = vapply(obs(data), function(i) sum(data$obs_data[i, colnames(data$obs_data) %in% data$mapping$sample_id]), numeric(1)))
-}
-
-v35_data <- calculate_abundance(v35_data)
-
-
 plot_all <- function(data, output_name, seed = 1) {
   set.seed(seed)
   data %>%
@@ -50,10 +76,13 @@ plot_all(v35_data, "hmp--v35--all_data")
 
 
 
-
 ## Plot body site differences
 
-```{r hmp_plot_diff}
+The HMP dataset is great for comparing treatment since there are many body sites with many replicates so statistical tests can be used to find real correlation between body sites and taxon abundance. 
+The code below applies the Wilcox rank-sum test to differences in median read proportion between every pair of body sties compared. 
+Since the data is compositional in nature (i.e. not idependent samples) we used a non-parametric test and used median instead of mean read proportion.
+
+```{r hmp_diff_funcs}
 calculate_prop <- function(data, site) {
   sample_cols <- as.character(unlist(data$mapping[data$mapping$body_site == site, "sample_id"]))
   sample_cols <- sample_cols[sample_cols %in% colnames(data$obs_data)]
@@ -72,19 +101,15 @@ calculate_prop_diff <- function(data, site_1, site_2) {
   props_2 <- calculate_prop(data, site_2)
   p_value <- mapply(function(x, y) wilcox.test(x, y)$p.value,
                     props_1, props_2)
-  p_value <- p.adjust(p_value, method = "bonferroni")
+  p_value <- p.adjust(p_value, method = "holm")
   ifelse(p_value > 0.05 | is.nan(p_value), 0, vapply(props_1, median, numeric(1)) - vapply(props_2, median, numeric(1)))
 }
 
 plot_body_site_diff <- function(data, site_1, site_2, output_name, seed = 1) {
-  # calculate site difference
-  data$taxon_data$median_prop_diff <- calculate_prop_diff(data, site_1, site_2)
-  
-  # plot
   set.seed(seed)
   data %>%
+    mutate_taxa(median_prop_diff = calculate_prop_diff(data, site_1, site_2))
     filter_taxa(abundance >= 100) %>%
-    # filter_taxa(n_supertaxa <= 4) %>%
     plot(node_size_axis_label = "Number of OTUs",
          node_size = n_obs,
          node_color_axis_label = paste0(site_1, " only    Both    ", site_2, " only"),
@@ -96,12 +121,12 @@ plot_body_site_diff <- function(data, site_1, site_2, output_name, seed = 1) {
          node_label = name,
          node_label_max = 150,
          overlap_avoidance = 1,
-         # initial_layout = "re", layout = "da",
-         # maxiter = 20, fineiter = 20,
-         # margin_size = c(0.001, 0.001),
          output_file = file.path(output_folder, paste0(output_name, "--", site_1, "_vs_", site_2, output_format)))
 }
+```
 
+
+```{r hmp_diff_plot}
 plot_body_site_diff(v35_data, "Throat", "Saliva", "hmp--v35")
 plot_body_site_diff(v35_data,  "Supragingival_plaque", "Subgingival_plaque", "hmp--v35")
 plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
@@ -110,10 +135,14 @@ plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
 
 ## Plot body site difference matrix
 
+The graphs above are great for comparing two treatments, but it would be nice to see how many treatments compare in a single graph.
+To do this, we have developed a pair-wise matrix layout for comparisons of this kind. 
+
 ```{r hmp_matrix_calc}
 # Identify pairs of treatments to compare
 body_sites <- c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares")
 combinations <- t(combn(seq_along(body_sites), 2))
+site_diff_cols <- apply(combinations, MARGIN = 1, function(i) paste0(body_sites[i], collapse = "-"))
 
 layout_matrix <- matrix(rep(NA, (length(body_sites))^2), nrow = length(body_sites))
 for (index in 1:nrow(combinations)) {
@@ -122,37 +151,40 @@ for (index in 1:nrow(combinations)) {
 
 # Make reduced taxonomy for plotting
 v35_reduced <- v35_data
-v35_reduced <- filter_taxa(v35_reduced, n_supertaxa < 4)
 
 # Calculate significant body site differneces
-apply(combinations, MARGIN = 1, function(i) {
+not_used <- apply(combinations, MARGIN = 1, function(i) {
   v35_reduced$taxon_data[[paste0(body_sites[i], collapse = "-")]] <<- calculate_prop_diff(v35_reduced, body_sites[i[1]],  body_sites[i[2]])
 })
-site_diff_cols <- apply(combinations, MARGIN = 1, function(i) paste0(body_sites[i], collapse = "-"))
 
 # Remove data not needed for plotting
-is_diff <- apply(v35_reduced$taxon_data[ , site_diff_cols], MARGIN = 1, function(a_row) any(a_row != 0))
-v35_reduced <- filter_taxa(v35_reduced, is_diff, supertaxa = TRUE) # remove taxa with no differences
 v35_reduced$obs_data <- v35_reduced$obs_data[, c("obs_taxon_ids", "otu_id")] # remove per-otu data since it is big
-```
 
+# Record taxa with no differences in any treatment
+v35_reduced <- mutate_taxa(v35_reduced, 
+                           is_diff = apply(v35_reduced$taxon_data[ , site_diff_cols], MARGIN = 1,
+                                           function(a_row) any(a_row != 0)))
+```
 
 
 ```{r hmp_matrix_subplots, fig.width = 7.5, fig.height = 7.5}
 # Make individual plots
 plot_body_site_diff_small <- function(data, diff_col, seed = 1) {
   set.seed(seed)
-  mutate_taxa(data, diff_col = data$taxon_data[[diff_col]]) %>%
+  data %>%
+    mutate_taxa(diff_col = data$taxon_data[[diff_col]]) %>%
+    filter_taxa(n_supertaxa <= matrix_plot_depth) %>%
     # filter_taxa(is_diff, supertaxa = TRUE) %>%
+    filter_taxa(abundance > 1000) %>%
     plot(node_size = n_obs,
          node_color = diff_col,
          node_color_range = diverging_palette(),
-         node_color_trans = "linear",
+         node_color_trans = "area",
          node_color_interval = c(-0.5, 0.5),
          edge_color_interval = c(-0.5, 0.5),
          # node_label = ifelse(abs(diff_col) > 0.01, name, NA),
          # node_label_max = 50,
-         overlap_avoidance = 0.5,
+         overlap_avoidance = 0.7,
          node_size_axis_label = "Number of OTUs",
          node_color_axis_label = "Median proportion difference",
          make_legend = FALSE)
@@ -160,22 +192,27 @@ plot_body_site_diff_small <- function(data, diff_col, seed = 1) {
 
 
 sub_plots <- lapply(site_diff_cols, function(x) plot_body_site_diff_small(v35_reduced, x))
-key_plot <- plot(v35_reduced,
-                 node_size = n_obs,
-                 node_color = "#DDDDDD",
-                 node_color_range = diverging_palette(),
-                 node_color_trans = "linear",
-                 node_color_interval = c(-0.5, 0.5),
-                 edge_color_interval = c(-0.5, 0.5),
-                 node_label = ifelse(n_obs > 2000, name, NA),
-                 node_label_max = 500,
-                 edge_label = ifelse(n_obs > 2000, NA, name),
-                 edge_label_max = 500,
-                 edge_label_size_range = c(0.01, 0.02),
-                 overlap_avoidance = 0.5,
-                 node_size_axis_label = "Number of OTUs",
-                 node_color_axis_label = "Median proportion difference",
-                 make_legend = FALSE)
+key_plot <- v35_reduced %>% 
+  filter_taxa(n_supertaxa <= matrix_plot_depth) %>%
+  # filter_taxa(is_diff, supertaxa = TRUE) %>%
+  filter_taxa(abundance > 1000) %>%
+  plot(node_size = n_obs,
+       node_color = "#DDDDDD",
+       node_color_range = diverging_palette(),
+       node_color_trans = "linear",
+       node_color_interval = c(-0.5, 0.5),
+       edge_color_interval = c(-0.5, 0.5),
+       node_label = ifelse(n_obs > 1000, name, NA),
+       edge_label = ifelse(n_obs > 1000, NA, name),
+# edge_label = name, 
+       node_label_max = 500,
+       edge_label_max = 500,
+       edge_label_size_range = c(0.007, 0.02),
+node_label_size_range = c(0.007, 0.02),
+       overlap_avoidance = 0.7,
+       node_size_axis_label = "Number of OTUs",
+       node_color_axis_label = "Median proportion difference",
+       make_legend = TRUE)
 ```
 
 
@@ -194,9 +231,12 @@ layout_matrix <- layout_matrix[! apply(layout_matrix, MARGIN = 1, function(x) al
 layout_matrix <- layout_matrix[ ,! apply(layout_matrix, MARGIN = 2, function(x) all(is.na(x)))]
 
 # Get subplot layout data
-matrix_data <- calc_subplot_coords(layout_matrix, x1 = 0, y1 = 0, x2 = 0.9, y2 = 0.9)
+matrix_data <- calc_subplot_coords(layout_matrix, x1 = 0.2, y1 = 0.2, x2 = 0.95, y2 = 0.95)
 matrix_data$site <- site_diff_cols[layout_matrix]
 matrix_data <- tidyr::separate(matrix_data, site, c("site_1", "site_2"), "-")
+matrix_data <- matrix_data[!is.na(matrix_data$plot_index), ]
+matrix_data <- matrix_data[order(matrix_data$plot_index), ]
+rownames(matrix_data) <- matrix_data$plot_index
 
 # Make label data
 named_row <- which(apply(layout_matrix, MARGIN = 1, function(x) all(!is.na(x))))
@@ -206,21 +246,32 @@ vert_label_data <- matrix_data[match(layout_matrix[, named_col], matrix_data$plo
 subgraph_width <- abs(horz_label_data$x[1] - horz_label_data$x[2])
 subgraph_height <- abs(vert_label_data$y[1] - vert_label_data$y[2])
 horz_label_data$label_x <- horz_label_data$x + subgraph_width / 2 # center of label
-horz_label_data$label_y <- 0.9 # bottom of label
-vert_label_data$label_x <- 0.9 # bottom of rotated label 
+horz_label_data$label_y <- 0.96 # bottom of label
+vert_label_data$label_x <- 0.96 # bottom of rotated label 
 vert_label_data$label_y <- vert_label_data$y + subgraph_height / 2 # center of rotated label 
 
-
 # Make plot
-matrix_plot <- ggdraw(plot_grid(plotlist = plots[layout_matrix], label_size = 8,
-                                nrow = nrow(layout_matrix), 
-                                ncol = ncol(layout_matrix), 
-                                labels = site_diff_cols[layout_matrix])) + 
-  draw_plot(key_plot, x = 0.5, y = 0, width = 0.5, height = 0.5)
-
+library(cowplot)
+library(metacoder)
+label_size <- 12
+matrix_plot <- ggdraw() + 
+  draw_plot(key_plot, x = 0, y = -0.03, width = 0.78, height = 0.67) +
+  draw_text(gsub("_", " ", horz_label_data$site_2), 
+            x = horz_label_data$label_x, y = horz_label_data$label_y, 
+            size = label_size, colour = diverging_palette()[1],
+            hjust = "center", vjust = "bottom") +
+  draw_text(gsub("_", " ", vert_label_data$site_1), 
+            x = vert_label_data$label_x, y = vert_label_data$label_y, 
+            size = label_size, colour = diverging_palette()[3],
+            hjust = "center", vjust = "bottom", angle = -90)
+for (i in seq_along(sub_plots)) {
+  matrix_plot <- matrix_plot + draw_plot(sub_plots[[i]], 
+                                         x = matrix_data[i, "x"],
+                                         y = matrix_data[i, "y"],
+                                         width = subgraph_width, height = subgraph_height)
+}
+print(matrix_plot)
 save_plot(file.path(output_folder, "figure_3--hmp_matrix_plot.pdf"), 
           matrix_plot, base_width = 7.5, base_height = 7.5)
-print(matrix_plot)
-
 ```
 
