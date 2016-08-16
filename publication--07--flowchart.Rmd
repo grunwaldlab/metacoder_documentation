@@ -1,0 +1,25 @@
+---
+title: Making the flowchart
+---
+
+
+## Notes
+
+* code example and conceptual flowchart side-by-side
+* code and flowchart color-coded for major function/object type
+* pseudocode inset
+
+## Example code using pipes
+
+```{r}
+library(metacoder)
+data %>%
+  extract_taxonomy() %>%
+  filter_taxa() %>%
+  filter_obs() %>%
+  sample_n_obs() %>%
+  primersearch() %>%
+  filter_taxa() %>%
+  heat_tree()
+```
+
