@@ -164,7 +164,7 @@ data %>%
        node_size_axis_label = "Number of OTUs",
        node_size = n_obs,
        node_color = percent_known,
-       node_color_range = c("red", "orange", "yellow", "green", "cyan"),
+       node_color_range = c("red", "orange", "yellow", "yellow", "green"),
        node_color_trans = "linear",
        node_color_interval = c(0, 100),
        node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", name) &
