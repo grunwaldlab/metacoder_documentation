@@ -57,19 +57,15 @@ data <- extract_taxonomy(seqs, regex = "^(.*)\\t(.*)",
                          key = c(id = "obs_info", "class"),
                          class_sep = ";")
 print(data, max_rows = 3)
-pcr <- data %>%
-  mutate_taxa(seq_count = n_obs) %>%
-  filter_taxa(n_obs > 1) %>%
+pcr <- filter_taxa(data, n_obs > 1) %>%
   filter_obs(nchar(sequence) > 1000) %>% 
   filter_taxa(name == "Bacteria", subtaxa = TRUE)  %>% 
   sample_n_obs(5000, taxon_weight = 1 / n_obs) %>%
   sample_n_taxa(1000, supertaxa = TRUE) %>%
-  arrange_taxa(desc(seq_count)) %>%
   primersearch(forward = "CTCCTACGGGAGGCAGCAG", 
                reverse = "GAATTACCGCGGCKGCTG", 
                mismatch = 10) %>%
   filter_taxa(prop_amplified < 0.9, supertaxa = TRUE)
-print(pcr, max_rows = 3)
 heat_tree(pcr, node_size = n_obs, node_label = name,
      node_color = prop_amplified,
      node_color_range =  c("red", "yellow", "cyan"))
