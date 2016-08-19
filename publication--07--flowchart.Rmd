@@ -2,24 +2,76 @@
 title: Making the flowchart
 ---
 
-
-## Notes
-
-* code example and conceptual flowchart side-by-side
-* code and flowchart color-coded for major function/object type
-* pseudocode inset
-
-## Example code using pipes
+## Parameters
 
 ```{r}
+library(knitr)
+options(width = 60)
+opts_chunk$set(cache = TRUE, dev = 'png', fig.width = 4, warning = FALSE, message = FALSE, 
+               dpi = 300, cache.lazy = FALSE, autodep = TRUE, comment = "")
+```
+
+
+##
+
+
+```{r fc_download, echo = FALSE}
+rdp_fasta_url <- "http://mothur.org/w/images/b/b5/Trainset10_082014.rdp.tgz"
+temp_dir_path <- tempdir()
+local_file_path <- file.path(temp_dir_path, basename(rdp_fasta_url))
+download.file(url = rdp_fasta_url, destfile = local_file_path, quiet = TRUE)
+```
+
+Next we will uncompress the archive and identify the fasta file.
+
+```{r fc_uncompress, echo = FALSE}
+# Get contents of tar archive
+unpacked_file_paths <- untar(local_file_path, list = TRUE)
+# Uncompress archive
+untar(local_file_path, exdir = temp_dir_path)
+# Identify the Mothur RDP training set
+unpacked_fasta_path <- file.path(temp_dir_path, 
+                                  unpacked_file_paths[grepl("fasta$", unpacked_file_paths)])
+```
+
+The file can then be parsed using the `ape` package and the taxonomy data in the headers can be extracted by `extract_taxonomy`:
+
+```{r fc_parse, warning=FALSE, message=FALSE, echo = FALSE}
 library(metacoder)
-data %>%
-  extract_taxonomy() %>%
-  filter_taxa() %>%
-  filter_obs() %>%
-  sample_n_obs() %>%
-  primersearch() %>%
-  filter_taxa() %>%
-  heat_tree()
+seqs <- ape::read.FASTA(unpacked_fasta_path)
+cat(names(seqs)[1])
+data <- extract_taxonomy(seqs, regex = "^(.*)\\t(.*)",
+                         key = c(id = "obs_info", "class"),
+                         class_sep = ";")
+```
+
+```{r fc_fake_parse, eval = FALSE}
+library(metacoder)
+seqs <- ape::read.FASTA("rdp_training_set.fa")
+```
+
+
+```{r fc_flowchart}
+cat(names(seqs)[1])
+data <- extract_taxonomy(seqs, regex = "^(.*)\\t(.*)",
+                         key = c(id = "obs_info", "class"),
+                         class_sep = ";")
+print(data, max_rows = 3)
+pcr <- data %>%
+  mutate_taxa(seq_count = n_obs) %>%
+  filter_taxa(n_obs > 1) %>%
+  filter_obs(nchar(sequence) > 1000) %>% 
+  filter_taxa(name == "Bacteria", subtaxa = TRUE)  %>% 
+  sample_n_obs(5000, taxon_weight = 1 / n_obs) %>%
+  sample_n_taxa(1000, supertaxa = TRUE) %>%
+  arrange_taxa(desc(seq_count)) %>%
+  primersearch(forward = "CTCCTACGGGAGGCAGCAG", 
+               reverse = "GAATTACCGCGGCKGCTG", 
+               mismatch = 10) %>%
+  filter_taxa(prop_amplified < 0.9, supertaxa = TRUE)
+print(pcr, max_rows = 3)
+heat_tree(pcr, node_size = n_obs, node_label = name,
+     node_color = prop_amplified,
+     node_color_range =  c("red", "yellow", "cyan"))
 ```
 
