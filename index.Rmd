@@ -112,7 +112,7 @@ Most often, bar charts, stacked bar charts, or pie graphs are used, but these ar
 MetacodeR maps taxonomic data (e.g. sequence abundance) to color/size of tree components in what we call a **Metadiversity Plot**:
 
 ```{r home_plot_1}
-plot(data, node_size = n_obs, node_label = name, node_color = n_obs)
+heat_tree(data, node_size = n_obs, node_label = name, node_color = n_obs)
 ```
 
 ```{r, include = FALSE, eval = FALSE}
