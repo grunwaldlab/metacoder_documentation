@@ -18,6 +18,11 @@ output_format <- ".pdf"
 
 
 ## ---- database_comparison_settings ----
+size_range <- c(0.0004, 0.015)
+label_size_range <- c(0.001, 0.02)
+all_size_interval <- c(1, 3000000)
+pcr_size_interval <- c(1, 25000)
+label_max <- 100
 max_taxonomy_depth <- 4
 min_seq_count <- NULL
 just_bacteria <- TRUE

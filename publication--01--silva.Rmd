@@ -68,20 +68,21 @@ print(silva)
 Although SILVA is such a large database (`r nrow(silva$taxa_data)` taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:
 
 ```{r silva_plot_all}
-system.time(silva_plot_all <- plot(silva,
-                                   node_size = n_obs,
-                                   node_color = n_obs,
-                                   # node_size_range = c(0.0005, 0.012) * 2,
-                                   # edge_size_range = c(0.0005, 0.012),
-                                   # node_size_interval = c(1, 3000000),
-                                   # edge_size_interval = c(1, 3000000),
-                                   # node_color_interval = c(1, 3000000),
-                                   # edge_color_interval = c(1, 3000000),
-                                   node_label = name,
-                                   node_label_max = 150,
-                                   node_color_axis_label = "Sequence count",
-                                   make_legend = TRUE,
-                                   output_file = file.path(output_folder, paste0("silva--all", output_format))))
+system.time(silva_plot_all <- heat_tree(silva,
+                                        node_size = n_obs,
+                                        node_color = n_obs,
+                                        node_size_range = size_range * 2,
+                                        edge_size_range = size_range,
+                                        node_size_interval = all_size_interval,
+                                        edge_size_interval = all_size_interval,
+                                        node_color_interval = all_size_interval,
+                                        edge_color_interval = all_size_interval,
+                                        node_label = name,
+                                        node_label_size_range = label_size_range,
+                                        node_label_max = label_max,
+                                        node_color_axis_label = "Sequence count",
+                                        make_legend = TRUE,
+                                        output_file = file.path(output_folder, paste0("silva--all", output_format))))
 print(silva_plot_all)
 ```
 
@@ -107,41 +108,42 @@ system.time(silva_pcr <- primersearch(silva,
 ```
 
 ```{r silva_plot_pcr_all}
-system.time(silva_plot_pcr_all <- plot(silva_pcr,
-                                       node_size = n_obs,
-                                       node_label = name,
-                                       node_color = prop_amplified,
-                                       node_color_range =  pcr_success_color_scale,
-                                       node_color_trans = "linear",
-                                       edge_color_interval = c(0, 1),
-                                       node_color_interval = c(0, 1),
-                                       node_label_max = 150,
-                                       node_color_axis_label = "Proportion PCR success",
-                                       node_size_axis_label = "Sequence count",
-                                       output_file = file.path(output_folder, paste0("silva--pcr_all", output_format))))
+system.time(silva_plot_pcr_all <- heat_tree(silva_pcr,
+                                            node_size = n_obs,
+                                            node_label = name,
+                                            node_color = prop_amplified,
+                                            node_color_range =  pcr_success_color_scale,
+                                            node_color_trans = "linear",
+                                            edge_color_interval = c(0, 1),
+                                            node_color_interval = c(0, 1),
+                                            node_label_size_range = label_size_range,
+                                            node_label_max = label_max,
+                                            node_color_axis_label = "Proportion PCR success",
+                                            node_size_axis_label = "Sequence count",
+                                            output_file = file.path(output_folder, paste0("silva--pcr_all", output_format))))
 print(silva_plot_pcr_all)
 ```
 
 ```{r, silva_plot_pcr_fail}
 system.time(silva_plot_pcr_fail <- silva_pcr %>%
               filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
-              plot(node_size = n_obs - count_amplified,
-                   node_label = name,
-                   node_color = prop_amplified,
-#                    node_size_range = c(0.0005, 0.012) * 2,
-#                    edge_size_range = c(0.0005, 0.012),
-#                    node_size_interval = c(1, 1000000),
-#                    edge_size_interval = c(1, 1000000),
-                   edge_color_interval = c(0, 1),
-                   node_color_range =  pcr_success_color_scale,
-                   node_color_trans = "linear",
-                   node_color_interval = c(0, 1),
-                   node_label_size_range = c(0.008, 0.015),
-                   node_label_max = 500,
-                   node_color_axis_label = "Proportion PCR success",
-                   node_size_axis_label = "Sequences not amplified",
-                   make_legend = TRUE,
-                   output_file = file.path(output_folder, paste0("silva--pcr_fail", output_format))))
+              heat_tree(node_size = n_obs - count_amplified,
+                        node_label = name,
+                        node_color = prop_amplified,
+                        node_size_range = size_range * 2,
+                        edge_size_range = size_range,
+                        node_size_interval = pcr_size_interval,
+                        edge_size_interval = pcr_size_interval,
+                        node_color_range =  pcr_success_color_scale,
+                        node_color_trans = "linear",
+                        node_color_interval = c(0, 1),
+                        edge_color_interval = c(0, 1),
+                        node_label_size_range = label_size_range,
+                        node_label_max = 1000,
+                        node_color_axis_label = "Proportion PCR success",
+                        node_size_axis_label = "Sequences not amplified",
+                        make_legend = TRUE,
+                        output_file = file.path(output_folder, paste0("silva--pcr_fail", output_format))))
 print(silva_plot_pcr_fail)
 ```
 
