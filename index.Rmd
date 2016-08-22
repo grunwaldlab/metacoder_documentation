@@ -1,5 +1,5 @@
 ---
-title: "An R package for metabarcoding research"
+title: "MetacodeR user documentation"
 author: "Zachary S. L. Foster and Niklaus J. Grünwald"
 date: "`r Sys.Date()`"
 ---
