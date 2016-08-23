@@ -30,15 +30,20 @@ color_range <- c(-4, 4)
 
 ## Parsing taxonomic data
 
+The function `parse_hmp_qiime` is a wrapper for `extract_taxonomy` made for this analysis. 
+It might be made more generic in the future.
+The information on sample characteristics (e.g. body site) is saved in a table called `mapping` in the `taxmap` object. 
+
 ```{r hmp_parse, warning=FALSE, message=FALSE}
 library(metacoder)
 v35_data <- parse_hmp_qiime(otu_file = "http://downloads.hmpdacc.org/data/HMQCP/otu_table_psn_v35.txt.gz",
                             mapping_file = "http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.txt.bz2")
+v35_data
 ```
 
 ## Read abundance
 
-I will calculate read abundance per taxon for later graphing and filtering.
+I will calculate total read abundance per taxon for later graphing and filtering.
 
 ```{r hmp_calc_abundance}
 calculate_abundance <- function(data) {
@@ -61,16 +66,15 @@ plot_all <- function(data, output_name, seed = 1) {
   data %>%
     filter_taxa(abundance >= 100) %>%
     filter_taxa(name != "") %>% # Some taxonomic levels are not named
-    plot(node_size = n_obs,
-         node_size_axis_label = "Number of OTUs",
-         node_color = abundance,
-         node_color_trans = "area",
-         node_color_axis_label = "Number of reads",
-         node_label = name,
-         node_label_max = 100,
-         overlap_avoidance = 1,
-         # initial_layout = "re", layout = "da",
-         output_file = file.path(output_folder, paste0(output_name, output_format)))
+    heat_tree(node_size = n_obs,
+              node_size_axis_label = "Number of OTUs",
+              node_color = abundance,
+              node_color_trans = "area",
+              node_color_axis_label = "Number of reads",
+              node_label = name,
+              node_label_max = 100,
+              overlap_avoidance = 1,
+              output_file = file.path(output_folder, paste0(output_name, output_format)))
 }
 
 plot_all(v35_data, "hmp--v35--all_data")
@@ -85,13 +89,6 @@ The code below applies the Wilcox rank-sum test to differences in median read pr
 Since the data is compositional in nature (i.e. not idependent samples) we used a non-parametric test and used median instead of mean read proportion.
 
 ```{r hmp_diff_funcs}
-remove_inf <- function(values) {
-  values[values == Inf] <- 10000000000000000000000000
-  values[values == -Inf] <- -10000000000000000000000000
-  values[is.nan(values)] <- 0
-  return(values)
-}
-
 calculate_prop <- function(data, site) {
   sample_cols <- as.character(unlist(data$mapping[data$mapping$body_site == site, "sample_id"]))
   sample_cols <- sample_cols[sample_cols %in% colnames(data$obs_data)]
@@ -106,34 +103,41 @@ calculate_prop <- function(data, site) {
 }
 
 calculate_prop_diff <- function(data, site_1, site_2) {
+  
+  remove_inf <- function(values) {
+    values[values == Inf] <- 10000000000000000000000000
+    values[values == -Inf] <- -10000000000000000000000000
+    values[is.nan(values)] <- 0
+    return(values)
+  }
+  
   props_1 <- calculate_prop(data, site_1)
   props_2 <- calculate_prop(data, site_2)
   p_value <- mapply(function(x, y) wilcox.test(x, y)$p.value,
                     props_1, props_2)
   p_value <- p.adjust(p_value, method = "fdr")
   result <- ifelse(p_value > 0.05 | is.nan(p_value), 0,
-                   log10(vapply(props_1, median, numeric(1)) / vapply(props_2, median, numeric(1))))
+                   log2(vapply(props_1, median, numeric(1)) / vapply(props_2, median, numeric(1))))
   remove_inf(result)
 }
 
 plot_body_site_diff <- function(data, site_1, site_2, output_name, seed = 1) {
   set.seed(seed)
   data %>%
-    mutate_taxa(median_prop_diff = calculate_prop_diff(data, site_1, site_2))
-  filter_taxa(abundance >= 100) %>%
+    mutate_taxa(median_prop_diff = calculate_prop_diff(data, site_1, site_2)) %>%
+    filter_taxa(abundance >= 100) %>%
     filter_taxa(name != "") %>% # Some taxonomic levels are not named
-    plot(node_size_axis_label = "Number of OTUs",
-         node_size = n_obs,
-         node_color_axis_label = paste0(site_1, " only    Both    ", site_2, " only"),
-         node_color = median_prop_diff,
-         node_color_range = diverging_palette(),
-         node_color_trans = "area",
-         node_color_interval = max(abs(range(median_prop_diff))) * c(-1, 1),
-         edge_color_interval = max(abs(range(median_prop_diff))) * c(-1, 1),
-         node_label = name,
-         node_label_max = 150,
-         overlap_avoidance = 1,
-         output_file = file.path(output_folder, paste0(output_name, "--", site_1, "_vs_", site_2, output_format)))
+    heat_tree(node_size_axis_label = "Number of OTUs",
+              node_size = n_obs,
+              node_color_axis_label = "Log 2 ratio of median proportions",
+              node_color = median_prop_diff,
+              node_color_range = diverging_palette(),
+              node_color_trans = "linear",
+              node_color_interval = color_range,
+              edge_color_interval = color_range,
+              node_label = name,
+              node_label_max = 150,
+              output_file = file.path(output_folder, paste0(output_name, "--", site_1, "_vs_", site_2, output_format)))
 }
 ```
 
@@ -240,7 +244,7 @@ key_plot <- v35_reduced %>%
             node_label_size_range = c(0.007, 0.02),
             overlap_avoidance = 0.7,
             node_size_axis_label = "Number of OTUs",
-            node_color_axis_label = "Log 10 ratio of proportions",
+            node_color_axis_label = "Log 2 ratio of median proportions",
             make_legend = TRUE)
 ```
 
