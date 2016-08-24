@@ -1,3 +1,5 @@
 # Documentation for MetacodeR
 
-Documentation for the MetacodeR R package
+This repository is the source for the MetacodeR documentation website at https://grunwaldlab.github.io/metacoder_documentation/.
+
+The MetacodeR pacakge source can be found at https://github.com/grunwaldlab/metacoder.
