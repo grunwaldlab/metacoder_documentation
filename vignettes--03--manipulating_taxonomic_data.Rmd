@@ -6,9 +6,6 @@ title: "Manipulating taxonomic data"
 source("settings.R")
 ```
 
-
-## Introduction
-
 Manipulating taxonomic data is a more subtle problem then it might seem at first.
 For example, if you want to remove a taxon, do you remove its supertaxa and subtaxa as well?
 What if there are sequences assigned to that taxon; are the sequences removed or reassigned to a preserved supertaxa?
@@ -17,9 +14,9 @@ The answers to these questions depend on what the goal of the subsetting is.
 MetacodeR uses `dplyr`-style functions for manipulating taxonomic data.
 For each `dplyr` verb, there are two functions in metacodeR, one that manipulates the taxon portion of the data and one that manipulates the observation portion.
 
-### Subsetting rows: `filter_taxa` and `filter_obs`
+## Subsetting rows: `filter_taxa` and `filter_obs`
 
-#### Removing supertaxa
+### Removing supertaxa
 
 Often, there are many shared ranks in the taxonomic hierarchy that can make effective visualization difficult:
 
@@ -51,7 +48,7 @@ filter_taxa(genbank_ex_data, n_supertaxa > 4)
 ```
 
 
-#### Removing subtaxa
+### Removing subtaxa
 
 You can also remove subtaxa by filtering with a specified level/rank:
 
@@ -88,7 +85,7 @@ filter_taxa(unite_ex_data_3, n_supertaxa < 4, reassign_obs = FALSE) %>%
 ```
 
 
-#### Removing internal taxa
+### Removing internal taxa
 
 You can also remove internal taxa:
 
@@ -111,7 +108,7 @@ filter_taxa(unite_ex_data_3, unite_rank != "c", reassign_taxa = FALSE) %>%
 ```
 
 
-#### Filtering observations 
+### Filtering observations 
 
 Filtering observations assigned to taxa is less complicated.
 The code below removes all taxa with `seq_id`s that do not start with "A".
@@ -133,13 +130,13 @@ filter_obs(unite_ex_data_3, grepl("^A",  seq_id), unobserved = FALSE) %>%
 ```
 
 
-### Sampling rows: `sample_n_taxa` and `sample_n_obs`
+## Sampling rows: `sample_n_taxa` and `sample_n_obs`
 
 Random sampling of taxa and observations is similar to subsetting, except you provide weights to each observation or taxon indicating how likely it is to be included in the subset.
 The random subset of taxa or observations is then passed to `filter_taxa` or `filter_obs` respectively.
 Therefore, all the options of `filter_taxa` or `filter_obs` can be used within `sample_n_taxa` and `sample_n_obs`.
 
-#### Sampling observations
+### Sampling observations
 
 Sampling observations is useful for making a subset of a large data set (not that the example below uses a large data set):
 
@@ -171,7 +168,7 @@ sample_n_obs(unite_ex_data_3, size = 100, unobserved = FALSE,
 ```
 
 
-#### Sampling taxa
+### Sampling taxa
 
 Taxa can be sampled the same way observations are sampled.
 The code below randomly selects 5 taxa of rank "class":
@@ -195,7 +192,7 @@ sample_n_taxa(unite_ex_data_3, size = 100) %>%
             node_label = name)
 ```
 
-#### Sampling a fraction of the total
+### Sampling a fraction of the total
 
 `sample_n_taxa` and `sample_n_obs` have simple wrappers called `sample_frac_taxa` and `sample_frac_obs` that sample a given proportion of the total number of rows:
 
@@ -208,7 +205,7 @@ sample_frac_obs(unite_ex_data_3, size = 0.1) %>%
 ```
 
 
-### Subsetting columns: `select_taxa` and `select_obs`
+## Subsetting columns: `select_taxa` and `select_obs`
 
 Subsetting columns is more straight forward that subsetting rows.
 The functions `select_taxa` and `select_obs` are little more than wrappers for `dplyr::select`.
@@ -227,7 +224,7 @@ select_obs(unite_ex_data_3, other_id, seq_name)
 ```
 
 
-### Adding columns: `mutate_taxa` and `mutate_obs`
+## Adding columns: `mutate_taxa` and `mutate_obs`
 
 Adding a column to either `taxon_data` or `obs_data` is easy using the `dplyr` syntax:
 
@@ -246,7 +243,7 @@ mutate_taxa(unite_ex_data_3,
 Adding observation columns with `mutate_obs` works the same way.
 
 
-### Replacing columns: `transmute_taxa` and `transmute_obs`
+## Replacing columns: `transmute_taxa` and `transmute_obs`
 
 `transmute_taxa` and `transmute_obs` make new columns and discard all of the old columns:
 
@@ -257,7 +254,7 @@ transmute_taxa(unite_ex_data_3,
 ```
 
 
-### Reordering rows: `arrange_taxa` and `arrange_obs`
+## Reordering rows: `arrange_taxa` and `arrange_obs`
 
 The way `taxmap` objects are defined, the order of all of the components do not matter.
 This means its easy to reorder them to fit your needs:
