@@ -152,21 +152,29 @@ plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
 ## Conventional bubble plot
 
 ```{r}
-make_bubble <- function(data) {
-  sites_used = c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares")
-  data$taxon_data[sites_used] <- lapply(sites_used, 
-                                        function(x) sapply(calculate_prop(v35_data, x), mean))
-  plot_data <- filter_taxa(data, rank == "g")$taxon_data
-  plot_data <- plot_data[rev(order(plot_data$abundance)), ]
-  plot_data <- plot_data[1:10, c("name", sites_used)]
-  plot_data$y <- 10:1
-  plot_data <- tidyr::gather(plot_data, site, prop, -name, -y)
-  plot_data$x <- rep(seq_along(sites_used), each = 10)
-  ggplot(plot_data, aes(x = x, y = y, size = prop)) + 
-    geom_point() + 
-    scale_x_discrete(breaks = seq_along(sites_used), labels = sites_used) +
-    scale_y_discrete(breaks = 1:10, labels = unique(plot_data$name))
-}
+library(ggplot2)
+sites_used = c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares")
+plot_data <- v35_data
+plot_data$taxon_data[sites_used] <- lapply(sites_used, 
+                                          function(x) sapply(calculate_prop(plot_data, x), mean))
+plot_data <- filter_taxa(plot_data, rank == "g")$taxon_data
+plot_data <- plot_data[rev(order(plot_data$abundance)), ]
+plot_data <- plot_data[1:10, c("name", sites_used)]
+plot_data$y <- 10:1
+plot_data <- tidyr::gather(plot_data, site, prop, -name, -y)
+plot_data$x <- rep(seq_along(sites_used), each = 10)
+bubble_plot <- ggplot(plot_data, aes(x = x, y = y, size = prop)) + 
+  geom_point() + 
+  scale_x_continuous(breaks = seq_along(sites_used), labels = sites_used, limits = c(1, 5)) +
+  scale_y_continuous(breaks = 1:10, labels = rev(unique(plot_data$name)), limits = c(1, 10)) +
+  guides(size = FALSE) +
+  ggtitle("Abundant Genera") +
+  theme(panel.grid = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_text(angle = -20, hjust = 0),
+        legend.background = element_blank()) 
+
 ```
 
 
