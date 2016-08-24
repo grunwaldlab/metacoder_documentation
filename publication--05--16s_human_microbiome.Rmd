@@ -151,6 +151,8 @@ plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
 
 ## Conventional bubble plot
 
+Here is an example of a more conventional way of displaying the same data that does not supply taxonomic context.
+
 ```{r}
 library(ggplot2)
 sites_used = c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares")
@@ -165,7 +167,7 @@ plot_data <- tidyr::gather(plot_data, site, prop, -name, -y)
 plot_data$x <- rep(seq_along(sites_used), each = 10)
 bubble_plot <- ggplot(plot_data, aes(x = x, y = y, size = prop)) + 
   geom_point() + 
-  scale_x_continuous(breaks = seq_along(sites_used), labels = sites_used, limits = c(1, 5)) +
+  scale_x_continuous(breaks = seq_along(sites_used), labels = sites_used, limits = c(1, 6)) +
   scale_y_continuous(breaks = 1:10, labels = rev(unique(plot_data$name)), limits = c(1, 10)) +
   guides(size = FALSE) +
   ggtitle("Abundant Genera") +
@@ -174,7 +176,8 @@ bubble_plot <- ggplot(plot_data, aes(x = x, y = y, size = prop)) +
         axis.title = element_blank(),
         axis.text.x = element_text(angle = -20, hjust = 0),
         legend.background = element_blank()) 
-
+ggsave(file.path(output_folder, "bubble_plot.pdf"), width = 5, height = 4)
+print(bubble_plot)
 ```
 
 
