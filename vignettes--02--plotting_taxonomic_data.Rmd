@@ -18,11 +18,12 @@ First, we will use a bar chart to display abundance of taxa at each rank:
 
 
 ```{r, echo = FALSE}
+library(metacoder)
 data <- taxon_data(unite_ex_data_3)
 data$name <- factor(data$name, levels = unique(data$name[order(data$n_obs, decreasing = TRUE)]), ordered = TRUE)
 data$unite_rank <- factor(data$unite_rank, levels = unique(data$unite_rank),
-                    labels = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"), 
-                    ordered = TRUE)
+                          labels = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"), 
+                          ordered = TRUE)
 ggplot(data[!data$unite_rank  %in% c("Kingdom", "Species", "Genus"), ]) + 
   geom_bar(aes(x = name, y = n_obs), stat = "identity") +
   facet_wrap(~ unite_rank, scales = "free") +
@@ -55,10 +56,10 @@ ggplot(data[data$unite_rank == "Phylum", ]) +
 `Metacoder` approaches this problem by using size and color to represent numeric data distributed along a phylogenetic tree:
 
 ```{r, echo=FALSE}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name)
 ```
 
 In this example, both size and color are being used to represent the abundance of taxa.
@@ -67,13 +68,13 @@ Using this method, it is clear how subtaxa are distributed within their supertax
 
 ## Basic usage
 
-Although there are many options that can be used to make highly customized graphs, `plot_taxonomy` only needs one argument to function: an object of type `taxmap`.
+Although there are many options that can be used to make highly customized graphs, `heat_tree` only needs one argument to function: an object of type `taxmap`.
 We can see the default appearance of the data used in the introduction using the code below:
 
 ```{r}
 library(metacoder)
 unite_ex_data_3
-plot(unite_ex_data_3)
+heat_tree(unite_ex_data_3)
 ```
 
 Each node (i.e. circle) in the graph represents a taxon and each line represents its membership in a lower taxon. 
@@ -84,8 +85,8 @@ The size of nodes and lines can be scaled to a number associated with each taxon
 Below, the number of sequences for each taxon is used to determine node size.
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs)
 ```
 
 Note that it was not necessary to specify the absolute node size; the range of absolute node sizes is optimized for each graph so as to minimize overlap of nodes and maximize the ranges of sizes.
@@ -95,12 +96,12 @@ A high `overlap_avoidance` makes the connections between taxa more clear, but di
 Too low of an `overlap_avoidance` can make the graph hard to read.
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     overlap_avoidance = 10)
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     overlap_avoidance = 0.1)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          overlap_avoidance = 10)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          overlap_avoidance = 0.1)
 ```
 
 
@@ -113,14 +114,14 @@ The range of color used can be set using the `node_color_range` argument.
 This argument take a list of colors in the form of names, hex color codes, or integers. 
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs)
 
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_color_range = c("#FFFFFF", "darkorange3", "#4e567d", "gold"))
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_color_range = c("#FFFFFF", "darkorange3", "#4e567d", "gold"))
 ```
 
 ### Line color
@@ -129,15 +130,15 @@ Like `node_size`, the color of lines can be set independently of nodes, although
 To only color nodes, you can set the lines to be a constant color or vise-versa.
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     edge_color = "grey")
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          edge_color = "grey")
 
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = "grey",
-     edge_color = n_obs)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = "grey",
+          edge_color = n_obs)
 ```
 
 You can also set the color palette used for the lines in the same way as you set it for the node using the argument `edge_color_range`. 
@@ -147,10 +148,10 @@ You can also set the color palette used for the lines in the same way as you set
 Labels can be added to nodes using the `node_label` option:
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name)
 ```
 
 Label sizes are proportional to node size by default. 
@@ -158,17 +159,17 @@ By default, only a maximum number of labels are printed to avoid excessive crowd
 The maximum number of labels that will be printed is controlled by the `node_label_max` option:
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     node_label_max = 5)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          node_label_max = 5)
 
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     node_label_max = 200)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          node_label_max = 200)
 ```
 
 Note that the labels are a special kind that scales with the size of the graph. 
@@ -179,10 +180,10 @@ This means that the text size will always be proportional to the graph size rega
 Lines can be labeled as well using the `edge_label` option, which works similarly to the `node_label` option:
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     edge_label = name)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          edge_label = name)
 ```
 
 
@@ -192,27 +193,27 @@ The default background color is transparent in order to make formatting posters 
 Other background colors can be specified using the `background_color` option:
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     background_color = "grey")
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          background_color = "grey")
 ```
 
 
 Plots can be saved using `ggsave` from the `ggplot2` package or using the `output_file` option:
 
 ```{r, eval = FALSE}
-my_plot <- plot(unite_ex_data_3,
-                node_size = n_obs,
-                node_color = n_obs)
+my_plot <- heat_tree(unite_ex_data_3,
+                     node_size = n_obs,
+                     node_color = n_obs)
 ggplot2::ggsave("path/to/my/output.png", my_plot, bg = "transparent")
 ```
 
 ```{r, eval = FALSE}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     output_file = "path/to/my/output.png")
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          output_file = "path/to/my/output.png")
 ```
 
 
@@ -225,18 +226,16 @@ This occurs when there is not a common taxon all observations are assigned to, l
 `metacoder` plots taxonomies with multiple roots as multiple trees:
 
 ```{r}
-plot(contaminants,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     tree_label = name,
-     layout = "fruchterman-reingold")
+heat_tree(contaminants,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          tree_label = name,
+          layout = "fruchterman-reingold")
 ```
 
 
 ### More information
 
-Note that `plot` is a generic R function that works differently depending on what it is given to it
-MetacodeR supplies the function **plot_taxonomy**, which is used when plot is given the type of data outputted by `extract_taxonomy`.
-To see the long list of available plotting options, type `?plot_taxonomy`.
+To see the long list of available plotting options, type `?heat_tree`.
 

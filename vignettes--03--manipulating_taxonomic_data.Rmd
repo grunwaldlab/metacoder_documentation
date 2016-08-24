@@ -26,11 +26,11 @@ Often, there are many shared ranks in the taxonomic hierarchy that can make effe
 ```{r}
 library(metacoder)
 set.seed(2)
-plot(genbank_ex_data,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     layout = "davidson-harel")
+heat_tree(genbank_ex_data,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          layout = "davidson-harel")
 ```
 
 `filter_taxa` can easily remove these taxa by selecting the root taxon by name:
@@ -38,10 +38,10 @@ plot(genbank_ex_data,
 ```{r}
 set.seed(1)
 filter_taxa(genbank_ex_data, name == "Basidiomycota", subtaxa = TRUE) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name,
-       layout = "davidson-harel")
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name,
+            layout = "davidson-harel")
 ```
 
 The filtering operation could be done this way as well:
@@ -56,24 +56,24 @@ filter_taxa(genbank_ex_data, n_supertaxa > 4)
 You can also remove subtaxa by filtering with a specified level/rank:
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name)
 filter_taxa(unite_ex_data_3, n_supertaxa <= 3) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 Or we can filter by the number of observations assigned to each taxon:
 
 ```{r}
 filter_taxa(unite_ex_data_3, n_obs >= 3) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name,
-       tree_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name,
+            tree_label = name)
 ```
 
 This is useful when plotting very large data sets, since it is difficult to make effective visualizations of over ~2000 taxa.
@@ -82,9 +82,9 @@ You can prevent this by setting the `reassign_obs` option to `FALSE`, but when m
 
 ```{r}
 filter_taxa(unite_ex_data_3, n_supertaxa < 4, reassign_obs = FALSE) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 
@@ -94,9 +94,9 @@ You can also remove internal taxa:
 
 ```{r}
 filter_taxa(unite_ex_data_3, unite_rank != "c") %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 Note that the above result has no fungal classes anymore (taxa with names ending in "mycetes").
@@ -105,9 +105,9 @@ Although it usually does not make much sense to not reassign taxa, it is possibl
 
 ```{r}
 filter_taxa(unite_ex_data_3, unite_rank != "c", reassign_taxa = FALSE) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 
@@ -118,18 +118,18 @@ The code below removes all taxa with `seq_id`s that do not start with "A".
 
 ```{r}
 filter_obs(unite_ex_data_3, grepl("^A",  seq_id)) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 You can remove any taxa that are made unobserved by the filtering using the `unobserved` option: 
 
 ```{r}
 filter_obs(unite_ex_data_3, grepl("^A",  seq_id), unobserved = FALSE) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 
@@ -145,29 +145,29 @@ Sampling observations is useful for making a subset of a large data set (not tha
 
 ```{r}
 sample_n_obs(unite_ex_data_3, size = 100, unobserved = FALSE) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 Weights can be assigned to observations to determine how likely each is to be sampled:
 
 ```{r}
 sample_n_obs(unite_ex_data_3, size = 50, unobserved = FALSE,
-               obs_weight = ifelse(grepl("Agaricales", seq_name), 100, 1)) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+             obs_weight = ifelse(grepl("Agaricales", seq_name), 100, 1)) %>%
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 You can also assign weights to observations based on the taxon they are assigned to: 
 
 ```{r}
 sample_n_obs(unite_ex_data_3, size = 100, unobserved = FALSE, 
-               taxon_weight = 1 / n_obs) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+             taxon_weight = 1 / n_obs) %>%
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 
@@ -179,10 +179,10 @@ The code below randomly selects 5 taxa of rank "class":
 ```{r}
 set.seed(1)
 sample_n_taxa(unite_ex_data_3, size = 5, subtaxa = TRUE, 
-               taxon_weight = ifelse(unite_rank == "c", 1, 0)) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name, tree_label = name)
+              taxon_weight = ifelse(unite_rank == "c", 1, 0)) %>%
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name, tree_label = name)
 ```
 
 When randomly subsetting taxa, pay special attention to the options of `filter_taxa` since excluding them can have a drastic effect:
@@ -190,9 +190,9 @@ When randomly subsetting taxa, pay special attention to the options of `filter_t
 ```{r}
 set.seed(1)
 sample_n_taxa(unite_ex_data_3, size = 100) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 #### Sampling a fraction of the total
@@ -202,9 +202,9 @@ sample_n_taxa(unite_ex_data_3, size = 100) %>%
 ```{r}
 set.seed(1)
 sample_frac_obs(unite_ex_data_3, size = 0.1) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name)
 ```
 
 

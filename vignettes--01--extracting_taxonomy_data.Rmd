@@ -90,11 +90,11 @@ We can plot the result using `plot`:
 
 ```{r}
 set.seed(2)
-plot(genbank_ex_data,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     layout = "fruchterman")
+heat_tree(genbank_ex_data,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          layout = "fruchterman")
 ```
 
 
@@ -132,11 +132,11 @@ head(names(sequences))
 ```{r}
 set.seed(10)
 filter_taxa(unite_ex_data_1, name == "Fungi", subtaxa = TRUE) %>%
-  plot(node_size = n_obs,
-       node_color = n_obs,
-       node_label = name,
-       layout = "davidson-harel",
-       overlap_avoidance = 0.5)
+  heat_tree(node_size = n_obs,
+            node_color = n_obs,
+            node_label = name,
+            layout = "davidson-harel",
+            overlap_avoidance = 0.5)
 ```
 
 #### Using included classification names to look up the taxon id
@@ -160,10 +160,10 @@ unite_ex_data_2 <- extract_taxonomy(sequences,
 ```
 
 ```{r}
-plot(unite_ex_data_2,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name)
+heat_tree(unite_ex_data_2,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name)
 ```
 
 Note that the taxon name (entry 1) and the sequence id (entry 2) are now encoded as `"obs_info"`, causing them to be interpreted as generic data.
@@ -190,10 +190,10 @@ unite_ex_data_3 <- extract_taxonomy(sequences,
 ```
 
 ```{r}
-plot(unite_ex_data_3,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name)
+heat_tree(unite_ex_data_3,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name)
 ```
 
 ### ITS1 DB FASTA headers
@@ -221,11 +221,11 @@ head(names(sequences))
 
 ```{r}
 set.seed(1)
-plot(its1_ex_data,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     layout = "fruchterman-reingold")
+heat_tree(its1_ex_data,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          layout = "fruchterman-reingold")
 ```
 
 ### PR2 FASTA headers
@@ -251,10 +251,10 @@ head(names(sequences))
 ```
 
 ```{r}
-plot(pr2_ex_data,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name)
+heat_tree(pr2_ex_data,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name)
 ```
 
 ### RDP FASTA headers
@@ -286,11 +286,11 @@ Therefore, we can use a `class_regex` that matches two `;` to correctly parse th
 
 ```{r}
 set.seed(3)
-plot(rdp_ex_data,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     layout = "da")
+heat_tree(rdp_ex_data,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          layout = "da")
 ```
 
 
@@ -317,11 +317,11 @@ head(names(sequences))
 
 ```{r}
 set.seed(2)
-plot(silva_ex_data,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     tree_label = name)
+heat_tree(silva_ex_data,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          tree_label = name)
 ```
 
 
@@ -341,12 +341,12 @@ contaminants <- extract_taxonomy(ids, key = "obs_id", database = "ncbi")
 
 ```{r}
 set.seed(3)
-plot(contaminants,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     tree_label = name,
-     layout = "fruchterman-reingold")
+heat_tree(contaminants,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          tree_label = name,
+          layout = "fruchterman-reingold")
 ```
 
 
@@ -370,12 +370,12 @@ bryophytes_ex_data <- extract_taxonomy(taxon_names, key = "name", database = "it
 
 ```{r}
 set.seed(2)
-plot(bryophytes_ex_data,
-     node_size = n_obs,
-     node_color = n_obs,
-     node_label = name,
-     tree_label = name,
-     layout = "davidson-harel")
+heat_tree(bryophytes_ex_data,
+          node_size = n_obs,
+          node_color = n_obs,
+          node_label = name,
+          tree_label = name,
+          layout = "davidson-harel")
 ```
 
 
