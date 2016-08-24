@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Graphing the SILVA database</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/default.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MetacodeR</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="vignettes--01--extracting_taxonomy_data.html">Parsing input files</a>
+    </li>
+    <li>
+      <a href="vignettes--02--plotting_taxonomic_data.html">Heat tree plotting</a>
+    </li>
+    <li>
+      <a href="vignettes--03--manipulating_taxonomic_data.html">Subsetting</a>
+    </li>
+    <li>
+      <a href="vignettes--04--hierarchical_subsampling.html">Sampling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Publication Analyses
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="publication--05--16s_human_microbiome.html">Human microbiome</a>
+    </li>
+    <li>
+      <a href="publication--06--tara_oceans.html">TARA Oceans</a>
+    </li>
+    <li>
+      <a href="publication--01--silva.html">In silico PCR: SILVA</a>
+    </li>
+    <li>
+      <a href="publication--02--rdp.html">In silico PCR: RDP</a>
+    </li>
+    <li>
+      <a href="publication--03--greengenes.html">In silico PCR: Greengenes</a>
+    </li>
+    <li>
+      <a href="publication--04--16s_database_comparision.html">In silico PCR: Comparing databases</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="presentation_page.html">Presentation</a>
+</li>
+<li>
+  <a href="https://github.com/grunwaldlab/metacoder">GitHub Repository</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Graphing the SILVA database</h1>
+
+</div>
+
+
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
+<p><strong>NOTE:</strong> This analysis requires at least 10Gb of RAM to run.</p>
+</div>
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<pre class="r"><code>input_folder &lt;- &quot;raw_input&quot;
+output_folder &lt;- &quot;results&quot;
+output_format &lt;- &quot;.pdf&quot;</code></pre>
+<pre class="r"><code>size_range &lt;- c(0.0004, 0.015)
+label_size_range &lt;- c(0.001, 0.02)
+all_size_interval &lt;- c(1, 3000000)
+pcr_size_interval &lt;- c(1, 25000)
+label_max &lt;- 100
+max_taxonomy_depth &lt;- 4
+min_seq_count &lt;- NULL
+just_bacteria &lt;- TRUE
+max_mismatch &lt;- 10 # percentage mismatch tolerated in pcr
+pcr_success_cutoff &lt;- 0.90 # Used to subset for graphing
+min_seq_length &lt;- 1200 # Use to encourage full length sequences
+forward_primer = c(&quot;515F&quot; = &quot;GTGYCAGCMGCCGCGGTAA&quot;)
+reverse_primer = c(&quot;806R&quot; = &quot;GGACTACNVGGGTWTCTAAT&quot;)
+pcr_success_color_scale = c(&quot;red&quot;, &quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;cyan&quot;)</code></pre>
+</div>
+<div id="parse-database" class="section level2">
+<h2>Parse database</h2>
+<p>The code below parses and subsets the entire SILVA non-redundant reference database. The object made is quite large.</p>
+<pre class="r"><code>library(metacoder)
+file_path &lt;- file.path(input_folder, &quot;SILVA_123.1_SSURef_Nr99_tax_silva.fasta&quot;)
+system.time(silva &lt;- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE), 
+                                      regex = &quot;^(.*?) (.*)$&quot;,
+                                      key = c(id = &quot;obs_info&quot;, &quot;class&quot;),
+                                      class_sep = &quot;;&quot;))</code></pre>
+<pre><code>##    user  system elapsed 
+## 641.249   1.846 644.227</code></pre>
+<pre class="r"><code>print(silva)</code></pre>
+<pre><code>## `taxmap` object with data for 147708 taxa and 598470 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 1, 2, 3, 4, 5, 6, 7 ... 147702, 147703, 147704, 147705, 147706, 147707, 147708
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 147,708 x 3
+##   taxon_ids supertaxon_ids                        name
+##       &lt;chr&gt;          &lt;chr&gt;                       &lt;chr&gt;
+## 1         1           &lt;NA&gt;                     Archaea
+## 2         2           &lt;NA&gt;                    Bacteria
+## 3         3           &lt;NA&gt;                   Eukaryota
+## 4         4              1             Aenigmarchaeota
+## 5         5              1                Aigarchaeota
+## 6         6              1 Ancient Archaeal Group(AAG)
+## 7         7              1               Crenarchaeota
+## # ... with 1.477e+05 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 598,470 x 3
+##   obs_taxon_ids               id
+##           &lt;chr&gt;            &lt;chr&gt;
+## 1        143243 &gt;AB001438.1.1662
+## 2        111186 &gt;AB006051.1.1796
+## 3        116163 &gt;FJ911802.1.1606
+## 4        115769 &gt;FJ911814.1.1608
+## 5        115905 &gt;FJ911819.1.1607
+## 6        115859 &gt;FJ911835.1.1585
+## 7        115926 &gt;FJ911842.1.1603
+## # ... with 5.985e+05 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="subset" class="section level2">
+<h2>Subset</h2>
+<pre class="r"><code>if (! is.null(min_seq_count)) {
+  system.time(silva &lt;- filter_taxa(silva, n_obs &gt;= min_seq_count))
+}
+if (just_bacteria) {
+  system.time(silva &lt;- filter_taxa(silva, name == &quot;Bacteria&quot;, subtaxa = TRUE))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+## 247.269   1.776 251.620</code></pre>
+<pre class="r"><code>if (! is.null(max_taxonomy_depth)) {
+  system.time(silva &lt;- filter_taxa(silva, n_supertaxa &lt;= max_taxonomy_depth))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+##  26.958   0.036  27.032</code></pre>
+<pre class="r"><code>print(silva)</code></pre>
+<pre><code>## `taxmap` object with data for 5006 taxa and 513121 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 3423, 3491, 3492, 3493 ... 104672, 104673, 104674, 104675, 104676, 104677
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 5,006 x 3
+##   taxon_ids supertaxon_ids                                          name
+##       &lt;chr&gt;          &lt;chr&gt;                                         &lt;chr&gt;
+## 1         2           &lt;NA&gt;                                      Bacteria
+## 2      3423              2                                  Acetothermia
+## 3      3491           3423                     bacterium SCGC AAA255-C06
+## 4      3492           3423                                   clone OPB14
+## 5      3493           3423   bacterium enrichment culture clone 73(2013)
+## 6      3494           3423 bacterium enrichment culture clone AOM-SR-B11
+## 7      3495           3423                   hypersaline lake metagenome
+## # ... with 4,999 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 513,121 x 3
+##   obs_taxon_ids               id
+##           &lt;chr&gt;            &lt;chr&gt;
+## 1         91658 &gt;AY230195.1.1496
+## 2         36076 &gt;AY230764.1.1512
+## 3         63763 &gt;AY230816.1.1447
+## 4         15361 &gt;AY232254.1.1432
+## 5          3543 &gt;AY234438.1.1303
+## 6         22606 &gt;AY234499.1.1317
+## 7         54118 &gt;AY234528.1.1429
+## # ... with 5.131e+05 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="remove-chloroplast-sequences" class="section level2">
+<h2>Remove chloroplast sequences</h2>
+<p>These are not bacterial and will bias the <em>in silico</em> PCR results.</p>
+<pre class="r"><code>system.time(silva &lt;- filter_taxa(silva, name == &quot;Chloroplast&quot;, subtaxa = TRUE, invert = TRUE))</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.273   0.000   0.273</code></pre>
+<pre class="r"><code>print(silva)</code></pre>
+<pre><code>## `taxmap` object with data for 3843 taxa and 513121 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 3423, 3491, 3492, 3493 ... 104672, 104673, 104674, 104675, 104676, 104677
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 3,843 x 3
+##   taxon_ids supertaxon_ids                                          name
+##       &lt;chr&gt;          &lt;chr&gt;                                         &lt;chr&gt;
+## 1         2           &lt;NA&gt;                                      Bacteria
+## 2      3423              2                                  Acetothermia
+## 3      3491           3423                     bacterium SCGC AAA255-C06
+## 4      3492           3423                                   clone OPB14
+## 5      3493           3423   bacterium enrichment culture clone 73(2013)
+## 6      3494           3423 bacterium enrichment culture clone AOM-SR-B11
+## 7      3495           3423                   hypersaline lake metagenome
+## # ... with 3,836 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 513,121 x 3
+##   obs_taxon_ids               id
+##           &lt;chr&gt;            &lt;chr&gt;
+## 1         91658 &gt;AY230195.1.1496
+## 2         36076 &gt;AY230764.1.1512
+## 3         63763 &gt;AY230816.1.1447
+## 4         15361 &gt;AY232254.1.1432
+## 5          3543 &gt;AY234438.1.1303
+## 6         22606 &gt;AY234499.1.1317
+## 7         54118 &gt;AY234528.1.1429
+## # ... with 5.131e+05 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="plot-whole-database" class="section level2">
+<h2>Plot whole database</h2>
+<p>Although SILVA is such a large database ( taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:</p>
+<pre class="r"><code>system.time(silva_plot_all &lt;- heat_tree(silva,
+                                        node_size = n_obs,
+                                        node_color = n_obs,
+                                        node_size_range = size_range * 2,
+                                        edge_size_range = size_range,
+                                        node_size_interval = all_size_interval,
+                                        edge_size_interval = all_size_interval,
+                                        node_color_interval = all_size_interval,
+                                        edge_color_interval = all_size_interval,
+                                        node_label = name,
+                                        node_label_size_range = label_size_range,
+                                        node_label_max = label_max,
+                                        node_color_axis_label = &quot;Sequence count&quot;,
+                                        make_legend = TRUE,
+                                        output_file = file.path(output_folder, paste0(&quot;silva--all&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##  42.908   0.687  43.939</code></pre>
+<pre class="r"><code>print(silva_plot_all)</code></pre>
+<p><img src="publication--01--silva_files/figure-html/silva_plot_all-1.png" width="2100" /></p>
+</div>
+<div id="pcr" class="section level2">
+<h2>PCR</h2>
+<pre class="r"><code>if (! is.null(min_seq_length)) {
+  system.time(silva &lt;- filter_obs(silva, nchar(sequence) &gt;= min_seq_length, unobserved = FALSE))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+##   2.351   0.004   2.379</code></pre>
+<pre class="r"><code>print(silva)</code></pre>
+<pre><code>## `taxmap` object with data for 3842 taxa and 513120 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 3423, 3491, 3492, 3493 ... 104672, 104673, 104674, 104675, 104676, 104677
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 3,842 x 3
+##   taxon_ids supertaxon_ids                                          name
+##       &lt;chr&gt;          &lt;chr&gt;                                         &lt;chr&gt;
+## 1         2           &lt;NA&gt;                                      Bacteria
+## 2      3423              2                                  Acetothermia
+## 3      3491           3423                     bacterium SCGC AAA255-C06
+## 4      3492           3423                                   clone OPB14
+## 5      3493           3423   bacterium enrichment culture clone 73(2013)
+## 6      3494           3423 bacterium enrichment culture clone AOM-SR-B11
+## 7      3495           3423                   hypersaline lake metagenome
+## # ... with 3,835 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 513,120 x 3
+##   obs_taxon_ids               id
+##           &lt;chr&gt;            &lt;chr&gt;
+## 1         91658 &gt;AY230195.1.1496
+## 2         36076 &gt;AY230764.1.1512
+## 3         63763 &gt;AY230816.1.1447
+## 4         15361 &gt;AY232254.1.1432
+## 5          3543 &gt;AY234438.1.1303
+## 6         22606 &gt;AY234499.1.1317
+## 7         54118 &gt;AY234528.1.1429
+## # ... with 5.131e+05 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+<pre class="r"><code># Replace all u with t so in silico PCR works
+system.time(silva$obs_data$sequence &lt;- gsub(pattern = &quot;u&quot;, replacement = &quot;t&quot;, silva$obs_data$sequence))</code></pre>
+<pre><code>##    user  system elapsed 
+##  29.523   0.519  30.182</code></pre>
+<pre class="r"><code># in silico PCR
+system.time(silva_pcr &lt;- primersearch(silva,
+                                      forward = forward_primer,
+                                      reverse = reverse_primer,
+                                      mismatch = max_mismatch))</code></pre>
+<pre><code>##    user  system elapsed 
+##  53.091   1.110  54.798</code></pre>
+<pre class="r"><code>system.time(silva_plot_pcr_all &lt;- heat_tree(silva_pcr,
+                                            node_size = n_obs,
+                                            node_label = name,
+                                            node_color = prop_amplified,
+                                            node_color_range =  pcr_success_color_scale,
+                                            node_color_trans = &quot;linear&quot;,
+                                            edge_color_interval = c(0, 1),
+                                            node_color_interval = c(0, 1),
+                                            node_label_size_range = label_size_range,
+                                            node_label_max = label_max,
+                                            node_color_axis_label = &quot;Proportion PCR success&quot;,
+                                            node_size_axis_label = &quot;Sequence count&quot;,
+                                            output_file = file.path(output_folder, paste0(&quot;silva--pcr_all&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##  59.171   1.260  60.901</code></pre>
+<pre class="r"><code>print(silva_plot_pcr_all)</code></pre>
+<p><img src="publication--01--silva_files/figure-html/silva_plot_pcr_all-1.png" width="2100" /></p>
+<pre class="r"><code>system.time(silva_plot_pcr_fail &lt;- silva_pcr %&gt;%
+              filter_taxa(prop_amplified &lt; pcr_success_cutoff, supertaxa = TRUE) %&gt;%
+              heat_tree(node_size = n_obs - count_amplified,
+                        node_label = name,
+                        node_color = prop_amplified,
+                        node_size_range = size_range * 2,
+                        edge_size_range = size_range,
+                        node_size_interval = pcr_size_interval,
+                        edge_size_interval = pcr_size_interval,
+                        node_color_range =  pcr_success_color_scale,
+                        node_color_trans = &quot;linear&quot;,
+                        node_color_interval = c(0, 1),
+                        edge_color_interval = c(0, 1),
+                        node_label_size_range = label_size_range,
+                        node_label_max = 1000,
+                        node_color_axis_label = &quot;Proportion PCR success&quot;,
+                        node_size_axis_label = &quot;Sequences not amplified&quot;,
+                        make_legend = TRUE,
+                        output_file = file.path(output_folder, paste0(&quot;silva--pcr_fail&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##  52.636   0.008  52.975</code></pre>
+<pre class="r"><code>print(silva_plot_pcr_fail)</code></pre>
+<p><img src="publication--01--silva_files/figure-html/silva_plot_pcr_fail-1.png" width="2100" /></p>
+</div>
+<div id="save-outputs-for-composite-figure" class="section level2">
+<h2>Save outputs for composite figure</h2>
+<p>Some results from this file will be combined with other to make a composite figure. Below, the needed objects are saved so that they can be loaded by another Rmd file.</p>
+<pre class="r"><code>save(file = file.path(output_folder, &quot;silva_data.RData&quot;),
+     silva_plot_all, silva_plot_pcr_fail)</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

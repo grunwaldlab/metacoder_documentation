@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Graphing the Greengenes database</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/default.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MetacodeR</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="vignettes--01--extracting_taxonomy_data.html">Parsing input files</a>
+    </li>
+    <li>
+      <a href="vignettes--02--plotting_taxonomic_data.html">Heat tree plotting</a>
+    </li>
+    <li>
+      <a href="vignettes--03--manipulating_taxonomic_data.html">Subsetting</a>
+    </li>
+    <li>
+      <a href="vignettes--04--hierarchical_subsampling.html">Sampling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Publication Analyses
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="publication--05--16s_human_microbiome.html">Human microbiome</a>
+    </li>
+    <li>
+      <a href="publication--06--tara_oceans.html">TARA Oceans</a>
+    </li>
+    <li>
+      <a href="publication--01--silva.html">In silico PCR: SILVA</a>
+    </li>
+    <li>
+      <a href="publication--02--rdp.html">In silico PCR: RDP</a>
+    </li>
+    <li>
+      <a href="publication--03--greengenes.html">In silico PCR: Greengenes</a>
+    </li>
+    <li>
+      <a href="publication--04--16s_database_comparision.html">In silico PCR: Comparing databases</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="presentation_page.html">Presentation</a>
+</li>
+<li>
+  <a href="https://github.com/grunwaldlab/metacoder">GitHub Repository</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Graphing the Greengenes database</h1>
+
+</div>
+
+
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
+<p><strong>NOTE:</strong> This analysis requires at least 10Gb of RAM to run.</p>
+</div>
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<pre class="r"><code>input_folder &lt;- &quot;raw_input&quot;
+output_folder &lt;- &quot;results&quot;
+output_format &lt;- &quot;.pdf&quot;</code></pre>
+<pre class="r"><code>size_range &lt;- c(0.0004, 0.015)
+label_size_range &lt;- c(0.001, 0.02)
+all_size_interval &lt;- c(1, 3000000)
+pcr_size_interval &lt;- c(1, 25000)
+label_max &lt;- 100
+max_taxonomy_depth &lt;- 4
+min_seq_count &lt;- NULL
+just_bacteria &lt;- TRUE
+max_mismatch &lt;- 10 # percentage mismatch tolerated in pcr
+pcr_success_cutoff &lt;- 0.90 # Used to subset for graphing
+min_seq_length &lt;- 1200 # Use to encourage full length sequences
+forward_primer = c(&quot;515F&quot; = &quot;GTGYCAGCMGCCGCGGTAA&quot;)
+reverse_primer = c(&quot;806R&quot; = &quot;GGACTACNVGGGTWTCTAAT&quot;)
+pcr_success_color_scale = c(&quot;red&quot;, &quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;cyan&quot;)</code></pre>
+</div>
+<div id="parse-database" class="section level2">
+<h2>Parse database</h2>
+<p>The greengenes database stores sequences in one file and taxonomy information in another and the order of the two files differ making parseing more difficult than the other databases. Since taxonomy inforamtion is needed for creating the <code>taxmap</code> data structure, we will parse it first and add the sequence information on after.</p>
+<div id="parse-taxonomy-file" class="section level3">
+<h3>Parse taxonomy file</h3>
+<pre class="r"><code>gg_taxonomy_path &lt;- file.path(input_folder, &quot;gg_13_5_taxonomy.txt&quot;)
+gg_taxonomy &lt;- readLines(gg_taxonomy_path)
+print(gg_taxonomy[1:5])</code></pre>
+<pre><code>## [1] &quot;228054\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__&quot;
+## [2] &quot;844608\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__&quot;
+## [3] &quot;178780\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__&quot;
+## [4] &quot;198479\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__&quot;
+## [5] &quot;187280\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__&quot;</code></pre>
+<p>Note that there are some ranks with no names. These will be removed after parsing the file since they provide no information and an uniform-length taxonomy is not needed.</p>
+<pre class="r"><code>library(metacoder)
+# Parse taxonomy file
+system.time(greengenes &lt;- extract_taxonomy(input = gg_taxonomy, key = c(id = &quot;obs_info&quot;, &quot;class&quot;), regex = &quot;^([0-9]+)\t(.*)$&quot;, class_sep = &quot;; &quot;, class_regex = &quot;^([a-z]{1})__(.*)$&quot;, class_key = c(rank = &quot;taxon_info&quot;, &quot;name&quot;)))</code></pre>
+<pre><code>##    user  system elapsed 
+## 412.917   0.512 414.177</code></pre>
+<pre class="r"><code># Remove data for ranks with no information
+greengenes &lt;- filter_taxa(greengenes, name != &quot;&quot;)
+print(greengenes)</code></pre>
+<pre><code>## `taxmap` object with data for 3093 taxa and 1262986 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 1, 2, 4, 5, 6, 7, 14, 15 ... 7334, 7335, 7339, 7340, 7341, 7342, 7355, 7363, 7364
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 3,093 x 4
+##   taxon_ids supertaxon_ids  rank            name
+##       &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;
+## 1         1           &lt;NA&gt;     k         Archaea
+## 2         2           &lt;NA&gt;     k        Bacteria
+## 3         4              1     p   Crenarchaeota
+## 4         5              1     p   Euryarchaeota
+## 5         6              1     p   Nanoarchaeota
+## 6         7              1     p [Parvarchaeota]
+## 7        14              4     c             AAG
+## # ... with 3,086 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 1,262,986 x 2
+##   obs_taxon_ids     id
+##           &lt;chr&gt;  &lt;dbl&gt;
+## 1          2971 228054
+## 2          2971 844608
+## 3          2971 178780
+## 4          2971 198479
+## 5          2971 187280
+## 6          2971 179180
+## 7          2971 175058
+## # ... with 1.263e+06 more rows
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="parse-sequence-file" class="section level3">
+<h3>Parse sequence file</h3>
+<p>Next we will parse the sequence file so we can add it to the <code>obs_data</code> table of the <code>greengenes</code> object.</p>
+<pre class="r"><code>gg_sequence_path &lt;- file.path(input_folder, &quot;gg_13_5.fasta&quot;)
+substr(readLines(gg_sequence_path, n = 10), 1, 100)</code></pre>
+<pre><code>##  [1] &quot;&gt;1111886&quot;                                                                                            
+##  [2] &quot;AACGAACGCTGGCGGCATGCCTAACACATGCAAGTCGAACGAGACCTTCGGGTCTAGTGGCGCACGGGTGCGTAACGCGTGGGAATCTGCCCTTGGGTAC&quot;
+##  [3] &quot;&gt;1111885&quot;                                                                                            
+##  [4] &quot;AGAGTTTGATCCTGGCTCAGAATGAACGCTGGCGGCGTGCCTAACACATGCAAGTCGTACGAGAAATCCCGAGCTTGCTTGGGAAAGTAAAGTGGCGCAC&quot;
+##  [5] &quot;&gt;1111883&quot;                                                                                            
+##  [6] &quot;GCTGGCGGCGTGCCTAACACATGTAAGTCGAACGGGACTGGGGGCAACTCCAGTTCAGTGGCAGACGGGTGCGTAACACGTGAGCAACTTGTCCGACGGC&quot;
+##  [7] &quot;&gt;1111882&quot;                                                                                            
+##  [8] &quot;AGAGTTTGATCATGGCTCAGGATGAACGCTAGCGGCAGGCCTAACACATGCAAGTCGAGGGGTAGAGGCTTTCGGGCCTTGAGACCGGCGCACGGGTGCG&quot;
+##  [9] &quot;&gt;1111879&quot;                                                                                            
+## [10] &quot;CCTAATGCATGCAAGTCGAACGCAGCAGGCGTGCCTGGCTGCGTGGCGAACGGCTGACGAACACGTGGGTGACCTGCCCCGGAGTGGGGGATACCCCGTC&quot;</code></pre>
+<p>This can be easily parsed using <code>seqinr</code>:</p>
+<pre class="r"><code>gg_sequences &lt;- seqinr::read.fasta(gg_sequence_path, as.string = TRUE)</code></pre>
+</div>
+<div id="integrating-sequence-and-taxonomy" class="section level3">
+<h3>Integrating sequence and taxonomy</h3>
+<p>We will need to use the Greengenes ID to match up which sequence goes with which row since they are in different orders.</p>
+<pre class="r"><code>greengenes &lt;- mutate_obs(greengenes, sequence = unlist(gg_sequences)[as.character(id)])</code></pre>
+</div>
+</div>
+<div id="subset" class="section level2">
+<h2>Subset</h2>
+<p>This will make graphing a little more understandable by removing some taxa, but no sequence information will be removed.</p>
+<pre class="r"><code>if (! is.null(min_seq_count)) {
+  system.time(greengenes &lt;- filter_taxa(greengenes, n_obs &gt;= min_seq_count))
+}
+if (just_bacteria) {
+  system.time(greengenes &lt;- filter_taxa(greengenes, name == &quot;Bacteria&quot;, subtaxa = TRUE))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.453   0.000   0.454</code></pre>
+<pre class="r"><code>if (! is.null(max_taxonomy_depth)) {
+  system.time(greengenes &lt;- filter_taxa(greengenes, n_supertaxa &lt;= max_taxonomy_depth))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.395   0.000   0.396</code></pre>
+<pre class="r"><code>print(greengenes)</code></pre>
+<pre><code>## `taxmap` object with data for 1138 taxa and 1242330 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 553, 644, 645, 646, 647, 554 ... 7334, 7335, 7329, 7355, 637, 7363, 7364
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 1,138 x 4
+##   taxon_ids supertaxon_ids  rank          name
+##       &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;
+## 1         2           &lt;NA&gt;     k      Bacteria
+## 2       553              2     p           AC1
+## 3       644            553     c       B04R032
+## 4       645            553     c     HDBW-WB69
+## 5       646            553     c       SHA-114
+## 6       647            553     c          TA06
+## 7       554              2     p Acidobacteria
+## # ... with 1,131 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 1,242,330 x 3
+##   obs_taxon_ids     id
+##           &lt;chr&gt;  &lt;dbl&gt;
+## 1          2957 228054
+## 2          2957 844608
+## 3          2957 178780
+## 4          2957 198479
+## 5          2957 187280
+## 6          2957 179180
+## 7          2957 175058
+## # ... with 1.242e+06 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="remove-chloroplast-sequences" class="section level2">
+<h2>Remove chloroplast sequences</h2>
+<p>These are not bacterial and will bias the <em>in silico</em> PCR results.</p>
+<pre class="r"><code>system.time(greengenes &lt;- filter_taxa(greengenes, name == &quot;Chloroplast&quot;, subtaxa = TRUE, invert = TRUE))</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.189   0.000   0.189</code></pre>
+<pre class="r"><code>print(greengenes)</code></pre>
+<pre><code>## `taxmap` object with data for 1121 taxa and 1242330 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 553, 644, 645, 646, 647, 554 ... 7334, 7335, 7329, 7355, 637, 7363, 7364
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 1,121 x 4
+##   taxon_ids supertaxon_ids  rank          name
+##       &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;
+## 1         2           &lt;NA&gt;     k      Bacteria
+## 2       553              2     p           AC1
+## 3       644            553     c       B04R032
+## 4       645            553     c     HDBW-WB69
+## 5       646            553     c       SHA-114
+## 6       647            553     c          TA06
+## 7       554              2     p Acidobacteria
+## # ... with 1,114 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 1,242,330 x 3
+##   obs_taxon_ids     id
+##           &lt;chr&gt;  &lt;dbl&gt;
+## 1          2957 228054
+## 2          2957 844608
+## 3          2957 178780
+## 4          2957 198479
+## 5          2957 187280
+## 6          2957 179180
+## 7          2957 175058
+## # ... with 1.242e+06 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="plot-whole-database" class="section level2">
+<h2>Plot whole database</h2>
+<p>Although Greengenes is such a large database ( taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:</p>
+<pre class="r"><code>system.time(greengenes_plot_all &lt;- heat_tree(greengenes, 
+                                             node_size = n_obs,
+                                             node_color = n_obs,
+                                             node_size_range = size_range * 2,
+                                             edge_size_range = size_range,
+                                             node_size_interval = all_size_interval,
+                                             edge_size_interval = all_size_interval,
+                                             node_color_interval = all_size_interval,
+                                             edge_color_interval = all_size_interval,
+                                             node_label = name,
+                                             node_label_max = label_max,
+                                             node_label_size_range = label_size_range,
+                                             node_color_axis_label = &quot;Sequence count&quot;,
+                                             make_legend = TRUE,
+                                             output_file = file.path(output_folder, paste0(&quot;greengenes--all&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##  10.503   0.072  10.608</code></pre>
+<pre class="r"><code>print(greengenes_plot_all)</code></pre>
+<p><img src="publication--03--greengenes_files/figure-html/greengenes_plot_all-1.png" width="2100" /></p>
+</div>
+<div id="pcr" class="section level2">
+<h2>PCR</h2>
+<pre class="r"><code>if (! is.null(min_seq_length)) {
+  system.time(greengenes &lt;- filter_obs(greengenes, nchar(sequence) &gt;= min_seq_length, unobserved = FALSE))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+##   4.747   0.240   4.995</code></pre>
+<pre class="r"><code>print(greengenes)</code></pre>
+<pre><code>## `taxmap` object with data for 1121 taxa and 1242309 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 553, 644, 645, 646, 647, 554 ... 7334, 7335, 7329, 7355, 637, 7363, 7364
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 1,121 x 4
+##   taxon_ids supertaxon_ids  rank          name
+##       &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;
+## 1         2           &lt;NA&gt;     k      Bacteria
+## 2       553              2     p           AC1
+## 3       644            553     c       B04R032
+## 4       645            553     c     HDBW-WB69
+## 5       646            553     c       SHA-114
+## 6       647            553     c          TA06
+## 7       554              2     p Acidobacteria
+## # ... with 1,114 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 1,242,309 x 3
+##   obs_taxon_ids     id
+##           &lt;chr&gt;  &lt;dbl&gt;
+## 1          2957 228054
+## 2          2957 844608
+## 3          2957 178780
+## 4          2957 198479
+## 5          2957 187280
+## 6          2957 179180
+## 7          2957 175058
+## # ... with 1.242e+06 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+<pre class="r"><code>system.time(greengenes_pcr &lt;- primersearch(greengenes,
+                                           forward = forward_primer,
+                                           reverse = reverse_primer,
+                                           mismatch = max_mismatch))</code></pre>
+<pre><code>##    user  system elapsed 
+## 127.360   3.028 135.588</code></pre>
+<pre class="r"><code>system.time(greengenes_plot_pcr_all &lt;- heat_tree(greengenes_pcr,
+                                                 node_size = n_obs,
+                                                 node_label = name,
+                                                 node_color = prop_amplified,
+                                                 node_color_range =  pcr_success_color_scale,
+                                                 node_color_trans = &quot;linear&quot;,
+                                                 node_label_max = 150,
+                                        node_label_size_range = label_size_range,
+                                                 edge_color_interval = c(0, 1),
+                                                 node_color_interval = c(0, 1),
+                                                 node_color_axis_label = &quot;Proportion PCR success&quot;,
+                                                 node_size_axis_label = &quot;Sequence count&quot;,
+                                                 output_file = file.path(output_folder, paste0(&quot;greengenes--pcr_all&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##  17.281   0.164  17.462</code></pre>
+<pre class="r"><code>print(greengenes_plot_pcr_all)</code></pre>
+<p><img src="publication--03--greengenes_files/figure-html/greengenes_plot_pcr_all-1.png" width="2100" /></p>
+<pre class="r"><code>system.time(greengenes_plot_pcr_fail &lt;- greengenes_pcr %&gt;%
+              filter_taxa(prop_amplified &lt; pcr_success_cutoff, supertaxa = TRUE) %&gt;%
+              heat_tree(node_size = n_obs - count_amplified,
+                        node_label = name,
+                        node_color = prop_amplified,
+                        node_size_range = size_range * 2,
+                        edge_size_range = size_range,
+                        node_size_interval = pcr_size_interval,
+                        edge_size_interval = pcr_size_interval,
+                        node_color_range =  pcr_success_color_scale,
+                        node_color_trans = &quot;linear&quot;,
+                        node_color_interval = c(0, 1),
+                        edge_color_interval = c(0, 1),
+                        node_label_size_range = label_size_range,
+                        node_label_max = 1000,
+                        node_color_axis_label = &quot;Proportion PCR success&quot;,
+                        node_size_axis_label = &quot;Sequences not amplified&quot;,
+                        make_legend = TRUE,
+                        output_file = file.path(output_folder, paste0(&quot;greengenes--pcr_fail&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##  10.242   0.028  10.287</code></pre>
+<pre class="r"><code>print(greengenes_plot_pcr_fail)</code></pre>
+<p><img src="publication--03--greengenes_files/figure-html/greengenes_plot_pcr_fail-1.png" width="2100" /></p>
+</div>
+<div id="save-outputs-for-composite-figure" class="section level2">
+<h2>Save outputs for composite figure</h2>
+<p>Some results from this file will be combined with other to make a composite figure. Below, the needed objects are saved so that they can be loaded by another Rmd file.</p>
+<pre class="r"><code>save(file = file.path(output_folder, &quot;greengenes_data.RData&quot;),
+     greengenes_plot_all, greengenes_plot_pcr_fail)</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Graphing the RDP database</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/default.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MetacodeR</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Tutorials
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="vignettes--01--extracting_taxonomy_data.html">Parsing input files</a>
+    </li>
+    <li>
+      <a href="vignettes--02--plotting_taxonomic_data.html">Heat tree plotting</a>
+    </li>
+    <li>
+      <a href="vignettes--03--manipulating_taxonomic_data.html">Subsetting</a>
+    </li>
+    <li>
+      <a href="vignettes--04--hierarchical_subsampling.html">Sampling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Publication Analyses
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="publication--05--16s_human_microbiome.html">Human microbiome</a>
+    </li>
+    <li>
+      <a href="publication--06--tara_oceans.html">TARA Oceans</a>
+    </li>
+    <li>
+      <a href="publication--01--silva.html">In silico PCR: SILVA</a>
+    </li>
+    <li>
+      <a href="publication--02--rdp.html">In silico PCR: RDP</a>
+    </li>
+    <li>
+      <a href="publication--03--greengenes.html">In silico PCR: Greengenes</a>
+    </li>
+    <li>
+      <a href="publication--04--16s_database_comparision.html">In silico PCR: Comparing databases</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="presentation_page.html">Presentation</a>
+</li>
+<li>
+  <a href="https://github.com/grunwaldlab/metacoder">GitHub Repository</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Graphing the RDP database</h1>
+
+</div>
+
+
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
+<p><strong>NOTE:</strong> This analysis requires at least 10Gb of RAM to run.</p>
+</div>
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<pre class="r"><code>input_folder &lt;- &quot;raw_input&quot;
+output_folder &lt;- &quot;results&quot;
+output_format &lt;- &quot;.pdf&quot;</code></pre>
+<pre class="r"><code>size_range &lt;- c(0.0004, 0.015)
+label_size_range &lt;- c(0.001, 0.02)
+all_size_interval &lt;- c(1, 3000000)
+pcr_size_interval &lt;- c(1, 25000)
+label_max &lt;- 100
+max_taxonomy_depth &lt;- 4
+min_seq_count &lt;- NULL
+just_bacteria &lt;- TRUE
+max_mismatch &lt;- 10 # percentage mismatch tolerated in pcr
+pcr_success_cutoff &lt;- 0.90 # Used to subset for graphing
+min_seq_length &lt;- 1200 # Use to encourage full length sequences
+forward_primer = c(&quot;515F&quot; = &quot;GTGYCAGCMGCCGCGGTAA&quot;)
+reverse_primer = c(&quot;806R&quot; = &quot;GGACTACNVGGGTWTCTAAT&quot;)
+pcr_success_color_scale = c(&quot;red&quot;, &quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;cyan&quot;)</code></pre>
+</div>
+<div id="parse-database" class="section level2">
+<h2>Parse database</h2>
+<p>The code below parses and subsets the entire RDP non-redundant reference database. The object made is quite large.</p>
+<pre class="r"><code>library(metacoder)
+file_path &lt;- file.path(input_folder, &quot;rdp_current_Bacteria_unaligned.fa&quot;)
+system.time(rdp &lt;- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE),
+                                    regex = &quot;\\tLineage(.*)&quot;,
+                                    key = c(&quot;class&quot;),
+                                    class_regex = &quot;[;=](.+?);(.+?)&quot;,
+                                    class_key = c(&quot;name&quot;, rdp_rank = &quot;taxon_info&quot;)))</code></pre>
+<pre><code>##     user   system  elapsed 
+## 1219.114    3.495 1224.577</code></pre>
+<pre class="r"><code>print(rdp)</code></pre>
+<pre><code>## `taxmap` object with data for 2614 taxa and 3070243 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 1, 2, 3, 4, 5, 6, 7, 8 ... 2606, 2607, 2608, 2609, 2610, 2611, 2612, 2613, 2614
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 2,614 x 4
+##   taxon_ids supertaxon_ids             name rdp_rank
+##       &lt;chr&gt;          &lt;chr&gt;            &lt;chr&gt;    &lt;chr&gt;
+## 1         1           &lt;NA&gt;             Root        r
+## 2         2              1         Bacteria        d
+## 3         3              2     Acetothermia        p
+## 4         4              2  &quot;Acidobacteria&quot;        p
+## 5         5              2 &quot;Actinobacteria&quot;        p
+## 6         6              2    Aminicenantes        p
+## 7         7              2      &quot;Aquificae&quot;        p
+## # ... with 2,607 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 3,070,243 x 2
+##   obs_taxon_ids
+##           &lt;chr&gt;
+## 1           135
+## 2           135
+## 3           135
+## 4           135
+## 5           135
+## 6           135
+## 7           135
+## # ... with 3.07e+06 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="subset" class="section level2">
+<h2>Subset</h2>
+<pre class="r"><code>if (! is.null(min_seq_count)) {
+  system.time(rdp &lt;- filter_taxa(rdp, n_obs &gt;= min_seq_count))
+}
+if (just_bacteria) {
+  system.time(rdp &lt;- filter_taxa(rdp, name == &quot;Bacteria&quot;, subtaxa = TRUE))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.395   0.000   0.396</code></pre>
+<pre class="r"><code>if (! is.null(max_taxonomy_depth)) {
+  system.time(rdp &lt;- filter_taxa(rdp, n_supertaxa &lt;= max_taxonomy_depth))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.545   0.000   0.546</code></pre>
+<pre class="r"><code>print(rdp)</code></pre>
+<pre><code>## `taxmap` object with data for 667 taxa and 3070243 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 3, 52, 4, 53, 79, 80, 81 ... 2586, 2601, 2587, 2602, 2588, 2603, 2604, 2605
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 667 x 4
+##   taxon_ids supertaxon_ids                  name rdp_rank
+##       &lt;chr&gt;          &lt;chr&gt;                 &lt;chr&gt;    &lt;chr&gt;
+## 1         2           &lt;NA&gt;              Bacteria        d
+## 2         3              2          Acetothermia        p
+## 3        52              3 genera_incertae_sedis        g
+## 4         4              2       &quot;Acidobacteria&quot;        p
+## 5        53              4     Acidobacteria_Gp1        c
+## 6        79             53            Acidicapsa        g
+## 7        80             53             Acidipila        g
+## # ... with 660 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 3,070,243 x 2
+##   obs_taxon_ids
+##           &lt;chr&gt;
+## 1           130
+## 2           130
+## 3           130
+## 4           130
+## 5           130
+## 6           130
+## 7           130
+## # ... with 3.07e+06 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="remove-chloroplast-sequences" class="section level2">
+<h2>Remove chloroplast sequences</h2>
+<p>These are not bacterial and will bias the <em>in silico</em> PCR results.</p>
+<pre class="r"><code>system.time(rdp &lt;- filter_taxa(rdp, name == &quot;Cyanobacteria/Chloroplast&quot;, subtaxa = TRUE, invert = TRUE))</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.249   0.004   0.253</code></pre>
+<pre class="r"><code>print(rdp)</code></pre>
+<pre><code>## `taxmap` object with data for 629 taxa and 3070243 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 3, 52, 4, 53, 79, 80, 81 ... 2586, 2601, 2587, 2602, 2588, 2603, 2604, 2605
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 629 x 4
+##   taxon_ids supertaxon_ids                  name rdp_rank
+##       &lt;chr&gt;          &lt;chr&gt;                 &lt;chr&gt;    &lt;chr&gt;
+## 1         2           &lt;NA&gt;              Bacteria        d
+## 2         3              2          Acetothermia        p
+## 3        52              3 genera_incertae_sedis        g
+## 4         4              2       &quot;Acidobacteria&quot;        p
+## 5        53              4     Acidobacteria_Gp1        c
+## 6        79             53            Acidicapsa        g
+## 7        80             53             Acidipila        g
+## # ... with 622 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 3,070,243 x 2
+##   obs_taxon_ids
+##           &lt;chr&gt;
+## 1           130
+## 2           130
+## 3           130
+## 4           130
+## 5           130
+## 6           130
+## 7           130
+## # ... with 3.07e+06 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+</div>
+<div id="plot-whole-database" class="section level2">
+<h2>Plot whole database</h2>
+<p>Although RDP is such a large database ( taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:</p>
+<pre class="r"><code>system.time(rdp_plot_all &lt;- heat_tree(rdp,
+                                      node_size = n_obs,
+                                      node_color = n_obs,
+                                      node_size_range = size_range * 2,
+                                      edge_size_range = size_range,
+                                      node_size_interval = all_size_interval,
+                                      edge_size_interval = all_size_interval,
+                                      node_color_interval = all_size_interval,
+                                      edge_color_interval = all_size_interval,
+                                      node_label = name,
+                                      node_label_size_range = label_size_range,
+                                      node_label_max = label_max,
+                                      node_color_axis_label = &quot;Sequence count&quot;,
+                                      make_legend = TRUE,
+                                      output_file = file.path(output_folder, paste0(&quot;rdp--all&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##   8.105   0.000   8.120</code></pre>
+<pre class="r"><code>print(rdp_plot_all)</code></pre>
+<p><img src="publication--02--rdp_files/figure-html/rdp_plot_all-1.png" width="2100" /></p>
+</div>
+<div id="pcr" class="section level2">
+<h2>PCR</h2>
+<pre class="r"><code>if (! is.null(min_seq_length)) {
+  system.time(rdp &lt;- filter_obs(rdp, nchar(sequence) &gt;= min_seq_length, unobserved = FALSE))
+}</code></pre>
+<pre><code>##    user  system elapsed 
+##   6.408   0.000   6.425</code></pre>
+<pre class="r"><code>print(rdp)</code></pre>
+<pre><code>## `taxmap` object with data for 619 taxa and 1516302 observations:
+## 
+## ----------------------------------------- taxa -----------------------------------------
+## 2, 3, 52, 4, 53, 79, 80, 81 ... 2586, 2601, 2587, 2602, 2588, 2603, 2604, 2605
+## 
+## -------------------------------------- taxon_data --------------------------------------
+## # A tibble: 619 x 4
+##   taxon_ids supertaxon_ids                  name rdp_rank
+##       &lt;chr&gt;          &lt;chr&gt;                 &lt;chr&gt;    &lt;chr&gt;
+## 1         2           &lt;NA&gt;              Bacteria        d
+## 2         3              2          Acetothermia        p
+## 3        52              3 genera_incertae_sedis        g
+## 4         4              2       &quot;Acidobacteria&quot;        p
+## 5        53              4     Acidobacteria_Gp1        c
+## 6        79             53            Acidicapsa        g
+## 7        80             53             Acidipila        g
+## # ... with 612 more rows
+## 
+## --------------------------------------- obs_data ---------------------------------------
+## # A tibble: 1,516,302 x 2
+##   obs_taxon_ids
+##           &lt;chr&gt;
+## 1           130
+## 2           130
+## 3           130
+## 4           130
+## 5           130
+## 6           130
+## 7           130
+## # ... with 1.516e+06 more rows, and 1 more variables: sequence &lt;chr&gt;
+## 
+## ------------------------------------- taxon_funcs -------------------------------------
+## n_obs, n_obs_1, n_supertaxa, n_subtaxa, n_subtaxa_1, hierarchies</code></pre>
+<pre class="r"><code>system.time(rdp_pcr &lt;- primersearch(rdp,
+                                    forward = forward_primer,
+                                    reverse = reverse_primer,
+                                    mismatch = max_mismatch))</code></pre>
+<pre><code>##    user  system elapsed 
+## 148.215   2.537 156.288</code></pre>
+<pre class="r"><code>system.time(rdp_plot_pcr_all &lt;- heat_tree(rdp_pcr,
+                                          node_size = n_obs,
+                                          node_label = name,
+                                          node_color = prop_amplified,
+                                          node_color_range =  pcr_success_color_scale,
+                                          node_color_trans = &quot;linear&quot;,
+                                          node_label_size_range = label_size_range,
+                                          node_label_max = 150,
+                                          edge_color_interval = c(0, 1),
+                                          node_color_interval = c(0, 1),
+                                          node_color_axis_label = &quot;Proportion PCR success&quot;,
+                                          node_size_axis_label = &quot;Sequence count&quot;,
+                                          output_file = file.path(output_folder, paste0(&quot;rdp--pcr_all&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##  11.875   0.164  12.068</code></pre>
+<pre class="r"><code>print(rdp_plot_pcr_all)</code></pre>
+<p><img src="publication--02--rdp_files/figure-html/rdp_plot_pcr_all-1.png" width="2100" /></p>
+<pre class="r"><code>system.time(rdp_plot_pcr_fail &lt;- rdp_pcr %&gt;%
+              filter_taxa(prop_amplified &lt; pcr_success_cutoff, supertaxa = TRUE) %&gt;%
+              heat_tree(node_size = n_obs - count_amplified,
+                        node_label = name,
+                        node_color = prop_amplified,
+                        node_size_range = size_range * 2,
+                        edge_size_range = size_range,
+                        node_size_interval = pcr_size_interval,
+                        edge_size_interval = pcr_size_interval,
+                        node_color_range =  pcr_success_color_scale,
+                        node_color_trans = &quot;linear&quot;,
+                        node_color_interval = c(0, 1),
+                        edge_color_interval = c(0, 1),
+                        node_label_size_range = label_size_range,
+                        node_label_max = 1000,
+                        node_color_axis_label = &quot;Proportion PCR success&quot;,
+                        node_size_axis_label = &quot;Sequences not amplified&quot;,
+                        make_legend = TRUE,
+                        output_file = file.path(output_folder, paste0(&quot;rdp--pcr_fail&quot;, output_format))))</code></pre>
+<pre><code>##    user  system elapsed 
+##   6.181   0.000   6.190</code></pre>
+<pre class="r"><code>print(rdp_plot_pcr_fail)</code></pre>
+<p><img src="publication--02--rdp_files/figure-html/rdp_plot_pcr_fail-1.png" width="2100" /></p>
+</div>
+<div id="save-outputs-for-composite-figure" class="section level2">
+<h2>Save outputs for composite figure</h2>
+<p>Some results from this file will be combined with other to make a composite figure. Below, the needed objects are saved so that they can be loaded by another Rmd file.</p>
+<pre class="r"><code>save(file = file.path(output_folder,&quot;rdp_data.RData&quot;),
+     rdp_plot_all, rdp_plot_pcr_fail)</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
