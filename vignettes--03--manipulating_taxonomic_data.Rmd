@@ -14,7 +14,7 @@ The answers to these questions depend on what the goal of the subsetting is.
 MetacodeR uses `dplyr`-style functions for manipulating taxonomic data.
 For each `dplyr` verb, there are two functions in metacodeR, one that manipulates the taxon portion of the data and one that manipulates the observation portion.
 
-## Subsetting rows: `filter_taxa` and `filter_obs`
+## Subsetting rows
 
 ### Removing supertaxa
 
@@ -130,7 +130,7 @@ filter_obs(unite_ex_data_3, grepl("^A",  seq_id), unobserved = FALSE) %>%
 ```
 
 
-## Sampling rows: `sample_n_taxa` and `sample_n_obs`
+## Sampling rows
 
 Random sampling of taxa and observations is similar to subsetting, except you provide weights to each observation or taxon indicating how likely it is to be included in the subset.
 The random subset of taxa or observations is then passed to `filter_taxa` or `filter_obs` respectively.
@@ -205,7 +205,7 @@ sample_frac_obs(unite_ex_data_3, size = 0.1) %>%
 ```
 
 
-## Subsetting columns: `select_taxa` and `select_obs`
+## Subsetting columns
 
 Subsetting columns is more straight forward that subsetting rows.
 The functions `select_taxa` and `select_obs` are little more than wrappers for `dplyr::select`.
@@ -224,7 +224,7 @@ select_obs(unite_ex_data_3, other_id, seq_name)
 ```
 
 
-## Adding columns: `mutate_taxa` and `mutate_obs`
+## Adding columns
 
 Adding a column to either `taxon_data` or `obs_data` is easy using the `dplyr` syntax:
 
@@ -243,7 +243,7 @@ mutate_taxa(unite_ex_data_3,
 Adding observation columns with `mutate_obs` works the same way.
 
 
-## Replacing columns: `transmute_taxa` and `transmute_obs`
+## Replacing columns
 
 `transmute_taxa` and `transmute_obs` make new columns and discard all of the old columns:
 
@@ -254,7 +254,7 @@ transmute_taxa(unite_ex_data_3,
 ```
 
 
-## Reordering rows: `arrange_taxa` and `arrange_obs`
+## Reordering rows
 
 The way `taxmap` objects are defined, the order of all of the components do not matter.
 This means its easy to reorder them to fit your needs:
