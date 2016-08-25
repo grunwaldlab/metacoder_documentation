@@ -25,41 +25,25 @@ knitr::read_chunk("settings.R")
 
 ## Parsing taxonomic data
 
-The code below downloads the compressed data to a temporary directory:
+The data set at the below URL was downloaded and uncompressed:
 
-```{r tara_download}
-library(metacoder)
-data_url <- "http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W5_OTU_occurences.tsv.zip"
-temp_dir_path <- tempdir()
-local_file_path <- file.path(temp_dir_path, basename(data_url))
-download.file(url = data_url, destfile = local_file_path, quiet = TRUE)
-```
-
-Next we will uncompress the archive and identify the fasta file.
-
-```{r tara_uncompress}
-# Get contents of zip archive
-unpacked_file_paths <- unzip(local_file_path, list = TRUE)
-# Uncompress archive
-unzip(local_file_path, exdir = temp_dir_path)
-# Identify the Mothur RDP training set
-unpacked_file_path <- file.path(temp_dir_path, 
-                                unpacked_file_paths[grepl("tsv$", unpacked_file_paths)])
-```
+http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W5_OTU_occurences.tsv.zip
 
 ```{r tara_parse, warning=FALSE, message=FALSE}
-data <- parse_taxonomy_table(unpacked_file_path, taxon_col = c("class" = -9), class_sep = "\\|")
+library(metacoder)
+data <- parse_taxonomy_table(file.path(input_folder, "Database_W5_OTU_occurences.tsv"), 
+                             taxon_col = c("class" = -9), class_sep = "\\|")
 ```
 
 
 ## Getting sample data
 
+The sample data was downloaded from the URL below:
+
+http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W1_Sample_parameters.xls
+
 ```{r tara_parse_sample}
-data_url <- "http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W1_Sample_parameters.xls"
-temp_dir_path <- tempdir()
-local_file_path <- file.path(temp_dir_path, basename(data_url))
-download.file(url = data_url, destfile = local_file_path, quiet = TRUE)
-sample_data <- readxl::read_excel(local_file_path)
+sample_data <- readxl::read_excel(file.path(input_folder, "Database_W1_Sample_parameters.xls"))
 ```
 
 
@@ -85,38 +69,40 @@ data %>%
   filter_taxa(! Reduce(`|`, lapply(taxa_patterns_to_remove, grepl, x = name))) %>%
   filter_taxa(read_counts >= 100) %>%
   filter_taxa(!(taxon_ids %in% subtaxa(data, name == "Eukaryota", simplify = TRUE, include_input = TRUE) & n_supertaxa <= 1)) %>%
-  plot(title = "Plankton diversity in the sunlit ocean",
-       title_size = 0.03,
-       node_color_axis_label = "Number of reads (Abundance)",
-       node_size_axis_label = "Number of species (OTUs)",
-       node_size = n_obs,
-       node_size_range = c(0.0012, NA),
-       node_color = read_counts,
-       node_color_range = c("grey", "#80cdc1", "#018571", "#dfc27d", "#a6611a"),
-       node_color_trans = "log10",
-       node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", name) &
-                             ! Reduce(`|`, lapply(taxa_patterns_to_hide, grepl, x = name)) &
-                             read_counts > 10000,
-                           name, NA),
-       node_label_color = "#000000",
-       node_label_color_trans = "area",
-       node_label_size = (n_obs / (n_supertaxa + 1)) ^ 0.5,
-       node_label_size_trans = "area",
-       node_label_size_range = c(0.001, NA),
-       node_label_max = 1000,
-       tree_label = name,
-       tree_label_color = "#00806c",
-       tree_label_max = 100,
-       initial_layout = "re", layout = "da",
-       overlap_avoidance = .65,
-       background_color = background_color,
-       maxiter = 50, fineiter = 50,
-       margin_size = c(0.001, 0.001),
-       output_file = file.path(output_folder, paste0("sup_figure_1--tara_all_plankton_diversity",  output_format)))
+  heat_tree(title = "Plankton diversity in the sunlit ocean",
+            title_size = 0.03,
+            node_color_axis_label = "Number of reads (Abundance)",
+            node_size_axis_label = "Number of species (OTUs)",
+            node_size = n_obs,
+            node_size_range = c(0.0012, NA),
+            node_color = read_counts,
+            node_color_range = c("grey", "#80cdc1", "#018571", "#dfc27d", "#a6611a"),
+            node_color_trans = "log10",
+            node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", name) &
+                                  ! Reduce(`|`, lapply(taxa_patterns_to_hide, grepl, x = name)) &
+                                  read_counts > 10000,
+                                name, NA),
+            node_label_color = "#000000",
+            node_label_color_trans = "area",
+            node_label_size = (n_obs / (n_supertaxa + 1)) ^ 0.5,
+            node_label_size_trans = "area",
+            node_label_size_range = c(0.001, NA),
+            node_label_max = 1000,
+            tree_label = name,
+            tree_label_color = "#00806c",
+            tree_label_max = 100,
+            initial_layout = "re", layout = "da",
+            overlap_avoidance = .65,
+            background_color = background_color,
+            maxiter = 50, fineiter = 50,
+            margin_size = c(0.001, 0.001),
+            output_file = file.path(output_folder, paste0("sup_figure_1--tara_all_plankton_diversity",  output_format)))
 ```
 
 
 ## Plot propotion of OTUs identified 
+
+For each taxon we will identify the proportion of OTUs with less than a 90% match to the most similar reference sequence to approximate classification certainty. 
 
 ```{r tara_calc_identified}
 data <- mutate_obs(data, pid = as.numeric(pid))
@@ -136,30 +122,30 @@ data %>%
   filter_taxa(! Reduce(`|`, lapply(taxa_patterns_to_remove, grepl, x = name))) %>%
   filter_taxa(read_counts >= 100) %>%
   filter_taxa(!(taxon_ids %in% subtaxa(data, name == "Eukaryota", simplify = TRUE, include_input = TRUE) & n_supertaxa <= 1)) %>%
-  plot(title = "Poportion of OTUs not well identified",
-       title_size = 0.03,
-       node_color_axis_label = "Percent of species (OTUs) identified",
-       node_size_axis_label = "Number of species (OTUs)",
-       node_size = n_obs,
-       node_size_range = c(0.0012, NA),
-       node_color = percent_known,
-       node_color_range = c("red", "orange", "yellow", "green", "cyan"),
-       node_color_trans = "linear",
-       node_color_interval = c(0, 100),
-       node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", name) &
-                             ! Reduce(`|`, lapply(taxa_patterns_to_hide, grepl, x = name)),
-                           name, NA),
-       node_label_size = (n_obs / (n_supertaxa + 1)) ^ 0.5,
-       node_label_size_trans = "area",
-       node_label_size_range = c(0.001, NA),
-       node_label_max = 1000,
-       tree_label = name,
-       tree_label_max = 100,
-       initial_layout = "re", layout = "da",
-       overlap_avoidance = .65,
-       maxiter = 50, fineiter = 50,
-       margin_size = c(0.001, 0.001),
-       output_file = file.path(output_folder, paste0("sup_figure_2--tara_proportion_identified",  output_format)))
+  heat_tree(title = "Poportion of OTUs not well identified",
+            title_size = 0.03,
+            node_color_axis_label = "Percent of species (OTUs) identified",
+            node_size_axis_label = "Number of species (OTUs)",
+            node_size = n_obs,
+            node_size_range = c(0.0012, NA),
+            node_color = percent_known,
+            node_color_range = c("red", "orange", "yellow", "green", "cyan"),
+            node_color_trans = "linear",
+            node_color_interval = c(0, 100),
+            node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", name) &
+                                  ! Reduce(`|`, lapply(taxa_patterns_to_hide, grepl, x = name)),
+                                name, NA),
+            node_label_size = (n_obs / (n_supertaxa + 1)) ^ 0.5,
+            node_label_size_trans = "area",
+            node_label_size_range = c(0.001, NA),
+            node_label_max = 1000,
+            tree_label = name,
+            tree_label_max = 100,
+            initial_layout = "re", layout = "da",
+            overlap_avoidance = .65,
+            maxiter = 50, fineiter = 50,
+            margin_size = c(0.001, 0.001),
+            output_file = file.path(output_folder, paste0("sup_figure_2--tara_proportion_identified",  output_format)))
 ```
 
 ### Just Metazoa
