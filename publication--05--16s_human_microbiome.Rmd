@@ -225,7 +225,7 @@ plot_body_site_diff_small <- function(data, diff_col, seed = 1) {
     filter_taxa(abundance > 1000) %>%
     filter_taxa(name != "") %>% # Some taxonomic levels are not named
     heat_tree(node_size = n_obs,
-              node_color = remove_inf(diff_col),
+              node_color = diff_col,
               node_color_range = diverging_palette(),
               node_color_trans = "linear",
               node_color_interval = color_range,
