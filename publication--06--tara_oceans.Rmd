@@ -25,41 +25,25 @@ knitr::read_chunk("settings.R")
 
 ## Parsing taxonomic data
 
-The code below downloads the compressed data to a temporary directory:
+The data set at the below URL was downloaded and uncompressed:
 
-```{r tara_download}
-library(metacoder)
-data_url <- "http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W5_OTU_occurences.tsv.zip"
-temp_dir_path <- tempdir()
-local_file_path <- file.path(temp_dir_path, basename(data_url))
-download.file(url = data_url, destfile = local_file_path, quiet = TRUE)
-```
-
-Next we will uncompress the archive and identify the fasta file.
-
-```{r tara_uncompress}
-# Get contents of zip archive
-unpacked_file_paths <- unzip(local_file_path, list = TRUE)
-# Uncompress archive
-unzip(local_file_path, exdir = temp_dir_path)
-# Identify the Mothur RDP training set
-unpacked_file_path <- file.path(temp_dir_path, 
-                                unpacked_file_paths[grepl("tsv$", unpacked_file_paths)])
-```
+http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W5_OTU_occurences.tsv.zip
 
 ```{r tara_parse, warning=FALSE, message=FALSE}
-data <- parse_taxonomy_table(unpacked_file_path, taxon_col = c("class" = -9), class_sep = "\\|")
+library(metacoder)
+data <- parse_taxonomy_table(file.path(input_folder, "Database_W5_OTU_occurences.tsv"), 
+                             taxon_col = c("class" = -9), class_sep = "\\|")
 ```
 
 
 ## Getting sample data
 
+The sample data was downloaded from the URL below:
+
+http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W1_Sample_parameters.xls
+
 ```{r tara_parse_sample}
-data_url <- "http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W1_Sample_parameters.xls"
-temp_dir_path <- tempdir()
-local_file_path <- file.path(temp_dir_path, basename(data_url))
-download.file(url = data_url, destfile = local_file_path, quiet = TRUE)
-sample_data <- readxl::read_excel(local_file_path)
+sample_data <- readxl::read_excel(file.path(input_folder, "Database_W1_Sample_parameters.xls"))
 ```
 
 
@@ -117,6 +101,8 @@ data %>%
 
 
 ## Plot propotion of OTUs identified 
+
+For each taxon we will identify the proportion of OTUs with less than a 90% match to the most similar reference sequence to approximate classification certainty. 
 
 ```{r tara_calc_identified}
 data <- mutate_obs(data, pid = as.numeric(pid))
