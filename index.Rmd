@@ -333,17 +333,10 @@ Some improvements that are being worked on include:
 
 To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
 
-## Feedback
-
-We would like to hear about users' thoughts on the package and any errors they run into.
-Please report bugs and comments on the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
-We also welcome contributions via a Github [pull request](https://help.github.com/articles/using-pull-requests/).
-
 ## Aknowledgements
 
 We thank Tom Sharpton for sharing his metagenomics expertise and advising us.
 MetacodeR's major dependencies are taxize, igraph, and ggplot2.
-
 
 ## References
 
@@ -351,3 +344,9 @@ MetacodeR's major dependencies are taxize, igraph, and ggplot2.
 bibliography()
 ```
 
+## Feedback and contributions
+
+We would like to hear about users' thoughts on the package and any errors they run into.
+Please report errors, questions or suggestions on the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
+We also welcome contributions via a Github [pull request](https://help.github.com/articles/using-pull-requests/).
+You can also talk with us using our [Google groups] site or the comments section below. 
