@@ -349,4 +349,4 @@ bibliography()
 We would like to hear about users' thoughts on the package and any errors they run into.
 Please report errors, questions or suggestions on the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
 We also welcome contributions via a Github [pull request](https://help.github.com/articles/using-pull-requests/).
-You can also talk with us using our [Google groups] site or the comments section below. 
+You can also talk with us using our [Google groups](https://groups.google.com/forum/#!forum/metacoder-discussions) site or the comments section below. 
