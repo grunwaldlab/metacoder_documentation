@@ -335,7 +335,7 @@ To see the details of what is being worked on, check out the [issues](https://gi
 
 ## Aknowledgements
 
-We thank Tom Sharpton for sharing his metagenomics expertise and advising us.
+We thank Thomas Sharpton for sharing his metagenomics expertise and advising us.
 MetacodeR's major dependencies are taxize, igraph, and ggplot2.
 
 ## References

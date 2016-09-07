@@ -41,4 +41,4 @@ output:
     toc_depth: 2
     theme: flatly  ## Choose from http://bootswatch.com/
     includes:
-      after_body: bottom_of_pages.html
+      after_body: footer.html
