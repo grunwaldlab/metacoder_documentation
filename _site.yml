@@ -42,3 +42,4 @@ output:
     theme: flatly  ## Choose from http://bootswatch.com/
     includes:
       after_body: footer.html
+      before_body: header.html
