@@ -1,0 +1,65 @@
+---
+title: Graphing voting geography
+---
+
+```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+knitr::read_chunk("settings.R")
+```
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```
+
+## Read in data
+
+```{r}
+file_path <- file.path(input_folder, "primary_results.csv")
+data <- tibble::as_tibble(read.table(file_path, sep = ",", header = TRUE, quote = "", stringsAsFactors = FALSE))
+```
+
+## Add region column
+
+```{r}
+divisions <- stack(list("New England" = c("Connecticut", "Maine", "Massachusetts",
+                                    "New Hampshire", "Rhode Island", "Vermont"),
+                  "Mid-Atlantic" = c("New Jersey", "New York", "Pennsylvania"),
+                  "East North Central" = c("Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin"),
+                  "West North Central" = c("Iowa", "Kansas", "Minnesota", "Missouri",
+                                           "Nebraska", "North Dakota", "South Dakota"),
+                  "South Atlantic" = c("Delaware", "Florida", "Georgia", "Maryland",
+                                       "North Carolina", "South Carolina", "Virginia",
+                                       "Washington D.C.", "West Virginia"),
+                  "East South Central" = c("Alabama", "Kentucky", "Mississippi", "Tennessee"),
+                  "West South Central" = c("Arkansas", "Louisiana", "Oklahoma", "Texas"),
+                  "Mountain" = c("Arizona", "Colorado", "Idaho", "Montana", "Nevada",
+                                 "New Mexico", "Utah", "Wyoming"),
+                  "Pacific" = c("Alaska", "California", "Hawaii", "Oregon", "Washington")))
+data$division <- divisions$ind[match(data$state, divisions$values)]
+regions <- stack(list("Northeast" = c("New England", "Mid-Atlantic"),
+                      "Midwest" = c("East North Central", "West North Central"),
+                      "South" = c("South Atlantic", "East South Central", "West South Central"),
+                      "West" = c("Mountain", "Pacific")))
+data$region <- regions$ind[match(data$division, regions$values)]
+data[] <- lapply(data, as.character)
+```
+
+
+## Construct classification
+
+```{r}
+data$classification <- paste(sep = "-", "USA", data$region, data$division, data$state, data$county)
+```
+
+## 
+
+```{r}
+library(metacoder)
+voting_data <- extract_taxonomy(data$classification, key = "class", class_sep = "-")
+voting_data <- parse_taxonomy_table(input = data, taxon_col = c("class" = -1), other_col_type = "obs_info")
+```
+
+## 
+
+```{r}
+heat_tree(voting_data, )
+```
+
