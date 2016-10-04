@@ -1,0 +1,15 @@
+---
+title: Human gene expression
+---
+
+```{r expression_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+knitr::read_chunk("settings.R")
+```
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```
+
+```{r io_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```
+
+## Read in data

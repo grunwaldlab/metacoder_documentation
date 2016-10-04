@@ -2,11 +2,14 @@
 title: Graphing voting geography
 ---
 
-```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```{r voting_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 knitr::read_chunk("settings.R")
 ```
 
 ```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```
+
+```{r io_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 ```
 
 ## Read in data
@@ -20,46 +23,89 @@ data <- tibble::as_tibble(read.table(file_path, sep = ",", header = TRUE, quote 
 
 ```{r}
 divisions <- stack(list("New England" = c("Connecticut", "Maine", "Massachusetts",
-                                    "New Hampshire", "Rhode Island", "Vermont"),
-                  "Mid-Atlantic" = c("New Jersey", "New York", "Pennsylvania"),
-                  "East North Central" = c("Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin"),
-                  "West North Central" = c("Iowa", "Kansas", "Minnesota", "Missouri",
-                                           "Nebraska", "North Dakota", "South Dakota"),
-                  "South Atlantic" = c("Delaware", "Florida", "Georgia", "Maryland",
-                                       "North Carolina", "South Carolina", "Virginia",
-                                       "Washington D.C.", "West Virginia"),
-                  "East South Central" = c("Alabama", "Kentucky", "Mississippi", "Tennessee"),
-                  "West South Central" = c("Arkansas", "Louisiana", "Oklahoma", "Texas"),
-                  "Mountain" = c("Arizona", "Colorado", "Idaho", "Montana", "Nevada",
-                                 "New Mexico", "Utah", "Wyoming"),
-                  "Pacific" = c("Alaska", "California", "Hawaii", "Oregon", "Washington")))
+                                          "New Hampshire", "Rhode Island", "Vermont"),
+                        "Mid-Atlantic" = c("New Jersey", "New York", "Pennsylvania"),
+                        "NE Central" = c("Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin"),
+                        "NW Central" = c("Iowa", "Kansas", "Minnesota", "Missouri",
+                                                 "Nebraska", "North Dakota", "South Dakota"),
+                        "South Atlantic" = c("Delaware", "Florida", "Georgia", "Maryland",
+                                             "North Carolina", "South Carolina", "Virginia",
+                                             "Washington D.C.", "West Virginia"),
+                        "SE Central" = c("Alabama", "Kentucky", "Mississippi", "Tennessee"),
+                        "SW Central" = c("Arkansas", "Louisiana", "Oklahoma", "Texas"),
+                        "Mountain" = c("Arizona", "Colorado", "Idaho", "Montana", "Nevada",
+                                       "New Mexico", "Utah", "Wyoming"),
+                        "Pacific" = c("Alaska", "California", "Hawaii", "Oregon", "Washington")))
 data$division <- divisions$ind[match(data$state, divisions$values)]
 regions <- stack(list("Northeast" = c("New England", "Mid-Atlantic"),
-                      "Midwest" = c("East North Central", "West North Central"),
-                      "South" = c("South Atlantic", "East South Central", "West South Central"),
+                      "Midwest" = c("NE Central", "NW Central"),
+                      "South" = c("South Atlantic", "SE Central", "SW Central"),
                       "West" = c("Mountain", "Pacific")))
 data$region <- regions$ind[match(data$division, regions$values)]
 data[] <- lapply(data, as.character)
 ```
 
 
-## Construct classification
+## Create and parse classifications
 
-```{r}
-data$classification <- paste(sep = "-", "USA", data$region, data$division, data$state, data$county)
-```
-
-## 
+The code below creates a single column in the dataset that contains all of the levels of the geographic hierarchy for each location. 
+It is then parsed using `parse_taxonomy_table` so that the other columns are preserved in the `taxmap` object.
 
 ```{r}
 library(metacoder)
-voting_data <- extract_taxonomy(data$classification, key = "class", class_sep = "-")
-voting_data <- parse_taxonomy_table(input = data, taxon_col = c("class" = -1), other_col_type = "obs_info")
+data$classification <- paste(sep = "|", "USA", data$region, data$division, data$state, data$county)
+voting_data <- parse_taxonomy_table(input = data, taxon_col = c("class" = -1), other_col_type = "obs_info", class_sep = "\\|")
 ```
 
-## 
+## Get canidate vote counts
+
+Instead of adding a static column for votes for Bernie / Hillary, I will add column-generating functions so that subsets of the dataset automitically updated vote counts.
 
 ```{r}
-heat_tree(voting_data, )
+voting_data$taxon_funcs <- c(voting_data$taxon_funcs, 
+                             total_votes = function(voting_data, subset) {
+                               sapply(obs(voting_data, subset),
+                                      function(i) sum(voting_data$obs_data$votes[i]))
+                             },
+                             clinton_votes = function(voting_data, subset) {
+                               sapply(obs(voting_data, subset),
+                                      function(i) {
+                                        subset <- voting_data$obs_data[i, ]
+                                        sum(subset$votes[subset$candidate == "Hillary Clinton"])
+                                      })
+                             },
+                             sanders_votes = function(voting_data, subset) {
+                               sapply(obs(voting_data, subset),
+                                      function(i) {
+                                        subset <- voting_data$obs_data[i, ]
+                                        sum(subset$votes[subset$candidate == "Bernie Sanders"])
+                                      })
+                             })
+```
+
+## Plotting results
+
+```{r}
+voting_data %>%
+  filter_taxa(total_votes >= 100) %>%
+  heat_tree(node_size = total_votes,
+            node_size_range = c(0.0002, 0.06),
+            node_color = (clinton_votes - sanders_votes) / total_votes * 100,
+            node_label = ifelse(n_supertaxa <= 3, name, NA),
+            edge_label = ifelse(total_votes > 100000 & n_supertaxa == 4, name, NA),
+            node_color_range = c("cyan", "lightgray", "magenta"),
+            node_color_interval = c(-50, 50),
+            edge_color_range = c("cyan", "lightgray", "magenta"),
+            edge_color_interval = c(-50, 50),
+            margin_size = c(0.001, 0.001),
+            node_color_axis_label = "Clinton                                Sanders",
+            node_size_axis_label = "Total votes",
+            node_label_max = 500,
+            edge_label_max = 500, 
+            overlap_avoidance = 10,
+            # layout = "da", initial_layout = "re",
+            output_file = file.path(output_folder,
+                                    paste0("voting",
+                                           output_format)))
 ```
 
