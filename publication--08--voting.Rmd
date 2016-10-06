@@ -27,7 +27,7 @@ divisions <- stack(list("New England" = c("Connecticut", "Maine", "Massachusetts
                         "Mid-Atlantic" = c("New Jersey", "New York", "Pennsylvania"),
                         "NE Central" = c("Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin"),
                         "NW Central" = c("Iowa", "Kansas", "Minnesota", "Missouri",
-                                                 "Nebraska", "North Dakota", "South Dakota"),
+                                         "Nebraska", "North Dakota", "South Dakota"),
                         "South Atlantic" = c("Delaware", "Florida", "Georgia", "Maryland",
                                              "North Carolina", "South Carolina", "Virginia",
                                              "Washington D.C.", "West Virginia"),
@@ -48,7 +48,7 @@ data[] <- lapply(data, as.character)
 
 ## Create and parse classifications
 
-The code below creates a single column in the dataset that contains all of the levels of the geographic hierarchy for each location. 
+The code below creates a single column in the data set that contains all of the levels of the geographic hierarchy for each location. 
 It is then parsed using `parse_taxonomy_table` so that the other columns are preserved in the `taxmap` object.
 
 ```{r}
@@ -59,51 +59,56 @@ voting_data <- parse_taxonomy_table(input = data, taxon_col = c("class" = -1), o
 
 ## Get canidate vote counts
 
-Instead of adding a static column for votes for Bernie / Hillary, I will add column-generating functions so that subsets of the dataset automitically updated vote counts.
+```{r}
+voting_data <- mutate_taxa(voting_data,
+                           total_votes = sapply(obs(voting_data),
+                                                function(i) sum(voting_data$obs_data$votes[i])),
+                           clinton_votes = sapply(obs(voting_data),
+                                                  function(i) {
+                                                    subset <- voting_data$obs_data[i, ]
+                                                    sum(subset$votes[subset$candidate == "Hillary Clinton"])
+                                                  }),
+                           sanders_votes = sapply(obs(voting_data),
+                                                  function(i) {
+                                                    subset <- voting_data$obs_data[i, ]
+                                                    sum(subset$votes[subset$candidate == "Bernie Sanders"])
+                                                  })
+)
+```
+
+# Get top counties
+
+I will get a list of the "taxon" IDs for the county in each state with the most votes.
+The code below works, but is not too elegant; I want to make a new set of functions, maybe called something like `subtaxa_apply` to do this kind of operation. 
 
 ```{r}
-voting_data$taxon_funcs <- c(voting_data$taxon_funcs, 
-                             total_votes = function(voting_data, subset) {
-                               sapply(obs(voting_data, subset),
-                                      function(i) sum(voting_data$obs_data$votes[i]))
-                             },
-                             clinton_votes = function(voting_data, subset) {
-                               sapply(obs(voting_data, subset),
-                                      function(i) {
-                                        subset <- voting_data$obs_data[i, ]
-                                        sum(subset$votes[subset$candidate == "Hillary Clinton"])
-                                      })
-                             },
-                             sanders_votes = function(voting_data, subset) {
-                               sapply(obs(voting_data, subset),
-                                      function(i) {
-                                        subset <- voting_data$obs_data[i, ]
-                                        sum(subset$votes[subset$candidate == "Bernie Sanders"])
-                                      })
-                             })
+total_votes <- taxon_data(voting_data, col_subset = "total_votes", drop = TRUE)
+top_counties <- vapply(FUN.VALUE = character(1), 
+                       subtaxa(voting_data, index = TRUE,
+                               filter_taxa(voting_data,
+                                           n_supertaxa == 3)$taxon_data$taxon_ids), 
+                       function(x) voting_data$taxon_data$taxon_ids[x[which.max(total_votes[x])]])
 ```
 
 ## Plotting results
 
+
 ```{r}
 voting_data %>%
-  filter_taxa(total_votes >= 100) %>%
   heat_tree(node_size = total_votes,
             node_size_range = c(0.0002, 0.06),
             node_color = (clinton_votes - sanders_votes) / total_votes * 100,
-            node_label = ifelse(n_supertaxa <= 3, name, NA),
-            edge_label = ifelse(total_votes > 100000 & n_supertaxa == 4, name, NA),
+            edge_label = ifelse(taxon_ids %in% top_counties | n_supertaxa <= 3, name, NA),
+            edge_label_size_trans = "area",
+            edge_label_size_range = c(0.008, 0.025),
             node_color_range = c("#a6611a", "lightgray", "#018571"),
             node_color_interval = c(-50, 50),
             edge_color_range = c("#a6611a", "lightgray", "#018571"),
             edge_color_interval = c(-50, 50),
-            margin_size = c(0.001, 0.001),
             node_color_axis_label = "Clinton                                Sanders",
             node_size_axis_label = "Total votes",
-            node_label_max = 500,
-            edge_label_max = 500, 
+            edge_label_max = 5000, 
             overlap_avoidance = 10,
-            # layout = "da", initial_layout = "re",
             output_file = file.path(output_folder,
                                     paste0("voting",
                                            output_format)))
