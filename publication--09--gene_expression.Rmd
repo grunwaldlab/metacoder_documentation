@@ -13,3 +13,147 @@ knitr::read_chunk("settings.R")
 ```
 
 ## Read in data
+
+### Starting from SummarizedExperiment
+
+```{r}
+library(rnaseqGene)
+library("airway")
+data("airway")
+se <- airway
+```
+
+```{r}
+se$dex <- relevel(se$dex, "untrt")
+se$dex
+```
+
+```{r}
+library("DESeq2")
+dds <- DESeqDataSet(se, design = ~ cell + dex)
+```
+
+### Pre-filtering the dataset
+
+```{r}
+nrow(dds)
+
+## [1] 64102
+
+dds <- dds[ rowSums(counts(dds)) > 1, ]
+nrow(dds)
+```
+
+### The rlog transformation
+
+```{r}
+rld <- rlog(dds, blind=FALSE)
+head(assay(rld), 3)
+```
+
+
+```{r}
+par( mfrow = c( 1, 2 ) )
+dds <- estimateSizeFactors(dds)
+plot(log2(counts(dds, normalized=TRUE)[,1:2] + 1),
+     pch=16, cex=0.3)
+plot(assay(rld)[,1:2],
+     pch=16, cex=0.3)
+```
+
+
+### Differential expression analysis
+
+```{r}
+dds <- DESeq(dds)
+(res <- results(dds))
+```
+
+
+
+
+### Converting ENSEMBL IDs to GO IDs
+
+
+```{r}
+library(GO.db)
+library(org.Hs.eg.db)
+res$go_id <- mapIds(org.Hs.eg.db,
+                    keys=rownames(res),
+                    column="GO",
+                    keytype="ENSEMBL",
+                    multiVals="first")
+```
+
+
+### Fitlering results 
+
+Remove genes with no GO annotation 
+
+```{r}
+res <- res[!is.na(res$go_id), ]
+res <- res[res$go_id %in% keys(org.Hs.eg.db, keytype = "GO"), ]
+
+```
+
+
+### Getting classificaiton
+
+```{r}
+term_class <- function(x, current = x) {
+  # Get immediate children of current taxon
+  if (x[1] %in% names(as.list(GOMFPARENTS))) {
+    parents <- names(Term(as.list(GOMFPARENTS[x[1]])[[1]]))
+    parents <- parents[parents != "all"]
+  } else {
+    parents <- c()
+  }
+  
+  if (length(parents) == 0) {
+    return(paste0(collapse = "|", Term(x)))
+  } else {
+    next_x <- lapply(parents, function(y) c(y, x))
+    
+    # Run this function on them to get their output
+    child_output <- lapply(next_x, term_class)
+    output <- unlist(child_output, recursive = FALSE)
+    
+    return(output)
+  }
+}
+go_class <- function(x, current = x) {
+  # Get immediate children of current taxon
+  parents <- names(Term(as.list(GOMFPARENTS[x[1]])[[1]]))
+  parents <- parents[parents != "all" & parents %in% names(as.list(GOMFPARENTS))]
+  
+  if (length(parents) == 0) {
+    return(paste0(collapse = "|", names(Term(x))))
+  } else {
+    next_x <- lapply(parents, function(y) c(y, x))
+    
+    # Run this function on them to get their output
+    child_output <- lapply(next_x, go_class)
+    output <- unlist(child_output, recursive = FALSE)
+    
+    return(output)
+  }
+}
+```
+
+
+
+```{r}
+classifications <- lapply(res$go_id, term_class)
+res <- res[rep(1:nrow(res), sapply(classifications, length)), ]
+res$class <- unlist(classifications)
+```
+
+
+### Parse into taxmap
+
+```{r}
+library(metacoder)
+data <- parse_taxonomy_table(input = res, taxon_col = c("class" = -1), other_col_type = "obs_info", class_sep = "\\|")
+```
+
+

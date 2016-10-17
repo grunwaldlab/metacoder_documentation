@@ -315,7 +315,7 @@ for (i in seq_along(sub_plots)) {
                                          width = subgraph_width, height = subgraph_height)
 }
 print(matrix_plot)
-save_plot(file.path(output_folder, "figure_3--hmp_matrix_plot.pdf"), 
+save_plot(file.path(output_folder, paste0("figure_3--hmp_matrix_plot", output_format)), 
           matrix_plot, base_width = 7.5, base_height = 7.5)
 ```
 
