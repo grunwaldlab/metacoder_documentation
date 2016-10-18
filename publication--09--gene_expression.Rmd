@@ -125,11 +125,10 @@ res <-  res[abs(res$log2FoldChange) >= 0.5, ]
 ### Getting classificaiton
 
 ```{r}
-valid_go <- names(as.list(GOBPPARENTS))
-term_class <- function(x, current = x, all_paths = TRUE) {
+term_class <- function(x, current = x, all_paths = TRUE, type = GOCCPARENTS) {
   # Get immediate children of current taxon
   parents = tryCatch({
-    names(AnnotationDbi::Term(as.list(GOBPPARENTS[x[1]])[[1]]))
+    names(AnnotationDbi::Term(as.list(type[x[1]])[[1]]))
   }, error = function(e) {
     c()
   })
@@ -140,13 +139,15 @@ term_class <- function(x, current = x, all_paths = TRUE) {
   }
   parents <- parents[parents != "all"]
   
-  if (length(parents) == 0) {
+  if (is.null(parents)) {
+    return(c())
+  } else if (length(parents) == 0) {
     return(paste0(collapse = "|", AnnotationDbi::Term(x)))
   } else {
     next_x <- lapply(parents, function(y) c(y, x))
     
     # Run this function on them to get their output
-    child_output <- lapply(next_x, term_class, all_paths = all_paths)
+    child_output <- lapply(next_x, term_class, all_paths = all_paths, type = type)
     output <- unlist(child_output, recursive = FALSE)
     
     return(output)
@@ -158,36 +159,31 @@ term_class <- function(x, current = x, all_paths = TRUE) {
 
 
 ```{r}
-classifications <- lapply(res$go_id, term_class, all_paths = FALSE)
-res <- res[rep(1:nrow(res), sapply(classifications, length)), ]
-res$class <- unlist(classifications)
+cc_class <- lapply(res$go_id, term_class, all_paths = FALSE, type = GOCCPARENTS)
+mf_class <- lapply(res$go_id, term_class, all_paths = FALSE, type = GOMFPARENTS)
+bp_class <- lapply(res$go_id, term_class, all_paths = FALSE, type = GOBPPARENTS)
+```
+
+```{r}
 ```
 
 
-### Parse into taxmap
+### Cellular component
 
 ```{r}
+cc_res <- res[rep(1:nrow(res), sapply(cc_class, length)), ]
+cc_res$class <- unlist(cc_class)
 library(metacoder)
-data <- parse_taxonomy_table(input = as.data.frame(res), taxon_col = c("class" = -1), other_col_type = "obs_info", class_sep = "\\|")
-```
-
-
-```{r}
+data <- parse_taxonomy_table(input = as.data.frame(cc_res),
+                             taxon_col = c("class" = -1),
+                             other_col_type = "obs_info",
+                             class_sep = "\\|")
 data$taxon_funcs <- c(data$taxon_funcs,
                       change = function(x, subset = NULL) {
                         vapply(obs(x),
                                function(i) mean(data$obs_data[i, ]$log2FoldChange, na.rm = TRUE),
-                               numeric(1))
-                      })
-```
-
-
-### Graph
-
-```{r}
+                               numeric(1))                      })
 data %>%
-  # filter_taxa(name == "molecular_function", subtaxa = TRUE) %>%
-  # filter_taxa(abs(change) > 0.5, supertaxa = TRUE) %>%
   heat_tree(node_label = name,
             node_size = n_obs,
             node_color = change,
@@ -197,7 +193,72 @@ data %>%
             edge_color_trans = "linear",
             edge_color_range = diverging_palette(),
             edge_color_interval = c(-1, 1),
-            node_label_max = 300)
+            node_label_max = 300,
+            output_file = file.path(output_folder,
+                                    paste0("gene_expression--cellular_component",
+                                           output_format)))
 ```
 
 
+
+### Biological Process
+
+```{r}
+bp_res <- res[rep(1:nrow(res), sapply(bp_class, length)), ]
+bp_res$class <- unlist(bp_class)
+library(metacoder)
+data <- parse_taxonomy_table(input = as.data.frame(bp_res),
+                             taxon_col = c("class" = -1),
+                             other_col_type = "obs_info",
+                             class_sep = "\\|")
+data$taxon_funcs <- c(data$taxon_funcs,
+                      change = function(x, subset = NULL) {
+                        vapply(obs(x),
+                               function(i) mean(data$obs_data[i, ]$log2FoldChange, na.rm = TRUE),
+                               numeric(1))                      })
+data %>%
+  heat_tree(node_label = name,
+            node_size = n_obs,
+            node_color = change,
+            node_color_trans = "linear",
+            node_color_range = diverging_palette(),
+            node_color_interval = c(-1, 1),
+            edge_color_trans = "linear",
+            edge_color_range = diverging_palette(),
+            edge_color_interval = c(-1, 1),
+            node_label_max = 300,
+            output_file = file.path(output_folder,
+                                    paste0("gene_expression--biological_process",
+                                           output_format)))
+```
+
+### Molecular Function
+
+```{r}
+mf_res <- res[rep(1:nrow(res), sapply(mf_class, length)), ]
+mf_res$class <- unlist(mf_class)
+library(metacoder)
+data <- parse_taxonomy_table(input = as.data.frame(mf_res),
+                             taxon_col = c("class" = -1),
+                             other_col_type = "obs_info",
+                             class_sep = "\\|")
+data$taxon_funcs <- c(data$taxon_funcs,
+                      change = function(x, subset = NULL) {
+                        vapply(obs(x),
+                               function(i) mean(data$obs_data[i, ]$log2FoldChange, na.rm = TRUE),
+                               numeric(1))                      })
+data %>%
+  heat_tree(node_label = name,
+            node_size = n_obs,
+            node_color = change,
+            node_color_trans = "linear",
+            node_color_range = diverging_palette(),
+            node_color_interval = c(-1, 1),
+            edge_color_trans = "linear",
+            edge_color_range = diverging_palette(),
+            edge_color_interval = c(-1, 1),
+            node_label_max = 300,
+            output_file = file.path(output_folder,
+                                    paste0("gene_expression--molecular_function",
+                                           output_format)))
+```
