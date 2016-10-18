@@ -12,6 +12,23 @@ knitr::read_chunk("settings.R")
 ```{r io_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 ```
 
+## Installation
+
+```{r eval = FALSE}
+source("https://bioconductor.org/biocLite.R")
+source("http://bioconductor.org/workflows.R")
+```
+
+```{r eval = FALSE}
+workflowInstall("rnaseqGene")
+biocLite("GO.db")
+biocLite("org.Hs.eg.db")
+biocLite("airway")
+biocLite("DESeq2")
+```
+
+
+
 ## Read in data
 
 ### Starting from SummarizedExperiment
@@ -37,9 +54,6 @@ dds <- DESeqDataSet(se, design = ~ cell + dex)
 
 ```{r}
 nrow(dds)
-
-## [1] 64102
-
 dds <- dds[ rowSums(counts(dds)) > 1, ]
 nrow(dds)
 ```
@@ -93,57 +107,58 @@ Remove genes with no GO annotation
 ```{r}
 res <- res[!is.na(res$go_id), ]
 res <- res[res$go_id %in% keys(org.Hs.eg.db, keytype = "GO"), ]
+```
 
+Remove insignificant genes
+
+```{r}
+res <- res[(! is.na(res$padj)) & res$padj <= 0.05, ]
+```
+
+Remove genes with small changes
+
+```{r}
+res <-  res[abs(res$log2FoldChange) >= 0.5, ]
 ```
 
 
 ### Getting classificaiton
 
 ```{r}
-term_class <- function(x, current = x) {
+valid_go <- names(as.list(GOBPPARENTS))
+term_class <- function(x, current = x, all_paths = TRUE) {
   # Get immediate children of current taxon
-  if (x[1] %in% names(as.list(GOMFPARENTS))) {
-    parents <- names(Term(as.list(GOMFPARENTS[x[1]])[[1]]))
-    parents <- parents[parents != "all"]
-  } else {
-    parents <- c()
+  parents = tryCatch({
+    names(AnnotationDbi::Term(as.list(GOBPPARENTS[x[1]])[[1]]))
+  }, error = function(e) {
+    c()
+  })
+  
+  # only go down one path if desired
+  if (! all_paths) {
+    parents <- parents[1]
   }
+  parents <- parents[parents != "all"]
   
   if (length(parents) == 0) {
-    return(paste0(collapse = "|", Term(x)))
+    return(paste0(collapse = "|", AnnotationDbi::Term(x)))
   } else {
     next_x <- lapply(parents, function(y) c(y, x))
     
     # Run this function on them to get their output
-    child_output <- lapply(next_x, term_class)
+    child_output <- lapply(next_x, term_class, all_paths = all_paths)
     output <- unlist(child_output, recursive = FALSE)
     
     return(output)
   }
 }
-go_class <- function(x, current = x) {
-  # Get immediate children of current taxon
-  parents <- names(Term(as.list(GOMFPARENTS[x[1]])[[1]]))
-  parents <- parents[parents != "all" & parents %in% names(as.list(GOMFPARENTS))]
-  
-  if (length(parents) == 0) {
-    return(paste0(collapse = "|", names(Term(x))))
-  } else {
-    next_x <- lapply(parents, function(y) c(y, x))
-    
-    # Run this function on them to get their output
-    child_output <- lapply(next_x, go_class)
-    output <- unlist(child_output, recursive = FALSE)
-    
-    return(output)
-  }
-}
+
 ```
 
 
 
 ```{r}
-classifications <- lapply(res$go_id, term_class)
+classifications <- lapply(res$go_id, term_class, all_paths = FALSE)
 res <- res[rep(1:nrow(res), sapply(classifications, length)), ]
 res$class <- unlist(classifications)
 ```
@@ -153,7 +168,36 @@ res$class <- unlist(classifications)
 
 ```{r}
 library(metacoder)
-data <- parse_taxonomy_table(input = res, taxon_col = c("class" = -1), other_col_type = "obs_info", class_sep = "\\|")
+data <- parse_taxonomy_table(input = as.data.frame(res), taxon_col = c("class" = -1), other_col_type = "obs_info", class_sep = "\\|")
+```
+
+
+```{r}
+data$taxon_funcs <- c(data$taxon_funcs,
+                      change = function(x, subset = NULL) {
+                        vapply(obs(x),
+                               function(i) mean(data$obs_data[i, ]$log2FoldChange, na.rm = TRUE),
+                               numeric(1))
+                      })
+```
+
+
+### Graph
+
+```{r}
+data %>%
+  # filter_taxa(name == "molecular_function", subtaxa = TRUE) %>%
+  # filter_taxa(abs(change) > 0.5, supertaxa = TRUE) %>%
+  heat_tree(node_label = name,
+            node_size = n_obs,
+            node_color = change,
+            node_color_trans = "linear",
+            node_color_range = diverging_palette(),
+            node_color_interval = c(-1, 1),
+            edge_color_trans = "linear",
+            edge_color_range = diverging_palette(),
+            edge_color_interval = c(-1, 1),
+            node_label_max = 300)
 ```
 
 
