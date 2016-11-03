@@ -3,7 +3,7 @@ title: Human gene expression
 ---
 
 ```{r expression_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-knitr::read_chunk("settings.R")
+knitr::read_chunk("settings.R") # source("settings.R")
 ```
 
 ```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
@@ -109,7 +109,7 @@ res$go_id <- mapIds(org.Hs.eg.db,
 
 Remove genes with no GO annotation 
 
-```{r eval = FALSE}
+```{r eval = TRUE}
 nrow(res)
 res <- res[!is.na(res$go_id), ]
 res <- res[res$go_id %in% keys(org.Hs.eg.db, keytype = "GO"), ]
@@ -136,10 +136,15 @@ nrow(res)
 ### Getting classificaiton
 
 ```{r}
-term_class <- function(x, current = x, all_paths = TRUE, type = GOCCPARENTS, verbose = TRUE) {
+term_class <- function(x, current = x, all_paths = TRUE, type = GOCCPARENTS, verbose = TRUE, 
+                       valid_relationships = c("is_a")) {
   # Get immediate children of current taxon
   parents = tryCatch({
-    names(AnnotationDbi::Term(as.list(type[x[1]])[[1]]))
+    possible_parents <- as.list(type[x[1]])[[1]]
+    if (! is.null(valid_relationships)) {
+      possible_parents <- possible_parents[names(possible_parents) %in% valid_relationships]
+    }
+    names(AnnotationDbi::Term(possible_parents))
   }, error = function(e) {
     c()
   })
