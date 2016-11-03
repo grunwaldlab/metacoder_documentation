@@ -181,9 +181,10 @@ mf_class <- lapply(res$go_id, term_class, all_paths = FALSE, type = GOMFPARENTS)
 bp_class <- lapply(res$go_id, term_class, all_paths = FALSE, type = GOBPPARENTS)
 ```
 
-```{r}
+```{r echo = FALSE, eval = FALSE}
+save.image(file = "09--gene_expression--workspace.RData")
+load("09--gene_expression--workspace.RData")
 ```
-
 
 ### Cellular component
 
