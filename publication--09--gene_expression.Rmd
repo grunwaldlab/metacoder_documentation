@@ -12,6 +12,11 @@ knitr::read_chunk("settings.R")
 ```{r io_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
 ```
 
+```{r}
+min_p_value <- 0.05
+```
+
+
 ## Installation
 
 ```{r eval = FALSE}
@@ -104,28 +109,34 @@ res$go_id <- mapIds(org.Hs.eg.db,
 
 Remove genes with no GO annotation 
 
-```{r}
+```{r eval = FALSE}
+nrow(res)
 res <- res[!is.na(res$go_id), ]
 res <- res[res$go_id %in% keys(org.Hs.eg.db, keytype = "GO"), ]
+nrow(res)
 ```
 
 Remove insignificant genes
 
-```{r}
+```{r eval = FALSE}
+nrow(res)
 res <- res[(! is.na(res$padj)) & res$padj <= 0.05, ]
+nrow(res)
 ```
 
 Remove genes with small changes
 
-```{r}
+```{r eval = FALSE}
+nrow(res)
 res <-  res[abs(res$log2FoldChange) >= 0.5, ]
+nrow(res)
 ```
 
 
 ### Getting classificaiton
 
 ```{r}
-term_class <- function(x, current = x, all_paths = TRUE, type = GOCCPARENTS) {
+term_class <- function(x, current = x, all_paths = TRUE, type = GOCCPARENTS, verbose = TRUE) {
   # Get immediate children of current taxon
   parents = tryCatch({
     names(AnnotationDbi::Term(as.list(type[x[1]])[[1]]))
@@ -142,6 +153,7 @@ term_class <- function(x, current = x, all_paths = TRUE, type = GOCCPARENTS) {
   if (is.null(parents)) {
     return(c())
   } else if (length(parents) == 0) {
+    cat(length(x))
     return(paste0(collapse = "|", AnnotationDbi::Term(x)))
   } else {
     next_x <- lapply(parents, function(y) c(y, x))
@@ -178,14 +190,36 @@ data <- parse_taxonomy_table(input = as.data.frame(cc_res),
                              taxon_col = c("class" = -1),
                              other_col_type = "obs_info",
                              class_sep = "\\|")
+data$obs_data$padj <- as.numeric(data$obs_data$padj)
 data$taxon_funcs <- c(data$taxon_funcs,
                       change = function(x, subset = NULL) {
                         vapply(obs(x),
-                               function(i) mean(data$obs_data[i, ]$log2FoldChange, na.rm = TRUE),
-                               numeric(1))                      })
+                               function(i) {
+                                 obs_change <- data$obs_data[i, ]$log2FoldChange[data$obs_data[i, ]$padj <= min_p_value]
+                                 mean(obs_change, na.rm = TRUE)
+                                 },
+                               numeric(1))
+                        },
+                      num_changed = function(x, subset = NULL) {
+                        vapply(obs(x),
+                               function(i) {
+                                 sum(data$obs_data[i, ]$padj <= min_p_value, na.rm = TRUE)
+                                 },
+                               numeric(1))
+                      })
+```
+
+
+```{r}
 data %>%
-  heat_tree(node_label = name,
-            node_size = n_obs,
+  filter_taxa(num_changed > 0) %>%
+  filter_taxa(n_supertaxa <= 4) %>%
+  heat_tree(node_label = ifelse(nchar(name) <= 40, name, NA),
+            node_size = num_changed,
+            # node_size_trans = "log10",
+            # node_size_range = c(0.003, 0.03),
+            # edge_size_trans = "log10",
+            # edge_size_range = c(0.003, 0.03) / 2,
             node_color = change,
             node_color_trans = "linear",
             node_color_range = diverging_palette(),
@@ -193,7 +227,7 @@ data %>%
             edge_color_trans = "linear",
             edge_color_range = diverging_palette(),
             edge_color_interval = c(-1, 1),
-            node_label_max = 300,
+            node_label_max = 500,
             output_file = file.path(output_folder,
                                     paste0("gene_expression--cellular_component",
                                            output_format)))
@@ -211,14 +245,35 @@ data <- parse_taxonomy_table(input = as.data.frame(bp_res),
                              taxon_col = c("class" = -1),
                              other_col_type = "obs_info",
                              class_sep = "\\|")
+data$obs_data$padj <- as.numeric(data$obs_data$padj)
 data$taxon_funcs <- c(data$taxon_funcs,
                       change = function(x, subset = NULL) {
                         vapply(obs(x),
-                               function(i) mean(data$obs_data[i, ]$log2FoldChange, na.rm = TRUE),
-                               numeric(1))                      })
+                               function(i) {
+                                 obs_change <- data$obs_data[i, ]$log2FoldChange[data$obs_data[i, ]$padj <= min_p_value]
+                                 mean(obs_change, na.rm = TRUE)
+                                 },
+                               numeric(1))
+                        },
+                      num_changed = function(x, subset = NULL) {
+                        vapply(obs(x),
+                               function(i) {
+                                 sum(data$obs_data[i, ]$padj <= min_p_value, na.rm = TRUE)
+                                 },
+                               numeric(1))
+                      })
+
+```
+
+```{r}
 data %>%
+  filter_taxa(num_changed > 0) %>%
   heat_tree(node_label = name,
-            node_size = n_obs,
+            node_size = num_changed,
+            node_size_trans = "log10",
+            node_size_range = c(0.003, 0.03),
+            edge_size_trans = "log10",
+            edge_size_range = c(0.003, 0.03) / 2,
             node_color = change,
             node_color_trans = "linear",
             node_color_range = diverging_palette(),
@@ -231,6 +286,7 @@ data %>%
                                     paste0("gene_expression--biological_process",
                                            output_format)))
 ```
+
 
 ### Molecular Function
 
