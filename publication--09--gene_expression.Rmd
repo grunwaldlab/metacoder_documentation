@@ -276,26 +276,34 @@ data$taxon_funcs <- c(data$taxon_funcs,
                                  },
                                numeric(1))
                       })
-
 ```
 
 ```{r}
+set.seed(3)
 data %>%
   filter_taxa(num_changed > 0) %>%
-  heat_tree(node_label = name,
+  filter_taxa(n_supertaxa <= 3) %>%
+  # filter_taxa(n_supertaxa >= 1) %>% 
+  filter_taxa(nchar(name) <= 40) %>%
+  heat_tree(node_label = ifelse(nchar(name) <= 40, name, NA),
             node_size = num_changed,
-            node_size_trans = "log10",
-            node_size_range = c(0.003, 0.03),
-            edge_size_trans = "log10",
-            edge_size_range = c(0.003, 0.03) / 2,
-            node_color = change,
+            # node_size_trans = "log10",
+            node_size_range = c(0.01, 0.03),
+            # node_label_size_trans = "log10",
+            node_label_size_range = c(0.01, 0.015),
+            # edge_size_trans = "log10",
+            edge_size_range = c(0.008, 0.03) / 2,
+            node_color = 2^abs(change) * sign(change),
             node_color_trans = "linear",
             node_color_range = diverging_palette(),
-            node_color_interval = c(-1, 1),
+            node_color_interval = c(-4, 4),
             edge_color_trans = "linear",
             edge_color_range = diverging_palette(),
-            edge_color_interval = c(-1, 1),
-            node_label_max = 300,
+            edge_color_interval =  c(-4, 4),
+            node_label_max = 500,
+            node_color_axis_label = "Factor change",
+            node_size_axis_label = "Number of genes",
+            layout = "da", initial_layout = "re",
             output_file = file.path(output_folder,
                                     paste0("gene_expression--biological_process",
                                            output_format)))
@@ -312,23 +320,53 @@ data <- parse_taxonomy_table(input = as.data.frame(mf_res),
                              taxon_col = c("class" = -1),
                              other_col_type = "obs_info",
                              class_sep = "\\|")
+data$obs_data$padj <- as.numeric(data$obs_data$padj)
 data$taxon_funcs <- c(data$taxon_funcs,
                       change = function(x, subset = NULL) {
                         vapply(obs(x),
-                               function(i) mean(data$obs_data[i, ]$log2FoldChange, na.rm = TRUE),
-                               numeric(1))                      })
+                               function(i) {
+                                 obs_change <- data$obs_data[i, ]$log2FoldChange[data$obs_data[i, ]$padj <= min_p_value]
+                                 mean(obs_change, na.rm = TRUE)
+                                 },
+                               numeric(1))
+                        },
+                      num_changed = function(x, subset = NULL) {
+                        vapply(obs(x),
+                               function(i) {
+                                 sum(data$obs_data[i, ]$padj <= min_p_value, na.rm = TRUE)
+                                 },
+                               numeric(1))
+                      })
+```
+
+
+```{r}
 data %>%
-  heat_tree(node_label = name,
-            node_size = n_obs,
-            node_color = change,
+  filter_taxa(num_changed > 0) %>%
+  filter_taxa(n_supertaxa <= 3) %>%
+  # filter_taxa(n_supertaxa >= 1) %>% 
+  filter_taxa(nchar(name) <= 40) %>%
+  heat_tree(node_label = ifelse(nchar(name) <= 40, name, NA),
+            node_size = num_changed,
+            # node_size_trans = "log10",
+            node_size_range = c(0.01, 0.03),
+            # node_label_size_trans = "log10",
+            node_label_size_range = c(0.01, 0.015),
+            # edge_size_trans = "log10",
+            edge_size_range = c(0.008, 0.03) / 2,
+            node_color = 2^abs(change) * sign(change),
             node_color_trans = "linear",
             node_color_range = diverging_palette(),
-            node_color_interval = c(-1, 1),
+            node_color_interval = c(-4, 4),
             edge_color_trans = "linear",
             edge_color_range = diverging_palette(),
-            edge_color_interval = c(-1, 1),
-            node_label_max = 300,
+            edge_color_interval =  c(-4, 4),
+            node_label_max = 500,
+            node_color_axis_label = "Factor change",
+            node_size_axis_label = "Number of genes",
+            layout = "da", initial_layout = "re",
             output_file = file.path(output_folder,
                                     paste0("gene_expression--molecular_function",
                                            output_format)))
 ```
+
