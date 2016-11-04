@@ -279,27 +279,31 @@ data$taxon_funcs <- c(data$taxon_funcs,
 ```
 
 ```{r}
-set.seed(3)
+set.seed(7) #2, 4, 5, 7*, 19
+data$taxon_data$name <- gsub("cellular modified amino acid metabolic process",
+                             "amino acid metabolic process", data$taxon_data$name)
+data$taxon_data$name <- gsub("cellular aromatic compound metabolic process",
+                             "aromatic compound process", data$taxon_data$name)
 data %>%
   filter_taxa(num_changed > 0) %>%
   filter_taxa(n_supertaxa <= 3) %>%
   # filter_taxa(n_supertaxa >= 1) %>% 
-  filter_taxa(nchar(name) <= 40) %>%
-  heat_tree(node_label = ifelse(nchar(name) <= 40, name, NA),
+  # filter_taxa(nchar(name) <= 40) %>%
+  heat_tree(node_label = gsub("_", " ", name),
             node_size = num_changed,
             # node_size_trans = "log10",
             node_size_range = c(0.01, 0.03),
             # node_label_size_trans = "log10",
-            node_label_size_range = c(0.01, 0.015),
+            node_label_size_range = c(0.0065, 0.011),
             # edge_size_trans = "log10",
             edge_size_range = c(0.008, 0.03) / 2,
             node_color = 2^abs(change) * sign(change),
             node_color_trans = "linear",
             node_color_range = diverging_palette(),
-            node_color_interval = c(-4, 4),
+            node_color_interval = c(-5, 5),
             edge_color_trans = "linear",
             edge_color_range = diverging_palette(),
-            edge_color_interval =  c(-4, 4),
+            edge_color_interval =  c(-5, 5),
             node_label_max = 500,
             node_color_axis_label = "Factor change",
             node_size_axis_label = "Number of genes",
