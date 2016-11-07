@@ -46,11 +46,15 @@ v35_data
 I will calculate total read abundance per taxon for later graphing and filtering.
 
 ```{r hmp_calc_abundance}
-calculate_abundance <- function(data) {
-  obs_samples <- colnames(data$obs_data) %in% data$mapping$sample_id
-  mutate_taxa(data,
-              abundance = vapply(obs(data), 
-                                 function(i) sum(data$obs_data[i, obs_samples]), numeric(1)))
+calculate_abundance <- function(data, col = colnames(data$obs_data) %in% data$mapping$sample_id, col_name = "abundance") {
+  data$taxon_data[[col_name]] <- vapply(obs(data), 
+                                        function(i) sum(data$obs_data[i, col]), numeric(1))
+  return(data)
+}
+calculate_prop <- function(data, col = colnames(data$obs_data) %in% data$mapping$sample_id, col_name = "abundance") {
+  data$taxon_data[[col_name]] <- vapply(obs(data), 
+                                        function(i) sum(data$obs_data[i, col]) , numeric(1)) / sum(data$obs_data[, col])
+  return(data)
 }
 v35_data <- calculate_abundance(v35_data)
 ```
@@ -78,6 +82,101 @@ plot_all <- function(data, output_name, seed = 1) {
 }
 
 plot_all(v35_data, "hmp--v35--all_data")
+```
+
+
+## Comparison with stacked bar charts
+
+### Calculate abundance
+
+```{r}
+v35_data <- calculate_abundance(v35_data, "700114482", "sample_1")
+v35_data <- calculate_abundance(v35_data, "700114439", "sample_2")
+```
+
+### Graph heat trees
+
+```{r}
+min_count <- 1
+sample_1 <- v35_data %>%
+  filter_taxa(sample_1 >= min_count | sample_2 >= min_count) %>%
+  heat_tree(
+    title = "Sample 1",
+    title_size = .05,
+    node_size = sample_1, 
+    node_color = sample_1, 
+    node_label = ifelse(sample_1 >= 1, name, NA),
+    node_label_max = 3000, 
+    node_size_range = c(.01, .07),
+    node_label_size_range = c(.015, .1) * 0.4, 
+    make_legend = TRUE, 
+    node_color_axis_label = "Abundance",
+    output_file = file.path(output_folder, paste0("sample_1_tree", output_format)))
+sample_2 <- v35_data %>%
+  filter_taxa(sample_1 >= min_count | sample_2 >= min_count) %>%
+  heat_tree(
+    title = "Sample 2",
+    title_size = .05,
+    node_size = sample_2, 
+    node_color = sample_2, 
+    node_label = ifelse(sample_2 >= 1, name, NA),
+    node_label_max = 3000, 
+    node_size_range = c(.01, .07),
+    node_label_size_range = c(.015, .1) * 0.4, 
+    make_legend = TRUE, 
+    node_color_axis_label = "Abundance",
+    output_file = file.path(output_folder, paste0("sample_2_tree", output_format)))
+
+```
+
+### Stacked barchart
+
+```{r}
+min_count <- 1
+bar_data <- filter_taxa(v35_data, (sample_1 >= min_count | sample_2 >= min_count) & name != "") %>%
+  calculate_prop("700114482", "sample_1") %>%
+  calculate_prop("700114439", "sample_2") %>%
+  taxon_data()
+
+bar_data <- bar_data[bar_data$rank == "p", c("name", "sample_1", "sample_2")]
+bar_data <- reshape2::melt(bar_data, id.vars = "name")
+
+bar_data <- bar_data[! bar_data$name %in% c("GN02", "SR1"), ]
+```
+
+
+```{r}
+library(ggplot2)
+bar_plot <- ggplot(bar_data, aes(x = variable, y = value, fill = name)) + 
+  geom_bar(stat = "identity") + 
+  scale_x_discrete(labels = c("1", "2")) +
+  xlab("Sample") + 
+  theme_minimal() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_blank(),
+        axis.title.y=element_blank(),
+        axis.title.x=element_text(size=20),
+        axis.text.y=element_blank(),
+        axis.text.x=element_text(size=20, margin=margin(b = 5, t = -15)),
+        axis.ticks.y=element_blank(),
+        legend.title=element_blank(),
+        legend.text=element_text(size=20),
+        legend.position=c(1,1), 
+        legend.justification=c(0, 1), 
+        # legend.key.width=unit(1.2, "lines"), 
+        plot.margin = unit(c(0, 12, 0, -1.5), "lines"))
+ggsave(bar_plot, filename = file.path(output_folder, paste0("bar_chart", output_format)), dpi = 350, width = 8, height = 8)
+```
+
+### Combine plots
+
+```{r}
+library(gridExtra)
+library(cowplot)
+combined_plot <- plot_grid(bar_plot, sample_1, sample_2, ncol = 3, nrow = 1)
+save_plot(filename = file.path(output_folder, paste0("barchart_heat_tree_comparison", output_format)),
+          combined_plot, ncol = 3, nrow = 1)
 ```
 
 
