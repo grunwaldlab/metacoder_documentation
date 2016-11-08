@@ -109,7 +109,7 @@ sample_1 <- v35_data %>%
     node_label_max = 3000, 
     node_size_range = c(.01, .07),
     node_label_size_range = c(.015, .1) * 0.4, 
-    make_legend = TRUE, 
+    make_legend = FALSE, 
     node_color_axis_label = "Abundance",
     output_file = file.path(output_folder, paste0("sample_1_tree", output_format)))
 sample_2 <- v35_data %>%
@@ -123,7 +123,7 @@ sample_2 <- v35_data %>%
     node_label_max = 3000, 
     node_size_range = c(.01, .07),
     node_label_size_range = c(.015, .1) * 0.4, 
-    make_legend = TRUE, 
+    make_legend = FALSE, 
     node_color_axis_label = "Abundance",
     output_file = file.path(output_folder, paste0("sample_2_tree", output_format)))
 
