@@ -131,7 +131,7 @@ identified_plot <- data %>%
     node_size = n_obs,
     node_size_range = c(0.0012, NA),
     node_color = percent_known,
-    node_color_range = c("red", "orange", "yellow", "green", "cyan"),
+    node_color_range = c("firebrick1", "orangered",  "orange", "yellow3", "yellowgreen", "green"),
     node_color_trans = "linear",
     node_color_interval = c(0, 100),
     # node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", name) &
