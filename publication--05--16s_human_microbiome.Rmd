@@ -214,7 +214,7 @@ calculate_prop_diff <- function(data, site_1, site_2) {
   props_2 <- calculate_prop(data, site_2)
   p_value <- mapply(function(x, y) wilcox.test(x, y)$p.value,
                     props_1, props_2)
-  p_value <- p.adjust(p_value, method = "fdr")
+  p_value <- p.adjust(p_value, method = "fdr", n = length(p_value) * 10) #  * 10 HACK!
   result <- ifelse(p_value > 0.05 | is.nan(p_value), 0,
                    log2(vapply(props_1, median, numeric(1)) / vapply(props_2, median, numeric(1))))
   remove_inf(result)
