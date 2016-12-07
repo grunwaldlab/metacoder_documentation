@@ -1,6 +1,6 @@
 ## ---- rendering_settings ----
 # display
-options(width = 100)
+options(width = 80)
 set.seed(1)
 # Knitr
 library(knitr)
