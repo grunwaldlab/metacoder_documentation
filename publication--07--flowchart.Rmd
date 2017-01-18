@@ -68,6 +68,7 @@ pcr <- filter_taxa(data, n_obs > 1) %>%
   filter_taxa(prop_amplified < 0.9, supertaxa = TRUE)
 heat_tree(pcr, node_size = n_obs, node_label = name,
      node_color = prop_amplified,
-     node_color_range =  c("red", "yellow", "cyan"))
+     node_color_range =  c("red", "yellow", "cyan"),
+    output_file = "flow_chart_heat_tree.png")
 ```
 
