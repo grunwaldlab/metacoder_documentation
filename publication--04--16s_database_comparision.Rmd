@@ -2,17 +2,24 @@
 title: "Comparing 16S databases"
 ---
 
-```{r setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-source("settings.R")
-opts_chunk$set(cache = FALSE)
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
 
 ## Requirements 
 
-**NOTE:** This analysis requires at least 10Gb of RAM to run. 
-
+**NOTE:** This analysis requires at least 10Gb of RAM to run.
+It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Run individual analyses
+
+This analysis just compiles the results from the three seperate analyses corresponding to the three reference databases being compared.
+The code below will run those three analyses, but it is not needed if they have been already run independently and it is not run during the rendering of this page.
 
 ```{r run_all, eval = FALSE}
 library(rmarkdown)
@@ -22,7 +29,9 @@ render(input = "publication--03--greengenes.Rmd")
 ```
 
 
-## Load plots 
+## Load plots
+
+After the three analyses have been completed, I loaded their results. 
 
 ```{r load}
 load(file.path(output_folder, "silva_data.RData"))
@@ -33,16 +42,19 @@ load(file.path(output_folder, "greengenes_data.RData"))
 
 ## Combine plots
 
+I then combine plots from the three analyses into a single graph and save the result.
+
 ```{r combine, fig.width = 7.5, fig.height = 10}
 library(gridExtra)
 library(grid)
 library(metacoder)
 combo_plot <- grid.arrange(ncol = 2, nrow = 3,
-                           top = "All data                                                           Not amplified        ",
+                           top = "Whole database                                                           Not amplified        ",
                            left = "Greengenes                                                      RDP                                                              SILVA",
                            silva_plot_all, silva_plot_pcr_fail,
                            rdp_plot_all, rdp_plot_pcr_fail,
                            greengenes_plot_all, greengenes_plot_pcr_fail)
-ggplot2::ggsave(file.path(output_folder, "figure_2--16s_database_comparison.pdf"), 
-                combo_plot, width = 7.5, height = 10)
+output_path <- file.path(output_folder, "figure_2--16s_database_comparison.pdf")
+ggplot2::ggsave(output_path, combo_plot, width = 7.5, height = 10)
+file.copy(output_path, "publication/revision_1/figure_4.pdf")
 ```

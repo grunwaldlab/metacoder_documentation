@@ -1,24 +1,37 @@
 ---
 title: Graphing the Greengenes database
+bibliography: bibliography.bibtex
 ---
 
-```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-knitr::read_chunk("settings.R")
-```
-
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
 
 ## Requirements 
 
-**NOTE:** This analysis requires at least 10Gb of RAM to run. 
+**NOTE:** This analysis requires at least 10Gb of RAM to run.
+It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Parameters
 
-```{r io_settings, cache=FALSE}
+### Document rendering
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
 ```
 
-```{r database_comparison_settings, cache=FALSE}
+### Analysis input/output
+
+```{r io_settings}
+```
+
+### Analysis parameters
+
+```{r database_comparison_settings}
 ```
 
 
@@ -26,6 +39,9 @@ knitr::read_chunk("settings.R")
 
 The greengenes database stores sequences in one file and taxonomy information in another and the order of the two files differ making parseing more difficult than the other databases.
 Since taxonomy inforamtion is needed for creating the `taxmap` data structure, we will parse it first and add the sequence information on after.
+The input files are not included in this repository because they are large, but you can download them from the Greengenes website here: 
+
+http://greengenes.lbl.gov/Download/
 
 ### Parse taxonomy file
 
@@ -41,7 +57,7 @@ These will be removed after parsing the file since they provide no information a
 ```{r greengenes_taxonomy_parse}
 library(metacoder)
 # Parse taxonomy file
-system.time(greengenes <- extract_taxonomy(input = gg_taxonomy, key = c(id = "obs_info", "class"), regex = "^([0-9]+)\t(.*)$", class_sep = "; ", class_regex = "^([a-z]{1})__(.*)$", class_key = c(rank = "taxon_info", "name")))
+greengenes <- extract_taxonomy(input = gg_taxonomy, key = c(id = "obs_info", "class"), regex = "^([0-9]+)\t(.*)$", class_sep = "; ", class_regex = "^([a-z]{1})__(.*)$", class_key = c(rank = "taxon_info", "name"))
 # Remove data for ranks with no information
 greengenes <- filter_taxa(greengenes, name != "")
 print(greengenes)
@@ -57,7 +73,7 @@ gg_sequence_path <- file.path(input_folder, "gg_13_5.fasta")
 substr(readLines(gg_sequence_path, n = 10), 1, 100)
 ```
 
-This can be easily parsed using `seqinr`:
+This can be easily parsed using the R package `seqinr`:
 
 ```{r greengenes_sequence_read}
 gg_sequences <- seqinr::read.fasta(gg_sequence_path, as.string = TRUE)
@@ -75,17 +91,18 @@ greengenes <- mutate_obs(greengenes, sequence = unlist(gg_sequences)[as.characte
 
 ## Subset
 
-This will make graphing a little more understandable by removing some taxa, but no sequence information will be removed. 
+Next I will subset the taxa in the dataset (depending on parameter settings). 
+This can help make the graphs less cluttered and make it easier to compare databases. 
 
 ```{r greengenes_subset}
 if (! is.null(min_seq_count)) {
-  system.time(greengenes <- filter_taxa(greengenes, n_obs >= min_seq_count))
+  greengenes <- filter_taxa(greengenes, n_obs >= min_seq_count)
 }
 if (just_bacteria) {
-  system.time(greengenes <- filter_taxa(greengenes, name == "Bacteria", subtaxa = TRUE))
+  greengenes <- filter_taxa(greengenes, name == "Bacteria", subtaxa = TRUE)
 }
 if (! is.null(max_taxonomy_depth)) {
-  system.time(greengenes <- filter_taxa(greengenes, n_supertaxa <= max_taxonomy_depth))
+  greengenes <- filter_taxa(greengenes, n_supertaxa <= max_taxonomy_depth)
 }
 print(greengenes)
 ```
@@ -96,7 +113,7 @@ print(greengenes)
 These are not bacterial and will bias the *in silico* PCR results.
 
 ```{r greengenes_rm_chloro}
-system.time(greengenes <- filter_taxa(greengenes, name == "Chloroplast", subtaxa = TRUE, invert = TRUE))
+greengenes <- filter_taxa(greengenes, name == "Chloroplast", subtaxa = TRUE, invert = TRUE)
 print(greengenes)
 ```
 
@@ -106,85 +123,89 @@ print(greengenes)
 Although Greengenes is such a large database (`r nrow(greengenes$taxa_data)` taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:
 
 ```{r greengenes_plot_all}
-system.time(greengenes_plot_all <- heat_tree(greengenes, 
-                                             node_size = n_obs,
-                                             node_color = n_obs,
-                                             node_size_range = size_range * 2,
-                                             edge_size_range = size_range,
-                                             node_size_interval = all_size_interval,
-                                             edge_size_interval = all_size_interval,
-                                             node_color_interval = all_size_interval,
-                                             edge_color_interval = all_size_interval,
-                                             node_label = name,
-                                             node_label_max = label_max,
-                                             node_label_size_range = label_size_range,
-                                             node_color_axis_label = "Sequence count",
-                                             make_legend = TRUE,
-                                             output_file = file.path(output_folder, paste0("greengenes--all", output_format))))
+greengenes_plot_all <- heat_tree(greengenes, 
+                                 node_size = n_obs,
+                                 node_color = n_obs,
+                                 node_size_range = size_range * 2,
+                                 edge_size_range = size_range,
+                                 node_size_interval = all_size_interval,
+                                 edge_size_interval = all_size_interval,
+                                 node_color_interval = all_size_interval,
+                                 edge_color_interval = all_size_interval,
+                                 node_label = name,
+                                 node_label_max = label_max,
+                                 node_label_size_range = label_size_range,
+                                 node_color_axis_label = "Sequence count",
+                                 make_legend = TRUE,
+                                 output_file = result_path("greengenes--all"))
 print(greengenes_plot_all)
 ```
 
 
 ## PCR
 
+Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved].
+These primers were designed to amplify all bacteria.
+
+
 ```{r greengenes_length_filter}
 if (! is.null(min_seq_length)) {
-  system.time(greengenes <- filter_obs(greengenes, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+  greengenes <- filter_obs(greengenes, nchar(sequence) >= min_seq_length, unobserved = FALSE)
 }
 print(greengenes)
 ```
 
 ```{r greengenes_pcr}
-system.time(greengenes_pcr <- primersearch(greengenes,
-                                           forward = forward_primer,
-                                           reverse = reverse_primer,
-                                           mismatch = max_mismatch))
+greengenes_pcr <- primersearch(greengenes,
+                               forward = forward_primer,
+                               reverse = reverse_primer,
+                               mismatch = max_mismatch)
 ```
 
 ```{r greengenes_plot_pcr_all}
-system.time(greengenes_plot_pcr_all <- heat_tree(greengenes_pcr,
-                                                 node_size = n_obs,
-                                                 node_label = name,
-                                                 node_color = prop_amplified,
-                                                 node_color_range =  pcr_success_color_scale,
-                                                 node_color_trans = "linear",
-                                                 node_label_max = 150,
-                                        node_label_size_range = label_size_range,
-                                                 edge_color_interval = c(0, 1),
-                                                 node_color_interval = c(0, 1),
-                                                 node_color_axis_label = "Proportion PCR success",
-                                                 node_size_axis_label = "Sequence count",
-                                                 output_file = file.path(output_folder, paste0("greengenes--pcr_all", output_format))))
+greengenes_plot_pcr_all <- heat_tree(greengenes_pcr,
+                                     node_size = n_obs,
+                                     node_label = name,
+                                     node_color = prop_amplified,
+                                     node_color_range =  pcr_success_color_scale,
+                                     node_color_trans = "linear",
+                                     node_label_max = label_max,
+                                     node_label_size_range = label_size_range,
+                                     edge_color_interval = c(0, 1),
+                                     node_color_interval = c(0, 1),
+                                     node_color_axis_label = "Proportion PCR success",
+                                     node_size_axis_label = "Sequence count",
+                                     output_file = result_path("greengenes--pcr_all"))
 print(greengenes_plot_pcr_all)
 ```
 
 ```{r greengenes_plot_pcr_fail}
-system.time(greengenes_plot_pcr_fail <- greengenes_pcr %>%
-              filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
-              heat_tree(node_size = n_obs - count_amplified,
-                        node_label = name,
-                        node_color = prop_amplified,
-                        node_size_range = size_range * 2,
-                        edge_size_range = size_range,
-                        node_size_interval = pcr_size_interval,
-                        edge_size_interval = pcr_size_interval,
-                        node_color_range =  pcr_success_color_scale,
-                        node_color_trans = "linear",
-                        node_color_interval = c(0, 1),
-                        edge_color_interval = c(0, 1),
-                        node_label_size_range = label_size_range,
-                        node_label_max = 1000,
-                        node_color_axis_label = "Proportion PCR success",
-                        node_size_axis_label = "Sequences not amplified",
-                        make_legend = TRUE,
-                        output_file = file.path(output_folder, paste0("greengenes--pcr_fail", output_format))))
+greengenes_plot_pcr_fail <- greengenes_pcr %>%
+  filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
+  heat_tree(node_size = n_obs - count_amplified,
+            node_label = name,
+            node_color = prop_amplified,
+            node_size_range = size_range * 2,
+            edge_size_range = size_range,
+            node_size_interval = pcr_size_interval,
+            edge_size_interval = pcr_size_interval,
+            node_color_range =  pcr_success_color_scale,
+            node_color_trans = "linear",
+            node_color_interval = c(0, 1),
+            edge_color_interval = c(0, 1),
+            node_label_size_range = label_size_range,
+            node_label_max = label_max,
+            node_color_axis_label = "Proportion PCR success",
+            node_size_axis_label = "Sequences not amplified",
+            make_legend = TRUE,
+            output_file = result_path("greengenes--pcr_fail"))
 print(greengenes_plot_pcr_fail)
 ```
 
 
 ## Save outputs for composite figure
 
-Some results from this file will be combined with other to make a composite figure.
+Some results from this file will be combined with others from similar analyses to make a composite figure.
 Below, the needed objects are saved so that they can be loaded by another Rmd file.
 
 ```{r greengenes_save}
@@ -193,3 +214,4 @@ save(file = file.path(output_folder, "greengenes_data.RData"),
 ```
 
 
+## References

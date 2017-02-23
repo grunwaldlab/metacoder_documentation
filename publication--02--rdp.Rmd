@@ -1,55 +1,71 @@
 ---
 title: Graphing the RDP database
+bibliography: bibliography.bibtex
 ---
-
-
-```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-knitr::read_chunk("settings.R")
-```
-
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
 
 ## Requirements 
 
-**NOTE:** This analysis requires at least 10Gb of RAM to run. 
+**NOTE:** This analysis requires at least 10Gb of RAM to run.
+It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Parameters
 
-```{r io_settings, cache=FALSE}
+### Document rendering
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
 ```
 
-```{r database_comparison_settings, cache=FALSE}
+### Analysis input/output
+
+```{r io_settings}
+```
+
+### Analysis parameters
+
+```{r database_comparison_settings}
 ```
 
 
 ## Parse database
 
 The code below parses and subsets the entire RDP non-redundant reference database.
-The object made is quite large.
+The input file is not included in this repository because it is 3.6GB, but you can download it from the RDP website here: 
+
+https://rdp.cme.msu.edu/misc/resources.jsp
 
 ```{r rdp_load}
 library(metacoder)
 file_path <- file.path(input_folder, "rdp_current_Bacteria_unaligned.fa")
-system.time(rdp <- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE),
-                                    regex = "\\tLineage(.*)",
-                                    key = c("class"),
-                                    class_regex = "[;=](.+?);(.+?)",
-                                    class_key = c("name", rdp_rank = "taxon_info")))
+rdp <- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE),
+                        regex = "\\tLineage(.*)",
+                        key = c("class"),
+                        class_regex = "[;=](.+?);(.+?)",
+                        class_key = c("name", rdp_rank = "taxon_info"))
 print(rdp)
 ```
 
 ## Subset
 
+Next I will subset the taxa in the dataset (depending on parameter settings). 
+This can help make the graphs less cluttered and make it easier to compare databases. 
+
 ```{r rdp_subset}
 if (! is.null(min_seq_count)) {
-  system.time(rdp <- filter_taxa(rdp, n_obs >= min_seq_count))
+  rdp <- filter_taxa(rdp, n_obs >= min_seq_count)
 }
 if (just_bacteria) {
-  system.time(rdp <- filter_taxa(rdp, name == "Bacteria", subtaxa = TRUE))
+  rdp <- filter_taxa(rdp, name == "Bacteria", subtaxa = TRUE)
 }
 if (! is.null(max_taxonomy_depth)) {
-  system.time(rdp <- filter_taxa(rdp, n_supertaxa <= max_taxonomy_depth))
+  rdp <- filter_taxa(rdp, n_supertaxa <= max_taxonomy_depth)
 }
 print(rdp)
 ```
@@ -60,7 +76,7 @@ print(rdp)
 These are not bacterial and will bias the *in silico* PCR results.
 
 ```{r rdp_rm_chloro}
-system.time(rdp <- filter_taxa(rdp, name == "Cyanobacteria/Chloroplast", subtaxa = TRUE, invert = TRUE))
+rdp <- filter_taxa(rdp, name == "Cyanobacteria/Chloroplast", subtaxa = TRUE, invert = TRUE)
 print(rdp)
 ```
 
@@ -70,85 +86,88 @@ print(rdp)
 Although RDP is such a large database (`r nrow(rdp$taxa_data)` taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:
 
 ```{r rdp_plot_all}
-system.time(rdp_plot_all <- heat_tree(rdp,
-                                      node_size = n_obs,
-                                      node_color = n_obs,
-                                      node_size_range = size_range * 2,
-                                      edge_size_range = size_range,
-                                      node_size_interval = all_size_interval,
-                                      edge_size_interval = all_size_interval,
-                                      node_color_interval = all_size_interval,
-                                      edge_color_interval = all_size_interval,
-                                      node_label = name,
-                                      node_label_size_range = label_size_range,
-                                      node_label_max = label_max,
-                                      node_color_axis_label = "Sequence count",
-                                      make_legend = TRUE,
-                                      output_file = file.path(output_folder, paste0("rdp--all", output_format))))
+rdp_plot_all <- heat_tree(rdp,
+                          node_size = n_obs,
+                          node_color = n_obs,
+                          node_size_range = size_range * 2,
+                          edge_size_range = size_range,
+                          node_size_interval = all_size_interval,
+                          edge_size_interval = all_size_interval,
+                          node_color_interval = all_size_interval,
+                          edge_color_interval = all_size_interval,
+                          node_label = name,
+                          node_label_size_range = label_size_range,
+                          node_label_max = label_max,
+                          node_color_axis_label = "Sequence count",
+                          make_legend = TRUE,
+                          output_file = result_path("rdp--all"))
 print(rdp_plot_all)
 ```
 
 
 ## PCR
 
+Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved].
+These primers were designed to amplify all bacteria.
+
 ```{r rdp_length_filter}
 if (! is.null(min_seq_length)) {
-  system.time(rdp <- filter_obs(rdp, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+  rdp <- filter_obs(rdp, nchar(sequence) >= min_seq_length, unobserved = FALSE)
 }
 print(rdp)
 ```
 
 ```{r rdp_pcr}
-system.time(rdp_pcr <- primersearch(rdp,
-                                    forward = forward_primer,
-                                    reverse = reverse_primer,
-                                    mismatch = max_mismatch))
+rdp_pcr <- primersearch(rdp,
+                        forward = forward_primer,
+                        reverse = reverse_primer,
+                        mismatch = max_mismatch)
 ```
 
 ```{r rdp_plot_pcr_all}
-system.time(rdp_plot_pcr_all <- heat_tree(rdp_pcr,
-                                          node_size = n_obs,
-                                          node_label = name,
-                                          node_color = prop_amplified,
-                                          node_color_range =  pcr_success_color_scale,
-                                          node_color_trans = "linear",
-                                          node_label_size_range = label_size_range,
-                                          node_label_max = 150,
-                                          edge_color_interval = c(0, 1),
-                                          node_color_interval = c(0, 1),
-                                          node_color_axis_label = "Proportion PCR success",
-                                          node_size_axis_label = "Sequence count",
-                                          output_file = file.path(output_folder, paste0("rdp--pcr_all", output_format))))
+rdp_plot_pcr_all <- heat_tree(rdp_pcr,
+                              node_size = n_obs,
+                              node_label = name,
+                              node_color = prop_amplified,
+                              node_color_range =  pcr_success_color_scale,
+                              node_color_trans = "linear",
+                              node_label_size_range = label_size_range,
+                              node_label_max = label_max,
+                              edge_color_interval = c(0, 1),
+                              node_color_interval = c(0, 1),
+                              node_color_axis_label = "Proportion PCR success",
+                              node_size_axis_label = "Sequence count",
+                              output_file = result_path("rdp--pcr_all"))
 print(rdp_plot_pcr_all)
 ```
 
 ```{r, rdp_plot_pcr_fail}
-system.time(rdp_plot_pcr_fail <- rdp_pcr %>%
-              filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
-              heat_tree(node_size = n_obs - count_amplified,
-                        node_label = name,
-                        node_color = prop_amplified,
-                        node_size_range = size_range * 2,
-                        edge_size_range = size_range,
-                        node_size_interval = pcr_size_interval,
-                        edge_size_interval = pcr_size_interval,
-                        node_color_range =  pcr_success_color_scale,
-                        node_color_trans = "linear",
-                        node_color_interval = c(0, 1),
-                        edge_color_interval = c(0, 1),
-                        node_label_size_range = label_size_range,
-                        node_label_max = 1000,
-                        node_color_axis_label = "Proportion PCR success",
-                        node_size_axis_label = "Sequences not amplified",
-                        make_legend = TRUE,
-                        output_file = file.path(output_folder, paste0("rdp--pcr_fail", output_format))))
+rdp_plot_pcr_fail <- rdp_pcr %>%
+  filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
+  heat_tree(node_size = n_obs - count_amplified,
+            node_label = name,
+            node_color = prop_amplified,
+            node_size_range = size_range * 2,
+            edge_size_range = size_range,
+            node_size_interval = pcr_size_interval,
+            edge_size_interval = pcr_size_interval,
+            node_color_range =  pcr_success_color_scale,
+            node_color_trans = "linear",
+            node_color_interval = c(0, 1),
+            edge_color_interval = c(0, 1),
+            node_label_size_range = label_size_range,
+            node_label_max = label_max,
+            node_color_axis_label = "Proportion PCR success",
+            node_size_axis_label = "Sequences not amplified",
+            make_legend = TRUE,
+            output_file = result_path("rdp--pcr_fail"))
 print(rdp_plot_pcr_fail)
 ```
 
 
 ## Save outputs for composite figure
 
-Some results from this file will be combined with other to make a composite figure.
+Some results from this file will be combined with others from similar analyses to make a composite figure.
 Below, the needed objects are saved so that they can be loaded by another Rmd file.
 
 ```{r rdp_save}
@@ -156,3 +175,4 @@ save(file = file.path(output_folder,"rdp_data.RData"),
      rdp_plot_all, rdp_plot_pcr_fail)
 ```
 
+## References

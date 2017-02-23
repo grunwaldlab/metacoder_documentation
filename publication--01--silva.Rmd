@@ -1,53 +1,71 @@
 ---
 title: Graphing the SILVA database
+bibliography: bibliography.bibtex
 ---
 
-```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-knitr::read_chunk("settings.R")
-```
-
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
 
 ## Requirements 
 
-**NOTE:** This analysis requires at least 10Gb of RAM to run. 
+**NOTE:** This analysis requires at least 10Gb of RAM to run.
+It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Parameters
 
-```{r io_settings, cache=FALSE}
+### Document rendering
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
 ```
 
-```{r database_comparison_settings, cache=FALSE}
+### Analysis input/output
+
+```{r io_settings}
+```
+
+### Analysis parameters
+
+```{r database_comparison_settings}
 ```
 
 
 ## Parse database
 
 The code below parses and subsets the entire SILVA non-redundant reference database.
-The object made is quite large.
+The input file is not included in this repository because it is 905MB, but you can download it from the SILVA website here: 
+
+https://www.arb-silva.de/no_cache/download/archive/release_123_1/Exports/
 
 ```{r silva_load}
 library(metacoder)
 file_path <- file.path(input_folder, "SILVA_123.1_SSURef_Nr99_tax_silva.fasta")
-system.time(silva <- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE), 
-                                      regex = "^(.*?) (.*)$",
-                                      key = c(id = "obs_info", "class"),
-                                      class_sep = ";"))
+silva <- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE), 
+                          regex = "^(.*?) (.*)$",
+                          key = c(id = "obs_info", "class"),
+                          class_sep = ";")
 print(silva)
 ```
 
 ## Subset
 
+Next I will subset the taxa in the dataset (depending on parameter settings). 
+This can help make the graphs less cluttered and make it easier to compare databases. 
+
 ```{r silva_subset}
 if (! is.null(min_seq_count)) {
-  system.time(silva <- filter_taxa(silva, n_obs >= min_seq_count))
+  silva <- filter_taxa(silva, n_obs >= min_seq_count)
 }
 if (just_bacteria) {
-  system.time(silva <- filter_taxa(silva, name == "Bacteria", subtaxa = TRUE))
+  silva <- filter_taxa(silva, name == "Bacteria", subtaxa = TRUE)
 }
 if (! is.null(max_taxonomy_depth)) {
-  system.time(silva <- filter_taxa(silva, n_supertaxa <= max_taxonomy_depth))
+  silva <- filter_taxa(silva, n_supertaxa <= max_taxonomy_depth)
 }
 print(silva)
 ```
@@ -58,7 +76,7 @@ print(silva)
 These are not bacterial and will bias the *in silico* PCR results.
 
 ```{r silva_rm_chloro}
-system.time(silva <- filter_taxa(silva, name == "Chloroplast", subtaxa = TRUE, invert = TRUE))
+silva <- filter_taxa(silva, name == "Chloroplast", subtaxa = TRUE, invert = TRUE)
 print(silva)
 ```
 
@@ -68,30 +86,34 @@ print(silva)
 Although SILVA is such a large database (`r nrow(silva$taxa_data)` taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:
 
 ```{r silva_plot_all}
-system.time(silva_plot_all <- heat_tree(silva,
-                                        node_size = n_obs,
-                                        node_color = n_obs,
-                                        node_size_range = size_range * 2,
-                                        edge_size_range = size_range,
-                                        node_size_interval = all_size_interval,
-                                        edge_size_interval = all_size_interval,
-                                        node_color_interval = all_size_interval,
-                                        edge_color_interval = all_size_interval,
-                                        node_label = name,
-                                        node_label_size_range = label_size_range,
-                                        node_label_max = label_max,
-                                        node_color_axis_label = "Sequence count",
-                                        make_legend = TRUE,
-                                        output_file = file.path(output_folder, paste0("silva--all", output_format))))
+silva_plot_all <- heat_tree(silva,
+                            node_size = n_obs,
+                            node_color = n_obs,
+                            node_size_range = size_range * 2,
+                            edge_size_range = size_range,
+                            node_size_interval = all_size_interval,
+                            edge_size_interval = all_size_interval,
+                            node_color_interval = all_size_interval,
+                            edge_color_interval = all_size_interval,
+                            node_label = name,
+                            node_label_size_range = label_size_range,
+                            node_label_max = label_max,
+                            node_color_axis_label = "Sequence count",
+                            make_legend = TRUE,
+                            margin_size = c(.01, 0, 0, 0),
+                            output_file = result_path("silva--all"))
 print(silva_plot_all)
 ```
 
 
 ## PCR
 
+Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved].
+These primers were designed to amplify all bacteria.
+
 ```{r silva_length_filter}
 if (! is.null(min_seq_length)) {
-  system.time(silva <- filter_obs(silva, nchar(sequence) >= min_seq_length, unobserved = FALSE))
+  silva <- filter_obs(silva, nchar(sequence) >= min_seq_length, unobserved = FALSE)
 }
 print(silva)
 ```
@@ -99,58 +121,58 @@ print(silva)
 
 ```{r silva_pcr}
 # Replace all u with t so in silico PCR works
-system.time(silva$obs_data$sequence <- gsub(pattern = "u", replacement = "t", silva$obs_data$sequence))
+silva$obs_data$sequence <- gsub(pattern = "u", replacement = "t", silva$obs_data$sequence)
 # in silico PCR
-system.time(silva_pcr <- primersearch(silva,
-                                      forward = forward_primer,
-                                      reverse = reverse_primer,
-                                      mismatch = max_mismatch))
+silva_pcr <- primersearch(silva,
+                          forward = forward_primer,
+                          reverse = reverse_primer,
+                          mismatch = max_mismatch)
 ```
 
 ```{r silva_plot_pcr_all}
-system.time(silva_plot_pcr_all <- heat_tree(silva_pcr,
-                                            node_size = n_obs,
-                                            node_label = name,
-                                            node_color = prop_amplified,
-                                            node_color_range =  pcr_success_color_scale,
-                                            node_color_trans = "linear",
-                                            edge_color_interval = c(0, 1),
-                                            node_color_interval = c(0, 1),
-                                            node_label_size_range = label_size_range,
-                                            node_label_max = label_max,
-                                            node_color_axis_label = "Proportion PCR success",
-                                            node_size_axis_label = "Sequence count",
-                                            output_file = file.path(output_folder, paste0("silva--pcr_all", output_format))))
+silva_plot_pcr_all <- heat_tree(silva_pcr,
+                                node_size = n_obs,
+                                node_label = name,
+                                node_color = prop_amplified,
+                                node_color_range =  pcr_success_color_scale,
+                                node_color_trans = "linear",
+                                edge_color_interval = c(0, 1),
+                                node_color_interval = c(0, 1),
+                                node_label_size_range = label_size_range,
+                                node_label_max = label_max,
+                                node_color_axis_label = "Proportion PCR success",
+                                node_size_axis_label = "Sequence count",
+                                output_file = result_path("silva--pcr_all"))
 print(silva_plot_pcr_all)
 ```
 
 ```{r, silva_plot_pcr_fail}
-system.time(silva_plot_pcr_fail <- silva_pcr %>%
-              filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
-              heat_tree(node_size = n_obs - count_amplified,
-                        node_label = name,
-                        node_color = prop_amplified,
-                        node_size_range = size_range * 2,
-                        edge_size_range = size_range,
-                        node_size_interval = pcr_size_interval,
-                        edge_size_interval = pcr_size_interval,
-                        node_color_range =  pcr_success_color_scale,
-                        node_color_trans = "linear",
-                        node_color_interval = c(0, 1),
-                        edge_color_interval = c(0, 1),
-                        node_label_size_range = label_size_range,
-                        node_label_max = 1000,
-                        node_color_axis_label = "Proportion PCR success",
-                        node_size_axis_label = "Sequences not amplified",
-                        make_legend = TRUE,
-                        output_file = file.path(output_folder, paste0("silva--pcr_fail", output_format))))
+silva_plot_pcr_fail <- silva_pcr %>%
+  filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
+  heat_tree(node_size = n_obs - count_amplified,
+            node_label = name,
+            node_color = prop_amplified,
+            node_size_range = size_range * 2,
+            edge_size_range = size_range,
+            node_size_interval = pcr_size_interval,
+            edge_size_interval = pcr_size_interval,
+            node_color_range =  pcr_success_color_scale,
+            node_color_trans = "linear",
+            node_color_interval = c(0, 1),
+            edge_color_interval = c(0, 1),
+            node_label_size_range = label_size_range,
+            node_label_max = label_max,
+            node_color_axis_label = "Proportion PCR success",
+            node_size_axis_label = "Sequences not amplified",
+            make_legend = TRUE,
+            output_file = result_path("silva--pcr_fail"))
 print(silva_plot_pcr_fail)
 ```
 
 
 ## Save outputs for composite figure
 
-Some results from this file will be combined with other to make a composite figure.
+Some results from this file will be combined with others from similar analyses to make a composite figure.
 Below, the needed objects are saved so that they can be loaded by another Rmd file.
 
 ```{r silva_save}
@@ -158,3 +180,4 @@ save(file = file.path(output_folder, "silva_data.RData"),
      silva_plot_all, silva_plot_pcr_fail)
 ```
 
+## References

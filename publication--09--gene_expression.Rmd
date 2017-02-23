@@ -38,6 +38,9 @@ biocLite("DESeq2")
 
 ### Starting from SummarizedExperiment
 
+http://www.bioconductor.org/help/workflows/rnaseqGene/
+
+
 ```{r}
 library(rnaseqGene)
 library("airway")
@@ -194,14 +197,14 @@ data$taxon_funcs <- c(data$taxon_funcs,
                                function(i) {
                                  obs_change <- data$obs_data[i, ]$log2FoldChange[data$obs_data[i, ]$padj <= min_p_value]
                                  mean(obs_change, na.rm = TRUE)
-                                 },
+                               },
                                numeric(1))
-                        },
+                      },
                       num_changed = function(x, subset = NULL) {
                         vapply(obs(x),
                                function(i) {
                                  sum(data$obs_data[i, ]$padj <= min_p_value, na.rm = TRUE)
-                                 },
+                               },
                                numeric(1))
                       })
 ```
@@ -257,59 +260,71 @@ data$taxon_funcs <- c(data$taxon_funcs,
                                function(i) {
                                  obs_change <- data$obs_data[i, ]$log2FoldChange[data$obs_data[i, ]$padj <= min_p_value]
                                  mean(obs_change, na.rm = TRUE)
-                                 },
+                               },
                                numeric(1))
-                        },
+                      },
                       num_changed = function(x, subset = NULL) {
                         vapply(obs(x),
                                function(i) {
                                  sum(data$obs_data[i, ]$padj <= min_p_value, na.rm = TRUE)
-                                 },
+                               },
                                numeric(1))
                       })
 ```
 
 ```{r}
 set.seed(7) #2, 4, 5, 7*, 19
-data$taxon_data$name <- gsub("cellular modified amino acid metabolic process",
-                             "amino acid metabolic process", data$taxon_data$name)
-data$taxon_data$name <- gsub("cellular aromatic compound metabolic process",
-                             "aromatic compound process", data$taxon_data$name)
-data$taxon_data$name <- gsub("immune system process",
-                             "immune system", data$taxon_data$name)
-data$taxon_data$name <- gsub("single organism reproductive process",
-                             "single organism reproduction", data$taxon_data$name)
-data$taxon_data$name <- gsub("lipid metabolic process",
-                             "lipid", data$taxon_data$name)
-data$taxon_data$name <- gsub("cellular component morphogenesis",
-                             "cellular component", data$taxon_data$name)
+mgsub <- function(pattern, replacement, x, ...) { # from: http://stackoverflow.com/questions/15253954/replace-multiple-arguments-with-gsub
+  if (length(pattern)!=length(replacement)) {
+    stop("pattern and replacement do not have the same length.")
+  }
+  result <- x
+  for (i in 1:length(pattern)) {
+    result <- gsub(pattern[i], replacement[i], result, ...)
+  }
+  result
+}
+
+to_replace <- matrix(ncol = 2, byrow = TRUE,
+                     c("regulation of growth", "",
+                       "activation of innate immune response", "",
+                       "system development", "",
+                       "regulation of response to stimulus", "",
+                       "lipid metabolic process", "",
+                       "selenium compound metabolic process", "selenium metabolic process"
+                       ))
+output_path <- file.path(output_folder,
+                                    paste0("gene_expression--biological_process",
+                                           output_format))
 data %>%
   filter_taxa(num_changed > 0) %>%
   filter_taxa(n_supertaxa <= 3) %>%
-  # filter_taxa(n_supertaxa >= 1) %>% 
-  # filter_taxa(nchar(name) <= 40) %>%
-  heat_tree(node_label = gsub("_", " ", name),
+  mutate_taxa(name = gsub("_", " ", name),
+              f_change = 2^abs(change) * sign(change)) %>%
+  mutate_taxa(short_name = vapply(name, FUN.VALUE = character(1), function(x) {
+    mgsub(pattern = to_replace[, 1], replacement =  to_replace[, 2], x, fixed = TRUE)
+  })) %>%
+  heat_tree(node_label = ifelse(abs(f_change) > 1, short_name, NA),
             node_size = num_changed,
             # node_size_trans = "log10",
             node_size_range = c(0.008, 0.03),
             # node_label_size_trans = "log10",
-            node_label_size_range = c(0.008, 0.0143),
+            node_label_size_range = c(0.012, 0.02),
             # edge_size_trans = "log10",
             edge_size_range = c(0.008, 0.03) / 2,
-            node_color = 2^abs(change) * sign(change),
+            node_color = f_change,
             node_color_trans = "linear",
             node_color_range = diverging_palette(),
             node_color_interval = c(-5, 5),
             edge_color_trans = "linear",
             edge_color_range = diverging_palette(),
             edge_color_interval =  c(-5, 5),
-            node_label_max = 500,
-            node_color_axis_label = "Factor change",
+            node_label_max = 80,
+            node_color_axis_label = "Fold change",
             node_size_axis_label = "Number of genes",
             layout = "da", initial_layout = "re",
-            output_file = file.path(output_folder,
-                                    paste0("gene_expression--biological_process",
-                                           output_format)))
+            output_file = output_path)
+file.copy(output_path, "publication/revision_1/figure_7.pdf")
 ```
 
 
@@ -330,14 +345,14 @@ data$taxon_funcs <- c(data$taxon_funcs,
                                function(i) {
                                  obs_change <- data$obs_data[i, ]$log2FoldChange[data$obs_data[i, ]$padj <= min_p_value]
                                  mean(obs_change, na.rm = TRUE)
-                                 },
+                               },
                                numeric(1))
-                        },
+                      },
                       num_changed = function(x, subset = NULL) {
                         vapply(obs(x),
                                function(i) {
                                  sum(data$obs_data[i, ]$padj <= min_p_value, na.rm = TRUE)
-                                 },
+                               },
                                numeric(1))
                       })
 ```

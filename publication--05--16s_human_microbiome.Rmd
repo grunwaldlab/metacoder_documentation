@@ -1,37 +1,46 @@
 ---
 title: "Human microbiome example"
+bibliography: bibliography.bibtex
 ---
 
-```{r greengenes_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-knitr::read_chunk("settings.R")
-```
-
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
 
 ## Requirements 
 
-**NOTE:** This analysis requires at least 10Gb of RAM to run. 
+**NOTE:** This analysis requires at least 10Gb of RAM to run.
+It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Parameters
 
-```{r io_settings, cache=FALSE}
+### Document rendering
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
 ```
+
+### Analysis input/output
+
+```{r io_settings}
+```
+
+### Analysis parameters
 
 ```{r hmp_parameters}
-matrix_plot_depth <- 6
-color_range <- c(-4, 4)
+matrix_plot_depth <- 6 # The maximum number of ranks to display
+color_interval <- c(-4, 4) # The range of values (log 2 ratio of median proportion) to display
+min_read_count <- 100 # The minium number of reads needed for a taxon to be graphed
 ```
-
-
-## Requirements 
-
-**NOTE:** This analysis requires at least 10Gb of RAM to run. 
 
 ## Parsing taxonomic data
 
 The function `parse_hmp_qiime` is a wrapper for `extract_taxonomy` made for this analysis. 
-It might be made more generic in the future.
+It might be made into a more generic "table parser" in the future.
 The information on sample characteristics (e.g. body site) is saved in a table called `mapping` in the `taxmap` object. 
 
 ```{r hmp_parse, warning=FALSE, message=FALSE}
@@ -68,7 +77,7 @@ To get an idea of how the data looks overall I will make a plot showing OTU and 
 plot_all <- function(data, output_name, seed = 1) {
   set.seed(seed)
   data %>%
-    filter_taxa(abundance >= 100) %>%
+    filter_taxa(abundance >= min_read_count) %>%
     filter_taxa(name != "") %>% # Some taxonomic levels are not named
     heat_tree(node_size = n_obs,
               node_size_axis_label = "Number of OTUs",
@@ -78,7 +87,7 @@ plot_all <- function(data, output_name, seed = 1) {
               node_label = name,
               node_label_max = 100,
               overlap_avoidance = 1,
-              output_file = file.path(output_folder, paste0(output_name, output_format)))
+              output_file = result_path(output_name))
 }
 
 plot_all(v35_data, "hmp--v35--all_data")
@@ -86,6 +95,12 @@ plot_all(v35_data, "hmp--v35--all_data")
 
 
 ## Comparison with stacked bar charts
+
+Stacked bar charts are commonly used to visualize community composition, with different colors corresponding to taxa.
+However, the use of color for categories limits the number of number of taxa displayed to the number of colors that are easily decernable, which is around 10. 
+Therefore, rare taxa are exculded from the graph or only coarse taxonomic ranks are displayed. 
+This might leave out biolicoally relevant information. 
+The code below visulizes the community composition of the same 2 samples from the HMP using both a stacked barchart and heat trees so the two methods can be compared.
 
 ### Calculate abundance
 
@@ -97,7 +112,7 @@ v35_data <- calculate_abundance(v35_data, "700114439", "sample_2")
 ### Graph heat trees
 
 ```{r}
-plot_sample_tree <- function(data, sample, out_name, min_count = 1, ...) {
+plot_sample_tree <- function(data, sample, out_name, min_count = min_read_count, ...) {
   data %>%
     mutate_taxa(sample = data$taxon_data[[sample]]) %>%
     mutate_taxa(sample_prop = sample / max(sample)) %>%
@@ -107,15 +122,13 @@ plot_sample_tree <- function(data, sample, out_name, min_count = 1, ...) {
       title_size = .05,
       node_size = sample, 
       node_color = sample, 
-      # node_color_range = viridis::plasma(10),
       node_label = ifelse(sample_prop >= 0.01, name, NA),
       node_label_max = 50, 
       node_size_range = c(.01, .07),
       node_label_size_range = c(.015, .03), 
       node_color_axis_label = "Abundance",
-      output_file = file.path(output_folder, paste0(out_name, output_format)))
+      output_file = result_path(out_name))
 }
-
 
 sample_1 <- plot_sample_tree(v35_data, "sample_1", "sample_1_tree", title = "Sample 1") 
 sample_2 <- plot_sample_tree(v35_data, "sample_2", "sample_2_tree", title = "Sample 2") 
@@ -135,7 +148,6 @@ bar_data <- reshape2::melt(bar_data, id.vars = "name")
 
 bar_data <- bar_data[! bar_data$name %in% c("GN02", "SR1"), ]
 ```
-
 
 ```{r}
 library(ggplot2)
@@ -158,7 +170,7 @@ bar_plot <- ggplot(bar_data, aes(x = variable, y = value, fill = name)) +
         legend.justification=c(0, 1), 
         # legend.key.width=unit(1.2, "lines"), 
         plot.margin = unit(c(-0.35, 8, 0, 0.5), "lines"))
-ggsave(bar_plot, filename = file.path(output_folder, paste0("bar_chart", output_format)), dpi = 350, width = 8, height = 8)
+ggsave(bar_plot, filename = result_path("bar_chart"), dpi = 350, width = 8, height = 8)
 ```
 
 ### Combine plots
@@ -166,11 +178,12 @@ ggsave(bar_plot, filename = file.path(output_folder, paste0("bar_chart", output_
 ```{r}
 library(gridExtra)
 library(cowplot)
+plot_name <- "barchart_heat_tree_comparison"
 combined_plot <- plot_grid(bar_plot, sample_1, sample_2, ncol = 3, nrow = 1, rel_widths = c(1, 2, 2))
-save_plot(filename = file.path(output_folder, paste0("barchart_heat_tree_comparison", output_format)),
+save_plot(filename = result_path(plot_name),
           combined_plot, ncol = 3, nrow = 1, base_aspect_ratio = .9)
+save_publication_fig(plot_name, figure_number = 2)
 ```
-
 
 
 ## Plot body site differences
@@ -216,7 +229,7 @@ plot_body_site_diff <- function(data, site_1, site_2, output_name, seed = 1) {
   set.seed(seed)
   data %>%
     mutate_taxa(median_prop_diff = calculate_prop_diff(data, site_1, site_2)) %>%
-    filter_taxa(abundance >= 100) %>%
+    filter_taxa(abundance >= min_read_count) %>%
     filter_taxa(name != "") %>% # Some taxonomic levels are not named
     heat_tree(node_size_axis_label = "Number of OTUs",
               node_size = n_obs,
@@ -224,8 +237,8 @@ plot_body_site_diff <- function(data, site_1, site_2, output_name, seed = 1) {
               node_color = median_prop_diff,
               node_color_range = diverging_palette(),
               node_color_trans = "linear",
-              node_color_interval = color_range,
-              edge_color_interval = color_range,
+              node_color_interval = color_interval,
+              edge_color_interval = color_interval,
               node_label = name,
               node_label_max = 150,
               output_file = file.path(output_folder, paste0(output_name, "--", site_1, "_vs_", site_2, output_format)))
@@ -267,7 +280,7 @@ bubble_plot <- ggplot(plot_data, aes(x = x, y = y, size = prop)) +
         axis.title = element_blank(),
         axis.text.x = element_text(angle = -20, hjust = 0),
         legend.background = element_blank()) 
-ggsave(file.path(output_folder, "bubble_plot.pdf"), width = 5, height = 4)
+ggsave(result_path("bubble_plot"), width = 5, height = 4)
 print(bubble_plot)
 ```
 
@@ -319,8 +332,8 @@ plot_body_site_diff_small <- function(data, diff_col, seed = 1) {
               node_color = diff_col,
               node_color_range = diverging_palette(),
               node_color_trans = "linear",
-              node_color_interval = color_range,
-              edge_color_interval = color_range,
+              node_color_interval = color_interval,
+              edge_color_interval = color_interval,
               overlap_avoidance = 0.7,
               node_size_axis_label = "Number of OTUs",
               node_color_axis_label = "Median proportion difference",
@@ -337,7 +350,7 @@ key_plot <- v35_reduced %>%
             node_color = "#DDDDDD",
             node_color_range = diverging_palette(),
             node_color_trans = "linear",
-            node_color_interval = color_range,
+            node_color_interval = color_interval,
             node_label = ifelse(n_obs > 1000, name, NA),
             edge_label = ifelse(n_obs > 1000, NA, name),
             node_label_max = 500,
@@ -406,7 +419,9 @@ for (i in seq_along(sub_plots)) {
                                          width = subgraph_width, height = subgraph_height)
 }
 print(matrix_plot)
-save_plot(file.path(output_folder, paste0("figure_3--hmp_matrix_plot", output_format)), 
+plot_name <- "figure_3--hmp_matrix_plot"
+save_plot(result_path(plot_name), 
           matrix_plot, base_width = 7.5, base_height = 7.5)
+save_publication_fig(plot_name, figure_number = 5)
 ```
 

@@ -95,7 +95,6 @@ data %>%
             overlap_avoidance = .65,
             background_color = background_color,
             maxiter = 50, fineiter = 50,
-            margin_size = c(0.001, 0.001),
             output_file = file.path(output_folder, paste0("sup_figure_1--tara_all_plankton_diversity",  output_format)))
 ```
 
