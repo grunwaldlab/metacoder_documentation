@@ -1,41 +1,76 @@
 ---
 title: "Extracting taxonomy information from metadata"
+bibliography: bibliography.bibtex
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 library(metacoder)
-source("settings.R")
 ```
+
 
 ## Introduction
 
-One of the most challenging parts of making inferences from publicly available DNA sequences for metabarcoding experiments is obtaining a set of reference sequences with reliable and specific taxonomy information. 
-If the locus being studied is a standard barcoding locus and the taxa of interest well known, then there is likely a curated database to get sequences from. 
-The problem becomes more difficult with non-standard loci or taxa. 
-Some examples of curated databases are shown below:
+There is an abundance of publically available taxonomic information, including: 
 
-```{r}
-data <- data.frame(Database = c("UNITE", "RDP", "ITS1", "PR2", "SILVA", "Greengenes"),
-                   Locus = c("ITS", "16S, 28S rRNA", "ITS1", "18S", "SSU, LSU", "16S"),
-                   Taxon = c("Fungi", "Bacteria, Archea, Fungi", "Fungi",
-                             "Protists", "All", "Bacteria, Archaea"))
-knitr::kable(data)
+* Sequence or abundance data with associated classifications from experiments (e.g. [Genbank](https://www.ncbi.nlm.nih.gov/genbank/) accessions)
+* Reference sequence databases (e.g. [Greengenes](http://greengenes.lbl.gov/cgi-bin/nph-index.cgi), [UNITE](https://unite.ut.ee/), [RDP](https://rdp.cme.msu.edu/), [SILVA](https://www.arb-silva.de/))
+* Taxonomy databases (e.g. [NCBI taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy), [ITIS](https://www.itis.gov/#))
+* Species occuarance databases (e.g. [GBIF](http://www.gbif.org/))
+
+However, these data sources tend to have different ways of specifying taxonomic classifications, including:
+
+* Full classification with taxon names (e.g. Bacteria;Proteobacteria;Gammaproteobacteria; Enterobacterales;Enterobacteriaceae;Escherichia;coli)
+* Taxon ID from a reference database (e.g. [NCBI taxon ID 562](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=562&lvl=3&lin=f&keep=1&srchmode=1&unlock))
+* Taxon name (e.g. *Escherichia coli*)
+* Sequence/Observation ID (e.g. [Genbank accession BA000007](https://www.ncbi.nlm.nih.gov/nuccore/BA000007.2))
+
+In addition, the same method of defining classifications could be encoded with different formats.
+For example, all these formats are from refernece databases that supply classifications using a series of taxon names:
+
+
+ * RDP: 
+ 
+```
+S001191995 uncultured archaeon; LCDARCH35	Lineage=Root;rootrank;Archaea;domain;"Euryarchaeota";phylum;"Methanomicrobia";class;Methanosarcinales;order;untaxmap_Methanosarcinales;
 ```
 
+* SILVA:
+
+```
+AB001438.1.1662 Eukaryota;SAR;Alveolata;Dinoflagellata;Dinophyceae;Gymnodiniphycidae;Kareniaceae;Gyrodinium sp.
+```
+
+* UNITE
+
+```
+>Lachnum_sp|JQ347180|SH189775.06FU|reps|k__Fungi;p__Ascomycota;c__Leotiomycetes;o__Helotiales;f__Hyaloscyphaceae;g__Lachnum;s__Lachnum_sp
+```
+
+All this diversity can make parsing data into a common form difficult.
 
 ## Parsing taxonomy data with `extract_taxonomy`
 
-There are a large number of sequence header/metadata formats and most of them are specific to a particular database.
-This makes it difficult to compare and combine data from diverse sources. 
 Rather than exacerbating the syntactic pollution with another custom format or creating a parser for every database-specific format, the function `extract_taxonomy` parses taxonomy information from arbitrary characters strings (e.g. sequence headers) identified by a regex expression.
 Although the motivation for creating `extract_taxonomy` is to parse FASTA sequence headers, the function is not specific to FASTA or even to sequence information, so I will use the word "observation" instead of "sequence header" from now on.
-Any list of strings that contain identity and taxonomy information of a set of "observations" is valid.
 
-The function communicates with online databases (principally implemented using `taxize`) to infer missing information from information supplied.
-For example, if a GenBank accession number was the only information available, the taxon id and classification would be retrieved from the NCBI databases.
+`extract_taxonomy` can get taxonomic classfiacitons from any of the previously mentioned format types:
+
+* Full classification with taxon names (e.g. Bacteria;Proteobacteria;Gammaproteobacteria; Enterobacterales;Enterobacteriaceae;Escherichia;coli)
+* Taxon ID from a reference database (e.g. [NCBI taxon ID 562](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=562&lvl=3&lin=f&keep=1&srchmode=1&unlock))
+* Taxon name (e.g. *Escherichia coli*)
+* Sequence/Observation ID (e.g. [Genbank accession BA000007](https://www.ncbi.nlm.nih.gov/nuccore/BA000007.2))
+
+For all but a full classifcaiton with taxon names (e.g. Bacteria;Proteobacteria;Gammaproteobacteria; Enterobacterales;Enterobacteriaceae;Escherichia;coli), `extract_taxonomy` will query online databases to get the classificaiton. 
+Note that this usually invloves quierying NCBI, which is often quite slow, so it it best to use data that has a full classifcaiton with taxon names when possible.
 At the minimum, the output of `extract_taxonomy` consists of unique taxon identifiers, and the tree structure of the taxonomy shared by all sequences.
-This is all the information needed to fully characterize the taxonomic classification of a set of sequences.
 
+> NOTE: `extract_taxonomy` has been designed principally for parsing character vectors, like FASTA headers, rather than tabular data, like the abundance matricies produced by QIIME and mothur. There is another function in development called `parse_taxonomy_table` intended to parse this kind of data, but it is not quite mature yet, so it will not be discussed for now. See `?parse_taxonomy_table` for more information. 
 
 ### Input
 
@@ -58,7 +93,7 @@ See `?taxmap` for more details.
 ## Parsing FASTA files
 
 FASTA files are one of the most common formats that sometimes contain taxonomic data.
-The `read.FASTA` function from the `ape` `r citep("10.1093/bioinformatics/btg412")` package is commonly used to parse FASTA files in R and `extract_taxonomy` recognizes its output.
+The `read.FASTA` function from the `ape` [@paradis2004ape] package is commonly used to parse FASTA files in R and `extract_taxonomy` recognizes its output.
 When the output of  `ape::read.FASTA` is given to `extract_taxonomy`, the headers are parsed and the sequences are saved in the output object.
 
 ### Genbank FASTA headers
@@ -100,7 +135,7 @@ heat_tree(genbank_ex_data,
 
 ### UNITE FASTA headers
 
-The format of the UNITE `r citep("10.1111/j.1469-8137.2005.01376.x")` FASTA release has two pieces of information from which classifications can be determined.
+The format of the UNITE [@koljalg2005unite] FASTA release has two pieces of information from which classifications can be determined.
 The GenBank sequence identifier can be used to look up the taxon id from GenBank.
 Alternatively, the classifications specified in the header can be used to make an arbitrarily coded taxonomy.
 
@@ -230,7 +265,7 @@ heat_tree(its1_ex_data,
 
 ### PR2 FASTA headers
 
-The first observation in the PR2 `r citep("10.1093/nar/gks1160")` header is sometimes a GenBank accession number, but not always.
+The first observation in the PR2 [@guillou2012protist] header is sometimes a GenBank accession number, but not always.
 Therefore, the best option is to use the included taxonomy information.
 
 ```{r eval=FALSE}
@@ -259,7 +294,7 @@ heat_tree(pr2_ex_data,
 
 ### RDP FASTA headers
 
-This RDP `r citep("10.1093/nar/gkn879")` FASTA file does not contain any references to taxon or sequence ids that could be used to look up more information.
+This RDP [@maidak2001rdp] FASTA file does not contain any references to taxon or sequence ids that could be used to look up more information.
 Instead, we will parse the taxonomy information included in the sequence headers.
 In this case both the rank and taxon name are supplied.
 
@@ -296,7 +331,7 @@ heat_tree(rdp_ex_data,
 
 ### SILVA FASTA headers
 
-SILVA `citep("10.1093/nar/gks1219")` has a relativly simple format with an embedded taxonomy:
+SILVA [@quast2012silva] has a relativly simple format with an embedded taxonomy:
 
 ```{r eval=FALSE}
 file_path <- system.file("extdata", "silva_nr99.fasta", package = "metacoder")
@@ -380,8 +415,4 @@ heat_tree(bryophytes_ex_data,
 
 
 ## References
-
-```{r, results = 'asis', echo=FALSE}
-bibliography()
-```
 
