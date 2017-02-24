@@ -1,5 +1,6 @@
 ---
 title: "Comparing 16S databases"
+bibliography: bibliography.bibtex
 ---
 
 ```{r init, echo = FALSE, message = FALSE}
@@ -16,9 +17,14 @@ if (! is.null(current_input())) { # if knitr is being used
 **NOTE:** This analysis requires at least 10Gb of RAM to run.
 It uses large files not included in the repository and many steps can take a few minutes to run. 
 
+## Analysis input/output
+
+```{r io_settings}
+```
+
 ## Run individual analyses
 
-This analysis just compiles the results from the three seperate analyses corresponding to the three reference databases being compared.
+This analysis just compiles the results from the three seperate analyses corresponding to the three reference databases being compared: RDP [@maidak2001rdp], SILVA [@quast2012silva], and Greengenes [@desantis2006greengenes].
 The code below will run those three analyses, but it is not needed if they have been already run independently and it is not run during the rendering of this page.
 
 ```{r run_all, eval = FALSE}
@@ -58,3 +64,12 @@ output_path <- file.path(output_folder, "figure_2--16s_database_comparison.pdf")
 ggplot2::ggsave(output_path, combo_plot, width = 7.5, height = 10)
 file.copy(output_path, "publication/revision_1/figure_4.pdf")
 ```
+
+
+## Software and Packages used
+
+```{r}
+sessionInfo()
+```
+
+## References

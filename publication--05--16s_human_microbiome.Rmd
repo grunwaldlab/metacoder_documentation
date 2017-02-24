@@ -39,8 +39,9 @@ min_read_count <- 100 # The minium number of reads needed for a taxon to be grap
 
 ## Parsing taxonomic data
 
-The function `parse_hmp_qiime` is a wrapper for `extract_taxonomy` made for this analysis. 
-It might be made into a more generic "table parser" in the future.
+This analysis used OTU abundance data from the Human Microbiome Project (HMP) [@human2012structure], which used 16S metabarcoding to explore the bacterial microbiome of various human body parts.
+The function `parse_hmp_qiime` is a wrapper for `extract_taxonomy` made for this analysis and downloads the abundance data from the location specified below in the code. 
+It might be made into a more generic "table/matrix parser" in the future.
 The information on sample characteristics (e.g. body site) is saved in a table called `mapping` in the `taxmap` object. 
 
 ```{r hmp_parse, warning=FALSE, message=FALSE}
@@ -52,7 +53,9 @@ v35_data
 
 ## Read abundance
 
-I will calculate total read abundance per taxon for later graphing and filtering.
+The input data included read abundance for each sample-OTU combination, but we need the abundances associated with each taxon for graphing.
+The `obs` function is used here to get a list of row indexes corresponding to OTUs for each taxon.
+There will usually be multiple OTUs assigned to the same taxon, especailly for corase taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon.
 
 ```{r hmp_calc_abundance}
 calculate_abundance <- function(data, col = colnames(data$obs_data) %in% data$mapping$sample_id, col_name = "abundance") {
@@ -71,7 +74,8 @@ v35_data <- calculate_abundance(v35_data)
 
 ## Plot of everything
 
-To get an idea of how the data looks overall I will make a plot showing OTU and read abundance of all the data combined.
+To get an idea of how the data looks overall lets make a plot showing OTU and read abundance of all the data combined.
+I will exclude any taxon that has less than `r min_read_count` reads. 
 
 ```{r hmp_plot_all}
 plot_all <- function(data, output_name, seed = 1) {
@@ -93,12 +97,15 @@ plot_all <- function(data, output_name, seed = 1) {
 plot_all(v35_data, "hmp--v35--all_data")
 ```
 
+Here we can see that there are realtively few abundant taxa and many rare ones.
+However, we dont know anything about the species level diversity since the classifications go to genus only. 
+
 
 ## Comparison with stacked bar charts
 
 Stacked bar charts are commonly used to visualize community composition, with different colors corresponding to taxa.
 However, the use of color for categories limits the number of number of taxa displayed to the number of colors that are easily decernable, which is around 10. 
-Therefore, rare taxa are exculded from the graph or only coarse taxonomic ranks are displayed. 
+Therefore, rare taxa are often exculded from stackaed barcharts or only coarse taxonomic ranks are displayed. 
 This might leave out biolicoally relevant information. 
 The code below visulizes the community composition of the same 2 samples from the HMP using both a stacked barchart and heat trees so the two methods can be compared.
 
@@ -175,7 +182,7 @@ ggsave(bar_plot, filename = result_path("bar_chart"), dpi = 350, width = 8, heig
 
 ### Combine plots
 
-```{r}
+```{r fig.width=7, fig.height=2.61}
 library(gridExtra)
 library(cowplot)
 plot_name <- "barchart_heat_tree_comparison"
@@ -183,12 +190,23 @@ combined_plot <- plot_grid(bar_plot, sample_1, sample_2, ncol = 3, nrow = 1, rel
 save_plot(filename = result_path(plot_name),
           combined_plot, ncol = 3, nrow = 1, base_aspect_ratio = .9)
 save_publication_fig(plot_name, figure_number = 2)
+print(combined_plot)
 ```
 
+Note how the two visulization methods can suggest different conclusions regarding how similar the two communities are. 
+The stacked barcharts suggest that communities are dominated by Firmicutes, but sample 2 has additional Bacteriodetes and Proteobacteria.
+They look different, but not too different.
+The heat trees tell a much differnt story. 
+Almost all of sample 1 is composed of two genera, Lactobacillus and Gardnerella, which are completly absent in sample 2.
+In fact, the samples do not even share any families, so the similarity suggested by the stacked barchart is misleading.
+We could have construcated the stacked barchart at the family level to see these differneces, but then there would be too many colors to easily distinguish.
+
+To be fair, I did choose these two samples to prove this point. 
+In other cases stacked barcharts might represent data well, but using heat trees instead of stacked barcharts will avoid these kind of misleading graphs. 
 
 ## Plot body site differences
 
-The HMP dataset is great for comparing treatment since there are many body sites with many replicates so statistical tests can be used to find real correlation between body sites and taxon abundance. 
+The HMP dataset is great for comparing treatments since there are many body sites with many replicates so statistical tests can be used to find correlations between body sites and taxon read abundance (the relationship between read abundance and organism abundance is more fuzzy and open to debate). 
 The code below applies the Wilcox rank-sum test to differences in median read proportion between every pair of body sties compared. 
 Since the data is compositional in nature (i.e. not idependent samples) we used a non-parametric test and used median instead of mean read proportion.
 
@@ -241,10 +259,9 @@ plot_body_site_diff <- function(data, site_1, site_2, output_name, seed = 1) {
               edge_color_interval = color_interval,
               node_label = name,
               node_label_max = 150,
-              output_file = file.path(output_folder, paste0(output_name, "--", site_1, "_vs_", site_2, output_format)))
+              output_file = result_path(paste0(output_name, "--", site_1, "_vs_", site_2)))
 }
 ```
-
 
 ```{r hmp_diff_plot}
 plot_body_site_diff(v35_data, "Throat", "Saliva", "hmp--v35")
@@ -252,43 +269,16 @@ plot_body_site_diff(v35_data,  "Supragingival_plaque", "Subgingival_plaque", "hm
 plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
 ```
 
-
-## Conventional bubble plot
-
-Here is an example of a more conventional way of displaying the same data that does not supply taxonomic context.
-
-```{r}
-library(ggplot2)
-sites_used = c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares")
-plot_data <- v35_data
-plot_data$taxon_data[sites_used] <- lapply(sites_used, 
-                                           function(x) sapply(calculate_prop(plot_data, x), mean))
-plot_data <- filter_taxa(plot_data, rank == "g")$taxon_data
-plot_data <- plot_data[rev(order(plot_data$abundance)), ]
-plot_data <- plot_data[1:10, c("name", sites_used)]
-plot_data$y <- 10:1
-plot_data <- tidyr::gather(plot_data, site, prop, -name, -y)
-plot_data$x <- rep(seq_along(sites_used), each = 10)
-bubble_plot <- ggplot(plot_data, aes(x = x, y = y, size = prop)) + 
-  geom_point() + 
-  scale_x_continuous(breaks = seq_along(sites_used), labels = sites_used, limits = c(1, 6)) +
-  scale_y_continuous(breaks = 1:10, labels = rev(unique(plot_data$name)), limits = c(1, 10)) +
-  guides(size = FALSE) +
-  ggtitle("Abundant Genera") +
-  theme(panel.grid = element_blank(),
-        panel.background = element_blank(),
-        axis.title = element_blank(),
-        axis.text.x = element_text(angle = -20, hjust = 0),
-        legend.background = element_blank()) 
-ggsave(result_path("bubble_plot"), width = 5, height = 4)
-print(bubble_plot)
-```
-
+We call these types of graphs **differential heat trees** and they are great for comparing any type of data associated with two samples or treatments.
 
 ## Plot body site difference matrix
 
 The graphs above are great for comparing two treatments, but it would be nice to see how many treatments compare in a single graph.
 To do this, we have developed a pair-wise matrix layout for comparisons of this kind. 
+
+> Note: There is a lot of non-trivial code below to do this. We are workign on wrapping all this into a function to make this kind of figure easier to make, but to do this well requires a rebuild of the taxmap object to make it more flexible.
+
+First we need to calculate all of the information that will be plotted. 
 
 ```{r hmp_matrix_calc}
 # Identify pairs of treatments to compare
@@ -318,6 +308,7 @@ v35_reduced <- mutate_taxa(v35_reduced,
                                            function(a_row) any(a_row != 0)))
 ```
 
+Next, we will make all of the individual differential heat trees and the guide tree and save them in a list. 
 
 ```{r hmp_matrix_subplots, fig.width = 7.5, fig.height = 7.5}
 # Make individual plots
@@ -363,6 +354,8 @@ key_plot <- v35_reduced %>%
             make_legend = TRUE)
 ```
 
+
+Finally we will calcaulte the coordinates for each plot and arrange them together. 
 
 ```{r hmp_matrix_main_plot}
 calc_subplot_coords <- function(a_matrix, x1 = 0, y1 = 0, x2 = 1, y2 = 1) {
@@ -425,3 +418,10 @@ save_plot(result_path(plot_name),
 save_publication_fig(plot_name, figure_number = 5)
 ```
 
+## Software and Packages used
+
+```{r}
+sessionInfo()
+```
+
+## References

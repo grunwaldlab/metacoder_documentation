@@ -1,5 +1,5 @@
 ---
-title: Graphing the SILVA database
+title: Digital PCR with the SILVA database
 bibliography: bibliography.bibtex
 ---
 
@@ -14,14 +14,14 @@ if (! is.null(current_input())) { # if knitr is being used
 
 ## Requirements 
 
-**NOTE:** This analysis requires at least 10Gb of RAM to run.
+**NOTE:** This analysis requires at least 10GB of RAM to run.
 It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Parameters
 
 ### Document rendering
 
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
+```{r rendering_settings, warning=FALSE, message=FALSE}
 ```
 
 ### Analysis input/output
@@ -31,13 +31,16 @@ It uses large files not included in the repository and many steps can take a few
 
 ### Analysis parameters
 
+These settings are shared between the RDP, SILVA, and Greengenes analyses, since the results of those three analyeses are combined in one plot later. 
+This ensures that all of the graphs use the same color and size scales, instead of optimizing them for each data set, as would be done automatically otherwise.
+
 ```{r database_comparison_settings}
 ```
 
 
 ## Parse database
 
-The code below parses and subsets the entire SILVA non-redundant reference database.
+The code below parses and subsets the entire SILVA non-redundant reference database [@quast2012silva].
 The input file is not included in this repository because it is 905MB, but you can download it from the SILVA website here: 
 
 https://www.arb-silva.de/no_cache/download/archive/release_123_1/Exports/
@@ -54,8 +57,9 @@ print(silva)
 
 ## Subset
 
-Next I will subset the taxa in the dataset (depending on parameter settings). 
-This can help make the graphs less cluttered and make it easier to compare databases. 
+Next I will subset the taxa in the data set (depending on parameter settings). 
+This can help make the graphs less cluttered and make it easier to compare databases.
+
 
 ```{r silva_subset}
 if (! is.null(min_seq_count)) {
@@ -73,7 +77,9 @@ print(silva)
 
 ## Remove chloroplast sequences
 
-These are not bacterial and will bias the *in silico* PCR results.
+These are not bacterial and will bias the digital PCR results.
+Note that the `invert` option makes it so taxa are included that *did not* pass the filter. 
+This is different than simply using `name != "Chloroplast", subtaxa = TRUE` since the effects of `invert` are applied after those of `subtaxa`.
 
 ```{r silva_rm_chloro}
 silva <- filter_taxa(silva, name == "Chloroplast", subtaxa = TRUE, invert = TRUE)
@@ -83,7 +89,7 @@ print(silva)
 
 ## Plot whole database
 
-Although SILVA is such a large database (`r nrow(silva$taxa_data)` taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:
+Although graphing everything can be a bit overwhelming (`r nrow(silva$taxon_data)` taxa), it gives an intuitive feel for the complexity of the database:
 
 ```{r silva_plot_all}
 silva_plot_all <- heat_tree(silva,
@@ -108,8 +114,9 @@ print(silva_plot_all)
 
 ## PCR
 
-Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved].
-These primers were designed to amplify all bacteria.
+Before doing the digital PCR, I will filter for only full length sequences, since shorter sequences might not have a primer binding site and the digital PCR would fail, not because of an inability of a real primer to bind to real DNA, but because of missing sequence information in the database. 
+Ideally, this kind of filtering for full length sequences would involve something like a multiple sequences alignment so we don't remove sequences that are actually full length, but just happen to be shorter than the cutoff of `r min_seq_length` naturally.
+However, this method is easy and should work OK.
 
 ```{r silva_length_filter}
 if (! is.null(min_seq_length)) {
@@ -118,22 +125,31 @@ if (! is.null(min_seq_length)) {
 print(silva)
 ```
 
+Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved], allowing for a maximum mismatch of `r max_mismatch`%.
 
 ```{r silva_pcr}
-# Replace all u with t so in silico PCR works
+# Replace all u with t so digital PCR works
 silva$obs_data$sequence <- gsub(pattern = "u", replacement = "t", silva$obs_data$sequence)
-# in silico PCR
+# digital PCR
 silva_pcr <- primersearch(silva,
                           forward = forward_primer,
                           reverse = reverse_primer,
                           mismatch = max_mismatch)
+print(silva_pcr)
 ```
+
+Now the object `silva_pcr` has all the information that `silva` has plus the results of the digital PCR.
+Lets plot the whole database again, but coloring based on digital PCR success.
 
 ```{r silva_plot_pcr_all}
 silva_plot_pcr_all <- heat_tree(silva_pcr,
                                 node_size = n_obs,
-                                node_label = name,
                                 node_color = prop_amplified,
+                                node_label = name,
+                                node_size_range = size_range * 2,
+                                edge_size_range = size_range,
+                                node_size_interval = all_size_interval,
+                                edge_size_interval = all_size_interval,
                                 node_color_range =  pcr_success_color_scale,
                                 node_color_trans = "linear",
                                 edge_color_interval = c(0, 1),
@@ -146,12 +162,17 @@ silva_plot_pcr_all <- heat_tree(silva_pcr,
 print(silva_plot_pcr_all)
 ```
 
+Since these are universal bacterial primers, we would expect most of the database to amplify.
+The plot shows this for the most part, but there are many taxa where around 20% of their sequences are not amplified and some that have no sequences amplified.
+If we wanted to look at only those sequences that did not amplify, we could filter taxa by PCR success and plot what remains. 
+I am including the supertaxa of those taxa that did not amplify since excluding them would split the tree into a cloud of fragments lacking taxonomic context.
+
 ```{r, silva_plot_pcr_fail}
 silva_plot_pcr_fail <- silva_pcr %>%
   filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
   heat_tree(node_size = n_obs - count_amplified,
-            node_label = name,
             node_color = prop_amplified,
+            node_label = name,
             node_size_range = size_range * 2,
             edge_size_range = size_range,
             node_size_interval = pcr_size_interval,
@@ -169,6 +190,36 @@ silva_plot_pcr_fail <- silva_pcr %>%
 print(silva_plot_pcr_fail)
 ```
 
+This is a figure I will use for the publication, so I have limited the number of labels printed to `r label_max` to increase readability. 
+However, we can do the same graph with many more smaller labels for exploring with a PDF viewer with good zooming abilities:
+
+```{r, silva_plot_pcr_fail_detailed}
+silva_plot_pcr_fail <- silva_pcr %>%
+  filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
+  heat_tree(node_size = n_obs - count_amplified,
+            node_color = prop_amplified,
+            node_label = name,
+            node_size_range = size_range * 2,
+            edge_size_range = size_range,
+            node_size_interval = pcr_size_interval,
+            edge_size_interval = pcr_size_interval,
+            node_color_range =  pcr_success_color_scale,
+            node_color_trans = "linear",
+            node_color_interval = c(0, 1),
+            edge_color_interval = c(0, 1),
+            node_label_size_range = label_size_range * 0.6,
+            node_label_max = label_max * 10,
+            node_color_axis_label = "Proportion PCR success",
+            node_size_axis_label = "Sequences not amplified",
+            make_legend = TRUE,
+            output_file = result_path("silva--pcr_fail_detailed"))
+print(silva_plot_pcr_fail)
+```
+
+```{r results="asis", echo=FALSE}
+cat(paste0("[Click here to download a PDF of the detailed graph](", result_path("silva--pcr_fail_detailed"), ")"))
+```
+
 
 ## Save outputs for composite figure
 
@@ -178,6 +229,12 @@ Below, the needed objects are saved so that they can be loaded by another Rmd fi
 ```{r silva_save}
 save(file = file.path(output_folder, "silva_data.RData"),
      silva_plot_all, silva_plot_pcr_fail)
+```
+
+## Software and Packages used
+
+```{r}
+sessionInfo()
 ```
 
 ## References

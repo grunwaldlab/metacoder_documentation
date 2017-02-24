@@ -1,5 +1,5 @@
 ---
-title: "Extracting taxonomy information from metadata"
+title: "Extracting taxonomy data"
 bibliography: bibliography.bibtex
 ---
 
@@ -10,9 +10,10 @@ if (! is.null(current_input())) { # if knitr is being used
 } else {
   source("settings.R")
 }
-library(metacoder)
 ```
 
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
+```
 
 ## Introduction
 
@@ -46,15 +47,15 @@ S001191995 uncultured archaeon; LCDARCH35	Lineage=Root;rootrank;Archaea;domain;"
 AB001438.1.1662 Eukaryota;SAR;Alveolata;Dinoflagellata;Dinophyceae;Gymnodiniphycidae;Kareniaceae;Gyrodinium sp.
 ```
 
-* UNITE
+* UNITE:
 
 ```
->Lachnum_sp|JQ347180|SH189775.06FU|reps|k__Fungi;p__Ascomycota;c__Leotiomycetes;o__Helotiales;f__Hyaloscyphaceae;g__Lachnum;s__Lachnum_sp
+Lachnum_sp|JQ347180|SH189775.06FU|reps|k__Fungi;p__Ascomycota;c__Leotiomycetes;o__Helotiales;f__Hyaloscyphaceae;g__Lachnum;s__Lachnum_sp
 ```
 
 All this diversity can make parsing data into a common form difficult.
 
-## Parsing taxonomy data with `extract_taxonomy`
+## Using `extract_taxonomy`
 
 Rather than exacerbating the syntactic pollution with another custom format or creating a parser for every database-specific format, the function `extract_taxonomy` parses taxonomy information from arbitrary characters strings (e.g. sequence headers) identified by a regex expression.
 Although the motivation for creating `extract_taxonomy` is to parse FASTA sequence headers, the function is not specific to FASTA or even to sequence information, so I will use the word "observation" instead of "sequence header" from now on.
@@ -83,7 +84,7 @@ The elements of `key` has a defined set of possible values; see the `extract_tax
 Usually, this is ncbi, but others databases are possible (although not as well tested yet); see the `extract_taxonomy` help page for options.
 
 Other arguments are important in special cases.
-Some will be explained in the examples below.
+Some will be explained in the examples below, but for more details see `?extract_taxonomy`.
 
 ### Output
 
@@ -102,6 +103,11 @@ FASTA files downloaded from GenBank custom queries contain the GenBank id and th
 Taxonomic information can be retrieved using either of these identifiers. 
 The following shows how to extract the GI numbers, accession id, and description from the headers. 
 The GenBank accession number is being used to look up the taxonomy information (hence `"obs_id"` in `key` option), while the GI numbers and description are being returned without contributing taxonomic information (hence `"obs_info"` in `key` option).
+
+```{r echo=FALSE}
+library(metacoder)
+```
+
 
 ```{r eval=FALSE}
 library(metacoder)
@@ -142,8 +148,6 @@ Alternatively, the classifications specified in the header can be used to make a
 #### Using the sequence identifier
 
 The GenBank accession number in the second entry of UNITE sequence headers can be used to look up the taxon assigned to each sequence by GenBank. 
-Looking up the taxon assignment using the sequence accession number means changes in sequence taxonomy since the UNITE FASTA file was downloaded will be included. 
-Therefore, the taxonomy returned by GenBank could be different than the one in the header.
 However, some of the sequences in the UNITE database do not have a GenBank accession number; these IDs start with `UDB` and should be filtered out:
 
 ```{r eval=FALSE}
@@ -176,7 +180,7 @@ filter_taxa(unite_ex_data_1, name == "Fungi", subtaxa = TRUE) %>%
 
 #### Using included classification names to look up the taxon id
 
-If you want to use the structure and names of the classification provided in the header, but still look up the official taxon id, you can provide `"class"` as the only key with taxonomic information.
+If you want to use the structure and names of the classification provided in the header, but still look up the official taxon id, you can provide `"class"` to `key` and specify a database to look up taxon ids from. 
 Since the UNITE classification also included the rank for each taxon, we will have to specify how to parse each taxon string using the `class_regex` and `class_key` options.
 These work the same as `regex` and `key`, except they apply to each element in a classification.
 You can still capture the sequence id or taxon id (assuming its present in the header) by using `"obs_info"` or `"taxon_info"` where you would otherwise use `"obs_id"` or `"taxon_id"`.
@@ -209,6 +213,7 @@ The unique taxon id for each taxon encountered will be looked up and taxa not fo
 
 It is also possible to build a custom taxonomy encoding using the taxonomy in the sequence headers without looking up the official taxon ids of each taxon.
 Taxa will be assigned arbitrary taxon ids that will be specific to the current analysis.
+This is prefereable to just using unique taxon names as IDs, since there are often placeholder taxa names such as "unknown" or "spp" and occasionally different taxa can have to same name. 
 This is the method that is most useful if available, since it does not require an internet connection.
 To do this, leave off the `database` option from the previous example.
 
@@ -365,6 +370,7 @@ heat_tree(silva_ex_data,
 
 ### A list of sequence IDs
 
+If the input is only the data used to look up classifications, without any other text to seperate from it, the `regex` argument can be omitted.
 Say someone emails you a list of ncbi ids that you want to plot.
 You could use the following code to get the taxonomic information.
 
@@ -388,7 +394,7 @@ heat_tree(contaminants,
 
 ### Scraping taxon names from the web
 
-Any list of taxon names can be parsed.
+Any list of taxon names can also be parsed by leaving off the regex option.
 One way to get those names from a website that does not have an API is to parse the HTML of the website using and html parser and [XPATH](http://www.w3schools.com/xsl/xpath_syntax.asp).
 Note that this example uses [ITIS](http://www.itis.gov/) instead of NCBI to look up classifications for the taxa scraped from [The Plant List](http://www.theplantlist.org/1.1/browse/B/):
 
@@ -413,6 +419,11 @@ heat_tree(bryophytes_ex_data,
           layout = "davidson-harel")
 ```
 
+## Software and packages used
+
+```{r}
+sessionInfo()
+```
 
 ## References
 

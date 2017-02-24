@@ -1,27 +1,38 @@
 ---
 title: "Tara oceans example"
+bibliography: bibliography.bibtex
 ---
 
-
-```{r tara_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-knitr::read_chunk("settings.R")
-```
-
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
 
 ## Requirements 
 
-**NOTE:** This analysis requires at least 10Gb of RAM to run. 
+**NOTE:** This analysis requires at least 10GB of RAM to run.
+It uses large files not included in the repository and many steps can take a few minutes to run. 
+
+### Document rendering
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
+```
 
 ## Parameters
 
 ```{r io_settings, cache=FALSE}
 ```
 
-```{r tara_parameters}
-```
+## Introduction
 
+Here we present the code to reproduce the TARA Oceans figure in the metacoder publication. 
+The TARA oceans expedition sampled ocean water from around the world and conducted 18S metabarcoding and metagenomics to infer species composition [@de2015eukaryotic]. 
+Their paper mentioned that a large portion of the diversity found could not be well identified with currently available reference sequences. 
+We decided to look at this using heat trees to see which taxonomic groups are poorly represented in reference databases. 
 
 ## Parsing taxonomic data
 
@@ -49,6 +60,10 @@ sample_data <- readxl::read_excel(file.path(input_folder, "Database_W1_Sample_pa
 
 ## Caluculate read abundance per taxon
 
+The input data included read abundance for each sample-OTU combination, but we need the abundances associated with each taxon for graphing.
+The `obs` function is used here to get a list of row indexes corresponding to OTUs for each taxon.
+There will usually be multiple OTUs assigned to the same taxon, especially for coarse taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon.
+
 ```{r tara_calculate_abundance}
 sample_columns <- sample_data[["PANGAEA ACCESSION NUMBER"]]
 data <- mutate_taxa(data,
@@ -58,6 +73,13 @@ data <- mutate_taxa(data,
 
 
 ## Plot read and OTU abundance
+
+First lets get an idea of the taxonomic distribution of reads and OTUs. 
+This data set has many taxa (`r nrow(data$taxon_data)`) and deep taxonomies (a max depth of `r max(sapply(supertaxa(data), length))`), so graphing all of it effectively will be a challenge. 
+To make it more likly that the layout algorithms can untangle it all, we filter out taxa with less than 100 reads and remove some of the coarse taxonomic ranks so that we get multiple trees per graph.
+Each tree is then easier to layout for the computer and easier to read for us humans (assuming you saved it as a PDF and zoom in).
+Additionally, we will remove some taxa that have ambiguous names since they do not provide any information. 
+Note that we are not throwing out read or OTU counts when we do this filtering; the reads and OTU counts still apply to supertaxa (e.g. Metazoa) that were not filtered out. 
 
 ```{r tara_plot_all}
 seed = 9 #9, 10, 12 is good
@@ -95,12 +117,14 @@ data %>%
             overlap_avoidance = .65,
             background_color = background_color,
             maxiter = 50, fineiter = 50,
-            output_file = file.path(output_folder, paste0("sup_figure_1--tara_all_plankton_diversity",  output_format)))
+            output_file = result_path("sup_figure_1--tara_all_plankton_diversity"))
 ```
 
 
 ## Plot propotion of OTUs identified 
 
+Next we will look at how well the reference database used was able to classify OTUs. 
+This will give us an idea of how well current references databases account for the diversity of eukaryotes in the oceans. 
 For each taxon we will identify the proportion of OTUs with less than a 90% match to the most similar reference sequence to approximate classification certainty. 
 
 ```{r tara_calc_identified}
@@ -114,6 +138,11 @@ data <- mutate_taxa(data, percent_known = vapply(obs(data),
                                                  function(x) sum(data$obs_data$pid[x] >= 90, na.rm = TRUE) / length(x) * 100, numeric(1)))
 ```
 
+We can plot this the same way that we plotted OTU and read abundance.
+In fact, we can preserve abundance information by letting the size of nodes and edges correspond to OTU and read abundance and using color to plot classification certainty. 
+Since this figure will be part of the publication, we have not added node labels since they would not be visible at the scale publication figures are viewed.
+
+
 ```{r tara_plot_all_identified}
 seed = 13
 set.seed(seed)
@@ -125,7 +154,6 @@ identified_plot <- data %>%
   filter_taxa(!(taxon_ids %in% subtaxa(data, name == "Eukaryota", simplify = TRUE, include_input = TRUE) & n_supertaxa <= 1)) %>%
   filter_taxa(n_subtaxa < 30 & n_supertaxa == 0, subtaxa = TRUE, invert = TRUE) %>%
   heat_tree(
-    # title = "Poportion of OTUs not well identified",
     title_size = 0.03,
     node_color_axis_label = "Percent of species (OTUs) identified",
     node_size_axis_label = "Number of species (OTUs)",
@@ -135,9 +163,6 @@ identified_plot <- data %>%
     node_color_range = color_range,
     node_color_trans = "linear",
     node_color_interval = c(0, 100),
-    # node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", name) &
-    #                       ! Reduce(`|`, lapply(taxa_patterns_to_hide, grepl, x = name)),
-    #                     name, NA),
     node_label_size = (n_obs / (n_supertaxa + 1)) ^ 0.5,
     node_label_size_trans = "area",
     node_label_size_range = c(0.001, NA),
@@ -149,11 +174,16 @@ identified_plot <- data %>%
     overlap_avoidance = .65,
     maxiter = 50, fineiter = 50,
     make_legend = FALSE,
-    output_file = file.path(output_folder, paste0("sup_figure_2--tara_proportion_identified",  output_format)))
+    output_file = result_path("sup_figure_2--tara_proportion_identified"))
 identified_plot
 ```
 
+
 ### Just Metazoa
+
+We can also plot a single tree for a little less overwhelming graph.
+Below, we plot only the metazoa using the same meanings for color and size.
+This is also a publication figure, so taxa have been filtered out more aggressively and only a few labels are shown. 
 
 ```{r tara_plot_metazoa_identified}
 seed <- 21
@@ -192,20 +222,28 @@ metazoa_plot <- data %>%
             maxiter = 20, fineiter = 50,
             weight.node.edge.dist = 15,
             margin_size = c(0, -0.08, 0, 0),
-            output_file = file.path(output_folder,
-                                    paste0("figure_1--tara_metazoa--seed_",
-                                           seed, output_format)))
+            output_file = result_path(paste0("figure_1--tara_metazoa--seed_", seed)))
 metazoa_plot
 ```
 
 
 ### Combine plots
 
-```{r}
+Finally, lets combine the two graphs to produce the publication figure. 
+
+```{r, fig.width=7, fig.height=10}
 library(gridExtra)
 library(cowplot)
 combined_plot <- plot_grid(metazoa_plot, identified_plot, ncol = 1, nrow = 2, labels = c("a", "b"))
-save_plot(filename = file.path(output_folder, paste0("figure_1--tara_metazoa_combined", output_format)),
+save_plot(filename = result_path("figure_1--tara_metazoa_combined"),
           combined_plot, ncol = 1, nrow = 2, base_height = 5, base_width = 8)
 combined_plot
 ```
+
+## Software and packages used
+
+```{r}
+sessionInfo()
+```
+
+## References

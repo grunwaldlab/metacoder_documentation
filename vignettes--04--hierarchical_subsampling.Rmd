@@ -1,10 +1,20 @@
 ---
 title: "Creating a taxonomically balanced sequence set"
+bibliography: bibliography.bibtex
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-source("settings.R")
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
+```
+
 
 ## Introduction
 
@@ -21,7 +31,7 @@ When evaluating potential primers for metabarcoding experiments it is important 
 The number of sequences of each taxon at each taxonomic level should be approximately equal, or perhaps more accurately, proportional to the diversity within that taxon.
 If the sequence of a given locus correlates with characters used to determine taxonomy, as is the case for an ideal barcoding locus, the number of sub-taxa should be proportional to diversity of a given taxon. 
 
-Random samples of online sequence databases typically do have these characteristics, even those designed for metabarcoding. 
+Random samples of online sequence databases typically do not have these characteristics, even those designed for metabarcoding. 
 Sequences are not available for many taxa and the numbers of sequences vary dramatically for different taxa. 
 For these reasons, a simple random sample of sequences for a given taxon from an online database will often not constitute an ideal reference sequence set. 
 Therefore, `metacoder` includes functions to extract a sample of reference sequences that meet these criteria from a larger set of sequences. 
@@ -97,4 +107,12 @@ sample_n_obs(unite_ex_data_3, size = 10000, taxon_weight = 1 / n_obs, replace = 
             node_color = n_obs,
             node_label = n_obs,
             edge_label = name)
+```
+
+There is more information on `sample_n_obs` and `sample_n_taxa` in the "Manipulating taxonomic data" tutorial. 
+
+## Software and packages used
+
+```{r}
+sessionInfo()
 ```

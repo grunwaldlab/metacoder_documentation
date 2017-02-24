@@ -1,5 +1,5 @@
 ---
-title: Graphing the RDP database
+title: Digital PCR with the RDP database
 bibliography: bibliography.bibtex
 ---
 ```{r init, echo = FALSE, message = FALSE}
@@ -30,13 +30,16 @@ It uses large files not included in the repository and many steps can take a few
 
 ### Analysis parameters
 
+These settings are shared between the RDP, SILVA, and Greengenes analyses, since the results of those three analyeses are combined in one plot later. 
+This ensures that all of the graphs use the same color and size scales, instead of optimizing them for each data set, as would be done automatically otherwise.
+
 ```{r database_comparison_settings}
 ```
 
 
 ## Parse database
 
-The code below parses and subsets the entire RDP non-redundant reference database.
+The code below parses and subsets the entire RDP non-redundant reference database [@maidak2001rdp].
 The input file is not included in this repository because it is 3.6GB, but you can download it from the RDP website here: 
 
 https://rdp.cme.msu.edu/misc/resources.jsp
@@ -73,7 +76,9 @@ print(rdp)
 
 ## Remove chloroplast sequences
 
-These are not bacterial and will bias the *in silico* PCR results.
+These are not bacterial and will bias the digital PCR results.
+Note that the `invert` option makes it so taxa are included that *did not* pass the filter. 
+This is different than simply using `name != "Chloroplast", subtaxa = TRUE` since the effects of `invert` are applied after those of `subtaxa`.
 
 ```{r rdp_rm_chloro}
 rdp <- filter_taxa(rdp, name == "Cyanobacteria/Chloroplast", subtaxa = TRUE, invert = TRUE)
@@ -83,7 +88,7 @@ print(rdp)
 
 ## Plot whole database
 
-Although RDP is such a large database (`r nrow(rdp$taxa_data)` taxa) that graphing everything can be a bit overwhelming, it gives an intuitive feel for the complexity of the database:
+Although graphing everything can be a bit overwhelming (`r nrow(silva$taxon_data)` taxa), it gives an intuitive feel for the complexity of the database:
 
 ```{r rdp_plot_all}
 rdp_plot_all <- heat_tree(rdp,
@@ -107,8 +112,9 @@ print(rdp_plot_all)
 
 ## PCR
 
-Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved].
-These primers were designed to amplify all bacteria.
+Before doing the digital PCR, I will filter for only full length sequences, since shorter sequences might not have a primer binding site and the digital PCR would fail, not because of an inability of a real primer to bind to real DNA, but because of missing sequence information in the database. 
+Ideally, this kind of filtering for full length sequences would involve something like a multiple sequences alignment so we don't remove sequences that are actually full length, but just happen to be shorter than the cutoff of `r min_seq_length` naturally.
+However, this method is easy and should work OK.
 
 ```{r rdp_length_filter}
 if (! is.null(min_seq_length)) {
@@ -117,12 +123,17 @@ if (! is.null(min_seq_length)) {
 print(rdp)
 ```
 
+Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved], allowing for a maximum mismatch of `r max_mismatch`%.
+
 ```{r rdp_pcr}
 rdp_pcr <- primersearch(rdp,
                         forward = forward_primer,
                         reverse = reverse_primer,
                         mismatch = max_mismatch)
 ```
+
+Now the object `rdp_pcr` has all the information that `rdp` has plus the results of the digital PCR.
+Lets plot the whole database again, but coloring based on digital PCR success.
 
 ```{r rdp_plot_pcr_all}
 rdp_plot_pcr_all <- heat_tree(rdp_pcr,
@@ -140,6 +151,11 @@ rdp_plot_pcr_all <- heat_tree(rdp_pcr,
                               output_file = result_path("rdp--pcr_all"))
 print(rdp_plot_pcr_all)
 ```
+
+Since these are universal bacterial primers, we would expect most of the database to amplify.
+The plot shows this and very few sequences were not amplified.
+If we wanted to look at only those sequences that did not amplify, we could filter taxa by PCR success and plot what remains. 
+I am including the supertaxa of those taxa that did not amplify since excluding them would split the tree into a cloud of fragments lacking taxonomic context.
 
 ```{r, rdp_plot_pcr_fail}
 rdp_plot_pcr_fail <- rdp_pcr %>%
@@ -164,7 +180,6 @@ rdp_plot_pcr_fail <- rdp_pcr %>%
 print(rdp_plot_pcr_fail)
 ```
 
-
 ## Save outputs for composite figure
 
 Some results from this file will be combined with others from similar analyses to make a composite figure.
@@ -174,5 +189,12 @@ Below, the needed objects are saved so that they can be loaded by another Rmd fi
 save(file = file.path(output_folder,"rdp_data.RData"),
      rdp_plot_all, rdp_plot_pcr_fail)
 ```
+
+## Software and Packages used
+
+```{r}
+sessionInfo()
+```
+
 
 ## References

@@ -1,75 +1,31 @@
 ---
 title: "Plotting value distributions on taxonomies"
+bibliography: bibliography.bibtex
 ---
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE}
-library(ggplot2)
-source("settings.R")
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
+```
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
 ```
 
 ## Introduction
 
-Visualizing statistics associated with taxa can be difficult due to the hierarchical nature of the information.
-Traditional graph types used to visualize the relationship between categories (e.g. taxa) and quantities (e.g. abundance) such as bar charts, pie charts, and box plots, are fundamentally two-dimensional. 
-This means the it is usually necessary to only view a 'slice' of the data, such as the abundance of taxa of a particular rank, rather than all ranks. 
-To demonstrate this idea, lets display the same data using various graphing techniques and compare their effectiveness.
-For this example we will be using a sample of 500 sequences from the UNITE fungal ITS database.
-First, we will use a bar chart to display abundance of taxa at each rank:
-
-
-```{r, echo = FALSE}
-library(metacoder)
-data <- taxon_data(unite_ex_data_3)
-data$name <- factor(data$name, levels = unique(data$name[order(data$n_obs, decreasing = TRUE)]), ordered = TRUE)
-data$unite_rank <- factor(data$unite_rank, levels = unique(data$unite_rank),
-                          labels = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"), 
-                          ordered = TRUE)
-ggplot(data[!data$unite_rank  %in% c("Kingdom", "Species", "Genus"), ]) + 
-  geom_bar(aes(x = name, y = n_obs), stat = "identity") +
-  facet_wrap(~ unite_rank, scales = "free") +
-  labs(x = "Taxon", y = "Abundance", title = "Abundance of taxa in a sample of the UNITE database") +
-  theme_minimal() +  
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
-        panel.grid = element_blank())
-```
-
-For ranks with relatively few taxa, this is a satisfactory graphing technique, but it is ineffective once there is more than 20 or so taxa. 
-It also is difficult to discern how sub-taxa are distributed within each taxon. 
-For example, if we only looked at the phylum or class level, we can easily see that Basidiomycota/Agaricomyctes are the most plentiful, but don't know if that is due to a single highly abundant species, or many moderately abundant species.
-These details are typically important for the interpretation of results.  
-Pie charts are also commonly used for this purpose, but they are just a less effective version of a bar chart.
-
-```{r, echo = FALSE}
-ggplot(data[data$unite_rank == "Phylum", ]) + 
-  geom_bar(aes(x = factor(1), y = n_obs, fill = name), stat = "identity") +
-  coord_polar(theta = "y") +
-  labs(x = "Taxon", y = "Abundance", title = "Abundance of taxa in a sample of the UNITE database") +
-  theme_minimal() +  
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
-        panel.grid = element_blank(), 
-        axis.text = element_blank(),
-        axis.title = element_blank(),
-        axis.ticks = element_blank())
-```
-
-
-`Metacoder` approaches this problem by using size and color to represent numeric data distributed along a phylogenetic tree:
-
-```{r, echo=FALSE}
-heat_tree(unite_ex_data_3,
-          node_size = n_obs,
-          node_color = n_obs,
-          node_label = name)
-```
-
-In this example, both size and color are being used to represent the abundance of taxa.
-Using this method, it is clear how subtaxa are distributed within their supertaxa and what taxa are unusual (note the unidentified agaricales). 
-
+Visualizing statistics associated with hierarchical information can be difficult. 
+In the case of organism abundance data calssified by a taxonomy, stacked barcharts or pie graphs are typically used to view a single rank in the taxonomy (e.g. phylum).
+The use of color to represent different taxa in these visulizations limits the number of taxa displayed to the number of colors that can be easily discerned.
+Metacoder provides an alternative visulization we call *heat trees* to plot this type of data. 
 
 ## Basic usage
 
 Although there are many options that can be used to make highly customized graphs, `heat_tree` only needs one argument to function: an object of type `taxmap`.
-We can see the default appearance of the data used in the introduction using the code below:
+We can see the default appearance of a subset of the UNITE database [@koljalg2005unite] using the code below:
 
 ```{r}
 library(metacoder)
@@ -77,11 +33,11 @@ unite_ex_data_3
 heat_tree(unite_ex_data_3)
 ```
 
-Each node (i.e. circle) in the graph represents a taxon and each line represents its membership in a lower taxon. 
+Each node (i.e. circle) in the graph represents a taxon and each line represents its membership in a taxon of a corser taxonomic rank. 
 
 ### Node/Line size
 
-The size of nodes and lines can be scaled to a number associated with each taxon using the `node_size` and `edge_size` parameters. 
+The size of nodes and edges can be scaled to any number associated with each taxon using the `node_size` and `edge_size` parameters. 
 Below, the number of sequences for each taxon is used to determine node size.
 
 ```{r}
@@ -93,7 +49,7 @@ Note that it was not necessary to specify the absolute node size; the range of a
 The argument `overlap_avoidance` is used to determine how much overlaps are avoided. 
 Higher values mean more importance is given to avoiding overlapping nodes than to maximizing the ranges of sizes.
 A high `overlap_avoidance` makes the connections between taxa more clear, but diminishes the visual effect of node size.
-Too low of an `overlap_avoidance` can make the graph hard to read.
+Too low of an `overlap_avoidance` can make the graph hard to read by allowing nodes to overlap more.
 
 ```{r}
 heat_tree(unite_ex_data_3,
@@ -173,7 +129,7 @@ heat_tree(unite_ex_data_3,
 ```
 
 Note that the labels are a special kind that scales with the size of the graph. 
-This means that the text size will always be proportional to the graph size regardless of ow big the graph is rendered; however, these special labels take more time to render, so causing too many to be printed drastically slow the rendering of the graph. 
+This means that the text size will always be proportional to the graph size regardless of how big the graph is rendered; however, these special labels take more time to render, so causing too many to be printed drastically slow the rendering of the graph or even cause errors. 
 
 ### Line labels 
 
@@ -238,4 +194,12 @@ heat_tree(contaminants,
 ### More information
 
 To see the long list of available plotting options, type `?heat_tree`.
+Although there are many options (perhaps an overwhleming amount at first glance), most of the options fall into groups that work in similar ways.
 
+## Software and packages used
+
+```{r}
+sessionInfo()
+```
+
+## References

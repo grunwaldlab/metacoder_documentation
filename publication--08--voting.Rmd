@@ -1,16 +1,37 @@
 ---
 title: Graphing voting geography
+bibliography: bibliography.bibtex
 ---
 
-```{r voting_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-knitr::read_chunk("settings.R")
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
 
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+## Parameters
+
+### Document rendering
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
 ```
 
-```{r io_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+### Analysis input/output
+
+```{r io_settings}
 ```
+
+
+## Introduction
+
+Although metacoder has been designed for use with taxonomic data, any data that can be assigned to a heirarchy can be used. 
+To demonstrate this, we have used metacoder to display the results of the 2016 Democratic primary election. 
+The data used can be dowloaded here:
+
+https://www.kaggle.com/benhamner/2016-us-election/
 
 ## Read in data
 
@@ -19,7 +40,10 @@ file_path <- file.path(input_folder, "primary_results.csv")
 data <- tibble::as_tibble(read.table(file_path, sep = ",", header = TRUE, quote = "", stringsAsFactors = FALSE))
 ```
 
-## Add region column
+## Add region and divisons columns
+
+The data does not include the region or division of states/counties. 
+Adding these will make the visulization more interesting. 
 
 ```{r}
 divisions <- stack(list("New England" = c("Connecticut", "Maine", "Massachusetts",
@@ -92,7 +116,6 @@ top_counties <- vapply(FUN.VALUE = character(1),
 
 ## Plotting results
 
-
 ```{r}
 voting_data %>%
   heat_tree(node_size = total_votes,
@@ -114,3 +137,8 @@ voting_data %>%
                                            output_format)))
 ```
 
+## Software and Packages used
+
+```{r}
+sessionInfo()
+```

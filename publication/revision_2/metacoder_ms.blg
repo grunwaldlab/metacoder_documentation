@@ -1,0 +1,76 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: metacoder_ms.aux
+The style file: plos2015.bst
+I found no \bibdata command---while reading file metacoder_ms.aux
+Warning--I didn't find a database entry for "cristescu2014barcoding"
+Warning--I didn't find a database entry for "de2015eukaryotic"
+Warning--I didn't find a database entry for "coleman2016plant"
+Warning--I didn't find a database entry for "yu2012biodiversity"
+Warning--I didn't find a database entry for "human2012structure"
+Warning--I didn't find a database entry for "gilbert2014earth"
+Warning--I didn't find a database entry for "segata2012metagenomic"
+Warning--I didn't find a database entry for "schloss2009introducing"
+Warning--I didn't find a database entry for "maidak1996ribosomal"
+Warning--I didn't find a database entry for "benson2013genbank"
+Warning--I didn't find a database entry for "koljalg2013towards"
+Warning--I didn't find a database entry for "guillou2012protist"
+Warning--I didn't find a database entry for "desantis2006greengenes"
+Warning--I didn't find a database entry for "quast2013silva"
+Warning--I didn't find a database entry for "foster2016metacoder_manual"
+Warning--I didn't find a database entry for "hadley2016dplyr"
+Warning--I didn't find a database entry for "mcmurdie2013phyloseq"
+Warning--I didn't find a database entry for "walters2016improved"
+Warning--I didn't find a database entry for "himes2014rna"
+Warning--I didn't find a database entry for "paradis2004ape"
+Warning--I didn't find a database entry for "charif2007seqinr"
+Warning--I didn't find a database entry for "chamberlain2013taxize"
+Warning--I didn't find a database entry for "ficetola2010silico"
+Warning--I didn't find a database entry for "elbrecht2016primerminer"
+Warning--I didn't find a database entry for "brown2012spider"
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+You've used 0 entries,
+            3058 wiz_defined-function locations,
+            649 strings with 4778 characters,
+and the built_in function-call counts, 27 in all, are:
+= -- 0
+> -- 0
+< -- 0
++ -- 0
+- -- 0
+* -- 2
+:= -- 16
+add.period$ -- 0
+call.type$ -- 0
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 0
+duplicate$ -- 0
+empty$ -- 1
+format.name$ -- 0
+if$ -- 1
+int.to.chr$ -- 0
+int.to.str$ -- 0
+missing$ -- 0
+newline$ -- 3
+num.names$ -- 0
+pop$ -- 0
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 1
+stack$ -- 0
+substring$ -- 0
+swap$ -- 0
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 0
+width$ -- 0
+write$ -- 2
+(There was 1 error message)

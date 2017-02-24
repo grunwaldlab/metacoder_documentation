@@ -1,9 +1,29 @@
-name: "MetacodeR"
+name: "metacoder"
 output_dir: "."
 navbar:
-  title: "MetacodeR"
+  title: "metacoder"
   href: index.html
   left:
+    - text: "Publication"
+      href: http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005404
+    - text: "Publication Analyses"
+      menu:
+        - text: "Human microbiome"
+          href: publication--05--16s_human_microbiome.html
+        - text: "TARA Oceans"
+          href: publication--06--tara_oceans.html
+        - text: "Digital PCR: SILVA"
+          href: publication--01--silva.html
+        - text: "Digital PCR: RDP"
+          href: publication--02--rdp.html
+        - text: "Digital PCR: Greengenes"
+          href: publication--03--greengenes.html
+        - text: "Digital PCR: Comparing databases"
+          href: publication--04--16s_database_comparision.html
+        - text: "Voting Geography"
+          href: publication--08--voting.html
+        - text: "Gene Expression"
+          href: publication--09--gene_expression.html
     - text: "Tutorials"
       menu:
         - text: "Parsing input files"
@@ -14,27 +34,12 @@ navbar:
           href: vignettes--03--manipulating_taxonomic_data.html
         - text: "Sampling"
           href: vignettes--04--hierarchical_subsampling.html
-    - text: "Publication Analyses"
-      menu:
-        - text: "Human microbiome"
-          href: publication--05--16s_human_microbiome.html
-        - text: "TARA Oceans"
-          href: publication--06--tara_oceans.html
-        - text: "In silico PCR: SILVA"
-          href: publication--01--silva.html
-        - text: "In silico PCR: RDP"
-          href: publication--02--rdp.html
-        - text: "In silico PCR: Greengenes"
-          href: publication--03--greengenes.html
-        - text: "In silico PCR: Comparing databases"
-          href: publication--04--16s_database_comparision.html
-        - text: "Voting Geography"
-          href: publication--08--voting.html
     - text: "Presentation"
       href: presentation_page.html
     - text: "GitHub Repository"
       href: https://github.com/grunwaldlab/metacoder
-
+    - text: "Forum"
+      href: https://groups.google.com/forum/#!forum/metacoder-discussions
 output:
   html_document:
     toc: true
@@ -42,6 +47,7 @@ output:
       collapsed: false
     toc_depth: 2
     theme: flatly  ## Choose from http://bootswatch.com/
+    css: styles.css
     includes:
       after_body: footer.html
       before_body: header.html

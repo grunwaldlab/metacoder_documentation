@@ -1,18 +1,29 @@
 ---
 title: "Manipulating taxonomic data"
+bibliography: bibliography.bibtex
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-source("settings.R")
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
+```
+
+## Introduction
 
 Manipulating taxonomic data is a more subtle problem then it might seem at first.
 For example, if you want to remove a taxon, do you remove its supertaxa and subtaxa as well?
-What if there are sequences assigned to that taxon; are the sequences removed or reassigned to a preserved supertaxa?
+What if there are sequences assigned to that taxon; are the sequences removed or reassigned to a preserved supertaxon?
 What if the taxon is an internal node in the taxonomy; do you connect its supertaxa and subtaxa or break the taxonomy?
 The answers to these questions depend on what the goal of the subsetting is.
-MetacodeR uses `dplyr`-style functions for manipulating taxonomic data.
-For each `dplyr` verb, there are two functions in metacodeR, one that manipulates the taxon portion of the data and one that manipulates the observation portion.
+Metacoder uses `dplyr`-style functions for manipulating taxonomic data.
+For each `dplyr` verb, there are two functions in metacodeRr, one that manipulates the taxon portion of the data and one that manipulates the observation portion.
 
 ## Subsetting rows
 
@@ -50,7 +61,7 @@ filter_taxa(genbank_ex_data, n_supertaxa > 4)
 
 ### Removing subtaxa
 
-You can also remove subtaxa by filtering with a specified level/rank:
+You can also remove subtaxa by filtering with a specified rank:
 
 ```{r}
 heat_tree(unite_ex_data_3,
@@ -207,7 +218,7 @@ sample_frac_obs(unite_ex_data_3, size = 0.1) %>%
 
 ## Subsetting columns
 
-Subsetting columns is more straight forward that subsetting rows.
+Subsetting columns is more straight forward than subsetting rows.
 The functions `select_taxa` and `select_obs` are little more than wrappers for `dplyr::select`.
 The only thing they do differently is to enforce that the `taxon_ids`, `supertaxon_ids`, and `obs_taxon_ids` columns are preserved:
 
@@ -245,7 +256,7 @@ Adding observation columns with `mutate_obs` works the same way.
 
 ## Replacing columns
 
-`transmute_taxa` and `transmute_obs` make new columns and discard all of the old columns:
+`transmute_taxa` and `transmute_obs` make new columns and discards all of the old columns:
 
 ```{r}
 transmute_taxa(unite_ex_data_3,
@@ -267,4 +278,11 @@ To change the direction of ordering, use `dplyr::desc`:
 
 ```{r}
 arrange_taxa(unite_ex_data_3, desc(name))
+```
+
+
+## Software and packages used
+
+```{r}
+sessionInfo()
 ```
