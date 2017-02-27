@@ -2,42 +2,60 @@
 title: "MetacodeR user documentation"
 author: "Zachary S. L. Foster and Niklaus J. Grünwald"
 date: "`r Sys.Date()`"
+bibliography: bibliography.bibtex
 ---
 
 ```{r home_setup, echo=FALSE, warning=FALSE, message=FALSE}
-source("settings.R")
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
+
+```{r rendering_settings, echo=FALSE, warning=FALSE, message=FALSE}
+```
+
 
 ## Introduction
 
 Metabarcoding is revolutionizing microbial ecology and presenting new challenges:
 
 * Numerous database formats make taxonomic data difficult to parse, combine, and subset.
-* Stacked bar charts, commonly used to depict community diversity, lack taxonomic context.
+* Stacked bar charts, commonly used to depict community diversity, lack taxonomic context and are limited by the use of color to represent taxa.
 * Barcode loci and primers are a source of under-explored bias.
 
 MetacodeR is an R package that attempts to addresses these issues:
 
-* Sources of taxonomic data can be extracted from any file format and manipulated. 
-* Community diversity can be visualized by color and size in a tree plot.
+* Sources of taxonomic data can be extracted from any file format and manipulated using [dpylr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html)-like functions that take into account hierarchical relationships. 
+* Community diversity can be visualized by color and size in a type of tree plot we call heat trees.
 * Primer specificity can be estimated with *in silico* PCR.
 
 ## Installation
 
-While this project is in development it can be installed through Github:
+This project is available on CRAN and can be installed like so:
 
+```
+install.packages("metacoder")
+```
+
+You can also intall the development version for the newest features, bugs, and bug fixes:
+
+```
 devtools::install_github(repo="grunwaldlab/metacoder", build_vignettes = TRUE)
-library(metacoder)
+```
 
 If you've built the vignettes, you can browse them with:
 
+```
 browseVignettes(package="metacoder")
-
+```
 ## Dependencies
 
-The function that runs *in silico* PCR requires `primersearch` from the EMBOSS `r citep("10.1093/bib/3.1.87")` tool kit to be installed. 
+The function that runs *in silico* PCR requires `primersearch` from the EMBOSS [@rice2000emboss] tool kit to be installed. 
 This is not an R package, so it is not automatically installed.
-Type `?primersearch` after installing and loading MetcodeR for installation instructions.
+Type `?primersearch` after installing and loading metacoder for installation instructions.
 
 
 ## Extracting taxonomic data
@@ -46,40 +64,17 @@ Most databases have a unique file format and taxonomic hierarchy/nomenclature.
 Taxonomic data can be extracted from any file format using the **extract_taxonomy** function.
 Classifications can be parsed offline or retrieved from online databases if a taxon name, taxon ID, or sequence ID is present.
 A regular expression with capture groups and a corresponding key is used to define how to parse the file.
-The example code below parses the 16s Ribosome Database Project training set for Mothur.
+The example code below parses the 16s Ribosome Database Project training set for Mothur which can be found here:
 
-R can be used to download files from the internet and decompress them.
-The code below downloads the compressed data to a temporary directory:
+http://mothur.org/w/images/b/b5/Trainset10_082014.rdp.tgz
 
-```{r home_download}
-rdp_fasta_url <- "http://mothur.org/w/images/b/b5/Trainset10_082014.rdp.tgz"
-temp_dir_path <- tempdir()
-local_file_path <- file.path(temp_dir_path, basename(rdp_fasta_url))
-download.file(url = rdp_fasta_url, destfile = local_file_path, quiet = TRUE)
-```
-
-Next we will uncompress the archive and identify the fasta file.
-
-```{r home_uncompress}
-# Get contents of tar archive
-unpacked_file_paths <- untar(local_file_path, list = TRUE)
-# Uncompress archive
-untar(local_file_path, exdir = temp_dir_path)
-# Identify the Mothur RDP training set
-unpacked_fasta_path <- file.path(temp_dir_path, 
-                                 unpacked_file_paths[grepl("fasta$", unpacked_file_paths)])
-```
-
-The file can then be parsed using the `ape` package and the taxonomy data in the headers can be extracted by `extract_taxonomy`:
+The file can be parsed using the `ape` package and the taxonomy data in the headers can be extracted by `extract_taxonomy`:
 
 ```{r home_parse, warning=FALSE, message=FALSE}
-# Load the package
 library(metacoder)
-# Load the input FASTA file
-seqs <- ape::read.FASTA(unpacked_fasta_path)
-# Print an example of the sequence headers
+fasta_path <- file.path("raw_input", "trainset10_082014.rdp.fasta")
+seqs <- ape::read.FASTA(fasta_path)
 cat(names(seqs)[1])
-# Extract the taxonomic information of the sequences
 data <- extract_taxonomy(seqs, regex = "^(.*)\\t(.*)",
                          key = c(id = "obs_info", "class"),
                          class_sep = ";")
@@ -105,7 +100,7 @@ There is corresponding `obs_data` function and `obs_funcs` list, but they are no
 
 The hierarchical nature of taxonomic data makes it difficult to plot effectively.
 Most often, bar charts, stacked bar charts, or pie graphs are used, but these are ineffective when plotting many taxa or multiple ranks.
-MetacodeR maps taxonomic data (e.g. sequence abundance) to color/size of tree components in what we call a **Metadiversity Plot**:
+MetacodeR maps taxonomic data (e.g. sequence abundance) to color/size of tree components in what we call a **heat tree**:
 
 ```{r home_plot_1}
 heat_tree(data, node_size = n_obs, node_label = name, node_color = n_obs)
@@ -136,13 +131,11 @@ The above command can take several minutes since it uses a force-directed layout
 ggplot2::ggsave(file = "intro_plot_2.svg", plot = the_last_plot, bg = "transparent")
 ```
 
-Note that `plot` is a generic R function that works differently depending on what it is given to it.
-MetacodeR supplies the function **plot_taxonomy**, which is used when plot is given the type of data outputted by `extract_taxonomy`.
-To see the long list of available plotting options, type `?plot_taxonomy`.
+To see the long list of available plotting options, type `?heat_tree`.
 
 ## Subsetting
 
-Taxonomic data in the form used in metacodeR can be manipulated using functions inspired by `dplyr`.
+Taxonomic data in the form used in metacoder can be manipulated using functions inspired by `dplyr`.
 For example, taxa can be subset using `filter_taxa`.
 Unlike the `dplyr` function `filter`, users can choose preserve or remove the subtaxa, supertaxa, and associated observation data of the selected taxa.
 For example, `filter_taxa` can be used to look at just the Archaea:
@@ -190,7 +183,7 @@ There is also a `filter_obs` function which can filter out observations and the 
 
 When calculating statistics for taxa, the amount of data should be balanced across taxa and there should be enough data per taxon to provide unbiased estimates.
 Random samples from large reference databases are biased towards overrepresented taxa.
-MetacodeR provides two ways to randomly sample taxonomic data.
+Metacoder provides two ways to randomly sample taxonomic data.
 The function `taxonomic_sample` is used to create taxonomically balanced random samples.
 The acceptable range of sequence or subtaxa counts can be defined for each taxonomic rank; taxa with too few are excluded and taxa with too many are randomly subsampled.
 The code below samples the data such that rank 6 taxa will have 5 sequences and rank 3 taxa (phyla) will have less than 100:
@@ -225,7 +218,7 @@ sample_n_obs(subsetted, size = 1000, taxon_weight = 1 / n_obs, unobserved = FALS
 ## In silico PCR
 
 The function **primersearch** is a wrapper for an EMBOSS tool that implements *in silico* PCR.
-The code below estimates the coverage of the universal prokaryotic primer pair 515F/806R `r citep("10.1128/mSystems.00009-15")`: 
+The code below estimates the coverage of the universal prokaryotic primer pair 515F/806R [@walters2016improved]: 
 
 ```{r home_pcr_1}
 pcr <- primersearch(sampled, 
@@ -235,7 +228,7 @@ pcr <- primersearch(sampled,
 taxon_data(pcr)
 ```
 
-The proportion of sequences amplified can be represented by color in a metadiversity plot:
+The proportion of sequences amplified can be represented by color in a heat tree:
 
 ```{r home_plot_8}
 set.seed(3)
@@ -320,25 +313,19 @@ ggplot2::ggsave(file = "in_silico_pcr_3.svg", plot = the_last_plot, bg = "transp
 ## Future development
 
 MetacodeR is under active development and many new features are planned.
-Some improvements that are being worked on include:
+Some improvements that are being explored include:
 
-* Increases in function speed
-* Plotting functions for pairwise comparison of treatments
+* Plotting functions for pairwise comparison of treatments (see figure 5 in the publication).
 * Barcoding gap analysis and associated plotting functions
 * A function to aid in retrieving appropriate sequence data from NCBI for *in silico* PCR from whole genome sequences.
+* Graphing of different node shapes in heat trees, possibly including pie graphs or other graphs. 
 
 To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
 
 ## Aknowledgements
 
 We thank Thomas Sharpton for sharing his metagenomics expertise and advising us.
-MetacodeR's major dependencies are taxize, igraph, and ggplot2.
-
-## References
-
-```{r home_bibliography, results = 'asis', echo=FALSE}
-bibliography()
-```
+metacoders's major dependencies are taxize, igraph, and ggplot2.
 
 ## Feedback and contributions
 
@@ -346,3 +333,11 @@ We would like to hear about users' thoughts on the package and any errors they r
 Please report errors, questions or suggestions on the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
 We also welcome contributions via a Github [pull request](https://help.github.com/articles/using-pull-requests/).
 You can also talk with us using our [Google groups](https://groups.google.com/forum/#!forum/metacoder-discussions) site or the comments section below. 
+
+## Software and packages used
+
+```{r}
+sessionInfo()
+```
+
+## References

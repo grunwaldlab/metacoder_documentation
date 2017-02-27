@@ -88,7 +88,7 @@ print(rdp)
 
 ## Plot whole database
 
-Although graphing everything can be a bit overwhelming (`r nrow(silva$taxon_data)` taxa), it gives an intuitive feel for the complexity of the database:
+Although graphing everything can be a bit overwhelming (`r nrow(rdp$taxon_data)` taxa), it gives an intuitive feel for the complexity of the database:
 
 ```{r rdp_plot_all}
 rdp_plot_all <- heat_tree(rdp,
@@ -190,7 +190,7 @@ save(file = file.path(output_folder,"rdp_data.RData"),
      rdp_plot_all, rdp_plot_pcr_fail)
 ```
 
-## Software and Packages used
+## Software and packages used
 
 ```{r}
 sessionInfo()

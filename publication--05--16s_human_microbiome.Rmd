@@ -418,7 +418,7 @@ save_plot(result_path(plot_name),
 save_publication_fig(plot_name, figure_number = 5)
 ```
 
-## Software and Packages used
+## Software and packages used
 
 ```{r}
 sessionInfo()

@@ -125,7 +125,7 @@ print(greengenes)
 
 ## Plot whole database
 
-Although graphing everything can be a bit overwhelming (`r nrow(silva$taxon_data)` taxa), it gives an intuitive feel for the complexity of the database:
+Although graphing everything can be a bit overwhelming (`r nrow(greengenes$taxon_data)` taxa), it gives an intuitive feel for the complexity of the database:
 
 ```{r greengenes_plot_all}
 greengenes_plot_all <- heat_tree(greengenes, 
@@ -227,7 +227,7 @@ save(file = file.path(output_folder, "greengenes_data.RData"),
      greengenes_plot_all, greengenes_plot_pcr_fail)
 ```
 
-## Software and Packages used
+## Software and packages used
 
 ```{r}
 sessionInfo()

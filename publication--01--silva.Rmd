@@ -231,7 +231,7 @@ save(file = file.path(output_folder, "silva_data.RData"),
      silva_plot_all, silva_plot_pcr_fail)
 ```
 
-## Software and Packages used
+## Software and packages used
 
 ```{r}
 sessionInfo()

@@ -1,23 +1,46 @@
 ---
 title: Human gene expression
+bibliography: bibliography.bibtex
 ---
 
-```{r expression_setup, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
-knitr::read_chunk("settings.R") # source("settings.R")
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
 
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+## Parameters
+
+### Document rendering
+
+```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
 ```
 
-```{r io_settings, echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+### Analysis input/output
+
+```{r io_settings}
 ```
+
+
+### Analysis settings
 
 ```{r}
 min_p_value <- 0.05
 ```
 
 
-## Installation
+## Introduction
+
+
+
+## Dependencies
+
+This analysis requires Bioconductor packages to work. 
+These packages are not available on CRAN and must be installed using the following code. 
+The code below is not run during the compilation of this page, but is provided so others can quickly find the right software to replicate this analysis. 
 
 ```{r eval = FALSE}
 source("https://bioconductor.org/biocLite.R")
@@ -236,9 +259,7 @@ data %>%
             node_color_axis_label = "Factor change",
             node_size_axis_label = "Number of genes",
             layout = "da", initial_layout = "re",
-            output_file = file.path(output_folder,
-                                    paste0("gene_expression--cellular_component",
-                                           output_format)))
+            output_file = result_path("gene_expression--cellular_component"))
 ```
 
 
@@ -323,8 +344,7 @@ data %>%
             node_color_axis_label = "Fold change",
             node_size_axis_label = "Number of genes",
             layout = "da", initial_layout = "re",
-            output_file = output_path)
-file.copy(output_path, "publication/revision_1/figure_7.pdf")
+            output_file = result_path("gene_expression--biological_process"))
 ```
 
 
@@ -383,8 +403,12 @@ data %>%
             node_color_axis_label = "Factor change",
             node_size_axis_label = "Number of genes",
             layout = "da", initial_layout = "re",
-            output_file = file.path(output_folder,
-                                    paste0("gene_expression--molecular_function",
-                                           output_format)))
+            output_file = result_path("gene_expression--molecular_function"))
 ```
 
+
+## Software and packages used
+
+```{r}
+sessionInfo()
+```

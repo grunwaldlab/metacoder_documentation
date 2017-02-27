@@ -36,7 +36,7 @@ navbar:
           href: vignettes--04--hierarchical_subsampling.html
     - text: "Presentation"
       href: presentation_page.html
-    - text: "GitHub Repository"
+    - text: "GitHub"
       href: https://github.com/grunwaldlab/metacoder
     - text: "Forum"
       href: https://groups.google.com/forum/#!forum/metacoder-discussions

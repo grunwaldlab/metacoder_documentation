@@ -132,12 +132,10 @@ voting_data %>%
             node_size_axis_label = "Total votes",
             edge_label_max = 5000, 
             overlap_avoidance = 10,
-            output_file = file.path(output_folder,
-                                    paste0("voting",
-                                           output_format)))
+            output_file = result_path("voting"))
 ```
 
-## Software and Packages used
+## Software and packages used
 
 ```{r}
 sessionInfo()
