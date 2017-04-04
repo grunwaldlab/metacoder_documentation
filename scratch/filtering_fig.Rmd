@@ -1,0 +1,68 @@
+
+
+```{r}
+library(metacoder)
+data <- filter_taxa(unite_ex_data_3, n_supertaxa <= 4)
+```
+
+```{r}
+plot_one <- function(selection, title) {
+  not_selected_color = "grey"
+  selected_color = "red"
+  
+  data %>%
+    heat_tree(node_size = n_obs,
+              node_color = ifelse(selection, selected_color, not_selected_color),
+              edge_color  = not_selected_color,
+              make_legend = FALSE,
+              title = title,
+              title_size = 0.05)
+}
+```
+
+
+
+```{r}
+subset <- n_obs(data) > 30 & data$taxon_data$unite_rank == "c"
+```
+
+### Default behavior
+
+
+```{r}
+```
+
+
+### Include supertaxa
+
+```{r}
+```
+
+
+### Include subtaxa
+
+```{r}
+```
+
+### Invert selection 
+
+
+```{r}
+```
+
+
+```{r}
+library(gridExtra)
+ combo_plot <- grid.arrange(ncol = 2, nrow = 2,
+                           top = "filter_taxa(data, n_obs > 30, unite_rank == 'c')" ,
+                           plot_one(subset, "Default options"),
+                           plot_one(data$taxon_data$taxon_ids %in% supertaxa(data, subset, simplify = TRUE, include_input = TRUE),
+                                    "supertaxa = TRUE"),
+                           plot_one(data$taxon_data$taxon_ids %in% subtaxa(data, subset, simplify = TRUE, include_input = TRUE),
+                                    "subtaxa = TRUE"),
+                           plot_one(! data$taxon_data$taxon_ids %in% subtaxa(data, subset, simplify = TRUE, include_input = TRUE),
+                                    "subtaxa = TRUE, invert = TRUE"))
+output_path <- "taxon_filtering_fig.png"
+ggplot2::ggsave(output_path, combo_plot, width = 7.5, height = 8)
+```
+
