@@ -1,15 +1,15 @@
 ---
-title: "MetacodeR: An R package for metabarcoding visualizations and primer evaluation"
-author: "Zachary Foster and Niklaus Grunwald"
-date: "May 17, 2016"
-fontsize: 9pt
+title: "Metacoder: An R package for visualization and manipulation of community taxonomic diversity data"
+author: "Zachary S. L. Foster, Thomas J. Sharpton, Niklaus J. Grünwald"
+date: "April 4, 2017"
+fontsize: 8pt
 output:
   beamer_presentation:
     theme: "default"
     colortheme: "beaver"
     fonttheme: "structurebold"
-    includes:
-      in_header: header.tex
+  includes:
+    in_header: header.tex
 ---
 
 ```{r setup, include=FALSE}
@@ -26,23 +26,25 @@ library(metacoder)
 
 Metabarcoding is revolutionizing microbial ecology and presenting new challenges:
 
-- Numerous formats make taxonomic data difficult to manipulate.
-- Stacked bar charts lack taxonomic context.
-- Barcode loci and primers are a source of under-explored bias.
+- Numerous formats make taxonomic data difficult to parse
+- The hierarchical nature of taxonomic data makes filtering and sampling complicated
+- Stacked bar charts lack taxonomic context and are limited by the number of discernible colors.
 
-MetacodeR is an R package that attempts to addresses these issues:
+Metacoder is an R package that attempts to addresses these issues:
 
-- Taxonomic data can be extracted from any file format and manipulated. 
-- Community diversity can be visualized by color and size in a tree plot.
-- Primer specificity can be estimated with *in silico* PCR.
+- Taxonomic data can be extracted from any file format definable by regular expressions.
+- Data can be subset and sampled while taking into account hierarchical relationships.
+- Community diversity can be visualized by color and size in a tree-base plot.
+
+![](../publication/revision_1/figure_2.png)
 
 ## Parsing taxonomic data: Embedded classifications
 
 ```{r, echo = FALSE}
-rdp_fasta_url <- "http://mothur.org/w/images/b/b5/Trainset10_082014.rdp.tgz"
+rdp_fasta_url <- "https://mothur.org/w/images/b/b5/Trainset10_082014.rdp.tgz"
 temp_dir_path <- tempdir()
 local_file_path <- file.path(temp_dir_path, basename(rdp_fasta_url))
-download.file(url = rdp_fasta_url, destfile = local_file_path, quiet = TRUE)
+download.file(url = rdp_fasta_url, destfile = local_file_path, quiet = TRUE, mode="wb")
 # Get contents of tar archive
 unpacked_file_paths <- untar(local_file_path, list = TRUE)
 # Uncompress archive
@@ -52,11 +54,16 @@ input_file_path <- file.path(temp_dir_path, unpacked_file_paths[grepl("fasta$", 
 seqs <- ape::read.FASTA(input_file_path)
 ```
 
+Embedded classifications often appear in abundance matrices and FASTA headers and are the best source of taxonomic information.
+
+Any extra observation info that should preserved in the parsed data can be added to the `key` option as `"obs_info"`.
+
 The code below parses the Mothur 16s RDP training set.
 
 ```{r eval = FALSE}
 library(metacoder)
-seqs <- ape::read.FASTA("trainset10_082014.rdp.fasta") 
+
+seqs <- ape::read.FASTA("trainset14_032015.rdp.fasta") 
 ```
 
 ```{r, warning = FALSE, message = FALSE}
@@ -67,27 +74,60 @@ data <- extract_taxonomy(seqs[1:1000],
                          class_sep = ";")
 ```
 
+## Parsing taxonomic data: Embedded classifications
+
 ```{r}
-taxon_data(data, row_subset = 1:4)
+print(data, max_rows = 4)
 ```
 
 
 ## Parsing taxonomic data: Genbank accession numbers
 
+Genbank accession numbers can be used to look up the NCBI taxonomy for sequences. 
+
+However, this can be quite slow since this information must be queried from NCBI's servers, which are heavily used.
+
+In the code below, the `regex` option can be omitted since only the accession is present. 
+
 ```{r, warning = FALSE, message = TRUE, eval = FALSE}
-ids <- c("JQ086376.1", "AM946981.2", "JQ182735.1", "CP001396.1", "J02459.1","AC150248.3", "X64334.1", "CP001509.3", "CP006698.1", "AC198536.1","JF340119.2", "KF771025.1", "CP007136.1", "CP007133.1", "U39286.1","CP006584.1", "EU421722.1", "U03462.1", "U03459.1", "AC198467.1","V00638.1", "CP007394.1", "CP007392.1", "HG941718.1", "HG813083.1","HG813082.1", "CP007391.1", "HG813084.1", "CP002516.1", "KF561236.1","JX509734.1", "AP010953.1", "U39285.1", "M15423.1", "X98613.1","CP006784.1", "CP007393.1", "CU928163.2", "AP009240.1", "CP007025.1","CP006027.1", "CP003301.1", "CP003289.1", "CP000946.1", "CP002167.1","HG428755.1", "JQ086370.1", "CP001846.1", "CP001925.1", "X99439.1","AP010958.1", "CP001368.1", "AE014075.1", "CP002212.1", "CP003034.1","CP000243.1", "AY940193.1", "CP004009.1", "JQ182732.1", "U02453.1","AY927771.1", "BA000007.2", "CP003109.1", "CP007390.1", "U02426.1", "U02425.1", "CP006262.1", "HG738867.1", "U00096.3", "FN554766.1","CP001855.1", "L19898.1", "AE005174.2", "FJ188381.1", "AK157373.1", "JQ182733.1", "U39284.1", "U37692.1", "AF129072.1", "FM180568.1","CP001969.1", "HE616528.1", "CP002729.1", "JF974339.1", "AB248924.1", "AB248923.1", "CP002291.1", "X98409.1", "CU928161.2", "CP003297.1","FJ797950.1", "CP000038.1", "U82598.1", "CP002211.1", "JQ806764.1", "U03463.1", "CP001665.1")
-contaminants <- extract_taxonomy(ids, key = c("obs_id"),
+ids <- c("JQ086376.1", "AM946981.2", "JQ182735.1", "CP001396.1", "J02459.1",
+         "AC150248.3", "X64334.1", "CP001509.3", "CP006698.1", "AC198536.1",
+         "JF340119.2", "KF771025.1", "CP007136.1", "CP007133.1", "U39286.1",
+         "CP006584.1", "EU421722.1", "U03462.1", "U03459.1", "AC198467.1",
+         "V00638.1", "CP007394.1", "CP007392.1", "HG941718.1", "HG813083.1",
+         "HG813082.1", "CP007391.1", "HG813084.1", "CP002516.1", "KF561236.1",
+         "JX509734.1", "AP010953.1", "U39285.1", "M15423.1", "X98613.1",
+         "CP006784.1", "CP007393.1", "CU928163.2", "AP009240.1", "CP007025.1",
+         "CP006027.1", "CP003301.1", "CP003289.1", "CP000946.1", "CP002167.1",
+         "HG428755.1", "JQ086370.1", "CP001846.1", "CP001925.1", "X99439.1",
+         "AP010958.1", "CP001368.1", "AE014075.1", "CP002212.1", "CP003034.1",
+         "CP000243.1", "AY940193.1", "CP004009.1", "JQ182732.1", "U02453.1",
+         "AY927771.1", "BA000007.2", "CP003109.1", "CP007390.1", "U02426.1", 
+         "U02425.1", "CP006262.1", "HG738867.1", "U00096.3", "FN554766.1",
+         "CP001855.1", "L19898.1", "AE005174.2", "FJ188381.1", "AK157373.1",
+         "JQ182733.1", "U39284.1", "U37692.1", "AF129072.1", "FM180568.1",
+         "CP001969.1", "HE616528.1", "CP002729.1", "JF974339.1", "AB248924.1", 
+         "AB248923.1", "CP002291.1", "X98409.1", "CU928161.2", "CP003297.1",
+         "FJ797950.1", "CP000038.1", "U82598.1", "CP002211.1", "JQ806764.1",
+         "U03463.1", "CP001665.1")
+contaminants <- extract_taxonomy(ids,
+                                 key = "obs_id",
                                  database = "ncbi")
 ```
 
-```{r}
-taxon_data(contaminants, row_subset = 1:4)
-```
+## Parsing taxonomic data: Genbank accession numbers
 
+```{r}
+print(contaminants, max_rows = 4)
+```
 
 ## Parsing taxonomic data: Taxon names
 
-Parsing bryophyte family names scraped from [The Plant List](http://www.theplantlist.org/1.1/browse/B/):
+Taxon names can also be used to look up a complete classification.
+
+Which taxon names are valid depend on the database used. 
+
+The code below scrapes taxon names from [The Plant List](http://www.theplantlist.org/1.1/browse/B/).
 
 ```{r}
 taxon_names <- "http://www.theplantlist.org/1.1/browse/B/" %>%
@@ -98,19 +138,29 @@ taxon_names <- "http://www.theplantlist.org/1.1/browse/B/" %>%
 head(taxon_names)
 ```
 
+Note that a different database is being used this time: The Integrated Taxonomic Information System.
+
 ```{r, warning = FALSE, message = FALSE, eval = FALSE}
-bryophytes_ex_data <- extract_taxonomy(taxon_names, key = "name",
+bryophytes_ex_data <- extract_taxonomy(taxon_names,
+                                       key = "name",
                                        database = "itis")
 ```
 
+
+## Parsing taxonomic data: Taxon names
+
 ```{r}
-taxon_data(bryophytes_ex_data, row_subset = 20:23) 
+print(bryophytes_ex_data, max_rows = 4)
 ```
 
 
 ## Parsing taxonomic data: Taxon IDs
 
-Parsing included example data from the ITS1 database:
+Finally, the taxon IDs for a particular database can be used to look up the classification.
+
+Any extra **taxon** info that should preserved in the parsed data can be added to the `key` option as `"taxon_info"`.
+
+The code below uses NCBI taxon IDs embedded in FASTA headers.
 
 ```{r}
 file_path <- system.file("extdata", "its1_chytridiomycota_hmm.fasta",
@@ -127,247 +177,335 @@ its1_ex_data <- extract_taxonomy(sequences,
                                  database = "ncbi")
 ```
 
+## Parsing taxonomic data: Taxon IDs
+
 ```{r}
-taxon_data(its1_ex_data, row_subset = 17:20) 
+print(its1_ex_data, max_rows = 4)
 ```
 
 
-## Accessing parsed data
+## Plotting taxonomic data: Heat trees
 
-```{r }
-taxon_data(its1_ex_data, row_subset = 17:20) 
-obs_data(its1_ex_data, row_subset = 1:4) 
-```
+Parsed data can be plotted using the `heat_tree` function.
 
+Any statistic can be mapped to the size and color of nodes and edges.
 
-## Plotting taxonomic data: Metadiversity plots
-
-```{r}
-plot(data, node_size = n_obs,
-     node_label = name, node_color = n_obs)
+```{r fig.width=3}
+heat_tree(data, node_size = n_obs, node_label = name, node_color = n_obs)
 ```
 
 
 ## Plotting taxonomic data: Overlap optimization
 
-```{r}
-gridExtra::grid.arrange(ncol = 2, nrow = 1,
-  plot(data, node_size = n_obs, overlap_avoidance = 10),
-  plot(data, node_size = n_obs, overlap_avoidance = 0.1))
+The size range of nodes is optimized for each graph by default to avoid overlaps while maximizing size range.
+
+The balance between the two goals can be modified with the `overlap_avoidance` option.
+
+```{r, eval=FALSE}
+heat_tree(data, node_size = n_obs, overlap_avoidance = 10, title = "10")
+
+heat_tree(data, node_size = n_obs, overlap_avoidance = 0.1, title = "0.1")
+```
+
+
+```{r, echo=FALSE}
+gridExtra::grid.arrange(ncol = 2, nrow = 1, widths = c(1, 1.1),
+                        heat_tree(data, node_size = n_obs, overlap_avoidance = 10, title = "10"),
+                        heat_tree(data, node_size = n_obs, overlap_avoidance = 0.1, title = "0.1"))
 ```
 
 
 ## Plotting taxonomic data: Size
 
-```{r}
-gridExtra::grid.arrange(ncol = 2, nrow = 1,
-  plot(data, node_size = n_obs,
-       node_size_range = c(0.0001, 0.1)),
-  plot(data, node_size = n_obs,
-       edge_size = - n_supertaxa, edge_size_range = c(0.001, 0.001)))
+The size range of nodes and edges can also be specified manually.
+
+```{r eval = FALSE}
+heat_tree(data, node_size = - n_supertaxa, node_size_range = c(0.001, 0.03),
+          edge_size_range = c(0.001, 0.001))
+
+heat_tree(data, edge_size = - n_supertaxa, edge_size_range = c(0.0001, 0.01),
+          node_size_range = c(0.005, 0.005))
+```
+
+```{r echo = FALSE}
+gridExtra::grid.arrange(ncol = 2, nrow = 1, widths = c(1.1, 1),
+                        heat_tree(data, node_size = - n_supertaxa, node_size_range = c(0.001, 0.03),
+                                  edge_size_range = c(0.001, 0.001)),
+                        heat_tree(data, edge_size = - n_supertaxa, edge_size_range = c(0.0001, 0.01),
+                                  node_size_range = c(0.005, 0.005)))
 ```
 
 
 ## Plotting taxonomic data: Color
 
-```{r}
+Mapping statistics to color works like it does for size.
+
+A custom color range can be specified with `node_color_range` and `edge_color_range`.
+
+```{r eval = FALSE}
+heat_tree(data, node_size = n_obs, node_color = n_obs,
+          node_color_range = c("#FFFFFF", "darkorange3", "#4e567d"))
+
+heat_tree(data, node_size = n_obs, node_color = "grey",
+          edge_color = n_obs)
+```
+
+
+```{r echo= FALSE}
 gridExtra::grid.arrange(ncol = 2, nrow = 1,
-  plot(data, node_size = n_obs, node_color = n_obs,
-       node_color_range = c("#FFFFFF", "darkorange3", "#4e567d")),
-  plot(data, node_size = n_obs, node_color = "grey",
-       edge_color = n_obs))
+                        heat_tree(data, node_size = n_obs, node_color = n_obs,
+                                  node_color_range = c("#FFFFFF", "darkorange3", "#4e567d")),
+                        heat_tree(data, node_size = n_obs, node_color = "grey",
+                                  edge_color = n_obs))
 ```
 
 
 ## Plotting taxonomic data: Labels
 
-```{r}
+Labels can be added to nodes and edges.
+
+Unlike most graphing in R, label sizes relative to other graph elements do not change with output size or aspect ratio.
+
+```{r eval = FALSE}
+heat_tree(data, node_size = n_obs, node_label = name,
+          node_label_max = 200, title = "Node labels")
+
+heat_tree(data, node_size = n_obs, edge_label = name,
+          edge_label_max = 200, title = "Edge labels")
+```
+
+
+```{r echo = FALSE}
 gridExtra::grid.arrange(ncol = 2, nrow = 1,
-  plot(data, node_size = n_obs, node_label = name,
-       title = "Node labels"),
-  plot(data, node_size = n_obs, edge_label = name,
-       edge_label_max = 200, title = "Edge labels"))
+                        heat_tree(data, node_size = n_obs, node_label = name,
+                                  node_label_max = 200, title = "Node labels"),
+                        heat_tree(data, node_size = n_obs, edge_label = name,
+                                  edge_label_max = 200, title = "Edge labels"))
 ```
 
 
 ## Plotting taxonomic data: Layouts
 
-```{r}
+Different layouts are available that suit different data structures.
+
+For stochastic, simulated layouts like "davidson-harel", it can sometimes be useful to initialize with another layout.
+
+```{r eval = FALSE}
+set.seed(2)
+heat_tree(data, node_size = n_obs, node_label = name,
+          layout = "davidson-harel")
+
+heat_tree(data, node_size = n_obs, node_label = name,
+          layout = "davidson-harel", initial_layout = "reingold")
+```
+
+
+```{r echo = FALSE}
 set.seed(2)
 gridExtra::grid.arrange(ncol = 2, nrow = 1,
-  plot(data, node_size = n_obs, node_label = name,
-       layout = "davidson-harel"),
-  plot(data, node_size = n_obs, node_label = name,
-       layout = "davidson-harel", initial_layout = "reingold"))
+                        heat_tree(data, node_size = n_obs, node_label = name,
+                                  layout = "davidson-harel"),
+                        heat_tree(data, node_size = n_obs, node_label = name,
+                                  layout = "davidson-harel", initial_layout = "reingold"))
 ```
 
 
 ## Plotting taxonomic data: Multiple roots
 
-```{r}
+When there are multiple roots to the taxonomy, multiple trees will be made an arranged in the same plot.
+
+Each tree can be given a title with the `tree_label` option.
+
+```{r fig.width=3.5}
 set.seed(3)
-plot(contaminants, node_size = n_obs,
-     node_color = n_obs, node_label = name,
-     tree_label = name, layout = "fruchterman-reingold")
+heat_tree(contaminants, node_size = n_obs, node_color = n_obs, node_label = name,
+          tree_label = name, layout = "fruchterman-reingold")
 ```
 
+## Subsetting taxonomic data: Default behavior
 
-## Subsetting taxonomic data: Picking a taxon
+Modifying data is done using functions analogous to `dplyr`'s functions for data frames.
 
-```{r}
+Filtering taxa can be done using `filter_taxa` with one or more filtering conditions. 
+
+The code below filters out all taxa with less than 3 observations.
+
+```{r eval = FALSE}
+data %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
+
+filter_taxa(data, n_obs >= 3) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
+```
+
+```{r echo = FALSE}
 set.seed(1)
 gridExtra::grid.arrange(ncol = 2, nrow = 1,
-  plot(filter_taxa(data, name == "Firmicutes", subtaxa = TRUE),
-       node_size = n_obs, node_label = name,
-       node_color = n_obs),
-  plot(filter_taxa(data, name == "Bacilli", subtaxa = TRUE),
-       node_size = n_obs, node_label = name,
-       node_color = n_obs))
+                        heat_tree(data,
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs),
+                        heat_tree(filter_taxa(data, n_obs >= 3),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs))
 ```
 
 
-## Subsetting taxonomic data: Removing root taxa
+## Subsetting taxonomic data: Including subtaxa
 
-```{r}
-set.seed(1)
-plot(filter_taxa(data, n_supertaxa > 1),
-       node_size = n_obs, node_label = name,
-       node_color = n_obs, tree_label = name)
+The subtaxa of taxa passing the filter can be included as well using the `subtaxa` option.
+
+The code below subsets the data for "Firmicutes" and "Bacilli" and their subtaxa.
+
+```{r eval = FALSE}
+filter_taxa(data, name == "Firmicutes", subtaxa = TRUE) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
+
+filter_taxa(data, name == "Bacilli", subtaxa = TRUE) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
 ```
 
-
-## Sampling taxonomic data
-
-
-```{r}
-subsampled <- taxonomic_sample(unite_ex_data_3, min_counts = c("7" = 3),
-                               max_counts = c("4" = 20, "7" = 5))
+```{r echo = FALSE}
 gridExtra::grid.arrange(ncol = 2, nrow = 1,
-  plot(unite_ex_data_3, node_size = n_obs, node_label = name,
-       node_color = n_obs, title = "All data"),
-  plot(filter_taxa(subsampled, n_obs > 0),
-     node_size = n_obs, node_color = n_obs,
-     node_label = n_obs, title = "Sampled"))
+                        heat_tree(filter_taxa(data, name == "Firmicutes", subtaxa = TRUE),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs),
+                        heat_tree(filter_taxa(data, name == "Bacilli", subtaxa = TRUE),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs))
 ```
 
 
-## *In silico PCR* use case example: Parsing data
+## Subsetting taxonomic data: Including supertaxa
 
-```{r}
-library(metacoder)
-seqs <- seqinr::read.fasta("trainset14_032015.rdp.fasta") 
-```
+The `supertaxon` option works similar to the `subtaxa` option. 
 
-```{r, warning = FALSE, message = FALSE}
-cat(names(seqs)[1]) 
-data <- extract_taxonomy(seqs,
-                         regex = "^>([a-zA-Z0-9_]+)[\t ]+(.*)$", 
-                         key = c(rdp_id = "obs_info", "class"),
-                         class_sep = ";")
-```
+The code below does the same subset as last slide, but includes the supertaxa as well. 
 
-```{r}
-taxon_data(data, row_subset = 1:4)
-```
+```{r eval = FALSE}
+filter_taxa(data, name == "Firmicutes", subtaxa = TRUE, supertaxa = TRUE) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
 
-## *In silico* PCR use case example: Plotting
-
-```{r, fig.height=2.5}
-plot(data, node_size = n_obs, edge_color = n_supertaxa,
-     node_label = name, node_color = n_obs,
-     node_color_range = c("cyan", "magenta", "green"),
-     edge_color_range   = c("#555555", "#EEEEEE"), overlap_avoidance = 0.5)
+filter_taxa(data, name == "Bacilli", subtaxa = TRUE, supertaxa = TRUE) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
 ```
 
 
-## *In silico* PCR use case example: Subsetting
+```{r echo = FALSE}
+gridExtra::grid.arrange(ncol = 2, nrow = 1,
+                        heat_tree(filter_taxa(data, name == "Firmicutes", subtaxa = TRUE, supertaxa = TRUE),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs),
+                        heat_tree(filter_taxa(data, name == "Bacilli", subtaxa = TRUE, supertaxa = TRUE),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs))
+```
 
-```{r, fig.height=2.5}
-subsetted <- filter_taxa(data, n_supertaxa > 0)
+## Subsetting taxonomic data: Removing internal taxa 
+
+By default, when internal taxa are removed their subtaxa are reassigned to any supertaxon that passed the filter.
+
+Not doing this is possible with the `reassign_taxa` option, but usually makes a mess. 
+
+The code below removes the taxa in red with and without reassigning taxa. 
+
+```{r eval = FALSE}
+data %>%
+  heat_tree(node_size = n_obs, node_label = name, 
+            node_color = ifelse(n_supertaxa == 2, "red", "grey"), make_legend = FALSE)
+
+filter_taxa(data, n_supertaxa != 2) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
+
+filter_taxa(data, n_supertaxa != 2, reassign_taxa = FALSE) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs, tree_label = name)
+```
+
+
+```{r echo = FALSE}
 set.seed(2)
-plot(subsetted, node_size = n_obs, node_label = name, 
-     node_color = n_obs, overlap_avoidance = 0.5, tree_label = name)
+gridExtra::grid.arrange(ncol = 3, nrow = 1, widths = c(.8, 1, 1.1),
+                        heat_tree(data,
+                                  node_size = n_obs, node_label = name,
+                                  node_color = ifelse(n_supertaxa == 2, "red", "grey"), make_legend = FALSE),
+                        heat_tree(filter_taxa(data, n_supertaxa != 2),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs),
+                        heat_tree(filter_taxa(data, n_supertaxa != 2, reassign_taxa = FALSE),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs, tree_label = name))
 ```
 
 
+## Sampling taxa
 
-## *In silico* PCR use case example: Sampling
+Random sampling of taxa works in a similar way to filtering taxa. 
 
-```{r, fig.height=2.5}
-sampled <- taxonomic_sample(subsetted, min_counts = c("6" = 5),
-                            max_counts = c("3" = 100, "6" = 5))
-sampled <- filter_taxa(sampled, n_obs > 0)
-set.seed(3)
-plot(sampled, node_size = n_obs, node_label = name, 
-     node_color = n_obs, overlap_avoidance = 0.5, tree_label = name)
+All of the options for `filter_taxa`, such as `subtaxa` and `reassign_taxa`, are available to `sample_n_taxa`. 
+
+```{r, eval=FALSE}
+set.seed(1)
+
+sample_n_taxa(data, 20, supertaxa = TRUE) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
+
+sample_n_taxa(data, 40, supertaxa = TRUE) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
 ```
 
 
-## *In silico* PCR use case example: First PCR
-
-```{r, fig.height=2.5}
-pcr <- primersearch(sampled, forward = "CTCCTACGGGAGGCAGCAG", 
-                    reverse = "GWATTACCGCGGCKGCTG",
-                    pair_name = "357F_519R",  mismatch = 10)
-taxon_data(pcr, row_subset = 1:7)
+```{r echo = FALSE}
+set.seed(1)
+gridExtra::grid.arrange(ncol = 2, nrow = 1,
+                        heat_tree(sample_n_taxa(data, 20, supertaxa = TRUE),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs),
+                        heat_tree(sample_n_taxa(data, 40, supertaxa = TRUE),
+                                  node_size = n_obs, node_label = name,
+                                  node_color = n_obs))
 ```
 
+## Sampling observations
 
-## *In silico* PCR use case example: First PCR
+Observations assigned to taxa can also be filtered and sampled. 
 
-```{r, fig.height=2.5}
-set.seed(3)
-plot(pcr, node_size = n_obs, node_label = name, 
-     node_color = prop_amplified, node_color_range =  c("red", "cyan"),
-     node_color_trans = "linear", tree_label = name)
+The code below randomly selects 50 (without replacement) and 100,000 (with replacement) observations. 
+
+```{r, eval=FALSE}
+sample_n_obs(data, 50) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
+
+sample_n_obs(data, 100000, replace = TRUE) %>%
+  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
 ```
 
-
-## *In silico* PCR use case example: First PCR
-
-```{r, fig.height=2.5}
-filter_taxa(pcr, name == "Bacteria", subtaxa = TRUE) %>%
-  filter_taxa(count_amplified < n_obs) %>% 
-  plot(node_size = n_obs, node_label = name,
-       node_color = prop_amplified, node_color_range =  c("red", "cyan"),
-       node_color_interval = c(0, 1), node_color_trans = "linear")
+```{r echo = FALSE}
+set.seed(1)
+gridExtra::grid.arrange(ncol = 2, nrow = 1,
+                        heat_tree(sample_n_obs(data, 50), node_size = n_obs, node_label = name, node_color = n_obs),
+                        heat_tree(sample_n_obs(data, 100000, replace = TRUE), node_size = n_obs, node_label = name, node_color = n_obs))
 ```
 
+## Example workflow: In silico PCR 
 
-## *In silico* PCR use case example: Second PCR
+![](../publication/revision_1/figure_1.png)
 
-```{r, fig.height=2.5}
-pcr_2 <- primersearch(sampled, forward = "GTGCCAGCMGCCGCGGTAA",
-                      reverse = "AGGGTTGCGCTCGTTG",
-                      pair_name = "515F_1100R", mismatch = 10)
-taxon_data(pcr, row_subset = 1:7)
-pcr <- mutate_taxa(pcr,
-                   count_amp_2 = taxon_data(pcr_2, col_subset = "count_amplified")[[1]],
-                   prop_diff = prop_amplified - taxon_data(pcr_2, col_subset = "prop_amplified")[[1]])
-```
+## Example Application: The Human Microbiome project
 
+Pairwise comparisons of microbiome communities in different parts of the human body.
+Only significant differences in abundance are colored. 
 
-## *In silico* PCR use case example: Differential plot
-
-```{r, fig.height=2.5}
-filter_taxa(pcr, name == "Bacteria", subtaxa = TRUE) %>%
-  filter_taxa(count_amplified < n_obs | count_amp_2 < n_obs) %>%
-  plot(node_size = n_obs, node_label = name,
-       node_color = prop_diff, node_color_range = diverging_palette(),
-       node_color_interval = c(-1, 1), node_color_trans = "linear")
-```
-
+![](../publication/revision_1/figure_5.png)
 
 ## Plans for future development
 
-MetacodeR is under active development and many new features are planned.
+Metacoder is under active development and many new features are planned.
 Some improvements that are being worked on include:
 
-* Increases in function speed
 * Plotting functions for pairwise comparison of treatments
 * Barcoding gap analysis and associated plotting functions
 * A function to aid in retrieving appropriate sequence data from NCBI for *in silico* PCR from whole genome sequences.
+* The `taxmap` class and manipulation functions are being made into an ropensci package called [taxa](https://github.com/ropenscilabs/taxa) with significant upgrades
 
-To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
+To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the metacoder [Github site](https://github.com/grunwaldlab).
 
 
