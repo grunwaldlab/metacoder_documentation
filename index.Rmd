@@ -20,13 +20,15 @@ if (! is.null(current_input())) { # if knitr is being used
 
 ## Introduction
 
+Metacoder is an R package for parsing, plotting, and manipulating hierarchical data.
+In particular, metacoder has been designed for large taxonomic data sets, like those generated from modern high-throughput sequencing techniques, like metabarcoding (i.e. amplification metagenomics, 16S metagenomics, etc).
 Metabarcoding is revolutionizing microbial ecology and presenting new challenges:
 
 * Numerous database formats make taxonomic data difficult to parse, combine, and subset.
 * Stacked bar charts, commonly used to depict community diversity, lack taxonomic context and are limited by the use of color to represent taxa.
 * Barcode loci and primers are a source of under-explored bias.
 
-MetacodeR is an R package that attempts to addresses these issues:
+Metacoder is an R package that attempts to addresses these issues:
 
 * Sources of taxonomic data can be extracted from any file format and manipulated using [dpylr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html)-like functions that take into account hierarchical relationships. 
 * Community diversity can be visualized by color and size in a type of tree plot we call heat trees.
@@ -40,17 +42,12 @@ This project is available on CRAN and can be installed like so:
 install.packages("metacoder")
 ```
 
-You can also intall the development version for the newest features, bugs, and bug fixes:
+You can also install the development version for the newest features, bugs, and bug fixes:
 
 ```
-devtools::install_github(repo="grunwaldlab/metacoder", build_vignettes = TRUE)
+devtools::install_github(repo="grunwaldlab/metacoder")
 ```
 
-If you've built the vignettes, you can browse them with:
-
-```
-browseVignettes(package="metacoder")
-```
 ## Dependencies
 
 The function that runs *in silico* PCR requires `primersearch` from the EMBOSS [@rice2000emboss] tool kit to be installed. 
@@ -61,8 +58,8 @@ Type `?primersearch` after installing and loading metacoder for installation ins
 ## Extracting taxonomic data
 
 Most databases have a unique file format and taxonomic hierarchy/nomenclature.
-Taxonomic data can be extracted from any file format using the **extract_taxonomy** function.
-Classifications can be parsed offline or retrieved from online databases if a taxon name, taxon ID, or sequence ID is present.
+Taxonomic data can be extracted from most file formats using the **extract_taxonomy** function.
+Classifications can be parsed offline or retrieved from online databases if a taxon name, taxon ID, or sequence ID is used.
 A regular expression with capture groups and a corresponding key is used to define how to parse the file.
 The example code below parses the 16s Ribosome Database Project training set for Mothur which can be found here:
 
@@ -87,20 +84,15 @@ The standard print method of the object shows a part of every kind of data it co
 data
 ```
 
-Note the `taxon_funcs` part contains function names (e.g. `n_obs`) used to calculate taxon statistics.
-You can see the results of these calculations using the `taxon_data` function:
-
-```{r}
-taxon_data(data)
-```
-
-There is corresponding `obs_data` function and `obs_funcs` list, but they are not used in this case.
+The `taxon_funcs` part contains functions (e.g. `n_obs`) used to calculate taxon statistics.
+These can be used like a column in `data$taxon_data` in most of metacoder's functions, expect they are calculated on demand.
+Note how `n_obs` is used in the following examples.
 
 ## Heat trees
 
 The hierarchical nature of taxonomic data makes it difficult to plot effectively.
 Most often, bar charts, stacked bar charts, or pie graphs are used, but these are ineffective when plotting many taxa or multiple ranks.
-MetacodeR maps taxonomic data (e.g. sequence abundance) to color/size of tree components in what we call a **heat tree**:
+Metacoder maps taxonomic data (e.g. sequence abundance) to color/size of tree components in what we call a **heat tree**:
 
 ```{r home_plot_1}
 heat_tree(data, node_size = n_obs, node_label = name, node_color = n_obs)
@@ -111,7 +103,7 @@ the_last_plot <- .Last.value
 ggplot2::ggsave(file = "intro_plot_1.svg", plot = the_last_plot, bg = "transparent")
 ```
 
-The default size range displayed is optimized for each plot.
+The default size range displayed is optimized for each plot to minimize overlaps, but can also be customized by the user.
 The legend represents the number of sequences for each taxon as both a color gradient and width of nodes.
 Only a few options are needed to make effective plots, yet many are available for customization of publication-ready graphics:
 
@@ -142,9 +134,9 @@ For example, `filter_taxa` can be used to look at just the Archaea:
 
 ```{r home_plot_3}
 set.seed(1)
-heat_tree(filter_taxa(data, name == "Archaea", subtaxa = TRUE),
-          node_size = n_obs, node_label = name, 
-          node_color = n_obs, layout = "fruchterman-reingold")
+filter_taxa(data, name == "Archaea", subtaxa = TRUE) %>%
+  heat_tree(node_size = n_obs, node_label = name, 
+            node_color = n_obs, layout = "fruchterman-reingold")
 ```
 
 ```{r, include = FALSE, eval = FALSE}
@@ -152,7 +144,7 @@ the_last_plot <- .Last.value
 ggplot2::ggsave(file = "subset_1.svg", plot = the_last_plot, bg = "transparent")
 ```
 
-Any column displayed by `taxon_data` can be used with `filter_taxa` (and most other metacodeR commands) as if it were a variable on its own.
+Any column displayed by `taxon_data` can be used with `filter_taxa` (and most other metacoder commands) as if it were a variable on its own.
 To make the Archaea-Bacteria division more clear, the "Root" taxon can be removed, resulting in two separate trees:
 
 ```{r home_plot_4}
@@ -167,9 +159,9 @@ the_last_plot <- .Last.value
 ggplot2::ggsave(file = "subset_2.svg", plot = the_last_plot, bg = "transparent")
 ```
 
-Although observations (information in `obs_data`) are typically assinged to the tips of the taxonomy, they can also be assigned to any internal node.
-When a taxon is removed by a filtering operation, the observations assinged to it are reassigned to an unfiltered supertaxon by default.
-This makes it easy to remove lower ranks of a taxonomy without discarding oberservations assinged to the tips: 
+Although observations (information in `obs_data`) are typically assigned to the tips of the taxonomy, they can also be assigned to any internal node.
+When a taxon is removed by a filtering operation, the observations assigned to it are reassigned to an unfiltered supertaxon by default.
+This makes it easy to remove lower ranks (e.g. species) of a taxonomy without discarding observations assigned to the tips: 
 
 ```{r home_plot_5}
 set.seed(1)
@@ -182,7 +174,7 @@ There is also a `filter_obs` function which can filter out observations and the 
 ## Sampling
 
 When calculating statistics for taxa, the amount of data should be balanced across taxa and there should be enough data per taxon to provide unbiased estimates.
-Random samples from large reference databases are biased towards overrepresented taxa.
+Random samples from large reference databases are biased towards over-represented taxa.
 Metacoder provides two ways to randomly sample taxonomic data.
 The function `taxonomic_sample` is used to create taxonomically balanced random samples.
 The acceptable range of sequence or subtaxa counts can be defined for each taxonomic rank; taxa with too few are excluded and taxa with too many are randomly subsampled.
@@ -267,7 +259,7 @@ ggplot2::ggsave(file = "in_silico_pcr_2.svg", plot = the_last_plot, bg = "transp
 We can use what we call **differential heat trees** to compare the values of treatments such as:
 
 * the relative abundance of taxa in two communities
-* the coverages of different primer pairs
+* the coverage of different primer pairs
 
 Here, we compare the effectiveness 515F/806R to another primer pair 357F/519F, by plotting the difference in proportions amplified by each.
 First, the same sequences are amplified with 357F/519F and results for the two primer pairs combined:
@@ -312,25 +304,28 @@ ggplot2::ggsave(file = "in_silico_pcr_3.svg", plot = the_last_plot, bg = "transp
 
 ## Future development
 
-MetacodeR is under active development and many new features are planned.
+Metacoder is under active development and many new features are planned.
 Some improvements that are being explored include:
 
 * Plotting functions for pairwise comparison of treatments (see figure 5 in the publication).
 * Barcoding gap analysis and associated plotting functions
-* A function to aid in retrieving appropriate sequence data from NCBI for *in silico* PCR from whole genome sequences.
-* Graphing of different node shapes in heat trees, possibly including pie graphs or other graphs. 
+* A function to aid in retrieving appropriate sequence data from NCBI for *in silico* PCR from whole genome sequences
+* Graphing of different node shapes in heat trees, possibly including pie graphs or [PhyloPics](http://phylopic.org/).
+* The `taxmap` object and associated filtering functions like `filter_taxa` are being separated into the rOpenSci package [taxa](https://github.com/ropensci/taxa), which we hope to make a taxonomy standard for R that other packages can use. 
+* Adding the ability to plot specific edge lengths in the heat trees so they can be used for phylogenetic trees.
+* Adding more data import and export functions to make parsing and writing common formats easier. 
 
-To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
+To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the Metacoder [Github site](https://github.com/grunwaldlab).
 
 ## Aknowledgements
 
-We thank Thomas Sharpton for sharing his metagenomics expertise and advising us.
-metacoders's major dependencies are taxize, igraph, and ggplot2.
+Metacoder's major dependencies are taxize, igraph, dplyr, and ggplot2.
+
 
 ## Feedback and contributions
 
 We would like to hear about users' thoughts on the package and any errors they run into.
-Please report errors, questions or suggestions on the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
+Please report errors, questions or suggestions on the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the Metacoder [Github site](https://github.com/grunwaldlab).
 We also welcome contributions via a Github [pull request](https://help.github.com/articles/using-pull-requests/).
 You can also talk with us using our [Google groups](https://groups.google.com/forum/#!forum/metacoder-discussions) site or the comments section below. 
 
