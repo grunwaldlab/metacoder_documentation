@@ -35,40 +35,96 @@ It uses large files not included in the repository and many steps can take a few
 matrix_plot_depth <- 6 # The maximum number of ranks to display
 color_interval <- c(-4, 4) # The range of values (log 2 ratio of median proportion) to display
 min_read_count <- 100 # The minium number of reads needed for a taxon to be graphed
+otu_file_url = "http://downloads.hmpdacc.org/data/HMQCP/otu_table_psn_v35.txt.gz"
+mapping_file_url = "http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.txt.bz2"
 ```
 
-## Parsing taxonomic data
+## Downloading the data
 
 This analysis used OTU abundance data from the Human Microbiome Project (HMP) [@human2012structure], which used 16S metabarcoding to explore the bacterial microbiome of various human body parts.
-The function `parse_hmp_qiime` is a wrapper for `extract_taxonomy` made for this analysis and downloads the abundance data from the location specified below in the code. 
-It might be made into a more generic "table/matrix parser" in the future.
-The information on sample characteristics (e.g. body site) is saved in a table called `mapping` in the `taxmap` object. 
+First we will download the files from the HMP website.
 
-```{r hmp_parse, warning=FALSE, message=FALSE}
-library(metacoder)
-v35_data <- parse_hmp_qiime(otu_file = "http://downloads.hmpdacc.org/data/HMQCP/otu_table_psn_v35.txt.gz",
-                            mapping_file = "http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.txt.bz2")
-v35_data
+```{r hmp_download, warning=FALSE, message=FALSE}
+download_file <- function(path) {
+  temp_file_path <- file.path(tempdir(), basename(path))
+  utils::download.file(url = path, destfile = temp_file_path, quiet = TRUE)
+  path <- temp_file_path
+  return(path)
+}
+otu_file <- download_file(otu_file_url)
+mapping_file <- download_file(mapping_file_url)
 ```
 
-## Read abundance
+## Parsing the data
+
+Then we will read these files into R and tidy up the data a bit.
+
+```{r hmp_parse_raw_otu}
+# Read in raw file content
+otu_data <- utils::read.table(otu_file, header = TRUE, skip = 1, comment.char = "",
+                              stringsAsFactors = FALSE, sep = "\t")
+colnames(otu_data)[1] <- "otu_id"
+
+# Take a look at part of the data
+print(otu_data[1:5, c(1:3, ncol(otu_data))])
+```
+
+The last column "Consensus.Lineage" contains the taxonomic classification, so we will use that to parse the rest of the data into a `taxmap` object using the [taxa package](https://github.com/ropensci/taxa).
+
+```{r hmp_parse_otu_table}
+hmp_data <- taxa::parse_tax_data(otu_data,
+                                 class_cols = "Consensus.Lineage",
+                                 class_regex = "([a-z]{0,1})_{0,2}(.*)$",
+                                 class_key = c(hmp_rank = "info", hmp_tax = "taxon_name"),
+                                 class_sep = ";")
+```
+
+I will save the information on sample characteristics (e.g. body site) in a seperate table, but it could have been included in the `taxmap` object `hmp_data` in the `data` feild.
+
+```{r hmp_sample_data}
+sample_data <- utils::read.table(mapping_file, header = TRUE, comment.char = "",
+                                 stringsAsFactors = FALSE, sep = "\t")[1:7]
+colnames(sample_data) <- c("sample_id", "rsid", "visit_no", "sex", "run_center",
+                           "body_site", "description")
+sample_data <- dplyr::tbl_df(sample_data)
+
+# Clean up header so that sample IDs match those in the OTU abundance matrix
+sample_data$sample_id <- paste0("X", sample_data$sample_id)
+
+# Take a look at part of the data
+print(sample_data)
+```
+
+
+## Getting read proportions per taxon
+
+We can now convert these counts to proportions and a simple alternative to rarefaction using `calc_obs_props`. This accounts for uneven numbers of sequences for each sample.
+
+```{r hmp_calc_props}
+library(metacoder)
+hmp_data$data$otu_prop <- calc_obs_props(hmp_data,
+                                         dataset = "tax_data",
+                                         cols = sample_data$sample_id, 
+                                         keep_other_cols = FALSE)
+```
 
 The input data included read abundance for each sample-OTU combination, but we need the abundances associated with each taxon for graphing.
-The `obs` function is used here to get a list of row indexes corresponding to OTUs for each taxon.
-There will usually be multiple OTUs assigned to the same taxon, especailly for corase taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon.
+There will usually be multiple OTUs assigned to the same taxon, especailly for corase taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon using the `calc_taxon_abund` function.
 
-```{r hmp_calc_abundance}
-calculate_abundance <- function(data, col = colnames(data$obs_data) %in% data$mapping$sample_id, col_name = "abundance") {
-  data$taxon_data[[col_name]] <- vapply(obs(data), 
-                                        function(i) sum(data$obs_data[i, col]), numeric(1))
-  return(data)
-}
-calculate_prop <- function(data, col = colnames(data$obs_data) %in% data$mapping$sample_id, col_name = "abundance") {
-  data$taxon_data[[col_name]] <- vapply(obs(data), 
-                                        function(i) sum(data$obs_data[i, col]) , numeric(1)) / sum(data$obs_data[, col])
-  return(data)
-}
-v35_data <- calculate_abundance(v35_data)
+```{r hmp_calc_tax_abund}
+hmp_data$data$tax_prop <- calc_taxon_abund(hmp_data, 
+                                           dataset = "otu_prop", 
+                                           cols = sample_data$sample_id)
+```
+
+
+## Doing pairwise comparisons of treatments
+
+```{r hmp_treat_comp}
+hmp_data$data$diff_table <- compare_treatments(hmp_data,
+                                               dataset = "tax_prop",
+                                               sample_ids = sample_data$sample_id,
+                                               treatments = sample_data$body_site)
 ```
 
 
