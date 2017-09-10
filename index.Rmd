@@ -41,7 +41,7 @@ browseVignettes(package="metacoder")
 
 The function that runs *in silico* PCR requires `primersearch` from the EMBOSS `r citep("10.1093/bib/3.1.87")` tool kit to be installed. 
 This is not an R package, so it is not automatically installed.
-Type `?primersearch` after installing and loading MetcodeR for installation instructions.
+Type `?primersearch` after installing and loading MetacodeR for installation instructions.
 
 
 ## Extracting taxonomic data
@@ -141,7 +141,7 @@ ggplot2::ggsave(file = "intro_plot_2.svg", plot = the_last_plot, bg = "transpare
 ```
 
 Note that `plot` is a generic R function that works differently depending on what it is given to it.
-MetacodeR supplies the function **plot_taxonomy**, which is used when plot is given the type of data outputted by `extract_taxonomy`.
+MetacodeR supplies the function **plot_taxonomy**, which is used when plot is given the type of data outputt by `extract_taxonomy`.
 To see the long list of available plotting options, type `?plot_taxonomy`.
 
 ## Subsetting
@@ -178,9 +178,9 @@ the_last_plot <- .Last.value
 ggplot2::ggsave(file = "subset_2.svg", plot = the_last_plot, bg = "transparent")
 ```
 
-Although observations (information in `obs_data`) are typically assinged to the tips of the taxonomy, they can also be assigned to any internal node.
-When a taxon is removed by a filtering operation, the observations assinged to it are reassigned to an unfiltered supertaxon by default.
-This makes it easy to remove lower ranks of a taxonomy without discarding oberservations assinged to the tips: 
+Although observations (information in `obs_data`) are typically assigned to the tips of the taxonomy, they can also be assigned to any internal node.
+When a taxon is removed by a filtering operation, the observations assigned to it are reassigned to an unfiltered supertaxon by default.
+This makes it easy to remove lower ranks of a taxonomy without discarding observations assigned to the tips: 
 
 ```{r home_plot_5}
 set.seed(1)
@@ -339,7 +339,7 @@ We would like to hear about users' thoughts on the package and any errors they r
 Please report bugs and comments on the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the MetacodeR [Github site](https://github.com/grunwaldlab).
 We also welcome contributions via a Github [pull request](https://help.github.com/articles/using-pull-requests/).
 
-## Aknowledgements
+## Acknowledgements
 
 We thank Tom Sharpton for sharing his metagenomics expertise and advising us.
 MetacodeR's major dependencies are taxize, igraph, and ggplot2.
