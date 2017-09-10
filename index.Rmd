@@ -141,7 +141,7 @@ ggplot2::ggsave(file = "intro_plot_2.svg", plot = the_last_plot, bg = "transpare
 ```
 
 Note that `plot` is a generic R function that works differently depending on what it is given to it.
-MetacodeR supplies the function **plot_taxonomy**, which is used when plot is given the type of data outputt by `extract_taxonomy`.
+MetacodeR supplies the function **plot_taxonomy**, which is used when plot is given the type of data output by `extract_taxonomy`.
 To see the long list of available plotting options, type `?plot_taxonomy`.
 
 ## Subsetting
