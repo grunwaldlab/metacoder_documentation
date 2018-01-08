@@ -23,7 +23,7 @@ plot_one <- function(selection, title) {
 
 
 ```{r}
-subset <- n_obs(data) > 30 & data$taxon_data$unite_rank == "c"
+subset <- n_obs(data) > 30 & n_supertaxa(data) == 2
 ```
 
 ### Default behavior
@@ -54,7 +54,7 @@ subset <- n_obs(data) > 30 & data$taxon_data$unite_rank == "c"
 ```{r}
 library(gridExtra)
  combo_plot <- grid.arrange(ncol = 2, nrow = 2,
-                           top = "filter_taxa(data, n_obs > 30, unite_rank == 'c')" ,
+                           top = "filter_taxa(data, n_obs > 30, n_supertaxa == 2)" ,
                            plot_one(subset, "Default options"),
                            plot_one(data$taxon_data$taxon_ids %in% supertaxa(data, subset, simplify = TRUE, include_input = TRUE),
                                     "supertaxa = TRUE"),
@@ -62,7 +62,7 @@ library(gridExtra)
                                     "subtaxa = TRUE"),
                            plot_one(! data$taxon_data$taxon_ids %in% subtaxa(data, subset, simplify = TRUE, include_input = TRUE),
                                     "subtaxa = TRUE, invert = TRUE"))
-output_path <- "taxon_filtering_fig.png"
+output_path <- "taxon_filtering_fig.pdf"
 ggplot2::ggsave(output_path, combo_plot, width = 7.5, height = 8)
 ```
 
