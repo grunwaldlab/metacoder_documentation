@@ -26,7 +26,7 @@ save_publication_fig <- function(name, figure_number) {
 
 ## ---- database_comparison_settings ----
 size_range <- c(0.0004, 0.015) # The size range of nodes
-label_size_range <- c(0.0015, 0.05) # The size range of labels
+label_size_range <- c(0.002, 0.05) # The size range of labels
 all_size_interval <- c(1, 3000000) # The range of read counts to display in the whole database plots
 pcr_size_interval <- c(1, 25000) # The range of read counts to display in the PCR plots
 label_max <- 50 # The maximum number of labels to show on each graph

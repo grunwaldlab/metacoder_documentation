@@ -58,54 +58,98 @@ mapping_file <- download_file(mapping_file_url)
 ## Parsing the data
 
 Then we will read these files into R and tidy up the data a bit.
+We will use the `readr` package to read these `gloss$add("TSV")` files.
+
 
 ```{r hmp_parse_raw_otu}
-# Read in raw file content
-otu_data <- utils::read.table(otu_file, header = TRUE, skip = 1, comment.char = "",
-                              stringsAsFactors = FALSE, sep = "\t")
-colnames(otu_data)[1] <- "otu_id"
-
-# Take a look at part of the data
-print(otu_data[1:5, c(1:3, ncol(otu_data))])
+library(readr)
+otu_data <- read_tsv(otu_file, skip = 1) # Skip the first line, which is a comment
+colnames(otu_data)[1] <- "otu_id" # make column name more R friendly
+print(otu_data)
 ```
 
-The last column "Consensus.Lineage" contains the taxonomic classification, so we will use that to parse the rest of the data into a `taxmap` object using the [taxa package](https://github.com/ropensci/taxa).
+The last column "Consensus Lineage" contains the `gloss$add("taxonomic classification")`, so we will use that to convert the rest of the data into a `taxmap` object using the [taxa package](https://github.com/ropensci/taxa).
+`Metacoder` imports the `taxa` package, so we can just load it to access `taxa`'s parsers.
+
+```{r}
+library(metacoder)
+```
+
+Since this is tabular data with an embedded taxonomic classification, we use `parse_tax_data`:
 
 ```{r hmp_parse_otu_table}
-hmp_data <- taxa::parse_tax_data(otu_data,
-                                 class_cols = "Consensus.Lineage",
-                                 class_regex = "([a-z]{0,1})_{0,2}(.*)$",
-                                 class_key = c(hmp_rank = "info", hmp_tax = "taxon_name"),
-                                 class_sep = ";")
+hmp_data <- parse_tax_data(otu_data,
+                           class_cols = "Consensus Lineage",
+                           class_regex = "([a-z]{0,1})_{0,2}(.*)$",
+                           class_key = c(hmp_rank = "taxon_rank", hmp_tax = "taxon_name"),
+                           class_sep = ";")
+hmp_data$data$class_data <- NULL # Delete uneeded regex match table
+names(hmp_data$data) <- "otu_count" # Rename abundnace matrix to something more understandable
+print(hmp_data)
 ```
 
-I will save the information on sample characteristics (e.g. body site) in a seperate table, but it could have been included in the `taxmap` object `hmp_data` in the `data` feild.
+I will save the information on sample characteristics (e.g. body site) in a seperate table, since it is not directly assocaited with taxonomic information.
 
 ```{r hmp_sample_data}
-sample_data <- utils::read.table(mapping_file, header = TRUE, comment.char = "",
-                                 stringsAsFactors = FALSE, sep = "\t")[1:7]
+sample_data <- read_tsv(mapping_file,
+                        col_types = "ccccccccc") # Force all columns to be character
 colnames(sample_data) <- c("sample_id", "rsid", "visit_no", "sex", "run_center",
-                           "body_site", "description")
-sample_data <- dplyr::tbl_df(sample_data)
-
-# Clean up header so that sample IDs match those in the OTU abundance matrix
-sample_data$sample_id <- paste0("X", sample_data$sample_id)
-
-# Take a look at part of the data
+                           "body_site", "mislabeled", "contaminated", "description")
 print(sample_data)
 ```
+
+Not all the samples in the sample data table appear in the abundance matrix and there are some in the abundance matrix that dont appear in the sample data and they are in a different order.
+Making the two correspond will probably make things easier later on.
+First, lets identify which columns they both share:
+
+```{r}
+sample_names <- intersect(colnames(hmp_data$data$otu_count), sample_data$sample_id)
+```
+
+We can then use `match` to order and subset the sample data based on the shared samples.
+
+```{r}
+sample_data <- sample_data[match(sample_names, sample_data$sample_id), ]
+```
+
+We can also subset the columns in the abundance matrix to just these shared samples.
+We also need to preserve the first two columns, the otu and taxon IDs.
+
+```{r}
+hmp_data$data$otu_count <- hmp_data$data$otu_count[ , c("taxon_id", "otu_id", sample_names)]
+```
+
+## Filtering the taxonomy
+
+Looking at the names of the taxa in the taxonomy, there are a lot of names that appear to be codes for uncharacterized taxa: 
+
+```{r}
+head(taxon_names(hmp_data), n = 20)
+```
+
+Those might be relevant depending on the research question, but for this analysis I choose to remove them, since they do not mean much to me (you might want to keep such taxa in your ananlysis).
+We can remove taxa from a `taxmap` object using the `filter_taxa` function from the `taxa` package.
+I will remove them by removing any taxon whose name is not composed of only letters.
+
+```{r}
+hmp_data <- filter_taxa(hmp_data, grepl(taxon_names, pattern =  "^[a-zA-Z]+$"))
+print(hmp_data)
+```
+
+Note that we have not removed any OTUs even though there were OTUs assigned to those taxa.
+Those OTUs were automatically reassigned to a `gloss$add("supertaxon")` that was not filtered out.
+This also removed taxa with no name (`""`), since the `+` in the above regex means "one or more".
 
 
 ## Getting read proportions per taxon
 
-We can now convert these counts to proportions and a simple alternative to rarefaction using `calc_obs_props`. This accounts for uneven numbers of sequences for each sample.
+We can now convert these counts to proportions and a simple alternative to rarefaction using `calc_obs_props`.
+This accounts for uneven numbers of sequences for each sample.
 
 ```{r hmp_calc_props}
-library(metacoder)
 hmp_data$data$otu_prop <- calc_obs_props(hmp_data,
-                                         dataset = "tax_data",
-                                         cols = sample_data$sample_id, 
-                                         keep_other_cols = FALSE)
+                                         data = "otu_count",
+                                         cols = sample_data$sample_id)
 ```
 
 The input data included read abundance for each sample-OTU combination, but we need the abundances associated with each taxon for graphing.
@@ -113,7 +157,7 @@ There will usually be multiple OTUs assigned to the same taxon, especailly for c
 
 ```{r hmp_calc_tax_abund}
 hmp_data$data$tax_prop <- calc_taxon_abund(hmp_data, 
-                                           dataset = "otu_prop", 
+                                           data = "otu_prop",
                                            cols = sample_data$sample_id)
 ```
 
@@ -121,10 +165,12 @@ hmp_data$data$tax_prop <- calc_taxon_abund(hmp_data,
 ## Doing pairwise comparisons of treatments
 
 ```{r hmp_treat_comp}
-hmp_data$data$diff_table <- compare_treatments(hmp_data,
-                                               dataset = "tax_prop",
-                                               sample_ids = sample_data$sample_id,
-                                               treatments = sample_data$body_site)
+hmp_data$data$diff_table <- compare_groups(hmp_data,
+                                           data = "tax_prop",
+                                           cols = sample_data$sample_id,
+                                           groups = sample_data$body_site)
+hmp_data$data$diff_table$wilcox_p_value <- p.adjust(hmp_data$data$diff_table$wilcox_p_value, method = "fdr")
+hmp_data$data$diff_table$log2_median_ratio[hmp_data$data$diff_table$wilcox_p_value > 0.05] <- 0
 ```
 
 
@@ -134,23 +180,19 @@ To get an idea of how the data looks overall lets make a plot showing OTU and re
 I will exclude any taxon that has less than `r min_read_count` reads. 
 
 ```{r hmp_plot_all}
-plot_all <- function(data, output_name, seed = 1) {
-  set.seed(seed)
-  data %>%
-    filter_taxa(abundance >= min_read_count) %>%
-    filter_taxa(name != "") %>% # Some taxonomic levels are not named
-    heat_tree(node_size = n_obs,
-              node_size_axis_label = "Number of OTUs",
-              node_color = abundance,
-              node_color_trans = "area",
-              node_color_axis_label = "Number of reads",
-              node_label = name,
-              node_label_max = 100,
-              overlap_avoidance = 1,
-              output_file = result_path(output_name))
-}
-
-plot_all(v35_data, "hmp--v35--all_data")
+set.seed(1)
+plot_all <- hmp_data %>%
+  mutate_obs("tax_prop", abundance = rowMeans(hmp_data$data$tax_prop[sample_data$sample_id])) %>%
+  filter_taxa(abundance >= 0.001) %>%
+  filter_taxa(taxon_names != "") %>% # Some taxonomic levels are not named
+  heat_tree(node_size = n_obs,
+            node_size_axis_label = "Number of OTUs",
+            node_color = abundance,
+            node_color_axis_label = "Mean proportion of reads",
+            node_label = taxon_names,
+            # node_label_max = 100,
+            # overlap_avoidance = 1,
+            output_file = result_path("hmp--v35--all_data"))
 ```
 
 Here we can see that there are realtively few abundant taxa and many rare ones.
@@ -165,36 +207,29 @@ Therefore, rare taxa are often exculded from stackaed barcharts or only coarse t
 This might leave out biolicoally relevant information. 
 The code below visulizes the community composition of the same 2 samples from the HMP using both a stacked barchart and heat trees so the two methods can be compared.
 
-### Calculate abundance
-
-```{r}
-v35_data <- calculate_abundance(v35_data, "700114482", "sample_1")
-v35_data <- calculate_abundance(v35_data, "700114439", "sample_2")
-```
-
 ### Graph heat trees
 
 ```{r}
-plot_sample_tree <- function(data, sample, out_name, min_count = min_read_count, ...) {
-  data %>%
-    mutate_taxa(sample = data$taxon_data[[sample]]) %>%
-    mutate_taxa(sample_prop = sample / max(sample)) %>%
-    filter_taxa(sample_1 >= min_count | sample_2 >= min_count) %>%
+plot_sample_tree <- function(obj, sample, out_name, min_count = min_read_count, ...) {
+  to_use <- obj$data$tax_prop[["700114488"]] >= 0.001 | obj$data$tax_prop[["700114430"]] >= 0.001
+  obj %>%
+    mutate_obs("tax_prop", sample_prop = obj$data$tax_prop[[sample]]) %>%
+    filter_taxa(to_use) %>%
     heat_tree(
       ...,
       title_size = .05,
       node_size = sample, 
       node_color = sample, 
-      node_label = ifelse(sample_prop >= 0.01, name, NA),
+      node_label = ifelse(sample >= 0.01, taxon_names, NA),
       node_label_max = 50, 
       node_size_range = c(.01, .07),
       node_label_size_range = c(.015, .03), 
-      node_color_axis_label = "Abundance",
+      node_color_axis_label = "Proportion of reads",
       output_file = result_path(out_name))
 }
 
-sample_1 <- plot_sample_tree(v35_data, "sample_1", "sample_1_tree", title = "Sample 1") 
-sample_2 <- plot_sample_tree(v35_data, "sample_2", "sample_2_tree", title = "Sample 2") 
+sample_1 <- plot_sample_tree(hmp_data, "700114488", "sample_1_tree", title = "Sample 1") 
+sample_2 <- plot_sample_tree(hmp_data, "700114430", "sample_2_tree", title = "Sample 2") 
 ```
 
 ### Stacked barchart
@@ -266,63 +301,31 @@ The HMP dataset is great for comparing treatments since there are many body site
 The code below applies the Wilcox rank-sum test to differences in median read proportion between every pair of body sties compared. 
 Since the data is compositional in nature (i.e. not idependent samples) we used a non-parametric test and used median instead of mean read proportion.
 
-```{r hmp_diff_funcs}
-calculate_prop <- function(data, site) {
-  sample_cols <- as.character(unlist(data$mapping[data$mapping$body_site == site, "sample_id"]))
-  sample_cols <- sample_cols[sample_cols %in% colnames(data$obs_data)]
-  obs_indexes <- obs(data)
-  total_counts <- vapply(sample_cols, function(s) sum(data$obs_data[, s]), numeric(1))
-  col_name <- paste0(site, "_median_prop")
-  lapply(obs_indexes,
-         function(i) {
-           vapply(sample_cols, 
-                  function(s) sum(data$obs_data[i, s]) / total_counts[s],
-                  numeric(1))})
-}
-
-calculate_prop_diff <- function(data, site_1, site_2) {
-  
-  remove_inf <- function(values) {
-    values[values == Inf] <- 10000000000000000000000000
-    values[values == -Inf] <- -10000000000000000000000000
-    values[is.nan(values)] <- 0
-    return(values)
-  }
-  
-  props_1 <- calculate_prop(data, site_1)
-  props_2 <- calculate_prop(data, site_2)
-  p_value <- mapply(function(x, y) wilcox.test(x, y)$p.value,
-                    props_1, props_2)
-  p_value <- p.adjust(p_value, method = "fdr", n = length(p_value) * 10) #  * 10 HACK!
-  result <- ifelse(p_value > 0.05 | is.nan(p_value), 0,
-                   log2(vapply(props_1, median, numeric(1)) / vapply(props_2, median, numeric(1))))
-  remove_inf(result)
-}
-
-plot_body_site_diff <- function(data, site_1, site_2, output_name, seed = 1) {
+```{r hmp_diff_funcs} 
+plot_body_site_diff <- function(site_1, site_2, output_name, seed = 1) {
   set.seed(seed)
-  data %>%
-    mutate_taxa(median_prop_diff = calculate_prop_diff(data, site_1, site_2)) %>%
-    filter_taxa(abundance >= min_read_count) %>%
-    filter_taxa(name != "") %>% # Some taxonomic levels are not named
+  hmp_data %>%
+    mutate_obs("tax_prop", abundance = rowMeans(hmp_data$data$tax_prop[sample_data$sample_id])) %>%
+    filter_taxa(abundance >= 0.001, reassign_obs = FALSE) %>%
+    filter_taxa(taxon_names != "", reassign_obs = FALSE) %>% # Some taxonomic levels are not named
+    filter_obs("diff_table", treatment_1 == site_1, treatment_2 == site_2) %>%
     heat_tree(node_size_axis_label = "Number of OTUs",
               node_size = n_obs,
               node_color_axis_label = "Log 2 ratio of median proportions",
-              node_color = median_prop_diff,
+              node_color = log2_median_ratio,
               node_color_range = diverging_palette(),
               node_color_trans = "linear",
-              node_color_interval = color_interval,
-              edge_color_interval = color_interval,
-              node_label = name,
-              node_label_max = 150,
+              node_color_interval = c(-5, 5),
+              edge_color_interval = c(-5, 5),
+              node_label = taxon_names,
               output_file = result_path(paste0(output_name, "--", site_1, "_vs_", site_2)))
 }
 ```
 
 ```{r hmp_diff_plot}
-plot_body_site_diff(v35_data, "Throat", "Saliva", "hmp--v35")
-plot_body_site_diff(v35_data,  "Supragingival_plaque", "Subgingival_plaque", "hmp--v35")
-plot_body_site_diff(v35_data,  "Anterior_nares", "Buccal_mucosa", "hmp--v35")
+plot_body_site_diff("Saliva", "Throat", "hmp--v35")
+plot_body_site_diff("Supragingival_plaque", "Subgingival_plaque", "hmp--v35")
+plot_body_site_diff("Buccal_mucosa", "Anterior_nares", "hmp--v35")
 ```
 
 We call these types of graphs **differential heat trees** and they are great for comparing any type of data associated with two samples or treatments.
@@ -332,147 +335,55 @@ We call these types of graphs **differential heat trees** and they are great for
 The graphs above are great for comparing two treatments, but it would be nice to see how many treatments compare in a single graph.
 To do this, we have developed a pair-wise matrix layout for comparisons of this kind. 
 
-> Note: There is a lot of non-trivial code below to do this. We are workign on wrapping all this into a function to make this kind of figure easier to make, but to do this well requires a rebuild of the taxmap object to make it more flexible.
-
-First we need to calculate all of the information that will be plotted. 
-
-```{r hmp_matrix_calc}
-# Identify pairs of treatments to compare
-body_sites <- c("Stool", "Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares")
-combinations <- t(combn(seq_along(body_sites), 2))
-site_diff_cols <- apply(combinations, MARGIN = 1, function(i) paste0(body_sites[i], collapse = "-"))
-
-layout_matrix <- matrix(rep(NA, (length(body_sites))^2), nrow = length(body_sites))
-for (index in 1:nrow(combinations)) {
-  layout_matrix[combinations[index,1], combinations[index,2]] <- index
-}
-
-# Make reduced taxonomy for plotting
-v35_reduced <- v35_data
-
-# Calculate significant body site differneces
-not_used <- apply(combinations, MARGIN = 1, function(i) {
-  v35_reduced$taxon_data[[paste0(body_sites[i], collapse = "-")]] <<- calculate_prop_diff(v35_reduced, body_sites[i[1]],  body_sites[i[2]])
-})
-
-# Remove data not needed for plotting
-v35_reduced$obs_data <- v35_reduced$obs_data[, c("obs_taxon_ids", "otu_id")] # remove per-otu data since it is big
-
-# Record taxa with no differences in any treatment
-v35_reduced <- mutate_taxa(v35_reduced, 
-                           is_diff = apply(v35_reduced$taxon_data[ , site_diff_cols], MARGIN = 1,
-                                           function(a_row) any(a_row != 0)))
-```
-
-Next, we will make all of the individual differential heat trees and the guide tree and save them in a list. 
-
-```{r hmp_matrix_subplots, fig.width = 7.5, fig.height = 7.5}
-# Make individual plots
-plot_body_site_diff_small <- function(data, diff_col, seed = 1) {
-  set.seed(seed)
-  data %>%
-    mutate_taxa(diff_col = data$taxon_data[[diff_col]]) %>%
-    filter_taxa(n_supertaxa <= matrix_plot_depth) %>%
-    filter_taxa(abundance > 1000) %>%
-    filter_taxa(name != "") %>% # Some taxonomic levels are not named
-    heat_tree(node_size = n_obs,
-              node_color = diff_col,
-              node_color_range = diverging_palette(),
-              node_color_trans = "linear",
-              node_color_interval = color_interval,
-              edge_color_interval = color_interval,
-              overlap_avoidance = 0.7,
-              node_size_axis_label = "Number of OTUs",
-              node_color_axis_label = "Median proportion difference",
-              make_legend = FALSE)
-}
-
-
-sub_plots <- lapply(site_diff_cols, function(x) plot_body_site_diff_small(v35_reduced, x))
-key_plot <- v35_reduced %>% 
-  filter_taxa(n_supertaxa <= matrix_plot_depth) %>%
-  filter_taxa(abundance > 1000) %>%
-  filter_taxa(name != "") %>% # Some taxonomic levels are not named
-  heat_tree(node_size = n_obs,
-            node_color = "#DDDDDD",
-            node_color_range = diverging_palette(),
-            node_color_trans = "linear",
-            node_color_interval = color_interval,
-            node_label = ifelse(n_obs > 1000, name, NA),
-            edge_label = ifelse(n_obs > 1000, NA, name),
-            node_label_max = 500,
-            edge_label_max = 500,
-            edge_label_size_range = c(0.007, 0.02),
-            node_label_size_range = c(0.007, 0.02),
-            overlap_avoidance = 0.7,
-            node_size_axis_label = "Number of OTUs",
-            node_color_axis_label = "Log 2 ratio of median proportions",
-            make_legend = TRUE)
+```{r}
+reword_key <- c(
+  'Stool' = 'Stool',
+  'Saliva' = 'Saliva',
+  'Tongue_dorsum' = 'Tongue',
+  'Hard_palate' = 'Hard_palate',
+  'Buccal_mucosa' = 'Cheek',
+  'Attached_Keratinized_gingiva' = 'Gums',
+  'Palatine_Tonsils' = 'Tonsils',
+  'Throat' = 'Throat',
+  'Supragingival_plaque' = 'Supragingival_plaque',
+  'Subgingival_plaque' = 'Subgingival_plaque',
+  'Right_Antecubital_fossa' = 'Skin',
+  'Anterior_nares' = 'Nose',
+  'Left_Retroauricular_crease' = 'Left_Retroauricular_crease',
+  'Right_Retroauricular_crease' = 'Right_Retroauricular_crease',
+  'Vaginal_introitus' = 'Vaginal_introitus',
+  'Mid_vagina' = 'Mid_vagina',
+  'Posterior_fornix' = 'Posterior_fornix',
+  'Left_Antecubital_fossa' = 'Left_Antecubital_fossa')
+hmp_data$data$diff_table$treatment_1 <- reword_key[hmp_data$data$diff_table$treatment_1]
+hmp_data$data$diff_table$treatment_2 <- reword_key[hmp_data$data$diff_table$treatment_2]
 ```
 
 
-Finally we will calcaulte the coordinates for each plot and arrange them together. 
-
-```{r hmp_matrix_main_plot}
-calc_subplot_coords <- function(a_matrix, x1 = 0, y1 = 0, x2 = 1, y2 = 1) {
-  # lowerleft = c(x1, y1), upperright = c(x2, y2)
-  x_coords <- seq(from = x1, to = x2, length.out = ncol(a_matrix) + 1)[- (ncol(a_matrix) + 1)]
-  y_coords <- seq(from = y1, to = y2, length.out = nrow(a_matrix) + 1)[- (nrow(a_matrix) + 1)]
-  do.call(rbind, lapply(1:ncol(a_matrix), function(x) data.frame(plot_index = a_matrix[, x],
-                                                                 x = x_coords[x], 
-                                                                 y = rev(y_coords))))
-}
-
-# remove empty column/row
-layout_matrix <- layout_matrix[! apply(layout_matrix, MARGIN = 1, function(x) all(is.na(x))), ]
-layout_matrix <- layout_matrix[ ,! apply(layout_matrix, MARGIN = 2, function(x) all(is.na(x)))]
-
-# Get subplot layout data
-matrix_data <- calc_subplot_coords(layout_matrix, x1 = 0.2, y1 = 0.2, x2 = 0.95, y2 = 0.95)
-matrix_data$site <- site_diff_cols[layout_matrix]
-matrix_data <- tidyr::separate(matrix_data, site, c("site_1", "site_2"), "-")
-matrix_data <- matrix_data[!is.na(matrix_data$plot_index), ]
-matrix_data <- matrix_data[order(matrix_data$plot_index), ]
-rownames(matrix_data) <- matrix_data$plot_index
-
-# Make label data
-named_row <- which(apply(layout_matrix, MARGIN = 1, function(x) all(!is.na(x))))
-named_col <- which(apply(layout_matrix, MARGIN = 2, function(x) all(!is.na(x))))
-horz_label_data <- matrix_data[match(layout_matrix[named_row, ], matrix_data$plot_index), ]
-vert_label_data <- matrix_data[match(layout_matrix[, named_col], matrix_data$plot_index), ]
-subgraph_width <- abs(horz_label_data$x[1] - horz_label_data$x[2])
-subgraph_height <- abs(vert_label_data$y[1] - vert_label_data$y[2])
-horz_label_data$label_x <- horz_label_data$x + subgraph_width / 2 # center of label
-horz_label_data$label_y <- 0.96 # bottom of label
-vert_label_data$label_x <- 0.96 # bottom of rotated label 
-vert_label_data$label_y <- vert_label_data$y + subgraph_height / 2 # center of rotated label 
-
-# Make plot
-library(cowplot)
-library(metacoder)
-label_size <- 12
-matrix_plot <- ggdraw() + 
-  draw_plot(key_plot, x = 0, y = -0.03, width = 0.78, height = 0.67) +
-  draw_text(gsub("_", " ", horz_label_data$site_2), 
-            x = horz_label_data$label_x, y = horz_label_data$label_y, 
-            size = label_size, colour = diverging_palette()[1],
-            hjust = "center", vjust = "bottom") +
-  draw_text(gsub("_", " ", vert_label_data$site_1), 
-            x = vert_label_data$label_x, y = vert_label_data$label_y, 
-            size = label_size, colour = diverging_palette()[3],
-            hjust = "center", vjust = "bottom", angle = -90)
-for (i in seq_along(sub_plots)) {
-  matrix_plot <- matrix_plot + draw_plot(sub_plots[[i]], 
-                                         x = matrix_data[i, "x"],
-                                         y = matrix_data[i, "y"],
-                                         width = subgraph_width, height = subgraph_height)
-}
-print(matrix_plot)
-plot_name <- "figure_3--hmp_matrix_plot"
-save_plot(result_path(plot_name), 
-          matrix_plot, base_width = 7.5, base_height = 7.5)
-save_publication_fig(plot_name, figure_number = 5)
+```{r}
+to_compare <- c("Stool", "Saliva", "Throat", "Skin", "Nose")
+hmp_data %>%
+  mutate_obs("tax_prop", abundance = rowMeans(hmp_data$data$tax_prop[sample_data$sample_id])) %>%
+  filter_taxa(abundance >= 0.001, reassign_obs = FALSE) %>%
+  filter_taxa(taxon_names != "", reassign_obs = FALSE) %>% # Some taxonomic levels are not named
+  filter_obs("diff_table", treatment_1 %in% to_compare & treatment_2 %in% to_compare) %>%
+  heat_tree_matrix(dataset = "diff_table",
+                   node_size = n_obs,
+                   node_label = taxon_names,
+                   node_color = log2_median_ratio,
+                   node_color_range = diverging_palette(),
+                   node_color_trans = "linear",
+                   node_color_interval = c(-7, 7),
+                   edge_color_interval = c(-7, 7),
+                   node_size_axis_label = "Number of OTUs",
+                   node_color_axis_label = "Log2 ratio median proportions",
+                   initial_layout = "re",
+                   layout = "da",
+                   key_size = 0.7,
+                   seed = 4,
+                   output_file = result_path("figure_3--hmp_matrix_plot"))
 ```
+
 
 ## Software and packages used
 

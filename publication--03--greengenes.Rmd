@@ -59,10 +59,18 @@ These will be removed after parsing the file since they provide no information a
 
 ```{r greengenes_taxonomy_parse}
 library(metacoder)
+
 # Parse taxonomy file
-greengenes <- extract_taxonomy(input = gg_taxonomy, key = c(id = "obs_info", "class"), regex = "^([0-9]+)\t(.*)$", class_sep = "; ", class_regex = "^([a-z]{1})__(.*)$", class_key = c(rank = "taxon_info", "name"))
+greengenes <- extract_tax_data(gg_taxonomy,
+                               key = c(id = "info", "class"),
+                               regex = "^([0-9]+)\t(.*)$",
+                               class_sep = "; ",
+                               class_regex = "^([a-z]{1})__(.*)$",
+                               class_key = c(rank = "info", "taxon_name"))
+greengenes$data$class_data <- NULL
+
 # Remove data for ranks with no information
-greengenes <- filter_taxa(greengenes, name != "")
+greengenes <- filter_taxa(greengenes, taxon_names != "")
 print(greengenes)
 ```
 
@@ -74,21 +82,15 @@ Next we will parse the sequence file so we can add it to the `obs_data` table of
 ```{r greengenes_sequence}
 gg_sequence_path <- file.path(input_folder, "gg_13_5.fasta")
 substr(readLines(gg_sequence_path, n = 10), 1, 100)
+gg_seq <- read_fasta(gg_sequence_path)
 ```
-
-This can be easily parsed using the R package `seqinr`:
-
-```{r greengenes_sequence_read}
-gg_sequences <- seqinr::read.fasta(gg_sequence_path, as.string = TRUE)
-```
-
 
 ### Integrating sequence and taxonomy
 
 We will need to use the Greengenes ID to match up which sequence goes with which row since they are in different orders.
 
 ```{r greengenes_combine}
-greengenes <- mutate_obs(greengenes, sequence = unlist(gg_sequences)[as.character(id)])
+greengenes <- mutate_obs(greengenes, "tax_data", sequence = gg_seq[id])
 ```
 
 
@@ -102,7 +104,7 @@ if (! is.null(min_seq_count)) {
   greengenes <- filter_taxa(greengenes, n_obs >= min_seq_count)
 }
 if (just_bacteria) {
-  greengenes <- filter_taxa(greengenes, name == "Bacteria", subtaxa = TRUE)
+  greengenes <- filter_taxa(greengenes, taxon_names == "Bacteria", subtaxa = TRUE)
 }
 if (! is.null(max_taxonomy_depth)) {
   greengenes <- filter_taxa(greengenes, n_supertaxa <= max_taxonomy_depth)
@@ -118,7 +120,7 @@ Note that the `invert` option makes it so taxa are included that *did not* pass 
 This is different than simply using `name != "Chloroplast", subtaxa = TRUE` since the effects of `invert` are applied after those of `subtaxa`.
 
 ```{r greengenes_rm_chloro}
-greengenes <- filter_taxa(greengenes, name == "Chloroplast", subtaxa = TRUE, invert = TRUE)
+greengenes <- filter_taxa(greengenes, taxon_names == "Chloroplast", subtaxa = TRUE, invert = TRUE)
 print(greengenes)
 ```
 
@@ -137,11 +139,10 @@ greengenes_plot_all <- heat_tree(greengenes,
                                  edge_size_interval = all_size_interval,
                                  node_color_interval = all_size_interval,
                                  edge_color_interval = all_size_interval,
-                                 node_label = name,
+                                 node_label = taxon_names,
                                  node_label_max = label_max,
                                  node_label_size_range = label_size_range,
                                  node_color_axis_label = "Sequence count",
-                                 make_legend = TRUE,
                                  output_file = result_path("greengenes--all"))
 print(greengenes_plot_all)
 ```
@@ -155,7 +156,7 @@ However, this method is easy and should work OK.
 
 ```{r greengenes_length_filter}
 if (! is.null(min_seq_length)) {
-  greengenes <- filter_obs(greengenes, nchar(sequence) >= min_seq_length, unobserved = FALSE)
+  greengenes <- filter_obs(greengenes, "tax_data", nchar(sequence) >= min_seq_length, drop_taxa = TRUE)
 }
 print(greengenes)
 ```
@@ -163,7 +164,7 @@ print(greengenes)
 Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved], allowing for a maximum mismatch of `r max_mismatch`%.
 
 ```{r greengenes_pcr}
-greengenes_pcr <- primersearch(greengenes,
+greengenes_pcr <- primersearch(greengenes, sequence,
                                forward = forward_primer,
                                reverse = reverse_primer,
                                mismatch = max_mismatch)
@@ -174,8 +175,12 @@ Lets plot the whole database again, but coloring based on digital PCR success.
 
 ```{r greengenes_plot_pcr_all}
 greengenes_plot_pcr_all <- heat_tree(greengenes_pcr,
-                                     node_size = n_obs,
-                                     node_label = name,
+                                     node_size = seq_count,
+                                     node_size_range = size_range * 2,
+                                     edge_size_range = size_range,
+                                     node_size_interval = all_size_interval,
+                                     edge_size_interval = all_size_interval,
+                                     node_label = taxon_names,
                                      node_color = prop_amplified,
                                      node_color_range =  pcr_success_color_scale,
                                      node_color_trans = "linear",
@@ -197,8 +202,8 @@ I am including the supertaxa of those taxa that did not amplify since excluding 
 ```{r greengenes_plot_pcr_fail}
 greengenes_plot_pcr_fail <- greengenes_pcr %>%
   filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
-  heat_tree(node_size = n_obs - count_amplified,
-            node_label = name,
+  heat_tree(node_size = query_count - seq_count,
+            node_label = taxon_names,
             node_color = prop_amplified,
             node_size_range = size_range * 2,
             edge_size_range = size_range,
@@ -212,7 +217,6 @@ greengenes_plot_pcr_fail <- greengenes_pcr %>%
             node_label_max = label_max,
             node_color_axis_label = "Proportion PCR success",
             node_size_axis_label = "Sequences not amplified",
-            make_legend = TRUE,
             output_file = result_path("greengenes--pcr_fail"))
 print(greengenes_plot_pcr_fail)
 ```

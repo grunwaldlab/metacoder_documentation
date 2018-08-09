@@ -47,13 +47,15 @@ https://www.arb-silva.de/no_cache/download/archive/release_123_1/Exports/
 
 ```{r silva_load}
 library(metacoder)
-file_path <- file.path(input_folder, "SILVA_123.1_SSURef_Nr99_tax_silva.fasta")
-silva <- extract_taxonomy(seqinr::read.fasta(file_path, as.string = TRUE), 
+silva_seq <- read_fasta(file.path(input_folder, "SILVA_123.1_SSURef_Nr99_tax_silva.fasta"))
+silva <- extract_tax_data(names(silva_seq), 
                           regex = "^(.*?) (.*)$",
-                          key = c(id = "obs_info", "class"),
+                          key = c(id = "info", "class"),
                           class_sep = ";")
+silva$data$tax_data$sequence <- silva_seq
 print(silva)
 ```
+
 
 ## Subset
 
@@ -66,7 +68,7 @@ if (! is.null(min_seq_count)) {
   silva <- filter_taxa(silva, n_obs >= min_seq_count)
 }
 if (just_bacteria) {
-  silva <- filter_taxa(silva, name == "Bacteria", subtaxa = TRUE)
+  silva <- filter_taxa(silva, taxon_names == "Bacteria", subtaxa = TRUE)
 }
 if (! is.null(max_taxonomy_depth)) {
   silva <- filter_taxa(silva, n_supertaxa <= max_taxonomy_depth)
@@ -82,7 +84,7 @@ Note that the `invert` option makes it so taxa are included that *did not* pass 
 This is different than simply using `name != "Chloroplast", subtaxa = TRUE` since the effects of `invert` are applied after those of `subtaxa`.
 
 ```{r silva_rm_chloro}
-silva <- filter_taxa(silva, name == "Chloroplast", subtaxa = TRUE, invert = TRUE)
+silva <- filter_taxa(silva, taxon_names == "Chloroplast", subtaxa = TRUE, invert = TRUE)
 print(silva)
 ```
 
@@ -101,11 +103,10 @@ silva_plot_all <- heat_tree(silva,
                             edge_size_interval = all_size_interval,
                             node_color_interval = all_size_interval,
                             edge_color_interval = all_size_interval,
-                            node_label = name,
+                            node_label = taxon_names,
                             node_label_size_range = label_size_range,
                             node_label_max = label_max,
                             node_color_axis_label = "Sequence count",
-                            make_legend = TRUE,
                             margin_size = c(.01, 0, 0, 0),
                             output_file = result_path("silva--all"))
 print(silva_plot_all)
@@ -120,7 +121,7 @@ However, this method is easy and should work OK.
 
 ```{r silva_length_filter}
 if (! is.null(min_seq_length)) {
-  silva <- filter_obs(silva, nchar(sequence) >= min_seq_length, unobserved = FALSE)
+  silva <- filter_obs(silva, "tax_data", nchar(sequence) >= min_seq_length, drop_taxa = TRUE)
 }
 print(silva)
 ```
@@ -129,9 +130,10 @@ Next I will conduct digital PCR with a new set of universal 16S primers [@walter
 
 ```{r silva_pcr}
 # Replace all u with t so digital PCR works
-silva$obs_data$sequence <- gsub(pattern = "u", replacement = "t", silva$obs_data$sequence)
+silva <- mutate_obs(silva, "tax_data", sequence = gsub(pattern = "U", replacement = "T", sequence))
+
 # digital PCR
-silva_pcr <- primersearch(silva,
+silva_pcr <- primersearch(silva, sequence,
                           forward = forward_primer,
                           reverse = reverse_primer,
                           mismatch = max_mismatch)
@@ -143,9 +145,9 @@ Lets plot the whole database again, but coloring based on digital PCR success.
 
 ```{r silva_plot_pcr_all}
 silva_plot_pcr_all <- heat_tree(silva_pcr,
-                                node_size = n_obs,
+                                node_size = seq_count,
                                 node_color = prop_amplified,
-                                node_label = name,
+                                node_label = taxon_names,
                                 node_size_range = size_range * 2,
                                 edge_size_range = size_range,
                                 node_size_interval = all_size_interval,
@@ -170,14 +172,14 @@ I am including the supertaxa of those taxa that did not amplify since excluding 
 ```{r, silva_plot_pcr_fail}
 silva_plot_pcr_fail <- silva_pcr %>%
   filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
-  heat_tree(node_size = n_obs - count_amplified,
+  heat_tree(node_size = query_count - seq_count,
             node_color = prop_amplified,
-            node_label = name,
+            node_label = taxon_names,
             node_size_range = size_range * 2,
             edge_size_range = size_range,
             node_size_interval = pcr_size_interval,
             edge_size_interval = pcr_size_interval,
-            node_color_range =  pcr_success_color_scale,
+             node_color_range =  pcr_success_color_scale,
             node_color_trans = "linear",
             node_color_interval = c(0, 1),
             edge_color_interval = c(0, 1),
@@ -185,7 +187,6 @@ silva_plot_pcr_fail <- silva_pcr %>%
             node_label_max = label_max,
             node_color_axis_label = "Proportion PCR success",
             node_size_axis_label = "Sequences not amplified",
-            make_legend = TRUE,
             output_file = result_path("silva--pcr_fail"))
 print(silva_plot_pcr_fail)
 ```
@@ -196,9 +197,9 @@ However, we can do the same graph with many more smaller labels for exploring wi
 ```{r, silva_plot_pcr_fail_detailed}
 silva_plot_pcr_fail <- silva_pcr %>%
   filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
-  heat_tree(node_size = n_obs - count_amplified,
+  heat_tree(node_size = query_count - seq_count,
             node_color = prop_amplified,
-            node_label = name,
+            node_label = taxon_names,
             node_size_range = size_range * 2,
             edge_size_range = size_range,
             node_size_interval = pcr_size_interval,
@@ -211,7 +212,6 @@ silva_plot_pcr_fail <- silva_pcr %>%
             node_label_max = label_max * 10,
             node_color_axis_label = "Proportion PCR success",
             node_size_axis_label = "Sequences not amplified",
-            make_legend = TRUE,
             output_file = result_path("silva--pcr_fail_detailed"))
 print(silva_plot_pcr_fail)
 ```
