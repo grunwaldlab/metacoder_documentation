@@ -1,0 +1,424 @@
+---
+output: html_document
+bibliography: "bibtexlib.bib"
+---
+
+```{r setup, include=FALSE}
+source("style.R")
+```
+
+# Manipulating taxonomic data
+
+Tabular data is relatively straight forward to manipulate if you know some R already, but taxonomic data is hierarchical, making it much harder to work with.
+It gets even more complicated when there are other data associated with the taxonomy.
+
+For example, if we want to remove a bacterial phylum from the data, do we also remove all of the taxa within that phylum? 
+If so, how do we identify which taxa are in that phylum?
+Depending on the format the data is in, this might be hard.
+If other data  (e.g. `r gloss$add('Operational Taxonomic Units (OTUs)', show = 'OTU')` counts) are associated with taxa within that phylum, do we also remove those too?
+After all, even if the phylum and the taxa within it are removed, we still know that all the associated data are bacterial, so do we reassign them to the Bacteria taxon, or just throw those data out?
+The answer to these kind of questions will depend on our data and what we want to do with it.
+
+## Load example data
+
+If you are starting the workshop at this section, or had problems running code in a previous section, use the following to load the data used in this section.
+You can download the "parsed_data.Rdata" file <a href="parsed_data.Rdata" download="parsed_data.Rdata">here</a>.
+If you have just done the previous section, you can ignore this and proceed.
+
+```{r}
+load("parsed_data.Rdata")
+```
+
+
+## Subsetting tabular data
+
+The `r gloss$add('function', shown = 'functions')` to subset taxonomic information in `taxmap` objects (the format our example data is in) provided by the `taxa` package are modeled after functions in the `dplyr` package for manipulating tabular data (@wickham2015dplyr).
+These `dplyr` functions are alternatives to the standard R subsetting (e.g. `[`, `[[`, and `$`) designed to be be more intuitive and consistent.
+Since an understanding of these functions will help with the analogous (and more complicated) functions for taxonomic data, we will start by practicing these. 
+Fortunately, we have a tabular data set in need of some subsetting: our sample data.
+
+First, lets take another look at our sample data: 
+
+```{r}
+print(sample_data)
+```
+
+This is a large data set and not all the `r nrow(sample_data)` samples are used in the main publication of @wagner2016host.
+Only the samples in the "ecotypes" experiment are part of the main study.
+Using standard R subsetting we could remove those like so:
+
+```{r eval = FALSE}
+sample_data <- sample_data[sample_data$Experiment == "ecotypes", ]
+```
+
+Using the `dplyr` functions, the same operation would be: 
+
+```{r}
+library(dplyr)
+sample_data <- filter(sample_data, Experiment == "ecotypes")
+```
+
+Note how we could use the `Experiment` column on its own within the `filter` functions.
+That is a special property of the `filter` function and many others in `dplyr` known as `r gloss$add('Non-standard evaluation (NSE)')`.
+If we tried that outside of the function, we would get an error.
+For example, the following will not work:
+
+```{r error=TRUE}
+is_ecotype <- Experiment == "ecotypes"
+```
+
+Most `dplyr` functions work this way and so do the analogous functions in `taxa` for manipulating taxonomic data.
+If we have multiple filtering criteria, we can simply add more arguments to the functions. 
+In the following code, we subset the table to only rows for plants from one of three site and that are 3 years old.
+
+```{r}
+sample_data <- filter(sample_data,
+                      Site %in% c("Mah", "Jam", "Sil"),
+                      Age == 3)
+```
+
+This is usually equivalent to combining multiple conditions with `&` in normal subsetting, but is faster for large data sets. 
+It also will not return values for which conditions evaluate to `NA`, unlike `r gloss$add('base R')` subsetting.
+
+Up until now, everything we have done using `filter` can be easily done with base R subsetting as well, but `dplyr` introduces a few more advanced features that can save time/typing.
+We wont go into these in detail, but its good to know they exist.
+One is the concept of "grouping".
+When rows are "grouped" by the values in one column, the rows corresponding to each unique value in that column are treated as a unit in some functions.
+`n()` is one such function that counts the number of items in each group.
+We can use this to filter out any plants that don't have both root and leaf samples by counting the number of times each "Plant_ID" shows up:
+
+```{r}
+sample_data <- sample_data %>%
+  group_by(Plant_ID) %>%
+  filter(n() == 2)
+```
+
+This leaves us with `r nrow(sample_data)` samples.
+Note the use of the `%>%` "piping" operator.
+This takes the result of the function that comes before and uses it as the first argument to function that comes after.
+For example, `seq(1:10) %>% length()` is the same as `length(seq(1:10))`.
+This allows for chaining many commands together in a readable way.
+Next we will subset the abundance data to just these samples to get the dataset down to a manageable size for a standard personal computer.
+
+## Subsetting a taxonomy
+
+The analog to `filter` for taxonomic data is `filter_taxa` from the `taxa` package.
+This works in a similar way, but has much more options for taxonomic relationships are used and what is done with data associated with removed taxa.
+Lets take another look at our data object:
+
+```{r}
+print(obj)
+```
+
+If we look at the second line, we can see that some taxa do not have names.
+These are the ones that only had  `r gloss$add('Taxonomic ranks', shown = 'rank')` information in the classification we parsed in the last section (e.g. `o__` in  `"Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__"`).
+Since these do not add any information, lets remove them.
+
+```{r}
+library(taxa)
+obj <- filter_taxa(obj, taxon_names != "")
+print(obj)
+```
+
+There were OTUs associated with the nameless taxa, but no OTUs were filtered out, so what happened to them?
+By default, they are reassigned to the closest supertaxon that passes the filter.
+For example, for the `r gloss$add('Taxonomic classifications', shown = 'classification')` `"Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__"`, the OTU would be reassigned to the class "SJA-28".
+
+Like `filter`, `filter_taxa` can use variables contained in the input objects as if they were independent variables.
+In this case, `taxon_names` is actually a function that is called when referenced in this way.
+
+```{r}
+head(taxon_names(obj))
+```
+
+Other values that can be used this way include columns in tables and `r gloss$add('list', shown = 'lists')`/`r gloss$add('vector', shown = 'vectors')` stored in the `obj$data` list in `taxmap` objects.
+Since `taxmap` objects can store any number of lists, vectors, or tables mapped to a taxonomy, there can be many variables that can be referenced by name.
+The `all_names` function returns the name and location of variables that can be used this way:
+
+```{r}
+head(all_names(obj), 20)
+length(all_names(obj))
+```
+
+Next, lets also filter out anything not in Bacteria, since the focus of the study was Bacteria.
+
+```{r}
+obj <- filter_taxa(obj, taxon_names == "Bacteria", subtaxa = TRUE)
+print(obj)
+```
+
+Note the use of the `subtaxa = TRUE`; this means that all the subtaxa of taxa that pass the filter should also be preserved.
+If we left this option off, we would would have only a single taxon with all OTUs assigned to it:
+
+```{r}
+filter_taxa(obj, taxon_names == "Bacteria")
+```
+
+Next, lets remove the columns from the abundance matrix that were removed from the sample data at the start of the section.
+
+```{r}
+obj$data$otu_counts <- obj$data$otu_counts[c("taxon_id", "OTU_ID", sample_data$SampleID)]
+```
+
+This leaves us with a data set of `r nrow(obj$data$otu_counts)` OTUs in `r nrow(sample_data)` samples, classified by `r length(obj$taxon_ids())` taxa:
+
+```{r}
+print(obj)
+```
+
+## Subsetting data classified by a taxonomy
+
+In the previous section we subset the taxonomy in a `taxmap` object using `filter_taxa`.
+By default, when taxa are removed, the OTUs assigned to them were reassigned to a supertaxon or removed as well.
+We can also subset the OTU table directly and remove any taxa that are no longer needed using the function `filter_obs`.
+The "obs" in the function name stands for "observations".
+Unlike `filter`, which you used previously to subset tables, `filter_obs` works on a data set in a `taxmap` object, like our OTU table.
+
+In the last section we removed samples (i.e. columns in the OTU table) that did not appear in the @wagner2016host publication.
+This probably means that some of the OTUs only existed in those samples and now have no reads in the remaining samples.
+Lets remove those to make the data set more manageable.
+First we need to find which OTUs (i.e. rows) no have no reads.
+We can do that by using the function `rowSums` to get the number of reads in all samples for each OTU.
+
+```{r}
+has_no_reads <- rowSums(obj$data$otu_counts[, sample_data$SampleID]) == 0
+```
+
+Since the table `otu_counts` also has the taxon ID and OTU ID columns we need to subset the columns to just the samples before using `rowSums`.
+The command above results in a `logical` vector, which is a series of `TRUE`/`FALSE` values that can be used to subset things.
+We can use `sum` to count the number of `TRUE` values and hence the number of OTUs without reads.
+
+```{r}
+sum(has_no_reads)
+```
+
+There are `r sum(has_no_reads)` of `r length(has_no_reads)` OTUs that now have no reads.
+Now that we know which they are, we can remove them using `filter_obs`.
+
+```{r}
+filter_obs(obj, "otu_counts", ! has_no_reads) # note the ! negation operator
+```
+
+Note how this removed rows in the "otu_counts" table but did not remove any taxa.
+To remove taxa that are no longer observed in any OTUs, we need to add the `drop_taxa` option:
+
+```{r}
+obj <- filter_obs(obj, "otu_counts", ! has_no_reads, drop_taxa = TRUE)
+```
+
+If there were other tables in `obj$data` the data for those taxa would have been removed as well unless `drop_obs = FALSE` was added.
+Since there is only the one table, we don't need to worry about that.
+
+
+```{r include=FALSE}
+save(obj, sample_data, file = "filtered_data.Rdata")
+```
+
+## Exercises
+
+In these exercises, we will be using `obj` and `sample_data` from the analysis above.
+If you did not run the code above or had problems, run the following code to get the objects used.
+You can download the "filtered_data.Rdata" file <a href="filtered_data.Rdata" download="filtered_data.Rdata">here</a>.
+
+```{r}
+load("filtered_data.Rdata")
+```
+
+### Subsetting tabular data
+
+**1)** Try to subset `sample_data` to just "leaf" samples using standard R subsetting (e.g. `my_table[rows, columns]`).
+
+```{r hide_button = TRUE}
+sample_data[sample_data$Type == "leaf", ]
+```
+
+**2)** Try to do the same thing using the `filter` function from the `dplyr` package.
+
+```{r hide_button = TRUE}
+filter(sample_data, Type == "leaf")
+```
+
+**3)** Using a single call to the `filter` function, get all leaf samples from site "Jam" that are of genotype "SIL" or "MIL".
+
+```{r hide_button = TRUE}
+filter(sample_data,
+       Type == "leaf",
+       Site == "Jam",
+       Genotype %in% c("SIL", "MIL"))
+```
+
+### Subsetting a taxonomy
+
+For the questions below, do not overwrite the `obj` with result of filtering (i.e. don't assign the result to `obj` with `<-`).
+
+**4)** The function `n_obs` counts the number of items in the first dataset (the OTU table in our case) assigned to each taxon. Try running `n_obs(obj)` to see how many OTUs are within each taxon.
+
+```{r hide_button = TRUE}
+n_obs(obj)
+```
+
+**5)** Like `taxon_names`, `n_obs` can be used within calls to `filter_taxa` as if it were a variable. Try to use `filter_taxa` to remove all taxa that have less than 100 OTUs.
+
+```{r hide_button = TRUE}
+filter_taxa(obj, n_obs >= 100)
+```
+
+**6a)** Subset `obj` to just "Actinobacteria" and *all of its subtaxa*.
+
+```{r hide_button = TRUE}
+filter_taxa(obj, taxon_names == "Actinobacteria", subtaxa = TRUE)
+```
+
+**6b)** Why are there fewer OTUs in the result of the above filtering?
+
+```{r hide_button = "Show Answer", results = 'asis', echo = FALSE}
+cat(
+  'Because the OTUs assinged to taxa besides *Actinobacteria* or one of its subtaxa were removed.'
+)
+```
+
+**6c)** Look at the documentation for `filter_taxa` by typing `?filter_taxa`. See if you can modify the previous command so that no OTUs are removed from the table, but the taxonomy is still subset to  "Actinobacteria" and all of its subtaxa.
+
+```{r hide_button = TRUE}
+filter_taxa(obj, taxon_names == "Actinobacteria", subtaxa = TRUE, drop_obs = FALSE)
+```
+
+**6d)** What happend to the taxon IDs for OTUs that are not in "Actinobacteria" and why?
+
+```{asis hide_button = "Show Answer"}
+The OTUs not in Actinobacteria were assinged a taxon ID of `NA` because there are no taxa left they could be reassigned to.
+```
+
+**7a)** The function `taxon_ranks` returns the ranks for each taxon and it can be used like `taxon_names` in calls to `filter_taxa`. Look at the result of `taxon_ranks(obj)`. Subset `obj` to phyla ("p" in our data) *and their supertaxa*.
+
+```{r hide_button = TRUE}
+filter_taxa(obj, taxon_ranks == "p", supertaxa = TRUE)
+```
+
+**7b)** Were any OTUs removed? Why?
+
+```{asis hide_button = "Show Answer"}
+No, because they were reassigned to the phyla. 
+```
+
+**8a)** Try to remove "Actinobacteria" and all of its subtaxa. You will probably need to look at the documentation for `filter_taxa` by typing `?filter_taxa` to figure out how to do this.
+
+```{r hide_button = TRUE}
+filter_taxa(obj, taxon_names == "Actinobacteria", subtaxa = TRUE, invert = TRUE)
+```
+
+**8b)** Why were no OTUs removed when "Actinobacteria" and all of its subtaxa were removed?
+
+```{r hide_button = "Show Answer", results = 'asis', echo = FALSE}
+cat(
+  'Because the OTUs that were assigned to "Actinobacteria" were reassigned to "Bacteria", its supertaxon.'
+)
+```
+
+**8c)** Try to modify the previous command to remove the OTUs that are assigned to "Actinobacteria".
+
+```{r hide_button = TRUE}
+filter_taxa(obj, taxon_names == "Actinobacteria",
+            subtaxa = TRUE,
+            invert = TRUE,
+            reassign_obs = FALSE)
+```
+
+### Subsetting data associated with a taxonomy
+
+For the questions below, do not overwrite the `obj` with result of filtering (i.e. don't assign the result to `obj` with `<-`).
+
+**9a)** Look at the documentation for `filter_obs` by typing `?filter_obs`. Use `filter_obs` to remove all rows of "otu_counts" that have less than 5 reads in the first sample, "M1981P563", without removing any taxa in the taxonomy.
+
+```{r hide_button = TRUE}
+filter_obs(obj, "otu_counts", M1981P563 > 5)
+# Also works: filter_obs(obj, "otu_counts", obj$data$otu_counts$M1981P563 > 5)
+```
+
+**9b)** Modify the previous command to remove taxa as well as rows in the table.
+
+```{r hide_button = TRUE}
+filter_obs(obj, "otu_counts", M1981P563 > 5, drop_taxa = TRUE)
+```
+
+**10a)** The function `calc_n_samples` from the `metacoder` package returns the number of samples each OTU appears in (i.e. has a non-zero count): 
+
+```{r}
+library(metacoder)
+calc_n_samples(obj, dataset = "otu_counts")
+```
+
+Using the `groups` option, it can do the calculation on columns grouped by treatment: 
+
+```{r}
+calc_n_samples(obj, dataset = "otu_counts", groups = sample_data$Type)
+```
+
+Run the following code to add this as a table in your `taxmap` object:
+
+```{r}
+obj$data$sample_counts <- calc_n_samples(obj,
+                                         dataset = "otu_counts",
+                                         groups = sample_data$Type,
+                                         other_cols = "OTU_ID") # Preserves OTU_ID column
+print(obj)
+```
+
+Since the "sample_counts" table is derived from the "otu_counts" table and in the same order, we can use values from it to subset "otu_counts".
+Using `filter_obs`, try to subset "otu_counts" to taxa that do not appear in leaf samples, but appear in at least 100 root samples.
+Remove any taxa not represented by these OTUs unique to roots.
+
+```{r hide_button = TRUE}
+filter_obs(obj, "otu_counts", leaf == 0, root > 100, drop_taxa = TRUE)
+```
+
+**10b)** The function `arrange_obs` sorts tables in `taxmap` object. For example, you can sort the OTU table in `obj` by the number of reads in sample "M1981P563" like so:
+
+```{r}
+arrange_obs(obj, "otu_counts", M1981P563)
+```
+
+To sort in descending order wrap the sorting parameter in `desc()`:
+
+```{r}
+arrange_obs(obj, "otu_counts", desc(M1981P563))
+```
+
+Try to sort the OTU table by the difference between the number of leaf samples and OTU was found in and the number of root samples and OTU was found in.
+This effectively sorts by how "characteristic" an OTU is to root samples.
+
+```{r hide_button = TRUE}
+arrange_obs(obj, "sample_counts", leaf - root)
+```
+
+**10c)** What is the ID of the OTU most "characteristic" of roots vs leafs?
+
+```{r hide_button = "Show Answer", results = 'asis', echo = FALSE}
+cat(
+  '436, 881, or 927'
+)
+```
+
+**10d)** `mutate_obs` is used to add new columns to tables in a `taxmap` objects. Look at the documentation and see if you can figure out how to add the results of the `classifications` function as a column in the "sample_counts" table. Note that you will need to use the "taxon_id" column of the "sample_counts" table to subset the results of the `classifications` function so that they match the taxon IDs in the "sample_counts" table.
+
+```{r hide_button = TRUE}
+mutate_obs(obj, "sample_counts", class = classifications(obj)[obj$data$sample_counts$taxon_id])
+```
+
+**10e)** Now use the `%>%` operator to pipe the code for part **d** into the code for part **b** to sort it and see what taxa are most "characteristic" of roots vs leafs.
+
+```{r hide_button = TRUE}
+obj %>%
+  mutate_obs("sample_counts", class = classifications(obj)[obj$data$sample_counts$taxon_id]) %>%
+  arrange_obs("sample_counts", leaf - root)
+```
+
+**10f)** What are the families of the OTUs most "characteristic" of roots vs leafs?
+
+```{r hide_button = "Show Answer", results = 'asis', echo = FALSE}
+cat(
+  'Hyphomicrobiaceae, Paenibacillaceae, and Gemmataceae'
+)
+```
+
+## References

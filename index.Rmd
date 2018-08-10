@@ -1,5 +1,5 @@
 ---
-title: "MetacodeR user documentation"
+title: "Metacoder documentation"
 author: "Zachary S. L. Foster and Niklaus J. Grünwald"
 date: "`r Sys.Date()`"
 bibliography: bibliography.bibtex
@@ -8,7 +8,7 @@ bibliography: bibliography.bibtex
 ```{r home_setup, echo=FALSE, warning=FALSE, message=FALSE}
 library(knitr)
 if (! is.null(current_input())) { # if knitr is being used
-  knitr::read_chunk("settings.R")
+  read_chunk("settings.R")
 } else {
   source("settings.R")
 }
@@ -20,306 +20,65 @@ if (! is.null(current_input())) { # if knitr is being used
 
 ## Introduction
 
-Metacoder is an R package for parsing, plotting, and manipulating hierarchical data.
-In particular, metacoder has been designed for large taxonomic data sets, like those generated from modern high-throughput sequencing techniques, like metabarcoding (i.e. amplification metagenomics, 16S metagenomics, etc).
-Metabarcoding is revolutionizing microbial ecology and presenting new challenges:
+Metacoder is an R package for `r gloss$add("parsing")`, plotting, and manipulating large taxonomic data sets, like those generated from modern high-throughput sequencing, like metabarcoding (i.e. amplification metagenomics, 16S metagenomics, etc).
+It provides a tree-based visualization called "heat trees" used to depict statistics for every taxon in a taxonomy using color and size.
+It also provides various functions to do common tasks in microbiome bioinformatics on data in the `taxmap` format defined by the `taxa` package, such as:
 
-* Numerous database formats make taxonomic data difficult to parse, combine, and subset.
-* Stacked bar charts, commonly used to depict community diversity, lack taxonomic context and are limited by the use of color to represent taxa.
-* Barcode loci and primers are a source of under-explored bias.
+* Summing read counts/abundance per taxon
+* Converting counts to proportions and `r gloss$add("rarefaction")` of counts using `vegan`
+* Comparing the abundance (or other characteristics) of groups of samples (e.g., experimental treatments) per taxon
+* Combining data for groups of samples
+* Simulated PCR, via EMBOSS primersearch, for testing primer specificity and coverage of taxonomic groups
+* Converting common microbiome formats for data and reference databases into the objects defined by the `taxa` package.
+* Converting to and from the `phyloseq` format and the `taxa` format
 
-Metacoder is an R package that attempts to addresses these issues:
+## Relationship with other packages
 
-* Sources of taxonomic data can be extracted from any file format and manipulated using [dpylr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html)-like functions that take into account hierarchical relationships. 
-* Community diversity can be visualized by color and size in a type of tree plot we call heat trees.
-* Primer specificity can be estimated with *in silico* PCR.
+Many of these operations can be done using other packages like `phyloseq`, which also provides tools for diversity analysis.
+The main strength of `metacoder` is that its functions use the flexible data types defined by `taxa`, which has powerful parsing and subsetting abilities that take into account the hierarchical relationship between taxa and user-defined data.
+In general, `metacoder` and `taxa` are more of an abstracted tool kit, whereas `phyloseq` has more specialized functions for community diversity data, but they both can do similar things.
+I encourage you to try both to see which fits your needs and style best.
+You can also combine the two in a single analysis by converting between the two data types when needed.
 
 ## Installation
 
 This project is available on CRAN and can be installed like so:
 
-```
+```{r eval = FALSE}
 install.packages("metacoder")
 ```
 
 You can also install the development version for the newest features, bugs, and bug fixes:
 
-```
-devtools::install_github(repo="grunwaldlab/metacoder")
+```{r eval = FALSE}
+install.packages("devtools")
+devtools::install_github("grunwaldlab/metacoder")
 ```
 
 ## Dependencies
 
-The function that runs *in silico* PCR requires `primersearch` from the EMBOSS [@rice2000emboss] tool kit to be installed. 
+The function that simulates PCR requires `primersearch` from the EMBOSS [@rice2000emboss] tool kit to be installed. 
 This is not an R package, so it is not automatically installed.
 Type `?primersearch` after installing and loading metacoder for installation instructions.
 
-
-## Extracting taxonomic data
-
-Most databases have a unique file format and taxonomic hierarchy/nomenclature.
-Taxonomic data can be extracted from most file formats using the **extract_taxonomy** function.
-Classifications can be parsed offline or retrieved from online databases if a taxon name, taxon ID, or sequence ID is used.
-A regular expression with capture groups and a corresponding key is used to define how to parse the file.
-The example code below parses the 16s Ribosome Database Project training set for Mothur which can be found here:
-
-http://mothur.org/w/images/b/b5/Trainset10_082014.rdp.tgz
-
-The file can be parsed using the `ape` package and the taxonomy data in the headers can be extracted by `extract_taxonomy`:
-
-```{r home_parse, warning=FALSE, message=FALSE}
-library(metacoder)
-fasta_path <- file.path("raw_input", "trainset10_082014.rdp.fasta")
-seqs <- ape::read.FASTA(fasta_path)
-cat(names(seqs)[1])
-data <- extract_taxonomy(seqs, regex = "^(.*)\\t(.*)",
-                         key = c(id = "obs_info", "class"),
-                         class_sep = ";")
-```
-
-The resulting object contains sequence information associated with an inferred taxonomic hierarchy.
-The standard print method of the object shows a part of every kind of data it contains:
-
-```{r}
-data
-```
-
-The `taxon_funcs` part contains functions (e.g. `n_obs`) used to calculate taxon statistics.
-These can be used like a column in `data$taxon_data` in most of metacoder's functions, expect they are calculated on demand.
-Note how `n_obs` is used in the following examples.
-
-## Heat trees
-
-The hierarchical nature of taxonomic data makes it difficult to plot effectively.
-Most often, bar charts, stacked bar charts, or pie graphs are used, but these are ineffective when plotting many taxa or multiple ranks.
-Metacoder maps taxonomic data (e.g. sequence abundance) to color/size of tree components in what we call a **heat tree**:
-
-```{r home_plot_1}
-heat_tree(data, node_size = n_obs, node_label = name, node_color = n_obs)
-```
-
-```{r, include = FALSE, eval = FALSE}
-the_last_plot <- .Last.value
-ggplot2::ggsave(file = "intro_plot_1.svg", plot = the_last_plot, bg = "transparent")
-```
-
-The default size range displayed is optimized for each plot to minimize overlaps, but can also be customized by the user.
-The legend represents the number of sequences for each taxon as both a color gradient and width of nodes.
-Only a few options are needed to make effective plots, yet many are available for customization of publication-ready graphics:
-
-```{r home_plot_2}
-set.seed(8)
-heat_tree(data, node_size = n_obs, edge_color = n_supertaxa,
-          node_label = name, node_color = n_obs,
-          node_color_range = c("cyan", "magenta", "green"),
-          edge_color_range   = c("#555555", "#EEEEEE"),
-          initial_layout = "reingold-tilford", layout = "davidson-harel",
-          overlap_avoidance = 0.5)
-```
-
-The above command can take several minutes since it uses a force-directed layout that requires simulations.
-
-```{r, include = FALSE, eval = FALSE}
-ggplot2::ggsave(file = "intro_plot_2.svg", plot = the_last_plot, bg = "transparent")
-```
-
-To see the long list of available plotting options, type `?heat_tree`.
-
-## Subsetting
-
-Taxonomic data in the form used in metacoder can be manipulated using functions inspired by `dplyr`.
-For example, taxa can be subset using `filter_taxa`.
-Unlike the `dplyr` function `filter`, users can choose preserve or remove the subtaxa, supertaxa, and associated observation data of the selected taxa.
-For example, `filter_taxa` can be used to look at just the Archaea:
-
-```{r home_plot_3}
-set.seed(1)
-filter_taxa(data, name == "Archaea", subtaxa = TRUE) %>%
-  heat_tree(node_size = n_obs, node_label = name, 
-            node_color = n_obs, layout = "fruchterman-reingold")
-```
-
-```{r, include = FALSE, eval = FALSE}
-the_last_plot <- .Last.value
-ggplot2::ggsave(file = "subset_1.svg", plot = the_last_plot, bg = "transparent")
-```
-
-Any column displayed by `taxon_data` can be used with `filter_taxa` (and most other metacoder commands) as if it were a variable on its own.
-To make the Archaea-Bacteria division more clear, the "Root" taxon can be removed, resulting in two separate trees:
-
-```{r home_plot_4}
-subsetted <- filter_taxa(data, n_supertaxa > 0)
-set.seed(2)
-heat_tree(subsetted, node_size = n_obs, node_label = name,
-          node_color = n_obs, tree_label = name)
-```
-
-```{r, include = FALSE, eval = FALSE}
-the_last_plot <- .Last.value
-ggplot2::ggsave(file = "subset_2.svg", plot = the_last_plot, bg = "transparent")
-```
-
-Although observations (information in `obs_data`) are typically assigned to the tips of the taxonomy, they can also be assigned to any internal node.
-When a taxon is removed by a filtering operation, the observations assigned to it are reassigned to an unfiltered supertaxon by default.
-This makes it easy to remove lower ranks (e.g. species) of a taxonomy without discarding observations assigned to the tips: 
-
-```{r home_plot_5}
-set.seed(1)
-filter_taxa(data, n_supertaxa < 4) %>%
-  heat_tree(node_size = n_obs, node_label = name, node_color = n_obs)
-```
-
-There is also a `filter_obs` function which can filter out observations and the taxa they are assigned to.
-
-## Sampling
-
-When calculating statistics for taxa, the amount of data should be balanced across taxa and there should be enough data per taxon to provide unbiased estimates.
-Random samples from large reference databases are biased towards over-represented taxa.
-Metacoder provides two ways to randomly sample taxonomic data.
-The function `taxonomic_sample` is used to create taxonomically balanced random samples.
-The acceptable range of sequence or subtaxa counts can be defined for each taxonomic rank; taxa with too few are excluded and taxa with too many are randomly subsampled.
-The code below samples the data such that rank 6 taxa will have 5 sequences and rank 3 taxa (phyla) will have less than 100:
-
-```{r home_plot_sample}
-set.seed(1)
-sampled <- taxonomic_sample(subsetted, max_counts = c("3" = 100, "6" = 5), min_counts = c("6" = 5))
-sampled <- filter_taxa(sampled, n_obs > 0, subtaxa = FALSE) 
-```
-
-```{r home_plot_6}
-set.seed(3)
-heat_tree(sampled, node_size = n_obs, node_label = n_obs, overlap_avoidance = 0.5,
-          node_color = n_obs, tree_label = name)
-```
-
-```{r, include = FALSE, eval = FALSE}
-the_last_plot <- .Last.value
-ggplot2::ggsave(file = "subsample.svg", plot = the_last_plot, bg = "transparent")
-```
-
-This can also be accomplished using the `dplyr` equivalents to `sample_n` and `sample_frac` by weighting the probability of sampling observations by the inverse of the number of observations:
-
-```{r home_plot_7}
-set.seed(6)
-sample_n_obs(subsetted, size = 1000, taxon_weight = 1 / n_obs, unobserved = FALSE) %>%
-  heat_tree(node_size = n_obs, node_label = n_obs, overlap_avoidance = 0.5,
-            node_color = n_obs, tree_label = name)
-```
-
-
-## In silico PCR
-
-The function **primersearch** is a wrapper for an EMBOSS tool that implements *in silico* PCR.
-The code below estimates the coverage of the universal prokaryotic primer pair 515F/806R [@walters2016improved]: 
-
-```{r home_pcr_1}
-pcr <- primersearch(sampled, 
-                    forward = c("515F" = "GTGYCAGCMGCCGCGGTAA"), 
-                    reverse = c("806R" = "GGACTACNVGGGTWTCTAAT"), 
-                    mismatch = 10)
-taxon_data(pcr)
-```
-
-The proportion of sequences amplified can be represented by color in a heat tree:
-
-```{r home_plot_8}
-set.seed(3)
-heat_tree(pcr, node_size = n_obs, node_label = name,
-          node_color = prop_amplified,
-          node_color_range =  c("red", "orange", "yellow", "green", "cyan"),
-          node_color_trans = "linear", tree_label = name)
-```
-
-```{r, include = FALSE, eval = FALSE}
-the_last_plot <- .Last.value
-ggplot2::ggsave(file = "in_silico_pcr_1.svg", plot = the_last_plot, bg = "transparent")
-```
-
-This plot makes it apparent that most taxa were amplified, but not all.
-The data can also be subset to better see what did not get amplified:
-
-```{r home_plot_9}
-set.seed(1) 
-pcr %>%
-  filter_taxa(count_amplified < n_obs) %>% 
-  heat_tree(node_size = n_obs, node_label = name, node_color = prop_amplified,
-            node_color_range =  c("red", "orange", "yellow", "green", "cyan"),
-            initial_layout = "reingold-tilford", layout = "davidson-harel",
-            node_color_interval = c(0, 1), node_color_trans = "linear",
-            node_label_max = 500, tree_label = name)
-```
-
-```{r, include = FALSE, eval = FALSE}
-the_last_plot <- .Last.value
-ggplot2::ggsave(file = "in_silico_pcr_2.svg", plot = the_last_plot, bg = "transparent")
-```
-
-## Differential heat trees
-
-We can use what we call **differential heat trees** to compare the values of treatments such as:
-
-* the relative abundance of taxa in two communities
-* the coverage of different primer pairs
-
-Here, we compare the effectiveness 515F/806R to another primer pair 357F/519F, by plotting the difference in proportions amplified by each.
-First, the same sequences are amplified with 357F/519F and results for the two primer pairs combined:
-
-```{r home_pcr_2}
-pcr_2 <- primersearch(sampled,
-                      forward = c("357F" = "CTCCTACGGGAGGCAGCAG"), 
-                      reverse = c("519F" = "GWATTACCGCGGCKGCTG"), 
-                      mismatch = 10)
-pcr <- mutate_taxa(pcr, 
-                   count_amplified_2 = taxon_data(pcr_2, col_subset = "count_amplified", drop = TRUE),
-                   prop_diff = prop_amplified - taxon_data(pcr_2, col_subset = "prop_amplified", drop = TRUE))
-```
-
-Then, taxa that are not amplified by both pairs can be subset and the difference in amplification plotted.
-In the plot below, green corresponds to taxa amplified by 515F/806R but not 357F/519F and brown is the opposite:
-
-
-```{r home_plot_10}
-set.seed(2)
-pcr %>%
-  filter_taxa(abs(prop_diff) > 0.1, supertaxa = TRUE) %>%
-  heat_tree(node_size = n_obs,
-            node_label = ifelse(abs(prop_diff) > 0.3, name, NA),
-            node_color = prop_diff,
-            node_color_range = diverging_palette(),
-            node_color_interval = c(-1, 1),
-            node_color_trans = "linear",
-            node_label_max = 500,
-            tree_label = name,
-            node_color_axis_label = "Difference in proportion amplified",
-            node_size_axis_label = "Sequence count",
-            initial_layout = "reingold-tilford", layout = "davidson-harel",
-            title = "Comparison of two universal primer pairs using in silico PCR",
-            title_size = 0.03)
-```
-
-```{r, include = FALSE, eval = FALSE}
-the_last_plot <- .Last.value
-ggplot2::ggsave(file = "in_silico_pcr_3.svg", plot = the_last_plot, bg = "transparent")
-```
 
 ## Future development
 
 Metacoder is under active development and many new features are planned.
 Some improvements that are being explored include:
 
-* Plotting functions for pairwise comparison of treatments (see figure 5 in the publication).
 * Barcoding gap analysis and associated plotting functions
 * A function to aid in retrieving appropriate sequence data from NCBI for *in silico* PCR from whole genome sequences
 * Graphing of different node shapes in heat trees, possibly including pie graphs or [PhyloPics](http://phylopic.org/).
-* The `taxmap` object and associated filtering functions like `filter_taxa` are being separated into the rOpenSci package [taxa](https://github.com/ropensci/taxa), which we hope to make a taxonomy standard for R that other packages can use. 
 * Adding the ability to plot specific edge lengths in the heat trees so they can be used for phylogenetic trees.
 * Adding more data import and export functions to make parsing and writing common formats easier. 
 
 To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the Metacoder [Github site](https://github.com/grunwaldlab).
 
+
 ## Aknowledgements
 
-Metacoder's major dependencies are taxize, igraph, dplyr, and ggplot2.
+Metacoder's major dependencies are `taxa`, `taxize`, `vegan`, `igraph`, `dplyr`, and `ggplot2`.
 
 
 ## Feedback and contributions
@@ -329,10 +88,5 @@ Please report errors, questions or suggestions on the [issues](https://github.co
 We also welcome contributions via a Github [pull request](https://help.github.com/articles/using-pull-requests/).
 You can also talk with us using our [Google groups](https://groups.google.com/forum/#!forum/metacoder-discussions) site or the comments section below. 
 
-## Software and packages used
-
-```{r}
-sessionInfo()
-```
 
 ## References
