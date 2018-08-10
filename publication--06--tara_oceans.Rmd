@@ -12,19 +12,17 @@ if (! is.null(current_input())) { # if knitr is being used
 }
 ```
 
+```{r rendering_settings, include=FALSE}
+```
+
 ## Requirements 
 
 **NOTE:** This analysis requires at least 10GB of RAM to run.
 It uses large files not included in the repository and many steps can take a few minutes to run. 
 
-### Document rendering
-
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
-```
-
 ## Parameters
 
-```{r io_settings, cache=FALSE}
+```{r io_settings}
 ```
 
 ## Introduction
@@ -40,8 +38,12 @@ The data set at the below URL was downloaded and uncompressed:
 
 http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W5_OTU_occurences.tsv.zip
 
-```{r tara_parse, warning=FALSE, message=FALSE}
+```{r}
 library(metacoder)
+```
+
+
+```{r tara_parse, warning=FALSE, message=FALSE, cache = TRUE}
 raw_data <- readr::read_tsv(file.path(input_folder, "Database_W5_OTU_occurences.tsv"))
 obj <- parse_tax_data(raw_data, class_cols = "lineage", class_sep = "\\|", sep_is_regex = TRUE)
 ```
@@ -53,8 +55,12 @@ The sample data was downloaded from the URL below:
 
 http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W1_Sample_parameters.xls
 
-```{r tara_parse_sample}
-sample_data <- readxl::read_excel(file.path(input_folder, "Database_W1_Sample_parameters.xls"))
+```{r}
+library(readxl)
+```
+
+```{r tara_parse_sample, cache = TRUE}
+sample_data <- read_excel(file.path(input_folder, "Database_W1_Sample_parameters.xls"))
 ```
 
 
@@ -64,7 +70,7 @@ The input data included read abundance for each sample-OTU combination, but we n
 The `obs` function is used here to get a list of row indexes corresponding to OTUs for each taxon.
 There will usually be multiple OTUs assigned to the same taxon, especially for coarse taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon.
 
-```{r tara_calculate_abundance}
+```{r tara_calculate_abundance, cache = TRUE}
 obj$data$tax_abund <- calc_taxon_abund(obj, "tax_data",
                                        cols = sample_data[["PANGAEA ACCESSION NUMBER"]])
 ```
@@ -79,7 +85,7 @@ Each tree is then easier to layout for the computer and easier to read for us hu
 Additionally, we will remove some taxa that have ambiguous names since they do not provide any information. 
 Note that we are not throwing out read or OTU counts when we do this filtering; the reads and OTU counts still apply to supertaxa (e.g. Metazoa) that were not filtered out. 
 
-```{r tara_plot_all}
+```{r tara_plot_all, cache = TRUE}
 seed = 9 #9, 10, 12 is good
 set.seed(seed)
 taxa_patterns_to_hide <- paste0("^", c("[X]+", "X\\+sp\\.", "NA", "root", "\\*", "sp\\.", "sp"), "$")
@@ -125,7 +131,7 @@ Next we will look at how well the reference database used was able to classify O
 This will give us an idea of how well current references databases account for the diversity of eukaryotes in the oceans. 
 For each taxon we will identify the proportion of OTUs with less than a 90% match to the most similar reference sequence to approximate classification certainty. 
 
-```{r tara_calc_identified}
+```{r tara_calc_identified, cache = TRUE}
 # color_range <- c("firebrick1", "orangered",  "orange", "yellow3", "yellowgreen", "green")
 color_range <- c(viridis::plasma(10)[4:9], "lightgrey")
 obj <- mutate_obs(obj, "tax_abund", mean_pid = vapply(obs(obj),
@@ -140,7 +146,7 @@ In fact, we can preserve abundance information by letting the size of nodes and 
 Since this figure will be part of the publication, we have not added node labels since they would not be visible at the scale publication figures are viewed.
 
 
-```{r tara_plot_all_identified}
+```{r tara_plot_all_identified, cache = TRUE}
 seed = 13
 set.seed(seed)
 taxa_patterns_to_hide <- paste0("^", c("[X]+", "X\\+sp\\.", "NA", "root", "\\*", "sp\\.", "sp"), "$")
@@ -182,7 +188,7 @@ We can also plot a single tree for a little less overwhelming graph.
 Below, we plot only the metazoa using the same meanings for color and size.
 This is also a publication figure, so taxa have been filtered out more aggressively and only a few labels are shown. 
 
-```{r tara_plot_metazoa_identified}
+```{r tara_plot_metazoa_identified, cache = TRUE}
 seed <- 21
 set.seed(seed)
 taxa_patterns_to_hide <- paste0("^", c("[X]+", "X\\+sp\\.", "NA", "root", "\\*", "sp\\.", "sp", "neglecta", "Bothriocroton", "Thysanoessa", "Metridia", "Aidanosagitta", "Cephalopoda", "Craniata"), "$")
@@ -227,11 +233,14 @@ metazoa_plot
 
 ### Combine plots
 
-Finally, lets combine the two graphs to produce the publication figure. 
+Finally, lets combine the two graphs to produce the publication figure.
 
-```{r, fig.width=7, fig.height=10}
+```{r}
 library(gridExtra)
 library(cowplot)
+```
+
+```{r, fig.width=7, fig.height=10, cache = TRUE}
 combined_plot <- plot_grid(metazoa_plot, identified_plot, ncol = 1, nrow = 2, labels = c("a", "b"))
 save_plot(filename = result_path("figure_1--tara_metazoa_combined"),
           combined_plot, ncol = 1, nrow = 2, base_height = 5, base_width = 8)
@@ -240,7 +249,7 @@ combined_plot
 
 ## Software and packages used
 
-```{r}
+```{r, cache = TRUE}
 sessionInfo()
 ```
 

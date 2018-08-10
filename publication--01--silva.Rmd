@@ -12,17 +12,15 @@ if (! is.null(current_input())) { # if knitr is being used
 }
 ```
 
+```{r rendering_settings, include=FALSE}
+```
+
 ## Requirements 
 
 **NOTE:** This analysis requires at least 10GB of RAM to run.
 It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Parameters
-
-### Document rendering
-
-```{r rendering_settings, warning=FALSE, message=FALSE}
-```
 
 ### Analysis input/output
 
@@ -45,8 +43,12 @@ The input file is not included in this repository because it is 905MB, but you c
 
 https://www.arb-silva.de/no_cache/download/archive/release_123_1/Exports/
 
-```{r silva_load}
+```{r}
 library(metacoder)
+```
+
+
+```{r silva_load, cache = TRUE}
 silva_seq <- read_fasta(file.path(input_folder, "SILVA_123.1_SSURef_Nr99_tax_silva.fasta"))
 silva <- extract_tax_data(names(silva_seq), 
                           regex = "^(.*?) (.*)$",
@@ -63,7 +65,7 @@ Next I will subset the taxa in the data set (depending on parameter settings).
 This can help make the graphs less cluttered and make it easier to compare databases.
 
 
-```{r silva_subset}
+```{r silva_subset, cache = TRUE}
 if (! is.null(min_seq_count)) {
   silva <- filter_taxa(silva, n_obs >= min_seq_count)
 }
@@ -83,7 +85,7 @@ These are not bacterial and will bias the digital PCR results.
 Note that the `invert` option makes it so taxa are included that *did not* pass the filter. 
 This is different than simply using `name != "Chloroplast", subtaxa = TRUE` since the effects of `invert` are applied after those of `subtaxa`.
 
-```{r silva_rm_chloro}
+```{r silva_rm_chloro, cache = TRUE}
 silva <- filter_taxa(silva, taxon_names == "Chloroplast", subtaxa = TRUE, invert = TRUE)
 print(silva)
 ```
@@ -91,9 +93,9 @@ print(silva)
 
 ## Plot whole database
 
-Although graphing everything can be a bit overwhelming (`r nrow(silva$taxon_data)` taxa), it gives an intuitive feel for the complexity of the database:
+Although graphing everything can be a bit overwhelming (`r length(taxon_names(silva))` taxa), it gives an intuitive feel for the complexity of the database:
 
-```{r silva_plot_all}
+```{r silva_plot_all, cache = TRUE}
 silva_plot_all <- heat_tree(silva,
                             node_size = n_obs,
                             node_color = n_obs,
@@ -119,7 +121,7 @@ Before doing the digital PCR, I will filter for only full length sequences, sinc
 Ideally, this kind of filtering for full length sequences would involve something like a multiple sequences alignment so we don't remove sequences that are actually full length, but just happen to be shorter than the cutoff of `r min_seq_length` naturally.
 However, this method is easy and should work OK.
 
-```{r silva_length_filter}
+```{r silva_length_filter, cache = TRUE}
 if (! is.null(min_seq_length)) {
   silva <- filter_obs(silva, "tax_data", nchar(sequence) >= min_seq_length, drop_taxa = TRUE)
 }
@@ -128,11 +130,7 @@ print(silva)
 
 Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved], allowing for a maximum mismatch of `r max_mismatch`%.
 
-```{r silva_pcr}
-# Replace all u with t so digital PCR works
-silva <- mutate_obs(silva, "tax_data", sequence = gsub(pattern = "U", replacement = "T", sequence))
-
-# digital PCR
+```{r silva_pcr, cache = TRUE}
 silva_pcr <- primersearch(silva, sequence,
                           forward = forward_primer,
                           reverse = reverse_primer,
@@ -143,7 +141,7 @@ print(silva_pcr)
 Now the object `silva_pcr` has all the information that `silva` has plus the results of the digital PCR.
 Lets plot the whole database again, but coloring based on digital PCR success.
 
-```{r silva_plot_pcr_all}
+```{r silva_plot_pcr_all, cache = TRUE}
 silva_plot_pcr_all <- heat_tree(silva_pcr,
                                 node_size = seq_count,
                                 node_color = prop_amplified,
@@ -169,7 +167,7 @@ The plot shows this for the most part, but there are many taxa where around 20% 
 If we wanted to look at only those sequences that did not amplify, we could filter taxa by PCR success and plot what remains. 
 I am including the supertaxa of those taxa that did not amplify since excluding them would split the tree into a cloud of fragments lacking taxonomic context.
 
-```{r, silva_plot_pcr_fail}
+```{r, silva_plot_pcr_fail, cache = TRUE}
 silva_plot_pcr_fail <- silva_pcr %>%
   filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
   heat_tree(node_size = query_count - seq_count,
@@ -194,7 +192,7 @@ print(silva_plot_pcr_fail)
 This is a figure I will use for the publication, so I have limited the number of labels printed to `r label_max` to increase readability. 
 However, we can do the same graph with many more smaller labels for exploring with a PDF viewer with good zooming abilities:
 
-```{r, silva_plot_pcr_fail_detailed}
+```{r, silva_plot_pcr_fail_detailed, cache = TRUE}
 silva_plot_pcr_fail <- silva_pcr %>%
   filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
   heat_tree(node_size = query_count - seq_count,
@@ -226,14 +224,14 @@ cat(paste0("[Click here to download a PDF of the detailed graph](", result_path(
 Some results from this file will be combined with others from similar analyses to make a composite figure.
 Below, the needed objects are saved so that they can be loaded by another Rmd file.
 
-```{r silva_save}
+```{r silva_save, cache = TRUE}
 save(file = file.path(output_folder, "silva_data.RData"),
      silva_plot_all, silva_plot_pcr_fail)
 ```
 
 ## Software and packages used
 
-```{r}
+```{r, cache = TRUE}
 sessionInfo()
 ```
 

@@ -1,0 +1,95 @@
+## Comparison with stacked bar charts
+
+Stacked bar charts are commonly used to visualize community composition, with different colors corresponding to taxa.
+However, the use of color for categories limits the number of number of taxa displayed to the number of colors that are easily decernable, which is around 10. 
+Therefore, rare taxa are often exculded from stackaed barcharts or only coarse taxonomic ranks are displayed. 
+This might leave out biolicoally relevant information. 
+The code below visulizes the community composition of the same 2 samples from the HMP using both a stacked barchart and heat trees so the two methods can be compared.
+
+### Graph heat trees
+
+```{r single_sample_trees, cache = TRUE}
+plot_sample_tree <- function(obj, sample, out_name, min_count = min_read_count, ...) {
+  to_use <- obj$data$tax_prop[["700114488"]] >= 0.001 | obj$data$tax_prop[["700114430"]] >= 0.001
+  obj %>%
+    mutate_obs("tax_prop", sample_prop = obj$data$tax_prop[[sample]]) %>%
+    filter_taxa(to_use) %>%
+    heat_tree(
+      ...,
+      title_size = .05,
+      node_size = sample, 
+      node_color = sample, 
+      node_label = ifelse(sample >= 0.01, taxon_names, NA),
+      node_label_max = 50, 
+      node_size_range = c(.01, .07),
+      node_label_size_range = c(.015, .03), 
+      node_color_axis_label = "Proportion of reads",
+      output_file = result_path(out_name))
+}
+
+sample_1 <- plot_sample_tree(hmp_data, "700114488", "sample_1_tree", title = "Sample 1") 
+sample_2 <- plot_sample_tree(hmp_data, "700114430", "sample_2_tree", title = "Sample 2") 
+```
+
+### Stacked barchart
+
+```{r}
+min_count <- 1
+bar_data <- filter_taxa(v35_data, (sample_1 >= min_count | sample_2 >= min_count) & name != "") %>%
+  calculate_prop("700114482", "sample_1") %>%
+  calculate_prop("700114439", "sample_2") %>%
+  taxon_data()
+
+bar_data <- bar_data[bar_data$rank == "p", c("name", "sample_1", "sample_2")]
+bar_data <- reshape2::melt(bar_data, id.vars = "name")
+
+bar_data <- bar_data[! bar_data$name %in% c("GN02", "SR1"), ]
+```
+
+```{r}
+library(ggplot2)
+bar_plot <- ggplot(bar_data, aes(x = variable, y = value, fill = name)) + 
+  geom_bar(stat = "identity") + 
+  scale_x_discrete(labels = c("1", "2")) +
+  xlab("Sample") + 
+  theme_minimal() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_blank(),
+        axis.title.y=element_blank(),
+        axis.title.x=element_text(size=14),
+        axis.text.y=element_blank(),
+        axis.text.x=element_text(size=14, margin=margin(b = 6, t = -15)),
+        axis.ticks.y=element_blank(),
+        legend.title=element_blank(),
+        legend.text=element_text(size=12),
+        legend.position=c(1,1), 
+        legend.justification=c(0, 1), 
+        # legend.key.width=unit(1.2, "lines"), 
+        plot.margin = unit(c(-0.35, 8, 0, 0.5), "lines"))
+ggsave(bar_plot, filename = result_path("bar_chart"), dpi = 350, width = 8, height = 8)
+```
+
+### Combine plots
+
+```{r fig.width=7, fig.height=2.61}
+library(gridExtra)
+library(cowplot)
+plot_name <- "barchart_heat_tree_comparison"
+combined_plot <- plot_grid(bar_plot, sample_1, sample_2, ncol = 3, nrow = 1, rel_widths = c(1, 2, 2))
+save_plot(filename = result_path(plot_name),
+          combined_plot, ncol = 3, nrow = 1, base_aspect_ratio = .9)
+save_publication_fig(plot_name, figure_number = 2)
+print(combined_plot)
+```
+
+Note how the two visulization methods can suggest different conclusions regarding how similar the two communities are. 
+The stacked barcharts suggest that communities are dominated by Firmicutes, but sample 2 has additional Bacteriodetes and Proteobacteria.
+They look different, but not too different.
+The heat trees tell a much differnt story. 
+Almost all of sample 1 is composed of two genera, Lactobacillus and Gardnerella, which are completly absent in sample 2.
+In fact, the samples do not even share any families, so the similarity suggested by the stacked barchart is misleading.
+We could have construcated the stacked barchart at the family level to see these differneces, but then there would be too many colors to easily distinguish.
+
+To be fair, I did choose these two samples to prove this point. 
+In other cases stacked barcharts might represent data well, but using heat trees instead of stacked barcharts will avoid these kind of misleading graphs. 

@@ -12,17 +12,15 @@ if (! is.null(current_input())) { # if knitr is being used
 }
 ```
 
+```{r rendering_settings, include=FALSE}
+```
+
 ## Requirements 
 
 **NOTE:** This analysis requires at least 10Gb of RAM to run.
 It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Parameters
-
-### Document rendering
-
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
-```
 
 ### Analysis input/output
 
@@ -48,7 +46,7 @@ http://greengenes.lbl.gov/Download/
 
 ### Parse taxonomy file
 
-```{r greengenes_taxonomy}
+```{r greengenes_taxonomy, cache = TRUE}
 gg_taxonomy_path <- file.path(input_folder, "gg_13_5_taxonomy.txt")
 gg_taxonomy <- readLines(gg_taxonomy_path)
 print(gg_taxonomy[1:5])
@@ -57,16 +55,18 @@ print(gg_taxonomy[1:5])
 Note that there are some ranks with no names. 
 These will be removed after parsing the file since they provide no information and an uniform-length taxonomy is not needed.
 
-```{r greengenes_taxonomy_parse}
+```{r}
 library(metacoder)
+```
 
+```{r greengenes_taxonomy_parse, cache = TRUE}
 # Parse taxonomy file
 greengenes <- extract_tax_data(gg_taxonomy,
                                key = c(id = "info", "class"),
                                regex = "^([0-9]+)\t(.*)$",
                                class_sep = "; ",
                                class_regex = "^([a-z]{1})__(.*)$",
-                               class_key = c(rank = "info", "taxon_name"))
+                               class_key = c(rank = "taxon_rank", "taxon_name"))
 greengenes$data$class_data <- NULL
 
 # Remove data for ranks with no information
@@ -79,7 +79,7 @@ print(greengenes)
 
 Next we will parse the sequence file so we can add it to the `obs_data` table of the `greengenes` object.
 
-```{r greengenes_sequence}
+```{r greengenes_sequence, cache = TRUE}
 gg_sequence_path <- file.path(input_folder, "gg_13_5.fasta")
 substr(readLines(gg_sequence_path, n = 10), 1, 100)
 gg_seq <- read_fasta(gg_sequence_path)
@@ -89,7 +89,7 @@ gg_seq <- read_fasta(gg_sequence_path)
 
 We will need to use the Greengenes ID to match up which sequence goes with which row since they are in different orders.
 
-```{r greengenes_combine}
+```{r greengenes_combine, cache = TRUE}
 greengenes <- mutate_obs(greengenes, "tax_data", sequence = gg_seq[id])
 ```
 
@@ -99,7 +99,7 @@ greengenes <- mutate_obs(greengenes, "tax_data", sequence = gg_seq[id])
 Next I will subset the taxa in the dataset (depending on parameter settings). 
 This can help make the graphs less cluttered and make it easier to compare databases. 
 
-```{r greengenes_subset}
+```{r greengenes_subset, cache = TRUE}
 if (! is.null(min_seq_count)) {
   greengenes <- filter_taxa(greengenes, n_obs >= min_seq_count)
 }
@@ -119,7 +119,7 @@ These are not bacterial and will bias the *in silico* PCR results.
 Note that the `invert` option makes it so taxa are included that *did not* pass the filter. 
 This is different than simply using `name != "Chloroplast", subtaxa = TRUE` since the effects of `invert` are applied after those of `subtaxa`.
 
-```{r greengenes_rm_chloro}
+```{r greengenes_rm_chloro, cache = TRUE}
 greengenes <- filter_taxa(greengenes, taxon_names == "Chloroplast", subtaxa = TRUE, invert = TRUE)
 print(greengenes)
 ```
@@ -127,9 +127,9 @@ print(greengenes)
 
 ## Plot whole database
 
-Although graphing everything can be a bit overwhelming (`r nrow(greengenes$taxon_data)` taxa), it gives an intuitive feel for the complexity of the database:
+Although graphing everything can be a bit overwhelming (`r length(taxon_names(greengenes))` taxa), it gives an intuitive feel for the complexity of the database:
 
-```{r greengenes_plot_all}
+```{r greengenes_plot_all, cache = TRUE}
 greengenes_plot_all <- heat_tree(greengenes, 
                                  node_size = n_obs,
                                  node_color = n_obs,
@@ -154,7 +154,7 @@ Before doing the digital PCR, I will filter for only full length sequences, sinc
 Ideally, this kind of filtering for full length sequences would involve something like a multiple sequences alignment so we don't remove sequences that are actually full length, but just happen to be shorter than the cutoff of `r min_seq_length` naturally.
 However, this method is easy and should work OK.
 
-```{r greengenes_length_filter}
+```{r greengenes_length_filter, cache = TRUE}
 if (! is.null(min_seq_length)) {
   greengenes <- filter_obs(greengenes, "tax_data", nchar(sequence) >= min_seq_length, drop_taxa = TRUE)
 }
@@ -163,7 +163,7 @@ print(greengenes)
 
 Next I will conduct digital PCR with a new set of universal 16S primers [@walters2016improved], allowing for a maximum mismatch of `r max_mismatch`%.
 
-```{r greengenes_pcr}
+```{r greengenes_pcr, cache = TRUE}
 greengenes_pcr <- primersearch(greengenes, sequence,
                                forward = forward_primer,
                                reverse = reverse_primer,
@@ -173,7 +173,7 @@ greengenes_pcr <- primersearch(greengenes, sequence,
 Now the object `greengenes_pcr` has all the information that `greengenes` has plus the results of the digital PCR.
 Lets plot the whole database again, but coloring based on digital PCR success.
 
-```{r greengenes_plot_pcr_all}
+```{r greengenes_plot_pcr_all, cache = TRUE}
 greengenes_plot_pcr_all <- heat_tree(greengenes_pcr,
                                      node_size = seq_count,
                                      node_size_range = size_range * 2,
@@ -199,7 +199,7 @@ The plot shows this and very few sequences were not amplified.
 If we wanted to look at only those sequences that did not amplify, we could filter taxa by PCR success and plot what remains. 
 I am including the supertaxa of those taxa that did not amplify since excluding them would split the tree into a cloud of fragments lacking taxonomic context.
 
-```{r greengenes_plot_pcr_fail}
+```{r greengenes_plot_pcr_fail, cache = TRUE}
 greengenes_plot_pcr_fail <- greengenes_pcr %>%
   filter_taxa(prop_amplified < pcr_success_cutoff, supertaxa = TRUE) %>%
   heat_tree(node_size = query_count - seq_count,
@@ -226,14 +226,14 @@ print(greengenes_plot_pcr_fail)
 Some results from this file will be combined with others from similar analyses to make a composite figure.
 Below, the needed objects are saved so that they can be loaded by another Rmd file.
 
-```{r greengenes_save}
+```{r greengenes_save, cache = TRUE}
 save(file = file.path(output_folder, "greengenes_data.RData"),
      greengenes_plot_all, greengenes_plot_pcr_fail)
 ```
 
 ## Software and packages used
 
-```{r}
+```{r, cache = TRUE}
 sessionInfo()
 ```
 

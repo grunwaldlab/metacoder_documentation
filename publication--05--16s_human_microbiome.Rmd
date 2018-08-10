@@ -12,17 +12,15 @@ if (! is.null(current_input())) { # if knitr is being used
 }
 ```
 
+```{r rendering_settings, include=FALSE}
+```
+
 ## Requirements 
 
 **NOTE:** This analysis requires at least 10Gb of RAM to run.
 It uses large files not included in the repository and many steps can take a few minutes to run. 
 
 ## Parameters
-
-### Document rendering
-
-```{r rendering_settings, echo = FALSE, warning=FALSE, message=FALSE}
-```
 
 ### Analysis input/output
 
@@ -44,7 +42,7 @@ mapping_file_url = "http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.
 This analysis used OTU abundance data from the Human Microbiome Project (HMP) [@human2012structure], which used 16S metabarcoding to explore the bacterial microbiome of various human body parts.
 First we will download the files from the HMP website.
 
-```{r hmp_download, warning=FALSE, message=FALSE}
+```{r hmp_download, warning=FALSE, message=FALSE, cache = TRUE}
 download_file <- function(path) {
   temp_file_path <- file.path(tempdir(), basename(path))
   utils::download.file(url = path, destfile = temp_file_path, quiet = TRUE)
@@ -58,10 +56,10 @@ mapping_file <- download_file(mapping_file_url)
 ## Parsing the data
 
 Then we will read these files into R and tidy up the data a bit.
-We will use the `readr` package to read these `gloss$add("TSV")` files.
+We will use the `readr` package to read these `gloss$add("Tab-delimited text file", shown = "TSV")` files.
 
 
-```{r hmp_parse_raw_otu}
+```{r hmp_parse_raw_otu, cache = TRUE}
 library(readr)
 otu_data <- read_tsv(otu_file, skip = 1) # Skip the first line, which is a comment
 colnames(otu_data)[1] <- "otu_id" # make column name more R friendly
@@ -77,7 +75,7 @@ library(metacoder)
 
 Since this is tabular data with an embedded taxonomic classification, we use `parse_tax_data`:
 
-```{r hmp_parse_otu_table}
+```{r hmp_parse_otu_table, cache = TRUE}
 hmp_data <- parse_tax_data(otu_data,
                            class_cols = "Consensus Lineage",
                            class_regex = "([a-z]{0,1})_{0,2}(.*)$",
@@ -90,7 +88,7 @@ print(hmp_data)
 
 I will save the information on sample characteristics (e.g. body site) in a seperate table, since it is not directly assocaited with taxonomic information.
 
-```{r hmp_sample_data}
+```{r hmp_sample_data, cache = TRUE}
 sample_data <- read_tsv(mapping_file,
                         col_types = "ccccccccc") # Force all columns to be character
 colnames(sample_data) <- c("sample_id", "rsid", "visit_no", "sex", "run_center",
@@ -98,24 +96,35 @@ colnames(sample_data) <- c("sample_id", "rsid", "visit_no", "sex", "run_center",
 print(sample_data)
 ```
 
+In this analysis, I will be looking at just a subset of the body sites, so I will subset the sample data to just those.
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+sites_to_compare <- c("Saliva", "Tongue_dorsum", "Buccal_mucosa", "Anterior_nares", "Stool")
+sample_data <- filter(sample_data, body_site %in% sites_to_compare)
+```
+
 Not all the samples in the sample data table appear in the abundance matrix and there are some in the abundance matrix that dont appear in the sample data and they are in a different order.
 Making the two correspond will probably make things easier later on.
 First, lets identify which columns they both share:
 
-```{r}
+```{r, cache = TRUE}
 sample_names <- intersect(colnames(hmp_data$data$otu_count), sample_data$sample_id)
 ```
 
 We can then use `match` to order and subset the sample data based on the shared samples.
 
-```{r}
+```{r, cache = TRUE}
 sample_data <- sample_data[match(sample_names, sample_data$sample_id), ]
 ```
 
 We can also subset the columns in the abundance matrix to just these shared samples.
 We also need to preserve the first two columns, the otu and taxon IDs.
 
-```{r}
+```{r, cache = TRUE}
 hmp_data$data$otu_count <- hmp_data$data$otu_count[ , c("taxon_id", "otu_id", sample_names)]
 ```
 
@@ -123,7 +132,7 @@ hmp_data$data$otu_count <- hmp_data$data$otu_count[ , c("taxon_id", "otu_id", sa
 
 Looking at the names of the taxa in the taxonomy, there are a lot of names that appear to be codes for uncharacterized taxa: 
 
-```{r}
+```{r, cache = TRUE}
 head(taxon_names(hmp_data), n = 20)
 ```
 
@@ -131,7 +140,7 @@ Those might be relevant depending on the research question, but for this analysi
 We can remove taxa from a `taxmap` object using the `filter_taxa` function from the `taxa` package.
 I will remove them by removing any taxon whose name is not composed of only letters.
 
-```{r}
+```{r, cache = TRUE}
 hmp_data <- filter_taxa(hmp_data, grepl(taxon_names, pattern =  "^[a-zA-Z]+$"))
 print(hmp_data)
 ```
@@ -141,36 +150,27 @@ Those OTUs were automatically reassigned to a `gloss$add("supertaxon")` that was
 This also removed taxa with no name (`""`), since the `+` in the above regex means "one or more".
 
 
-## Getting read proportions per taxon
+## Converting counts to proportions
 
 We can now convert these counts to proportions and a simple alternative to rarefaction using `calc_obs_props`.
 This accounts for uneven numbers of sequences for each sample.
 
-```{r hmp_calc_props}
+```{r hmp_calc_props, cache = TRUE}
 hmp_data$data$otu_prop <- calc_obs_props(hmp_data,
                                          data = "otu_count",
                                          cols = sample_data$sample_id)
 ```
 
+
+## Calculating abundance per taxon
+
 The input data included read abundance for each sample-OTU combination, but we need the abundances associated with each taxon for graphing.
 There will usually be multiple OTUs assigned to the same taxon, especailly for corase taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon using the `calc_taxon_abund` function.
 
-```{r hmp_calc_tax_abund}
+```{r hmp_calc_tax_abund, cache = TRUE}
 hmp_data$data$tax_prop <- calc_taxon_abund(hmp_data, 
                                            data = "otu_prop",
                                            cols = sample_data$sample_id)
-```
-
-
-## Doing pairwise comparisons of treatments
-
-```{r hmp_treat_comp}
-hmp_data$data$diff_table <- compare_groups(hmp_data,
-                                           data = "tax_prop",
-                                           cols = sample_data$sample_id,
-                                           groups = sample_data$body_site)
-hmp_data$data$diff_table$wilcox_p_value <- p.adjust(hmp_data$data$diff_table$wilcox_p_value, method = "fdr")
-hmp_data$data$diff_table$log2_median_ratio[hmp_data$data$diff_table$wilcox_p_value > 0.05] <- 0
 ```
 
 
@@ -179,7 +179,7 @@ hmp_data$data$diff_table$log2_median_ratio[hmp_data$data$diff_table$wilcox_p_val
 To get an idea of how the data looks overall lets make a plot showing OTU and read abundance of all the data combined.
 I will exclude any taxon that has less than `r min_read_count` reads. 
 
-```{r hmp_plot_all}
+```{r hmp_plot_all, cache = TRUE}
 set.seed(1)
 plot_all <- hmp_data %>%
   mutate_obs("tax_prop", abundance = rowMeans(hmp_data$data$tax_prop[sample_data$sample_id])) %>%
@@ -190,110 +190,62 @@ plot_all <- hmp_data %>%
             node_color = abundance,
             node_color_axis_label = "Mean proportion of reads",
             node_label = taxon_names,
-            # node_label_max = 100,
-            # overlap_avoidance = 1,
-            output_file = result_path("hmp--v35--all_data"))
+            output_file = result_path("hmp--all_data"))
 ```
 
 Here we can see that there are realtively few abundant taxa and many rare ones.
 However, we dont know anything about the species level diversity since the classifications go to genus only. 
 
 
-## Comparison with stacked bar charts
 
-Stacked bar charts are commonly used to visualize community composition, with different colors corresponding to taxa.
-However, the use of color for categories limits the number of number of taxa displayed to the number of colors that are easily decernable, which is around 10. 
-Therefore, rare taxa are often exculded from stackaed barcharts or only coarse taxonomic ranks are displayed. 
-This might leave out biolicoally relevant information. 
-The code below visulizes the community composition of the same 2 samples from the HMP using both a stacked barchart and heat trees so the two methods can be compared.
+## Comparing taxon abundance amoung treatments
 
-### Graph heat trees
+Assuming that differences in read depth correlates with differences in taxon abundance (a controversial assumption), we can compare taxon abundance amoung treatments using the `compare_groups` function.
+This function assumes you have multiple samples per treatment (i.e. group).
+It splits the counts up based on which group the samples came from and, for each row of the data (each taxon in this case), for each pair of groups (e.g. Nose vs Saliva samples), it applies a function to generate statistics summerizing the differences in abundance.
+You can create a custom function to return your own set of statistics, but the default is to do a `r gloss$add("Wilcoxon Rank Sum test")` on the differences in median abundance for the samples.
+See `?compare_groups` for more details.
+
+```{r hmp_treat_comp, cache = TRUE}
+hmp_data$data$diff_table <- compare_groups(hmp_data,
+                                           data = "tax_prop",
+                                           cols = sample_data$sample_id,
+                                           groups = sample_data$body_site)
+```
+
+We just did **a lot** (`r nrow(hmp_data$data$diff_table)`) of independent statistical tests, which means we probably got many false positives if we consider p < 0.05 to be significant. 
+To fix this we need to do a `r gloss$add('Multiple comparison corrections', shown = 'correction for multiple comparisions')` to adjust the p-values.
+We will also set any differences that are not significant after the correction to `0`, so that they do not show up when plotting. 
 
 ```{r}
-plot_sample_tree <- function(obj, sample, out_name, min_count = min_read_count, ...) {
-  to_use <- obj$data$tax_prop[["700114488"]] >= 0.001 | obj$data$tax_prop[["700114430"]] >= 0.001
-  obj %>%
-    mutate_obs("tax_prop", sample_prop = obj$data$tax_prop[[sample]]) %>%
-    filter_taxa(to_use) %>%
-    heat_tree(
-      ...,
-      title_size = .05,
-      node_size = sample, 
-      node_color = sample, 
-      node_label = ifelse(sample >= 0.01, taxon_names, NA),
-      node_label_max = 50, 
-      node_size_range = c(.01, .07),
-      node_label_size_range = c(.015, .03), 
-      node_color_axis_label = "Proportion of reads",
-      output_file = result_path(out_name))
-}
-
-sample_1 <- plot_sample_tree(hmp_data, "700114488", "sample_1_tree", title = "Sample 1") 
-sample_2 <- plot_sample_tree(hmp_data, "700114430", "sample_2_tree", title = "Sample 2") 
+hmp_data <- mutate_obs(hmp_data, "diff_table",
+                       wilcox_p_value = p.adjust(wilcox_p_value, method = "fdr"),
+                       log2_median_ratio = ifelse(wilcox_p_value < 0.05, log2_median_ratio, 0))
 ```
 
-### Stacked barchart
+Now we can make a what we call a "differential heat tree matrix", to plot the results of these tests.
 
 ```{r}
-min_count <- 1
-bar_data <- filter_taxa(v35_data, (sample_1 >= min_count | sample_2 >= min_count) & name != "") %>%
-  calculate_prop("700114482", "sample_1") %>%
-  calculate_prop("700114439", "sample_2") %>%
-  taxon_data()
-
-bar_data <- bar_data[bar_data$rank == "p", c("name", "sample_1", "sample_2")]
-bar_data <- reshape2::melt(bar_data, id.vars = "name")
-
-bar_data <- bar_data[! bar_data$name %in% c("GN02", "SR1"), ]
+hmp_data %>%
+  mutate_obs("tax_prop", abundance = rowMeans(hmp_data$data$tax_prop[sample_data$sample_id])) %>%
+  filter_taxa(abundance >= 0.001, reassign_obs = c(diff_table = FALSE)) %>%
+  heat_tree_matrix(data = "diff_table",
+                   node_size = n_obs,
+                   node_size_range = c(0.01, 0.05),
+                   node_label = taxon_names,
+                   node_color = log2_median_ratio,
+                   node_color_range = diverging_palette(),
+                   node_color_trans = "linear",
+                   node_color_interval = c(-7, 7),
+                   edge_color_interval = c(-7, 7),
+                   node_size_axis_label = "Number of OTUs",
+                   node_color_axis_label = "Log2 ratio median proportions",
+                   # initial_layout = "re",
+                   # layout = "da",
+                   key_size = 0.7,
+                   seed = 4,
+                   output_file = result_path("figure_3--hmp_matrix_plot"))
 ```
-
-```{r}
-library(ggplot2)
-bar_plot <- ggplot(bar_data, aes(x = variable, y = value, fill = name)) + 
-  geom_bar(stat = "identity") + 
-  scale_x_discrete(labels = c("1", "2")) +
-  xlab("Sample") + 
-  theme_minimal() + 
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        axis.line = element_blank(),
-        axis.title.y=element_blank(),
-        axis.title.x=element_text(size=14),
-        axis.text.y=element_blank(),
-        axis.text.x=element_text(size=14, margin=margin(b = 6, t = -15)),
-        axis.ticks.y=element_blank(),
-        legend.title=element_blank(),
-        legend.text=element_text(size=12),
-        legend.position=c(1,1), 
-        legend.justification=c(0, 1), 
-        # legend.key.width=unit(1.2, "lines"), 
-        plot.margin = unit(c(-0.35, 8, 0, 0.5), "lines"))
-ggsave(bar_plot, filename = result_path("bar_chart"), dpi = 350, width = 8, height = 8)
-```
-
-### Combine plots
-
-```{r fig.width=7, fig.height=2.61}
-library(gridExtra)
-library(cowplot)
-plot_name <- "barchart_heat_tree_comparison"
-combined_plot <- plot_grid(bar_plot, sample_1, sample_2, ncol = 3, nrow = 1, rel_widths = c(1, 2, 2))
-save_plot(filename = result_path(plot_name),
-          combined_plot, ncol = 3, nrow = 1, base_aspect_ratio = .9)
-save_publication_fig(plot_name, figure_number = 2)
-print(combined_plot)
-```
-
-Note how the two visulization methods can suggest different conclusions regarding how similar the two communities are. 
-The stacked barcharts suggest that communities are dominated by Firmicutes, but sample 2 has additional Bacteriodetes and Proteobacteria.
-They look different, but not too different.
-The heat trees tell a much differnt story. 
-Almost all of sample 1 is composed of two genera, Lactobacillus and Gardnerella, which are completly absent in sample 2.
-In fact, the samples do not even share any families, so the similarity suggested by the stacked barchart is misleading.
-We could have construcated the stacked barchart at the family level to see these differneces, but then there would be too many colors to easily distinguish.
-
-To be fair, I did choose these two samples to prove this point. 
-In other cases stacked barcharts might represent data well, but using heat trees instead of stacked barcharts will avoid these kind of misleading graphs. 
 
 ## Plot body site differences
 
@@ -329,61 +281,6 @@ plot_body_site_diff("Buccal_mucosa", "Anterior_nares", "hmp--v35")
 ```
 
 We call these types of graphs **differential heat trees** and they are great for comparing any type of data associated with two samples or treatments.
-
-## Plot body site difference matrix
-
-The graphs above are great for comparing two treatments, but it would be nice to see how many treatments compare in a single graph.
-To do this, we have developed a pair-wise matrix layout for comparisons of this kind. 
-
-```{r}
-reword_key <- c(
-  'Stool' = 'Stool',
-  'Saliva' = 'Saliva',
-  'Tongue_dorsum' = 'Tongue',
-  'Hard_palate' = 'Hard_palate',
-  'Buccal_mucosa' = 'Cheek',
-  'Attached_Keratinized_gingiva' = 'Gums',
-  'Palatine_Tonsils' = 'Tonsils',
-  'Throat' = 'Throat',
-  'Supragingival_plaque' = 'Supragingival_plaque',
-  'Subgingival_plaque' = 'Subgingival_plaque',
-  'Right_Antecubital_fossa' = 'Skin',
-  'Anterior_nares' = 'Nose',
-  'Left_Retroauricular_crease' = 'Left_Retroauricular_crease',
-  'Right_Retroauricular_crease' = 'Right_Retroauricular_crease',
-  'Vaginal_introitus' = 'Vaginal_introitus',
-  'Mid_vagina' = 'Mid_vagina',
-  'Posterior_fornix' = 'Posterior_fornix',
-  'Left_Antecubital_fossa' = 'Left_Antecubital_fossa')
-hmp_data$data$diff_table$treatment_1 <- reword_key[hmp_data$data$diff_table$treatment_1]
-hmp_data$data$diff_table$treatment_2 <- reword_key[hmp_data$data$diff_table$treatment_2]
-```
-
-
-```{r}
-to_compare <- c("Stool", "Saliva", "Throat", "Skin", "Nose")
-hmp_data %>%
-  mutate_obs("tax_prop", abundance = rowMeans(hmp_data$data$tax_prop[sample_data$sample_id])) %>%
-  filter_taxa(abundance >= 0.001, reassign_obs = FALSE) %>%
-  filter_taxa(taxon_names != "", reassign_obs = FALSE) %>% # Some taxonomic levels are not named
-  filter_obs("diff_table", treatment_1 %in% to_compare & treatment_2 %in% to_compare) %>%
-  heat_tree_matrix(dataset = "diff_table",
-                   node_size = n_obs,
-                   node_label = taxon_names,
-                   node_color = log2_median_ratio,
-                   node_color_range = diverging_palette(),
-                   node_color_trans = "linear",
-                   node_color_interval = c(-7, 7),
-                   edge_color_interval = c(-7, 7),
-                   node_size_axis_label = "Number of OTUs",
-                   node_color_axis_label = "Log2 ratio median proportions",
-                   initial_layout = "re",
-                   layout = "da",
-                   key_size = 0.7,
-                   seed = 4,
-                   output_file = result_path("figure_3--hmp_matrix_plot"))
-```
-
 
 ## Software and packages used
 

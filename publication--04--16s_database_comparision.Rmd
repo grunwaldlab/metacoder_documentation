@@ -12,6 +12,9 @@ if (! is.null(current_input())) { # if knitr is being used
 }
 ```
 
+```{r rendering_settings, include=FALSE}
+```
+
 ## Requirements 
 
 **NOTE:** This analysis requires at least 10Gb of RAM to run.
@@ -39,7 +42,7 @@ render(input = "publication--03--greengenes.Rmd")
 
 After the three analyses have been completed, I loaded their results. 
 
-```{r load}
+```{r load, cache = TRUE}
 load(file.path(output_folder, "silva_data.RData"))
 load(file.path(output_folder, "rdp_data.RData"))
 load(file.path(output_folder, "greengenes_data.RData"))
@@ -50,7 +53,7 @@ load(file.path(output_folder, "greengenes_data.RData"))
 
 I then combine plots from the three analyses into a single graph and save the result.
 
-```{r combine, fig.width = 7.5, fig.height = 10}
+```{r combine, fig.width = 7.5, fig.height = 10, cache = TRUE}
 library(gridExtra)
 library(grid)
 library(metacoder)
@@ -68,7 +71,7 @@ file.copy(output_path, "publication/revision_1/figure_4.pdf")
 
 ## Software and packages used
 
-```{r}
+```{r, cache = TRUE}
 sessionInfo()
 ```
 
