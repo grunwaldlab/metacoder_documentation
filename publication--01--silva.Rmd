@@ -49,11 +49,13 @@ library(metacoder)
 
 
 ```{r silva_load, cache = TRUE}
-silva_seq <- read_fasta(file.path(input_folder, "SILVA_123.1_SSURef_Nr99_tax_silva.fasta"))
+silva_path <- file.path(input_folder, "SILVA_123.1_SSURef_Nr99_tax_silva.fasta")
+silva_seq <- ape::read.FASTA(silva_path)
 silva <- extract_tax_data(names(silva_seq), 
                           regex = "^(.*?) (.*)$",
                           key = c(id = "info", "class"),
                           class_sep = ";")
+names(silva_seq) <- silva$data$tax_data$taxon_id
 silva$data$tax_data$sequence <- silva_seq
 print(silva)
 ```
@@ -123,7 +125,8 @@ However, this method is easy and should work OK.
 
 ```{r silva_length_filter, cache = TRUE}
 if (! is.null(min_seq_length)) {
-  silva <- filter_obs(silva, "tax_data", nchar(sequence) >= min_seq_length, drop_taxa = TRUE)
+  silva <- filter_obs(silva, data = c("sequence", "tax_data"), drop_taxa = TRUE,
+                      vapply(sequence, length, numeric(1)) >= min_seq_length)
 }
 print(silva)
 ```

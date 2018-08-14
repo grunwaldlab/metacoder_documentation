@@ -1,11 +1,12 @@
 ---
 output: html_document
-bibliography: "bibtexlib.bib"
+bibliography: "bibliography.bibtex"
 ---
 
 ```{r setup, include=FALSE}
-source("style.R")
+source("settings.R")
 ```
+
 
 # Getting data into R
 
@@ -49,11 +50,11 @@ library(readr) # Loads the readr package so we can use `read_tsv`
 ```
 
 Tibbles are a type of `data.frame` with some fancier printing and more consistent behavior.
-Click <a href="data/otuTable97.txt.bz2" download="data/otuTable97.txt.bz2">here</a> to download the OTU table.
+Click <a href="otuTable97.txt.bz2" download="otuTable97.txt.bz2">here</a> to download the OTU table.
 Lets read in the raw OTU table first:
 
 ```{r message=FALSE, cache=TRUE}
-otu_data <- read_tsv("data/otuTable97.txt.bz2") # You might need to change the path to the file
+otu_data <- read_tsv("otuTable97.txt.bz2") # You might need to change the path to the file
 print(otu_data) # You can also enter just `otu_data` to print it
 ```
 
@@ -62,10 +63,10 @@ If your computer cannot load this file, don't worry, we will provide a subset la
 
 In this data set, the taxonomic classifications for the OTUs are in a different file.
 This information could have been included as additional columns in the OTU table and often is in other data sets.
-Click <a href="data/taxAssignments97.txt" download="data/taxAssignments97.txt">here</a> to download the taxonomic classifications table.
+Click <a href="taxAssignments97.txt" download="taxAssignments97.txt">here</a> to download the taxonomic classifications table.
 
 ```{r message=FALSE, cache=TRUE}
-tax_data <- read_tsv("data/taxAssignments97.txt")
+tax_data <- read_tsv("taxAssignments97.txt")
 print(tax_data) # You can also enter `tax_data` to print it
 ```
 
@@ -101,10 +102,10 @@ tail(colnames(otu_data), n = 10) # `tail` returns the last n elements
 ```
 
 Next, lets load the sample data.
-Click <a href="data/SMD.txt" download="data/SMD.txt">here</a> to download the sample data table.
+Click <a href="SMD.txt" download="SMD.txt">here</a> to download the sample data table.
 
 ```{r message=FALSE}
-sample_data <- read_tsv("data/SMD.txt",
+sample_data <- read_tsv("SMD.txt",
                         col_types = "cccccccccccccccc") # each "c" means a column of "character"
 print(sample_data) # You can also enter `sample_data` to print it
 ```
@@ -234,19 +235,19 @@ We can name the tables or other info in `obj$data` whatever we want.
 
 ### Reading tabular data
 
-**1)** Take a look at the file [example_data_1.tsv](data/example_data_1.tsv) (click to download).
+**1)** Take a look at the file [example_data_1.tsv](example_data_1.tsv) (click to download).
 
 **2)** Try reading the file using the base R function `read.table`. You might need to change some of the options. Type `?read.table` to see the documentation for this function. Hint: what does the `.tsv` extension mean?
 
 ```{r hide_button = TRUE}
-table_1 <- read.table("data/example_data_1.tsv", header = TRUE, sep = "\t")
+table_1 <- read.table("example_data_1.tsv", header = TRUE, sep = "\t")
 ```
 
 **3)** Now try reading the same file using the `read_tsv` function from the `readr` package. Type `?read_tsv` to see the documentation for this function.
 
 ```{r hide_button = TRUE}
 library(readr)
-table_2 <- read_tsv("data/example_data_1.tsv")
+table_2 <- read_tsv("example_data_1.tsv")
 ```
 
 **4)** Compare the two results. What is different about them? Try using the `str` function on each result to see the details about how they are formatted.
@@ -259,9 +260,9 @@ str(table_2)
 **5)** Try to change the input parameters of both functions so that all columns are of type `character` ("chr" in the `str` output).
 
 ```{r hide_button = TRUE}
-table_1 <- read.table("data/example_data_1.tsv",
+table_1 <- read.table("example_data_1.tsv",
                       header = TRUE, sep = "\t", colClasses = "character")
-table_2 <- read_tsv("data/example_data_1.tsv", col_types = "cccc")
+table_2 <- read_tsv("example_data_1.tsv", col_types = "cccc")
 str(table_1)
 str(table_2)
 ```
@@ -271,7 +272,7 @@ str(table_2)
 In this exercise we will be converting the table from the previous exercise to a `taxmap` object.
 
 ```{r}
-my_data <- read_tsv("data/example_data_1.tsv")
+my_data <- read_tsv("example_data_1.tsv")
 print(my_data)
 ```
 
@@ -314,16 +315,16 @@ cat(
 ### Reading taxonomic data from complex formats
 
 Sometimes taxonomic data can be embedded in complex text, like FASTA headers.
-Look at the file [example_data_2.fa](data/example_data_2.fa) (click to download) which contains headers with two sources of taxonomic information:
+Look at the file [example_data_2.fa](example_data_2.fa) (click to download) which contains headers with two sources of taxonomic information:
 
 * The Genbank accession number
 * The taxonomic classification
 
-**11)** Read the FASTA file [example_data_2.fa](data/example_data_2.fa) using the `read.FASTA` function from the `ape` package and store the result in a variable.
+**11)** Read the FASTA file [example_data_2.fa](example_data_2.fa) using the `read.FASTA` function from the `ape` package and store the result in a variable.
 
 ```{r hide_button = TRUE}
 library(ape)
-seqs <- read.FASTA("data/example_data_2.fa")
+seqs <- read.FASTA("example_data_2.fa")
 print(seqs)
 ```
 

@@ -1,10 +1,10 @@
 ---
 output: html_document
-bibliography: "bibtexlib.bib"
+bibliography: "bibliography.bibtex"
 ---
 
 ```{r setup, include=FALSE}
-source("style.R")
+source("settings.R")
 knitr::opts_chunk$set(prompt = TRUE, comment = NA)
 ```
 

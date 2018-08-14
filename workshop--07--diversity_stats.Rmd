@@ -1,10 +1,10 @@
 ---
 output: html_document
-bibliography: "bibtexlib.bib"
+bibliography: "bibliography.bibtex"
 ---
 
 ```{r setup, include=FALSE}
-source("style.R")
+source("settings.R")
 knitr::opts_chunk$set(fig.height = 5, fig.width = 5)
 ```
 
@@ -332,7 +332,7 @@ For each taxon, at every rank, the `compare_groups` function compares two groups
 We have to define which sample belongs to which groups using `groups` option:
 
 ```{r}
-obj$data$diff_table <- compare_groups(obj, dataset = "tax_abund",
+obj$data$diff_table <- compare_groups(obj, data = "tax_abund",
                                       cols = sample_data$SampleID,
                                       groups = sample_data$Type)
 print(obj$data$diff_table)
@@ -403,7 +403,7 @@ First we need to use `compare_groups` to generate data for all pair-wise compari
 The code below compares all the sites used in this study to eachother:
 
 ```{r}
-obj$data$diff_table <- compare_groups(obj, dataset = "tax_abund",
+obj$data$diff_table <- compare_groups(obj, data = "tax_abund",
                                       cols = sample_data$SampleID,
                                       groups = sample_data$Site)
 print(obj$data$diff_table)
@@ -425,7 +425,7 @@ obj %>%
   taxa::filter_taxa(taxon_ranks == "o", supertaxa = TRUE) %>%
   mutate_obs("cleaned_names", gsub(taxon_names, pattern = "\\[|\\]", replacement = "")) %>%
   taxa::filter_taxa(grepl(cleaned_names, pattern = "^[a-zA-Z]+$")) %>%
-  heat_tree_matrix(dataset = "diff_table",
+  heat_tree_matrix(data = "diff_table",
                    node_label = cleaned_names,
                    node_size = n_obs, # number of OTUs
                    node_color = log2_median_ratio, # difference between groups
@@ -510,7 +510,7 @@ Proteobacteria
 ```{r hide_button = TRUE}
 library(dplyr)
 obj %>%
-  compare_groups(dataset = "tax_abund",
+  compare_groups(data = "tax_abund",
                  cols = sample_data$SampleID,
                  groups = sample_data$Genotype) %>% 
   mutate(wilcox_p_value = p.adjust(wilcox_p_value, method = "fdr")) %>%

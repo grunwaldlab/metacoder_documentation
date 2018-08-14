@@ -82,7 +82,7 @@ Next we will parse the sequence file so we can add it to the `obs_data` table of
 ```{r greengenes_sequence, cache = TRUE}
 gg_sequence_path <- file.path(input_folder, "gg_13_5.fasta")
 substr(readLines(gg_sequence_path, n = 10), 1, 100)
-gg_seq <- read_fasta(gg_sequence_path)
+gg_seq <- ape::read.FASTA(gg_sequence_path)
 ```
 
 ### Integrating sequence and taxonomy
@@ -90,7 +90,8 @@ gg_seq <- read_fasta(gg_sequence_path)
 We will need to use the Greengenes ID to match up which sequence goes with which row since they are in different orders.
 
 ```{r greengenes_combine, cache = TRUE}
-greengenes <- mutate_obs(greengenes, "tax_data", sequence = gg_seq[id])
+greengenes <- mutate_obs(greengenes, "sequence",
+                         setNames(gg_seq[id], greengenes$data$tax_data$taxon_id))
 ```
 
 
@@ -156,7 +157,8 @@ However, this method is easy and should work OK.
 
 ```{r greengenes_length_filter, cache = TRUE}
 if (! is.null(min_seq_length)) {
-  greengenes <- filter_obs(greengenes, "tax_data", nchar(sequence) >= min_seq_length, drop_taxa = TRUE)
+  greengenes <- filter_obs(greengenes, data = c("tax_data", "sequence"), drop_taxa = TRUE,
+                           vapply(sequence, length, numeric(1)) >= min_seq_length)
 }
 print(greengenes)
 ```

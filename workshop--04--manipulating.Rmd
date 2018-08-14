@@ -1,11 +1,12 @@
 ---
 output: html_document
-bibliography: "bibtexlib.bib"
+bibliography: "bibliography.bibtex"
 ---
 
 ```{r setup, include=FALSE}
-source("style.R")
+source("settings.R")
 ```
+
 
 # Manipulating taxonomic data
 
@@ -345,20 +346,20 @@ filter_obs(obj, "otu_counts", M1981P563 > 5, drop_taxa = TRUE)
 
 ```{r}
 library(metacoder)
-calc_n_samples(obj, dataset = "otu_counts")
+calc_n_samples(obj, data = "otu_counts")
 ```
 
 Using the `groups` option, it can do the calculation on columns grouped by treatment: 
 
 ```{r}
-calc_n_samples(obj, dataset = "otu_counts", groups = sample_data$Type)
+calc_n_samples(obj, data = "otu_counts", groups = sample_data$Type)
 ```
 
 Run the following code to add this as a table in your `taxmap` object:
 
 ```{r}
 obj$data$sample_counts <- calc_n_samples(obj,
-                                         dataset = "otu_counts",
+                                         data = "otu_counts",
                                          groups = sample_data$Type,
                                          other_cols = "OTU_ID") # Preserves OTU_ID column
 print(obj)

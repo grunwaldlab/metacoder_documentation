@@ -1,0 +1,12 @@
+---
+title: "Presentation"
+output:
+  html_document:
+    toc: FALSE
+---
+
+
+```{r echo = FALSE, results='asis'}
+cat('<embed src="poster/poster.pdf" width="1000" height="700" type="application/pdf">')
+```
+
