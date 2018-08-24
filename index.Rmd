@@ -17,7 +17,6 @@ if (! is.null(current_input())) { # if knitr is being used
 ```{r rendering_settings, echo=FALSE, warning=FALSE, message=FALSE}
 ```
 
-
 ## Introduction
 
 Metacoder is an R package for `r gloss$add("parsing")`, plotting, and manipulating large taxonomic data sets, like those generated from modern high-throughput sequencing, like metabarcoding (i.e. amplification metagenomics, 16S metagenomics, etc).
@@ -76,7 +75,7 @@ Some improvements that are being explored include:
 To see the details of what is being worked on, check out the [issues](https://github.com/grunwaldlab/metacoder/issues) tab of the Metacoder [Github site](https://github.com/grunwaldlab).
 
 
-## Aknowledgements
+## Acknowledgements
 
 Metacoder's major dependencies are `taxa`, `taxize`, `vegan`, `igraph`, `dplyr`, and `ggplot2`.
 
