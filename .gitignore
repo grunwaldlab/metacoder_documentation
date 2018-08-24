@@ -4,7 +4,7 @@
 raw_input
 results
 *_cache/**
-*_files
+/*_files
 *.RData
 *.pdf
 *.tiff
