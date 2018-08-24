@@ -72,5 +72,5 @@ output:
     css: style.css
     lib_dir: site_libs
     self_contained: no
-output_dir: website_html
+output_dir: docs
 

@@ -8,6 +8,6 @@ results
 *.RData
 *.pdf
 *.tiff
-website_html/raw_input
-website_html/results
-website_html/scratch
+docs/raw_input
+docs/results
+docs/scratch
