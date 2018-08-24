@@ -71,7 +71,7 @@ The `obs` function is used here to get a list of row indexes corresponding to OT
 There will usually be multiple OTUs assigned to the same taxon, especially for coarse taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon.
 
 ```{r tara_calculate_abundance, cache = TRUE}
-obj$data$tax_abund <- calc_taxon_abund(obj, "tax_data",
+obj$data$tax_abund <- calc_taxon_abund(obj, data = "tax_data",
                                        cols = sample_data[["PANGAEA ACCESSION NUMBER"]])
 ```
 
@@ -79,7 +79,7 @@ obj$data$tax_abund <- calc_taxon_abund(obj, "tax_data",
 ## Plot read and OTU abundance
 
 First lets get an idea of the taxonomic distribution of reads and OTUs. 
-This data set has many taxa (`r nrow(data$taxon_data)`) and deep taxonomies (a max depth of `r max(sapply(supertaxa(data), length))`), so graphing all of it effectively will be a challenge. 
+This data set has many taxa (`r length(taxon_names(obj))`) and deep taxonomies (a max depth of `r max(n_supertaxa(obj) + 1)`), so graphing all of it effectively will be a challenge. 
 To make it more likly that the layout algorithms can untangle it all, we filter out taxa with less than 100 reads and remove some of the coarse taxonomic ranks so that we get multiple trees per graph.
 Each tree is then easier to layout for the computer and easier to read for us humans (assuming you saved it as a PDF and zoom in).
 Additionally, we will remove some taxa that have ambiguous names since they do not provide any information. 
@@ -93,7 +93,7 @@ taxa_patterns_to_remove <- paste0("^", c("X\\+sp\\.", "NA", "root", "\\*", "sp\\
 background_color <- "#ccfff7"
 obj %>%
   mutate_obs("tax_abund", abundance = rowSums(obj$data$tax_abund[sample_data[["PANGAEA ACCESSION NUMBER"]]])) %>%
-  filter_taxa(!(taxon_ids %in% subtaxa(obj, taxon_names == "Eukaryota", simplify = TRUE, include_input = TRUE) & n_supertaxa <= 1)) %>%
+  filter_taxa(taxon_names == "Eukaryota", supertaxa = TRUE, invert = TRUE) %>%
   filter_taxa(abundance >= 100) %>%
   filter_taxa(! Reduce(`|`, lapply(taxa_patterns_to_remove, grepl, x = taxon_names))) %>%
   heat_tree(title = "Plankton diversity in the sunlit ocean",
@@ -108,7 +108,7 @@ obj %>%
             node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", taxon_names) &
                                   ! Reduce(`|`, lapply(taxa_patterns_to_hide, grepl, x = taxon_names)) &
                                   abundance > 10000,
-                                taxon_names, NA),
+                                taxon_names, ""),
             node_label_color = "#000000",
             node_label_color_trans = "area",
             node_label_size = (n_obs / (n_supertaxa + 1)) ^ 0.5,
@@ -120,7 +120,7 @@ obj %>%
             initial_layout = "re", layout = "da",
             overlap_avoidance = .65,
             background_color = background_color,
-            maxiter = 50, fineiter = 50,
+            # maxiter = 50, fineiter = 50,
             output_file = result_path("sup_figure_1--tara_all_plankton_diversity"))
 ```
 
@@ -134,10 +134,10 @@ For each taxon we will identify the proportion of OTUs with less than a 90% matc
 ```{r tara_calc_identified, cache = TRUE}
 # color_range <- c("firebrick1", "orangered",  "orange", "yellow3", "yellowgreen", "green")
 color_range <- c(viridis::plasma(10)[4:9], "lightgrey")
-obj <- mutate_obs(obj, "tax_abund", mean_pid = vapply(obs(obj),
-                                            function(x) mean(obj$data$tax_data$pid[x], na.rm = TRUE), numeric(1)))
+obj <- mutate_obs(obj, data = "tax_abund", mean_pid = vapply(obs(obj, data = "tax_data"),
+                                                 function(x) mean(obj$data$tax_data$pid[x], na.rm = TRUE), numeric(1)))
 # Percentage of OTUs with less than 90% idententiy
-obj <- mutate_obs(obj, "tax_abund", percent_known = vapply(obs(data),
+obj <- mutate_obs(obj, "tax_abund", percent_known = vapply(obs(obj, data = "tax_data"),
                                                  function(x) sum(obj$data$tax_data$pid[x] >= 90, na.rm = TRUE) / length(x) * 100, numeric(1)))
 ```
 
@@ -153,7 +153,7 @@ taxa_patterns_to_hide <- paste0("^", c("[X]+", "X\\+sp\\.", "NA", "root", "\\*",
 taxa_patterns_to_remove <- paste0("^", c("[X]+", "X\\+sp\\.", "NA", "root", "\\*", "sp\\.", "sp"), "$")
 identified_plot <- obj %>%
   mutate_obs("tax_abund", abundance = rowSums(obj$data$tax_abund[sample_data[["PANGAEA ACCESSION NUMBER"]]])) %>%
-  filter_taxa(!(taxon_ids %in% subtaxa(obj, taxon_names == "Eukaryota", simplify = TRUE, include_input = TRUE) & n_supertaxa <= 1)) %>%
+  filter_taxa(taxon_names == "Eukaryota", supertaxa = TRUE, invert = TRUE) %>%
   filter_taxa(abundance >= 100) %>%
   filter_taxa(! Reduce(`|`, lapply(taxa_patterns_to_remove, grepl, x = taxon_names))) %>%
   filter_taxa(n_subtaxa < 30 & n_supertaxa == 0, subtaxa = TRUE, invert = TRUE) %>%
@@ -170,13 +170,11 @@ identified_plot <- obj %>%
     node_label_size = (n_obs / (n_supertaxa + 1)) ^ 0.5,
     node_label_size_trans = "area",
     node_label_size_range = c(0.001, NA),
-    node_label_max = 1000,
     tree_label = taxon_names,
-    tree_label_max = 100,
     tree_label_size_range = c(0.008, 0.035),
     initial_layout = "re", layout = "da",
     overlap_avoidance = .65,
-    maxiter = 50, fineiter = 50,
+    # maxiter = 50, fineiter = 50,
     output_file = result_path("sup_figure_2--tara_proportion_identified"))
 identified_plot
 ```
@@ -200,7 +198,7 @@ metazoa_plot <- obj %>%
   filter_taxa(taxon_names == "Metazoa", subtaxa = TRUE) %>%
   heat_tree(node_color_axis_label = "Percent of OTUs identified",
             edge_color_axis_label = "Percent of OTUs identified",
-            edge_size = read_counts,
+            edge_size = abundance,
             edge_size_range = c(0.0005, 0.013),
             edge_size_trans = "area",
             edge_color = percent_known,
@@ -216,18 +214,14 @@ metazoa_plot <- obj %>%
             node_color_interval = c(0, 100),
             node_label = ifelse(grepl(pattern = "^[a-zA-z\\-]{1,25}$", taxon_names) &
                                   ! Reduce(`|`, lapply(taxa_patterns_to_hide, grepl, x = taxon_names)),
-                                taxon_names, NA),
-            node_label_size = (n_obs / (n_supertaxa + 1)) ^ 0.5,
+                                taxon_names, ""),
+            node_label_size = n_obs,
             node_label_size_range = c(0.013, 0.018),
             node_label_size_trans = "area",
-            node_label_max = 80,
+            node_label_max = 100,
             initial_layout = "fr", layout = "da",
-            overlap_avoidance = .8,
-            maxiter = 20, fineiter = 50,
-            weight.node.edge.dist = 15,
-            margin_size = c(0, -0.08, 0, 0),
             output_file = result_path(paste0("figure_1--tara_metazoa--seed_", seed)))
-metazoa_plot
+print(metazoa_plot)
 ```
 
 

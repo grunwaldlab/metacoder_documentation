@@ -1,0 +1,1167 @@
+% Template for PLoS
+
+% Version 3.4 January 2017
+
+%
+
+% % % % % % % % % % % % % % % % % % % % % %
+
+%
+
+% -- IMPORTANT NOTE
+
+%
+
+% This template contains comments intended 
+
+% to minimize problems and delays during our production 
+
+% process. Please follow the template instructions
+
+% whenever possible.
+
+%
+
+% % % % % % % % % % % % % % % % % % % % % % % 
+
+%
+
+% Once your paper is accepted for publication, 
+
+% PLEASE REMOVE ALL TRACKED CHANGES in this file 
+
+% and leave only the final text of your manuscript. 
+
+% PLOS recommends the use of latexdiff to track changes during review, as this will help to maintain a clean tex file.
+
+% Visit https://www.ctan.org/pkg/latexdiff?lang=en for info or contact us at latex@plos.org.
+
+%
+
+%
+
+% There are no restrictions on package use within the LaTeX files except that 
+
+% no packages listed in the template may be deleted.
+
+%
+
+% Please do not include colors or graphics in the text.
+
+%
+
+% The manuscript LaTeX source should be contained within a single file (do not use \input, \externaldocument, or similar commands).
+
+%
+
+% % % % % % % % % % % % % % % % % % % % % % %
+
+%
+
+% -- FIGURES AND TABLES
+
+%
+
+% Please include tables/figure captions directly after the paragraph where they are first cited in the text.
+
+%
+
+% DO NOT INCLUDE GRAPHICS IN YOUR MANUSCRIPT
+
+% - Figures should be uploaded separately from your manuscript file. 
+
+% - Figures generated using LaTeX should be extracted and removed from the PDF before submission. 
+
+% - Figures containing multiple panels/subfigures must be combined into one image file before submission.
+
+% For figure citations, please use "Fig" instead of "Figure".
+
+% See http://journals.plos.org/plosone/s/figures for PLOS figure guidelines.
+
+%
+
+% Tables should be cell-based and may not contain:
+
+% - spacing/line breaks within cells to alter layout or alignment
+
+% - do not nest tabular environments (no tabular environments within tabular environments)
+
+% - no graphics or colored text (cell background color/shading OK)
+
+% See http://journals.plos.org/plosone/s/tables for table guidelines.
+
+%
+
+% For tables that exceed the width of the text column, use the adjustwidth environment as illustrated in the example table in text below.
+
+%
+
+% % % % % % % % % % % % % % % % % % % % % % % %
+
+%
+
+% -- EQUATIONS, MATH SYMBOLS, SUBSCRIPTS, AND SUPERSCRIPTS
+
+%
+
+% IMPORTANT
+
+% Below are a few tips to help format your equations and other special characters according to our specifications. For more tips to help reduce the possibility of formatting errors during conversion, please see our LaTeX guidelines at http://journals.plos.org/plosone/s/latex
+
+%
+
+% For inline equations, please be sure to include all portions of an equation in the math environment.  For example, x$^2$ is incorrect; this should be formatted as $x^2$ (or $\mathrm{x}^2$ if the romanized font is desired).
+
+%
+
+% Do not include text that is not math in the math environment. For example, CO2 should be written as CO\textsubscript{2} instead of CO$_2$.
+
+%
+
+% Please add line breaks to long display equations when possible in order to fit size of the column. 
+
+%
+
+% For inline equations, please do not include punctuation (commas, etc) within the math environment unless this is part of the equation.
+
+%
+
+% When adding superscript or subscripts outside of brackets/braces, please group using {}.  For example, change "[U(D,E,\gamma)]^2" to "{[U(D,E,\gamma)]}^2". 
+
+%
+
+% Do not use \cal for caligraphic font.  Instead, use \mathcal{}
+
+%
+
+% % % % % % % % % % % % % % % % % % % % % % % % 
+
+%
+
+% Please contact latex@plos.org with any questions.
+
+%
+
+% % % % % % % % % % % % % % % % % % % % % % % %
+
+
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[top=0.85in,left=2.75in,footskip=0.75in]{geometry}
+
+
+% amsmath and amssymb packages, useful for mathematical formulas and symbols
+
+\usepackage{amsmath,amssymb}
+
+
+% Use adjustwidth environment to exceed column width (see example table in text)
+
+\usepackage{changepage}
+
+
+% Use Unicode characters when possible
+
+\usepackage[utf8x]{inputenc}
+
+
+% textcomp package and marvosym package for additional characters
+
+\usepackage{textcomp,marvosym}
+
+
+% cite package, to clean up citations in the main text. Do not remove.
+
+\usepackage{cite}
+
+
+% Use nameref to cite supporting information files (see Supporting Information section for more info)
+
+\usepackage{nameref,hyperref}
+
+
+% line numbers
+
+\usepackage[right]{lineno}
+
+
+% ligatures disabled
+
+\usepackage{microtype}
+
+\DisableLigatures[f]{encoding = *, family = * }
+
+
+% color can be used to apply background shading to table cells only
+
+\usepackage[table]{xcolor}
+
+
+% array package and thick rules for tables
+
+\usepackage{array}
+
+
+% create "+" rule type for thick vertical lines
+
+\newcolumntype{+}{!{\vrule width 2pt}}
+
+
+% create \thickcline for thick horizontal lines of variable length
+
+\newlength\savedwidth
+
+\newcommand\thickcline[1]{%
+
+\noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+
+\cline{#1}%
+
+\noalign{\vskip\arrayrulewidth}%
+
+\noalign{\global\arrayrulewidth\savedwidth}%
+
+}
+
+
+% \thickhline command for thick horizontal lines that span the table
+
+\newcommand\thickhline{\noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+
+\hline
+
+\noalign{\global\arrayrulewidth\savedwidth}}
+
+
+
+% Remove comment for double spacing
+
+%\usepackage{setspace} 
+
+%\doublespacing
+
+
+% Text layout
+
+\raggedright
+
+\setlength{\parindent}{0.5cm}
+
+\textwidth 5.25in 
+
+\textheight 8.75in
+
+
+% Bold the 'Figure #' in the caption and separate it from the title/caption with a period
+
+% Captions will be left justified
+
+\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off]{caption}
+
+\renewcommand{\figurename}{Fig}
+
+
+% Use the PLoS provided BiBTeX style
+
+\bibliographystyle{plos2015}
+
+
+% Remove brackets from numbering in List of References
+
+\makeatletter
+
+\renewcommand{\@biblabel}[1]{\quad#1.}
+
+\makeatother
+
+
+% Leave date blank
+
+\date{}
+
+
+% Header and Footer with logo
+
+\usepackage{lastpage,fancyhdr,graphicx}
+
+\usepackage{epstopdf}
+
+\pagestyle{myheadings}
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\setlength{\headheight}{27.023pt}
+
+\lhead{\includegraphics[width=2.0in]{PLOS-submission.eps}}
+
+\rfoot{\thepage/\pageref{LastPage}}
+
+\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
+
+\fancyheadoffset[L]{2.25in}
+
+\fancyfootoffset[L]{2.25in}
+
+\lfoot{\sf PLOS}
+
+
+%% Include all macros below
+
+
+\newcommand{\lorem}{{\bf LOREM}}
+
+\newcommand{\ipsum}{{\bf IPSUM}}
+
+
+%% END MACROS SECTION
+
+
+
+\begin{document}
+
+\vspace*{0.2in}
+
+
+% Title must be 250 characters or less.
+
+\begin{flushleft}
+
+{\Large
+
+\textbf\newline{Metacoder: An R Package for Visualization and Manipulation of Community
+	Taxonomic Diversity Data} % Please use "sentence case" for title and headings (capitalize only the first word in a title (or heading), the first word in a subtitle (or subheading), and any proper nouns).
+
+}
+
+% Insert author names, affiliations and corresponding author email (do not include titles, positions, or degrees).
+
+Zachary S. L. Foster\textsuperscript{1},
+Thomas J. Sharpton\textsuperscript{2, 3, 4},
+Niklaus J. Gr\"unwald\textsuperscript{1,4,5*}
+\\
+\bigskip
+\textbf{1} Department of Botany and Plant Pathology, Oregon State University, Corvallis, OR, 97331, USA
+\\
+\textbf{2} Department of Microbiology, Oregon State University, Corvallis, OR, 97331, USA
+\\
+\textbf{3} Department of Statistics, Oregon State University, Corvallis, OR, 97331, USA
+\\
+\textbf{4} Center for Genome Research and Biocomputing, Oregon State University, Corvallis, OR, 97331, USA
+\\
+\textbf{5} Horticultural Crops Research Laboratory, USDA-ARS, Corvallis, OR, 97330, USA
+\\
+\bigskip
+
+
+% Insert additional author notes using the symbols described below. Insert symbol callouts after author names as necessary.
+
+% Use the asterisk to denote corresponding authorship and provide email address in note below.
+
+* nik.grunwald@ars.usda.gov
+
+
+\end{flushleft}
+
+% Please keep the abstract below 300 words
+
+\section*{Abstract}
+
+Community-level data, the type generated by an increasing number of
+metabarcoding studies, is often graphed as stacked bar charts or pie
+graphs that use color to represent taxa. These graph types do not convey
+the hierarchical structure of taxonomic classifications and are limited
+by the use of color for categories. As an alternative, we developed
+\emph{metacoder}, an R package for easily parsing, manipulating, and
+graphing publication-ready plots of hierarchical data. \emph{Metacoder}
+includes a dynamic and flexible function that can parse most text-based
+formats that contain taxonomic classifications, taxon names, taxon
+identifiers, or sequence identifiers. \emph{Metacoder} can then subset,
+sample, and order this parsed data using a set of intuitive functions
+that take into account the hierarchical nature of the data. Finally, an
+extremely flexible plotting function enables quantitative representation
+of up to 4 arbitrary statistics simultaneously in a tree format by
+mapping statistics to the color and size of tree nodes and edges.
+\emph{Metacoder} also allows exploration of barcode primer bias by
+integrating functions to run digital PCR. Although it has been designed
+for data from metabarcoding research, \emph{metacoder} can easily be
+applied to any data that has a hierarchical component such as gene
+ontology or geographic location data. Our package complements currently
+available tools for community analysis and is provided open source with
+an extensive online user manual.
+
+keywords: heat tree; metabarcoding; biodiversity; taxonomy; hierarchy;
+bioinformatics
+
+\linenumbers
+
+
+\section*{Introduction}\label{introduction}
+
+Metabarcoding is revolutionizing our understanding of complex ecosystems
+by circumventing the traditional limits of microbial diversity
+assessment, which include the need and bias of culturability, the
+effects of cryptic diversity, and the reliance on expert identification.
+Metabarcoding is a technique for determining community composition that
+typically involves extracting environmental DNA, amplifying a gene
+shared by a taxonomic group of interest using PCR, sequencing the
+amplicons, and comparing the sequences to reference databases
+\cite{cristescu2014barcoding}. It has been used extensively to explore
+communities inhabiting diverse environments, including oceans
+\cite{de2015eukaryotic}, plants \cite{coleman2016plant}, animals
+\cite{yu2012biodiversity}, humans \cite{human2012structure}, and soil
+\cite{gilbert2014earth}.
+
+The complex community data produced by metabarcoding is challenging
+conventional graphing techniques. Most often, bar charts, stacked bar
+charts, or pie graphs are employed that use color to represent a small
+number of taxa at the same rank (e.g.~phylum, class, etc). This reliance
+on color for categorical information limits the number of taxa that can
+be effectively displayed, so most published figures only show results at
+a coarse taxonomic rank (e.g.~class) or for only the most abundant taxa.
+These graphing techniques do not convey the hierarchical nature of
+taxonomic classifications, potentially obscuring patterns in unexplored
+taxonomic ranks that might be more biologically important. More
+recently, tree-based visualizations are becoming available as
+exemplified by the python-based MetaPhlAn and the corresponding graphing
+software GraPhlAn \cite{segata2012metagenomic}. This tool allows
+visualization of high-quality circular representations of taxonomic
+trees.
+
+Here, we introduce the R package \emph{metacoder} that is specifically
+designed to address some of these problems in metabarcoding-based
+community ecology, focusing on parsing and manipulation of hierarchical
+data and community visualization in R. \emph{Metacoder} provides a
+visualization that we call ``heat trees'' which quantitatively depicts
+statistics associated with taxa, such as abundance, using the color and
+size of nodes and edges in a taxonomic tree. These heat trees are useful
+for evaluating taxonomic coverage, barcode bias, or displaying
+differences in taxon abundance between communities. To import and
+manipulate data, \emph{metacoder} provides a means of extracting and
+parsing taxonomic information from text-based formats (e.g.~reference
+database FASTA headers) and an intuitive set of functions for
+subsetting, sampling, and rearranging taxonomic data. \emph{Metacoder}
+also allows exploration of barcode primer bias by integrating digital
+PCR, which simulates PCR success using alignments between reference
+sequences and primers. All this functionality is made intuitive and
+user-friendly while still allowing extensive customization and
+flexibility. \emph{Metacoder} can be applied to any data that can be
+organized hierarchically such as gene ontology or geographic location.
+\emph{Metacoder} is an open source project available on CRAN and is
+provided with comprehensive online documentation including examples.
+
+
+\section*{Design and Implementation}\label{design-and-implementation}
+
+The R package \emph{metacoder} provides a set of novel tools designed to
+parse, manipulate, and visualize community diversity data in a tree
+format using any taxonomic classification (Fig~\ref{fig1}). Fig~\ref{fig1}
+illustrates the ease of use and flexibility of \emph{metacoder}. It
+shows an example analysis extracting taxonomy from the 16S Ribosomal
+Database Project (RDP) training set for \emph{mothur}
+\cite{schloss2009introducing}, filtering and sampling the data by both
+taxon and sequence characteristics, running digital PCR, and graphing
+the proportion of sequences amplified for each taxon. Table~\ref{table1} provides
+an overview of the core functions available in \emph{metacoder}.
+
+
+\begin{figure}[!h]
+\caption{{\bf \emph{Metacoder} has an intuitive and easy to use
+		syntax.}
+The code in this example analysis parses the taxonomic data
+associated with sequences from the Ribosomal Database Project
+\cite{maidak1996ribosomal} 16S training set, filters and subsamples the
+data by sequence and taxon characteristics, conducts digital PCR, and
+displays the results as a heat tree. All functions in bold are from the
+\emph{metacoder} package. Note how columns and functions in the
+\texttt{taxmap} object (green box) can be referenced within functions as
+if they were independent variables.}
+\label{fig1}
+\end{figure}
+
+
+\subsection*{\texorpdfstring{The \texttt{taxmap} data
+		object}{The taxmap data object}}\label{the-taxmap-data-object}
+
+To store the taxonomic hierarchy and associated observations
+(e.g.~sequences) we developed a new data object class called
+\texttt{taxmap}. The \texttt{taxmap} class is designed to be as flexible
+and easily manipulated as possible. The only assumption made about the
+user's data is that it can be represented as a set of observations
+assigned to a hierarchy; the hierarchy and the observations do not need
+to be biological. The class contains two tables in which user data is
+stored: a taxonomic hierarchy stored as an edge list of unique IDs and a
+set of observations mapped to that hierarchy (Fig~\ref{fig1}). Users can add,
+remove, or reorder both columns and rows in either \texttt{taxmap} table
+using convenient functions included in the package (Table~\ref{table1}). For each
+table, there is also a list of included functions that create a
+temporary column with the same name when referenced by one of the
+manipulation or plotting functions. These are useful for attributes that
+must be updated when the data is subset or otherwise modified, such as
+the number of observations for each taxon (see ``n\_obs'' in Fig~\ref{fig1}).
+If this kind of derived information was stored in a static column, the
+user would have to update the column each time the data set is subset,
+potentially leading to mistakes if this is not done. There are many of
+these column-generating functions included by default, but the user can
+easily add their own by adding a function that takes a \texttt{taxmap}
+object. The names of columns or column-generating functions in either
+table of a \texttt{taxmap} object can be referenced as if they were
+independent variables in most \emph{metacoder} functions in the style of
+popular R packages like \emph{ggplot2} and \emph{dplyr}. This makes the
+code much easier to read and write.
+
+
+\begin{table}
+	\caption{{\label{tab:table1} Primary functions found in \textit{metacoder}.}}
+	\begin{tabular}[t]{p{4cm}  p{8.5cm}}
+		\hline{\textbf{Function}}      & \textbf{Description}    \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{extract\_taxonomy}
+		\end{itemize} & Parses taxonomic data from arbitrary text and returns a \texttt{taxmap} object containing a table with rows corresponding to inputs (i.e. observations) and a table with rows corresponding to taxa.       \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{heat\_tree}
+		\end{itemize} & Makes tree-based plots of data stored in \texttt{taxmap} objects. Color, size, and labels of tree components can be mapped to arbitrary data. The output is a \textit{ggplot2} object.     \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{primersearch}
+		\end{itemize} & Executes the EMBOSS program \textit{primersearch} on sequence data stored in a \texttt{taxmap} object. Results are parsed, added to the input \texttt{taxmap} object and returned.                       \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{mutate\_taxa}
+			\item \texttt{mutate\_obs}
+			\item \texttt{transmute\_taxa}
+			\item \texttt{transmute\_obs}
+		\end{itemize} & Modify or add columns of taxon or observation data in \texttt{taxmap} objects. \texttt{mutate\_*} adds columns and \texttt{transmute\_*} returns only new columns. \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{select\_taxa}
+			\item \texttt{select\_obs}
+		\end{itemize} & Subset columns of taxon or observation data in \texttt{taxmap} objects.         \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{filter\_taxa}
+			\item \texttt{filter\_obs}
+		\end{itemize} & Subset rows of taxon or observation data in \texttt{taxmap} objects based on arbitrary conditions. Hierarchical relationships among taxa and mappings between taxa and observations are taken into account.  \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{arrange\_taxa}
+			\item \texttt{arrange\_obs}
+		\end{itemize} & Order rows of taxon or observation data in \texttt{taxmap} objects.  \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{sample\_n\_taxa}
+			\item \texttt{sample\_n\_obs}
+			\item \texttt{sample\_frac\_taxa}
+			\item \texttt{sample\_frac\_obs}
+		\end{itemize} & Randomly subsample rows of taxon or observation data in \texttt{taxmap} objects. Weights can be applied that take into account the taxonomic hierarchy and associated observations. Hierarchical relationships among taxa and mappings between taxa and observations are taken into account. \\
+		\hline
+		\begin{itemize}
+			\setlength\itemsep{0em}
+			\item \texttt{subtaxa}
+			\item \texttt{supertaxa}
+			\item \texttt{observations}
+			\item \texttt{roots}
+		\end{itemize} & Returns the indices of rows in taxon or observation data in \texttt{taxmap} objects. Used to map taxa to related taxa and observations.  \\
+		\hline
+	\end{tabular}
+	\label{table1}
+
+\end{table}
+
+
+\subsection*{Universal parsing and retrieval of taxonomic
+	information}\label{universal-parsing-and-retrieval-of-taxonomic-information}
+
+\emph{Metacoder} provides a way to extract taxonomic information from
+text-based formats so it can be manipulated within R. One of the most
+inefficient steps in bioinformatics can be loading and parsing data into
+a standardized form that is usable for computational analysis. Many
+databases have unique taxonomy formats with differing types of taxonomic
+information. The taxonomic structure and nomenclature used can be unique
+to the database or reference another database such as GenBank
+\cite{benson2013genbank}. Rather than creating a parser for each data
+format, \emph{metacoder} provides a single function to parse any format
+definable by regular expressions that contains taxonomic information
+(Fig~\ref{fig1}). This makes it easier to use multiple data sources with the
+same downstream analysis.
+
+The \texttt{extract\_taxonomy} function can parse hierarchical
+classifications or retrieve classifications from online databases using
+taxon names, taxon IDs, or Genbank sequence IDs. The user supplies a
+regular expression with capture groups (parentheses) and a corresponding
+key to define what parts of the input can provide classification
+information. The \texttt{extract\_taxonomy} function has been used
+successfully to parse several major database formats including Genbank
+\cite{benson2013genbank}, UNITE \cite{koljalg2013towards}, Protist
+Ribosomal Reference Database (PR2) \cite{guillou2012protist}, Greengenes
+\cite{desantis2006greengenes}, Silva \cite{quast2013silva}, and, as
+illustrated in Fig~\ref{fig1}, the RDP \cite{maidak1996ribosomal}. Examples
+for each database are provided in the user manuals
+\cite{foster2016metacoder_manual}.
+
+
+\subsection*{Intuitive manipulation of taxonomic
+	data}\label{intuitive-manipulation-of-taxonomic-data}
+
+\emph{Metacoder} makes it easy to subset and sample large data sets
+composed of thousands of observations (e.g.~sequences) assigned to
+thousands of taxa, while taking into account hierarchical relationships.
+This allows for exploration and analysis of manageable subsets of a
+large data set. Taxonomies are inherently hierarchical, making them
+difficult to subset and sample intuitively compared with typical tabular
+data. In addition to the taxonomy itself, there is usually also data
+assigned to taxa in the taxonomy, which we refer to as ``observations''.
+Subsetting either the taxonomy or the associated observations, depending
+on the goal, might require subsetting both to keep them in sync. For
+example, if a set of taxa are removed or left out of a random subsample,
+should the subtaxa and associated observations also be removed, left as
+is, or reassigned to a supertaxon? If observations are removed, should
+the taxa they were assigned to also be removed? The functions provided
+by \emph{metacoder} gives the user control over these details and
+simplifies their implementation.
+
+\emph{Metacoder} allows users to intuitively and efficiently subset
+complex hierarchical data sets using a cohesive set of functions
+inspired by the popular \emph{dplyr} data-manipulation philosophy.
+\emph{Dplyr} is an R package for providing a conceptually consistent set
+of operations for manipulating tabular information
+\cite{hadley2016dplyr}. Whereas \emph{dplyr} functions each act on a
+single table, \emph{metacoder}'s analogous functions act on both the
+taxon and observation tables in a \texttt{taxmap} object (Table~\ref{table1}).
+For each major \emph{dplyr} function there are two
+analogous \emph{metacoder} functions: one that manipulates the taxon
+table and one that manipulates the observations table. The functions
+take into account the relationship between the two tables and can modify
+both depending on parameterization, allowing for operations on taxa to
+affect their corresponding observations and vice versa. They also take
+into account the hierarchical nature of the taxon table. For example,
+the \emph{metacoder} functions \texttt{filter\_taxa} and
+\texttt{filter\_obs} are based on the \emph{dplyr} function
+\texttt{filter} and are used to remove rows in the taxon and observation
+tables corresponding to some criterion. Unlike simply applying a filter
+to these tables directly, these functions allow the subtaxa, supertaxa,
+and/or observations of taxa passing the filter to be preserved or
+discarded, making it easy to subset the data in diverse ways (Fig~\ref{fig1}).
+There are also functions for ordering rows (\texttt{arrange\_taxa},
+\texttt{arrange\_obs}), subsetting columns (\texttt{select\_taxa},
+\texttt{select\_obs}), and adding columns (\texttt{mutate\_taxa},
+\texttt{mutate\_obs}).
+
+\emph{Metacoder} also provides functions for random sampling of taxa and
+corresponding observations. The function \texttt{taxonomic\_sample} is
+used to randomly sub-sample items such that all taxa of one or more
+given ranks have some specified number of observations representing
+them. Taxa with too few sequences are excluded and taxa with too many
+are randomly subsampled. Whole taxa can also be sampled based on the
+number of sub-taxa they have. Alternatively, there are \emph{dplyr}
+analogues called \texttt{sample\_n\_taxa} and \texttt{sample\_n\_obs},
+which can sample some number of taxa or observations. In both functions,
+weights can be assigned to taxa or observations, influencing how likely
+each is to be sampled. For example, the probability of sampling a given
+observation can be determined by a taxon characteristic, such as the
+number of observations assigned to that taxon, or it could be determined
+by an observation characteristic, like sequence length. Similar to the
+\texttt{filter\_*} functions, there are parameters controlling whether
+selected taxa's subtaxa, supertaxa, or observations are included or not
+in the sample (Fig~\ref{fig1}).
+
+
+\subsection*{Heat tree plotting of taxonomic
+	data}\label{heat-tree-plotting-of-taxonomic-data}
+
+Visualizing the massive data sets being generated by modern sequencing
+of complex ecosystems is typically done using traditional stacked
+barcharts or pie graphs, but these ignore the hierarchical nature of
+taxonomic classifications and their reliance on colors for categories
+limits the number of taxa that can be distinguished (Fig~\ref{fig2}). Generic
+trees can convey a taxonomic hierarchy, but displaying how statistics
+are distributed throughout the tree, including internal taxa, is
+difficult. \emph{Metacoder} provides a function that plots up to 4
+statistics on a tree with quantitative legends by automatically mapping
+any set of numbers to the color and width of nodes and edges. The size
+and content of edge and node labels can also be mapped to custom values.
+These publication-quality graphs provide a method for visualizing
+community data that is richer than is currently possible with stacked
+bar charts. Although there are other R packages that can plot variables
+on trees, like \emph{phyloseq} \cite{mcmurdie2013phyloseq}, these have
+been designed for phylogenetic rather than taxonomic trees and are
+therefore optimized for plotting information on the tips of the tree and
+not on internal nodes. There is also a set of python scripts called
+GraPhlAn that can make similar tree-based visualizations. GraPhlAn has
+better annotation abilities than metacoder, supports edge length for
+phylogenetic trees, and can plot a variety of node shapes. However,
+metacoder's heat tree function can plot multiple trees per graph, use
+different layout algorithms, automatically transform raw data to
+color/size for quantitative display with a scale bar, and optimize the
+size range of nodes to avoid crowded or sparse graphs.
+
+
+
+\begin{figure}[!h]
+\caption{{\bf Heat trees allow for a better understanding of community
+		structure than stacked bar charts.}
+The stacked bar chart on the left
+represents the abundance of organisms in two samples from the Human
+Microbiome Project \cite{human2012structure}. The same data are
+displayed as heat trees on the right. In the heat trees, size and color
+of nodes and edges are correlated with the abundance of organisms in
+each community. Both visualizations show communities dominated by
+firmicutes, but the heat trees reveal that the two samples share no
+families within firmicutes and are thus much more different than
+suggested by the stacked bar chart.}
+\label{fig2}
+\end{figure}
+
+The function \texttt{heat\_tree} creates a tree utilizing color and size
+to display taxon statistics (e.g., sequence abundance) for many taxa and
+ranks in one intuitive graph (Fig~\ref{fig2}). Taxa are represented as nodes
+and both color and size are used to represent any statistic associated
+with taxa, such as abundance. Although the \texttt{heat\_tree} function
+has many options to customize the appearance of the graph, it is
+designed to minimize the amount of user-defined parameters necessary to
+create an effective visualization. The size range of graph elements is
+optimized for each graph to minimize overlap and maximize size range.
+Raw statistics are automatically translated to size and color and a
+legend is added to display the relationship. Unlike most other plotting
+functions in R, the plot looks the same regardless of output size,
+allowing the graph to be saved at any size or used in complex, composite
+figures without changing parameters. These characteristics allow
+\texttt{heat\_tree} to be used effectively in pipelines and with minimal
+parameterization since a small set of parameters displays diverse
+taxonomy data. The output of the \texttt{heat\_tree} function is a
+\emph{ggplot2} object, making it compatible with many existing R tools.
+Another novel feature of heat trees is the automatic plotting of
+multiple trees when there are multiple ``roots'' to the hierarchy. This
+can happen when, for example, there are ``Bacteria'' and ``Eukaryota''
+taxa without a unifying ``Life'' taxon, or when coarse taxonomic ranks
+are removed to aid in the visualization of large data sets (Fig~\ref{fig3}).
+
+
+\begin{figure}[!h]
+\caption{{\bf Heat trees display up to four metrics in a taxonomic
+		context and can plot multiple trees per graph.}
+Most graph components,
+such as the size and color of text, nodes, and edges, can be
+automatically mapped to arbitrary numbers, allowing for a quantitative
+representation of multiple statistics simultaneously. This graph depicts
+the uncertainty of OTU classifications from the TARA global oceans
+survey \cite{de2015eukaryotic}. Each node represents a taxon used to
+classify OTUs and the edges determine where it fits in the overall
+taxonomic hierarchy. Node diameter is proportional to the number of OTUs
+classified as that taxon and edge width is proportional to the number of
+reads. Color represents the percent of OTUs assigned to each taxon that
+are somewhat similar to their closest reference sequence
+(\textgreater{}90\% sequence identity). \textbf{a.} Metazoan diversity
+in detail. \textbf{b.} All taxonomic diversity found. Note that multiple
+trees are automatically created and arranged when there are multiple
+roots to the taxonomy.}
+\label{fig3}
+\end{figure}
+
+\section*{Results}\label{results}
+
+
+\subsection*{Heat trees allow quantitative visualization of community
+	diversity
+	data}\label{heat-trees-allow-quantitative-visualization-of-community-diversity-data}
+
+We developed heat trees to allow visualization of community data in a
+taxonomic context by mapping any statistic to the color or size of tree
+components. Here, we reanalyzed data set 5 from the TARA oceans
+eukaryotic plankton diversity study to visualize the similarity between
+OTUs observed in the data set and their closest match to a sequence in a
+reference database \cite{de2015eukaryotic}. The TARA ocean expedition
+analyzed DNA extracted from ocean water throughout the world. Even
+though a custom reference database was made using curated 18S sequences
+spanning all known eukaryotic diversity, many of the OTUs observed had
+no close match. Fig~\ref{fig3} shows a heat tree that illustrates the
+proportion of OTUs that were well characterized in each taxon (at least
+90\% identical to a reference sequence). Color indicates the percentage
+of OTUs that are well characterized, node width indicates the number of
+OTUs assigned to each taxon, and edge width indicates the number of
+reads. Taxa with ambiguous names and those with less than 300 reads have
+been filtered out for clarity. This figure illustrates one of the
+principal advantages of heat trees, as it reveals many clades in the
+tree that contain only purple and orange lineages, which indicate that
+the entire taxonomic group is poorly represented in the reference
+sequence database. Of particular interest are those clades with
+predominantly purple and orange lineages that also have relatively large
+nodes, such as Harpacticoida (in Copepoda on the left). These represent
+taxonomic groups that were found to have high amounts of diversity in
+the oceans, but for which we have a paucity of genomic information.
+Investigators interested in improving the genomic resolution of the
+biosphere can thus use these approaches to rapidly assess which taxa
+should be prioritized for focused investigations.
+
+
+\subsection*{Flexible parsing allows for similar use of diverse
+	data}\label{flexible-parsing-allows-for-similar-use-of-diverse-data}
+
+Metabarcoding studies often rely on techniques or data that may
+introduce bias into an investigation. For example, the specific set of
+PCR primers used to amplify genomic DNA and the taxonomic annotation
+database can both have an effect on the study results. A quick and
+inexpensive way to estimate biases caused by primers is to use digital
+PCR. \emph{Metacoder} can be used to explore different databases or
+primer combinations to assess these effects since it supplies functions
+to parse divserse data sources, conduct digital PCR, and plot the
+results. Fig~\ref{fig4} shows a series of heat tree comparisons that were
+produced using a common 16S rRNA metabarcoding primer set and digital
+PCR against the full-length 16S sequences found in three taxonomic
+annotation databases: Greengenes \cite{desantis2006greengenes}, RDP
+\cite{maidak1996ribosomal}, and SILVA \cite{quast2013silva}. These heat
+trees reveal subsets of the full taxonomies for these three databases
+that poorly amplify by digital PCR using the selected primers. As a
+result, they indicate which lineages within each of the taxonomies may
+be challenging to detect in a metabarcoding study that uses these
+primers. Importantly, different sets of primers likely amplify different
+sets of taxa, so investigators interested in specific lineages can use
+this approach in conjunction with various primer sets to identify those
+that maximize the likelihood of discovery and reduce wasted sequencing
+resources on non-target organisms. However, these heat trees do not
+indicate whether one database is necessarily preferable over another, as
+they differ in the structure of their taxonomies, as well as the number
+and phylogenetic diversity of their reference sequences. For example,
+most of the bacterial clades that do not amplify well in the SILVA
+lineages are unnamed lineages that are not found in the other databases,
+indicating that they warrant further exploration.
+
+\begin{figure}[!h]
+\caption{{\bf Flexible parsing and digital PCR allows for comparisons
+		of primers and databases.}
+Shown is a comparison of digital PCR results
+for three 16S reference databases. The plots on the left display
+abundance of all bacterial 16S sequences. Plots on the right display all
+taxa with subtaxa not entirely amplified by digital PCR using universal
+16S primers \cite{walters2016improved}. Node color and size display the
+proportion and number of sequences not amplified respectively.}
+\label{fig4}
+\end{figure}
+
+\subsection*{Heat trees can show pairwise comparisons of communities
+	across
+	treatments}\label{heat-trees-can-show-pairwise-comparisons-of-communities-across-treatments}
+
+One challenge in metabarcoding studies is visually determining how
+specific sub-sets of samples vary in their taxonomic composition. Unlike
+most other graphing software in R, \emph{metacoder} produces graphs that
+look the same at any output size or aspect ratio, allowing heat trees to
+be easily integrated into larger composite figures without changing the
+code for individual subplots. Using color to depict the difference in
+read or OTU abundance between two treatments can result in particularly
+effective visualizations, especially when the presence of color is made
+dependent on a statistical test. To examine more than two treatments at
+once, a matrix of these kind of heat trees can be combined with a
+labeled ``guide'' tree. Fig~\ref{fig5} shows application of this idea to human
+microbiome data showing pairwise differences between body sites.
+Coloring indicates significant differences between the median proportion
+of reads for samples from different body sites as determined using a
+Wilcox rank-sum test followed by a Benjamini-Hochberg (FDR) correction
+for multiple testing. The intensity of the color is relative to the
+log-2 ratio of difference in median proportions. Brown taxa indicate an
+enrichment in body sites listed on the top of the graph and green is the
+opposite. While the original study \cite{human2012structure} showed
+abundance plots, our visualization provides the taxonomic context. For
+example, \emph{Haemophilus}, \emph{Streptococcus}, and \emph{Prevotella}
+spp. are enriched in saliva (brown) relative to stool where
+\emph{Bacteroides} is enriched (green). We also see that in the
+Lachnospiraceae clade several genera shown in both green and brown taxa
+are differentially abundant. These observations are consistent with
+known differences in the human-associated microbiome across body sites,
+but heat trees uniquely provide an integrated view of how all levels of
+a taxonomy vary for all pairs of body sites.
+
+
+\begin{figure}[!h]
+\caption{{\bf Scale-independent appearance facilitates complex,
+		composite figures.}
+This graph uses 16S metabarcoding data from the
+human microbiome project study to show pairwise comparisons of
+microbiome communities in different parts of the human body. All graph
+components, including text, have the same relative sizes independent of
+output size, unlike most graphical packages in R, making it easier to
+create composite figures entirely within R. The gray tree on the lower
+left functions as a key for the smaller unlabeled trees. The color of
+each taxon represents the log-2 ratio of median proportions of reads
+observed at each body site. Only significant differences are colored,
+determined using a Wilcox rank-sum test followed by a Benjamini-Hochberg
+(FDR) correction for multiple comparisons. Taxa colored green are
+enriched in the part of the body shown in the row and those colored
+brown are enriched in the part of the body shown in the column. For
+example, \emph{Haemophilus}, \emph{Streptococcus}, \emph{Prevotella} are
+enriched in saliva (brown) relative to stool where \emph{Bacteroides} is
+enriched (green).}
+\label{fig5}
+\end{figure}
+
+
+\subsection*{Other applications}\label{other-applications}
+
+The \texttt{taxmap} data object defined in \emph{metacoder} can be used
+for any data that can be classified by a hierarchy. Fig~\ref{fig6}, for
+example, shows an analysis of votes cast in the 2016 US Democratic party
+national primaries organized by geography. The heat tree reveals
+distinct patterns such as a sweep by Clinton in the South and a split on
+the West coast, with California predominantly voting for Clinton while
+Washington and Oregon predominantly voted for Sanders. Another potential
+application is displaying the results of gene expression studies by
+associating differential expression with gene ontology (GO) annotations.
+Fig~\ref{fig7} shows the results of a RNA-seq study on the effect of
+glucocorticoids on smooth muscle tissue \cite{himes2014rna}. All
+biological processes influenced by at least one gene with a significant
+change in expression are plotted. The authors of the study find that
+genes involved in immune response are influenced by the glucocorticoid
+treatment. Viewing these results in a heat tree shows not only the
+specific immune process affected (the branch on the middle right), but
+also the more general phenomena they constitute; regulation of high
+level phenomena, like immune system function, can be explained by
+specific processes like ``leukocyte chemotaxis'' and these specific
+processes are put into the context of the phenomena they contribute to.
+This is more informative than simply reporting the results for a single
+level of the GO annotation hierarchy or discussing the effects of genes
+one at a time.
+
+\begin{figure}[!h]
+\caption{{\bf \emph{Metacoder} can be used with any type of data that
+		can be organized hierarchically.}
+This plot shows the results of the
+2016 Democratic primary election organized by region, division, state,
+and county. The regions and divisions are those defined by the United
+States census bureau. Color corresponds to the difference in the
+percentage of votes for candidates Hillary Clinton (green) and Bernie
+Sanders (brown). Size corresponds to the total number of votes cast.
+Data was downloaded from
+https://www.kaggle.com/benhamner/2016-us-election/.}
+\label{fig6}
+\end{figure}
+
+
+\begin{figure}[!h]
+	\caption{{\bf  Another alternate use example: vizualizing gene
+			expression data in a GO hierarchy.}
+		The gene ontology for all
+		differentially expressed genes in a study on the effect of a
+		glucocorticoid on airway smooth muscle tissue \cite{himes2014rna}. Color
+		indicates the sign and intensity of averaged changes in gene expression
+		and the size indicates the number of genes classified by a given gene
+		ontology term.}
+	\label{fig7}
+\end{figure}
+
+\section*{Availability and Future
+	Directions}\label{availability-and-future-directions}
+
+The R package \emph{metacoder} is an open-source project under the MIT
+License. Stable releases of \emph{metacoder} are available on CRAN while
+recent improvements can be downloaded from github
+(https://github.com/grunwaldlab/metacoder). A manual with documentation
+and examples is provided \cite{foster2016metacoder_manual}. This manual
+also provides the code to reproduce all figures included in this
+manuscript.
+
+We are currently continuing development of \emph{metacoder}. We welcome
+contributions and feedback from the community. We want to make
+\emph{metacoder} functions and classes compatible with those from other
+bioinformatic R packages such as \emph{phyloseq}, \emph{ape}
+\cite{paradis2004ape}, \emph{seqinr} \cite{charif2007seqinr}, and
+\emph{taxize} \cite{chamberlain2013taxize}. We might integrate more
+options for digital PCR and barcode gap analysis, perhaps using ecoPCR
+\cite{ficetola2010silico} or the R packages \emph{PrimerMiner}
+\cite{elbrecht2016primerminer} and \emph{Spider} \cite{brown2012spider}.
+We are also considering adding additional visualization functions.
+
+
+\nolinenumbers
+
+% \bibliography{references}
+
+
+% Either type in your references using
+
+% \begin{thebibliography}{}
+
+% \bibitem{}
+
+% Text
+
+% \end{thebibliography}
+
+%
+
+% or
+
+%
+
+% Compile your BiBTeX database using our plos2015.bst
+
+% style file and paste the contents of your .bbl file
+
+% here. See http://journals.plos.org/plosone/s/latex for 
+
+% step-by-step instructions.
+
+% 
+
+\begin{thebibliography}{10}
+	
+	\bibitem{cristescu2014barcoding}
+	Cristescu ME.
+	\newblock From barcoding single individuals to metabarcoding biological
+	communities: towards an integrative approach to the study of global
+	biodiversity.
+	\newblock Trends Ecol Evol. 2014;29(10):566--571.
+	
+	\bibitem{de2015eukaryotic}
+	De~Vargas C, Audic S, Henry N, Decelle J, Mah{\'e} F, Logares R, et~al.
+	\newblock Eukaryotic plankton diversity in the sunlit ocean.
+	\newblock Science. 2015;348(6237):1261605.
+	
+	\bibitem{coleman2016plant}
+	Coleman-Derr D, Desgarennes D, Fonseca-Garcia C, Gross S, Clingenpeel S, Woyke
+	T, et~al.
+	\newblock Plant compartment and biogeography affect microbiome composition in
+	cultivated and native Agave species.
+	\newblock New Phytol. 2016;209(2):798--811.
+	
+	\bibitem{yu2012biodiversity}
+	Yu DW, Ji Y, Emerson BC, Wang X, Ye C, Yang C, et~al.
+	\newblock Biodiversity soup: metabarcoding of arthropods for rapid biodiversity
+	assessment and biomonitoring.
+	\newblock Methods Ecol Evol. 2012;3(4):613--623.
+	
+	\bibitem{human2012structure}
+	Consortium HMP, et~al.
+	\newblock Structure, function and diversity of the healthy human microbiome.
+	\newblock Nature. 2012;486(7402):207--214.
+	
+	\bibitem{gilbert2014earth}
+	Gilbert JA, Jansson JK, Knight R.
+	\newblock The Earth Microbiome project: successes and aspirations.
+	\newblock BMC Biol. 2014;12(1):1.
+	
+	\bibitem{segata2012metagenomic}
+	Segata N, Waldron L, Ballarini A, Narasimhan V, Jousson O, Huttenhower C.
+	\newblock Metagenomic microbial community profiling using unique clade-specific
+	marker genes.
+	\newblock Nature Methods. 2012;9(8):811--814.
+	
+	\bibitem{schloss2009introducing}
+	Schloss PD, Westcott SL, Ryabin T, Hall JR, Hartmann M, Hollister EB, et~al.
+	\newblock Introducing mothur: open-source, platform-independent,
+	community-supported software for describing and comparing microbial
+	communities.
+	\newblock Appl Environ Microbiol. 2009;75(23):7537--7541.
+	
+	\bibitem{maidak1996ribosomal}
+	Maidak BL, Olsen GJ, Larsen N, Overbeek R, McCaughey MJ, Woese CR.
+	\newblock The ribosomal database project (RDP).
+	\newblock Nucleic Acids Res. 1996;24(1):82--85.
+	
+	\bibitem{benson2013genbank}
+	Benson DA, Cavanaugh M, Clark K, Karsch-Mizrachi I, Lipman DJ, Ostell J, et~al.
+	\newblock GenBank.
+	\newblock Nucleic Acids Res. 2013;41(D1):D36--D42.
+	
+	\bibitem{koljalg2013towards}
+	K{\~o}ljalg U, Nilsson RH, Abarenkov K, Tedersoo L, Taylor AF, Bahram M, et~al.
+	\newblock Towards a unified paradigm for sequence-based identification of
+	fungi.
+	\newblock Mol Ecol. 2013;22(21):5271--5277.
+	
+	\bibitem{guillou2012protist}
+	Guillou L, Bachar D, Audic S, Bass D, Berney C, Bittner L, et~al.
+	\newblock The Protist Ribosomal Reference database (PR2): a catalog of
+	unicellular eukaryote small sub-unit rRNA sequences with curated taxonomy.
+	\newblock Nucleic Acids Res. 2012;41:D597--D604.
+	
+	\bibitem{desantis2006greengenes}
+	DeSantis TZ, Hugenholtz P, Larsen N, Rojas M, Brodie EL, Keller K, et~al.
+	\newblock Greengenes, a chimera-checked 16S rRNA gene database and workbench
+	compatible with ARB.
+	\newblock Appl Environn Microbiol. 2006;72(7):5069--5072.
+	
+	\bibitem{quast2013silva}
+	Quast C, Pruesse E, Yilmaz P, Gerken J, Schweer T, Yarza P, et~al.
+	\newblock The SILVA ribosomal RNA gene database project: improved data
+	processing and web-based tools.
+	\newblock Nucleic Acids Res. 2013;41(D1):D590--D596.
+	
+	\bibitem{foster2016metacoder_manual}
+	Foster ZSL, Gr{\"u}nwald NJ. Metacoder user documentation; 2016.
+	\newblock Available from:
+	\url{http://grunwaldlab.github.io/metacoder_documentation}.
+	
+	\bibitem{hadley2016dplyr}
+	Wickham H, Francois R. dplyr: A Grammar of Data Manipulation; 2016.
+	\newblock Available from: \url{https://CRAN.R-project.org/package=dplyr}.
+	
+	\bibitem{mcmurdie2013phyloseq}
+	McMurdie PJ, Holmes S.
+	\newblock phyloseq: an R package for reproducible interactive analysis and
+	graphics of microbiome census data.
+	\newblock PloS One. 2013;8(4):e61217.
+	
+	\bibitem{walters2016improved}
+	Walters W, Hyde ER, Berg-Lyons D, Ackermann G, Humphrey G, Parada A, et~al.
+	\newblock Improved Bacterial 16S rRNA Gene (V4 and V4-5) and Fungal Internal
+	Transcribed Spacer Marker Gene Primers for Microbial Community Surveys.
+	\newblock mSystems. 2016;1(1):e00009--15.
+	
+	\bibitem{himes2014rna}
+	Himes BE, Jiang X, Wagner P, Hu R, Wang Q, Klanderman B, et~al.
+	\newblock RNA-Seq transcriptome profiling identifies CRISPLD2 as a
+	glucocorticoid responsive gene that modulates cytokine function in airway
+	smooth muscle cells.
+	\newblock PloS One. 2014;9(6):e99625.
+	
+	\bibitem{paradis2004ape}
+	Paradis E, Claude J, Strimmer K.
+	\newblock APE: analyses of phylogenetics and evolution in R language.
+	\newblock Bioinformatics. 2004;20(2):289--290.
+	
+	\bibitem{charif2007seqinr}
+	Charif D, Lobry JR.
+	\newblock SeqinR 1.0-2: a contributed package to the R project for statistical
+	computing devoted to biological sequences retrieval and analysis.
+	\newblock In: Structural approaches to sequence evolution. Springer; 2007. p.
+	207--232.
+	
+	\bibitem{chamberlain2013taxize}
+	Chamberlain SA, Sz{\"o}cs E.
+	\newblock taxize: taxonomic search and retrieval in R.
+	\newblock F1000Research. 2013;2.
+	
+	\bibitem{ficetola2010silico}
+	Ficetola GF, Coissac E, Zundel S, Riaz T, Shehzad W, Bessi{\`e}re J, et~al.
+	\newblock An in silico approach for the evaluation of DNA barcodes.
+	\newblock BMC genomics. 2010;11(1):434.
+	
+	\bibitem{elbrecht2016primerminer}
+	Elbrecht V, Leese F.
+	\newblock PrimerMiner: an R package for development and in silico validation of
+	DNA metabarcoding primers.
+	\newblock Methods in Ecology and Evolution. 2016;.
+	
+	\bibitem{brown2012spider}
+	Brown SD, Collins RA, Boyer S, Lefort MC, Malumbres-Olarte J, Vink CJ, et~al.
+	\newblock Spider: an R package for the analysis of species identity and
+	evolution, with particular reference to DNA barcoding.
+	\newblock Molecular Ecology Resources. 2012;12(3):562--565.
+	
+\end{thebibliography}
+
+
+
+\end{document}
+

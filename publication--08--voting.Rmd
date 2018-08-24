@@ -115,7 +115,6 @@ voting_data <- mutate_obs(voting_data, data =  "place_data",
 I will get a list of the "taxon" IDs for the county in each state with the most votes.
 
 ```{r}
-total_votes <- taxon_data(voting_data, col_subset = "total_votes", drop = TRUE)
 top_counties <- unlist(subtaxa_apply(voting_data, subset = n_supertaxa == 3, value = "votes",
                                      function(x) names(x[which.max(x)])))
 ```
@@ -127,14 +126,14 @@ voting_data %>%
   heat_tree(node_size = total_votes,
             node_size_range = c(0.0002, 0.06),
             node_color = (clinton_votes - sanders_votes) / total_votes * 100,
-            edge_label = ifelse(taxon_ids %in% top_counties | n_supertaxa <= 3, taxon_names, NA),
+            edge_label = ifelse(taxon_ids %in% top_counties | n_supertaxa <= 3, taxon_names, ""),
             edge_label_size_trans = "area",
             edge_label_size_range = c(0.008, 0.025),
             node_color_range = c("#a6611a", "lightgray", "#018571"),
             node_color_interval = c(-50, 50),
             edge_color_range = c("#a6611a", "lightgray", "#018571"),
             edge_color_interval = c(-50, 50),
-            node_color_axis_label = "Clinton                                Sanders",
+            node_color_axis_label = "Clinton               Sanders",
             node_size_axis_label = "Total votes",
             repel_labels = FALSE,
             output_file = result_path("voting"))

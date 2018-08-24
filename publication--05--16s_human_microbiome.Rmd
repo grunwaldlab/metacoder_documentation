@@ -186,11 +186,13 @@ plot_all <- hmp_data %>%
   filter_taxa(abundance >= 0.001) %>%
   filter_taxa(taxon_names != "") %>% # Some taxonomic levels are not named
   heat_tree(node_size = n_obs,
+            node_size_range = c(0.01, 0.06),
             node_size_axis_label = "Number of OTUs",
             node_color = abundance,
             node_color_axis_label = "Mean proportion of reads",
             node_label = taxon_names,
             output_file = result_path("hmp--all_data"))
+print(plot_all)
 ```
 
 Here we can see that there are realtively few abundant taxa and many rare ones.
@@ -220,7 +222,7 @@ We will also set any differences that are not significant after the correction t
 ```{r}
 hmp_data <- mutate_obs(hmp_data, "diff_table",
                        wilcox_p_value = p.adjust(wilcox_p_value, method = "fdr"),
-                       log2_median_ratio = ifelse(wilcox_p_value < 0.05, log2_median_ratio, 0))
+                       log2_median_ratio = ifelse(wilcox_p_value < 0.05 | is.na(wilcox_p_value), log2_median_ratio, 0))
 ```
 
 Now we can make a what we call a "differential heat tree matrix", to plot the results of these tests.
@@ -260,7 +262,7 @@ plot_body_site_diff <- function(site_1, site_2, output_name, seed = 1) {
     mutate_obs("tax_prop", abundance = rowMeans(hmp_data$data$tax_prop[sample_data$sample_id])) %>%
     filter_taxa(abundance >= 0.001, reassign_obs = FALSE) %>%
     filter_taxa(taxon_names != "", reassign_obs = FALSE) %>% # Some taxonomic levels are not named
-    filter_obs("diff_table", treatment_1 == site_1, treatment_2 == site_2) %>%
+    filter_obs("diff_table", treatment_1 %in% c(site_1, site_2), treatment_2 %in% c(site_1, site_2)) %>%
     heat_tree(node_size_axis_label = "Number of OTUs",
               node_size = n_obs,
               node_color_axis_label = "Log 2 ratio of median proportions",
@@ -275,8 +277,7 @@ plot_body_site_diff <- function(site_1, site_2, output_name, seed = 1) {
 ```
 
 ```{r hmp_diff_plot}
-plot_body_site_diff("Saliva", "Throat", "hmp--v35")
-plot_body_site_diff("Supragingival_plaque", "Subgingival_plaque", "hmp--v35")
+plot_body_site_diff("Saliva", "Anterior_nares", "hmp--v35")
 plot_body_site_diff("Buccal_mucosa", "Anterior_nares", "hmp--v35")
 ```
 

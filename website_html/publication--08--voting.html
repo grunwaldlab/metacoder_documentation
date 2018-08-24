@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Graphing voting geography</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84254038-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><div class="logo_frame"><span class="logo_helper"></span><img src="images/hex_sticker.png" height=50px /></div> metacoder</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="example.html">Example</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Workshop
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="workshop--00--introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="workshop--00--required_software.html">Required software</a>
+    </li>
+    <li>
+      <a href="workshop--00--required_data.html">Required datasets</a>
+    </li>
+    <li>
+      <a href="workshop--03--parsing.html">Getting data into R</a>
+    </li>
+    <li>
+      <a href="workshop--04--manipulating.html">Manipulating taxonomic data</a>
+    </li>
+    <li>
+      <a href="workshop--05--plotting.html">Plotting taxonomic data</a>
+    </li>
+    <li>
+      <a href="workshop--06--quality_control.html">Data quality control</a>
+    </li>
+    <li>
+      <a href="workshop--07--diversity_stats.html">Diversity and Ordination</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Publication
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005404">PLOS Comp Bio paper</a>
+    </li>
+    <li>
+      <a href="publication--05--16s_human_microbiome.html">Human microbiome</a>
+    </li>
+    <li>
+      <a href="publication--06--tara_oceans.html">TARA Oceans</a>
+    </li>
+    <li>
+      <a href="publication--01--silva.html">Digital PCR: SILVA</a>
+    </li>
+    <li>
+      <a href="publication--02--rdp.html">Digital PCR: RDP</a>
+    </li>
+    <li>
+      <a href="publication--03--greengenes.html">Digital PCR: Greengenes</a>
+    </li>
+    <li>
+      <a href="publication--04--16s_database_comparision.html">Digital PCR: Comparing databases</a>
+    </li>
+    <li>
+      <a href="publication--08--voting.html">Voting Geography</a>
+    </li>
+    <li>
+      <a href="publication--09--gene_expression.html">Gene Expression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Appendices
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="appendix--00--intro_to_r.html">Introduction to R</a>
+    </li>
+    <li>
+      <a href="appendix--00--intro_to_rstudio.html">Introduction to RStudio</a>
+    </li>
+    <li>
+      <a href="appendix--00--glossary.html">Glossary</a>
+    </li>
+    <li>
+      <a href="appendix--00--presentation_page.html">Slide show</a>
+    </li>
+    <li>
+      <a href="appendix--00--poster_page.html">Poster</a>
+    </li>
+    <li>
+      <a href="https://github.com/grunwaldlab/metacoder">Metacoder source code</a>
+    </li>
+    <li>
+      <a href="https://github.com/grunwaldlab/metacoder_documentation">Website source code</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Graphing voting geography</h1>
+
+</div>
+
+
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<div id="document-rendering" class="section level3">
+<h3>Document rendering</h3>
+</div>
+<div id="analysis-inputoutput" class="section level3">
+<h3>Analysis input/output</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span>
+output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span>
+output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span>
+pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span>
+revision_n &lt;-<span class="st"> </span><span class="dv">1</span>
+result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {
+  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))
+}
+save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {
+  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))
+}</code></pre></div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Although metacoder has been designed for use with taxonomic data, any data that can be assigned to a heirarchy can be used. To demonstrate this, we have used metacoder to display the results of the 2016 Democratic primary election. The data used can be dowloaded here:</p>
+<p><a href="https://www.kaggle.com/benhamner/2016-us-election/" class="uri">https://www.kaggle.com/benhamner/2016-us-election/</a></p>
+</div>
+<div id="read-in-data" class="section level2">
+<h2>Read in data</h2>
+<p>We will use the <code>readr</code> package to read in the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
+file_path &lt;-<span class="st"> </span><span class="kw">file.path</span>(input_folder, <span class="st">&quot;primary_results.csv&quot;</span>)
+data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(file_path)</code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   state = col_character(),
+##   state_abbreviation = col_character(),
+##   county = col_character(),
+##   fips = col_double(),
+##   party = col_character(),
+##   candidate = col_character(),
+##   votes = col_double(),
+##   fraction_votes = col_double()
+## )</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(data)</code></pre></div>
+<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 24,611 x 8</span><span>
+##    state   state_abbreviation county   fips party    candidate       votes fraction_votes
+##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+## </span><span style='color: #BCBCBC;'> 1</span><span> Alabama AL                 Autauga </span><span style='text-decoration: underline;'>1</span><span>001. Democrat Bernie Sanders   544.         0.182 
+## </span><span style='color: #BCBCBC;'> 2</span><span> Alabama AL                 Autauga </span><span style='text-decoration: underline;'>1</span><span>001. Democrat Hillary Clinton </span><span style='text-decoration: underline;'>2</span><span>387.         0.800 
+## </span><span style='color: #BCBCBC;'> 3</span><span> Alabama AL                 Baldwin </span><span style='text-decoration: underline;'>1</span><span>003. Democrat Bernie Sanders  </span><span style='text-decoration: underline;'>2</span><span>694.         0.329 
+## </span><span style='color: #BCBCBC;'> 4</span><span> Alabama AL                 Baldwin </span><span style='text-decoration: underline;'>1</span><span>003. Democrat Hillary Clinton </span><span style='text-decoration: underline;'>5</span><span>290.         0.647 
+## </span><span style='color: #BCBCBC;'> 5</span><span> Alabama AL                 Barbour </span><span style='text-decoration: underline;'>1</span><span>005. Democrat Bernie Sanders   222.         0.078</span><span style='text-decoration: underline;'>0</span><span>
+## </span><span style='color: #BCBCBC;'> 6</span><span> Alabama AL                 Barbour </span><span style='text-decoration: underline;'>1</span><span>005. Democrat Hillary Clinton </span><span style='text-decoration: underline;'>2</span><span>567.         0.906 
+## </span><span style='color: #BCBCBC;'> 7</span><span> Alabama AL                 Bibb    </span><span style='text-decoration: underline;'>1</span><span>007. Democrat Bernie Sanders   246.         0.197 
+## </span><span style='color: #BCBCBC;'> 8</span><span> Alabama AL                 Bibb    </span><span style='text-decoration: underline;'>1</span><span>007. Democrat Hillary Clinton  942.         0.755 
+## </span><span style='color: #BCBCBC;'> 9</span><span> Alabama AL                 Blount  </span><span style='text-decoration: underline;'>1</span><span>009. Democrat Bernie Sanders   395.         0.386 
+## </span><span style='color: #BCBCBC;'>10</span><span> Alabama AL                 Blount  </span><span style='text-decoration: underline;'>1</span><span>009. Democrat Hillary Clinton  564.         0.551 
+## </span><span style='color: #949494;'># ... with 24,601 more rows</span><span>
+</span></code></pre>
+</div>
+<div id="add-region-and-divisons-columns" class="section level2">
+<h2>Add region and divisons columns</h2>
+<p>The data does not include the region or division of states/counties. Adding these will make the visulization more interesting.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">divisions &lt;-<span class="st"> </span><span class="kw">stack</span>(<span class="kw">list</span>(<span class="st">&quot;New England&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Connecticut&quot;</span>, <span class="st">&quot;Maine&quot;</span>, <span class="st">&quot;Massachusetts&quot;</span>,
+                                          <span class="st">&quot;New Hampshire&quot;</span>, <span class="st">&quot;Rhode Island&quot;</span>, <span class="st">&quot;Vermont&quot;</span>),
+                        <span class="st">&quot;Mid-Atlantic&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;New Jersey&quot;</span>, <span class="st">&quot;New York&quot;</span>, <span class="st">&quot;Pennsylvania&quot;</span>),
+                        <span class="st">&quot;NE Central&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Illinois&quot;</span>, <span class="st">&quot;Indiana&quot;</span>, <span class="st">&quot;Michigan&quot;</span>, <span class="st">&quot;Ohio&quot;</span>, <span class="st">&quot;Wisconsin&quot;</span>),
+                        <span class="st">&quot;NW Central&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Iowa&quot;</span>, <span class="st">&quot;Kansas&quot;</span>, <span class="st">&quot;Minnesota&quot;</span>, <span class="st">&quot;Missouri&quot;</span>,
+                                         <span class="st">&quot;Nebraska&quot;</span>, <span class="st">&quot;North Dakota&quot;</span>, <span class="st">&quot;South Dakota&quot;</span>),
+                        <span class="st">&quot;South Atlantic&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Delaware&quot;</span>, <span class="st">&quot;Florida&quot;</span>, <span class="st">&quot;Georgia&quot;</span>, <span class="st">&quot;Maryland&quot;</span>,
+                                             <span class="st">&quot;North Carolina&quot;</span>, <span class="st">&quot;South Carolina&quot;</span>, <span class="st">&quot;Virginia&quot;</span>,
+                                             <span class="st">&quot;Washington D.C.&quot;</span>, <span class="st">&quot;West Virginia&quot;</span>),
+                        <span class="st">&quot;SE Central&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Alabama&quot;</span>, <span class="st">&quot;Kentucky&quot;</span>, <span class="st">&quot;Mississippi&quot;</span>, <span class="st">&quot;Tennessee&quot;</span>),
+                        <span class="st">&quot;SW Central&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Arkansas&quot;</span>, <span class="st">&quot;Louisiana&quot;</span>, <span class="st">&quot;Oklahoma&quot;</span>, <span class="st">&quot;Texas&quot;</span>),
+                        <span class="st">&quot;Mountain&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Arizona&quot;</span>, <span class="st">&quot;Colorado&quot;</span>, <span class="st">&quot;Idaho&quot;</span>, <span class="st">&quot;Montana&quot;</span>, <span class="st">&quot;Nevada&quot;</span>,
+                                       <span class="st">&quot;New Mexico&quot;</span>, <span class="st">&quot;Utah&quot;</span>, <span class="st">&quot;Wyoming&quot;</span>),
+                        <span class="st">&quot;Pacific&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Alaska&quot;</span>, <span class="st">&quot;California&quot;</span>, <span class="st">&quot;Hawaii&quot;</span>, <span class="st">&quot;Oregon&quot;</span>, <span class="st">&quot;Washington&quot;</span>)))
+data<span class="op">$</span>division &lt;-<span class="st"> </span><span class="kw">as.character</span>(divisions<span class="op">$</span>ind[<span class="kw">match</span>(data<span class="op">$</span>state, divisions<span class="op">$</span>values)])
+
+regions &lt;-<span class="st"> </span><span class="kw">stack</span>(<span class="kw">list</span>(<span class="st">&quot;Northeast&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;New England&quot;</span>, <span class="st">&quot;Mid-Atlantic&quot;</span>),
+                      <span class="st">&quot;Midwest&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;NE Central&quot;</span>, <span class="st">&quot;NW Central&quot;</span>),
+                      <span class="st">&quot;South&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;South Atlantic&quot;</span>, <span class="st">&quot;SE Central&quot;</span>, <span class="st">&quot;SW Central&quot;</span>),
+                      <span class="st">&quot;West&quot;</span> =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Mountain&quot;</span>, <span class="st">&quot;Pacific&quot;</span>)))
+data<span class="op">$</span>region &lt;-<span class="st"> </span><span class="kw">as.character</span>(regions<span class="op">$</span>ind[<span class="kw">match</span>(data<span class="op">$</span>division, regions<span class="op">$</span>values)])
+
+data<span class="op">$</span>country &lt;-<span class="st"> &quot;USA&quot;</span>
+
+<span class="kw">print</span>(data)</code></pre></div>
+<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 24,611 x 11</span><span>
+##    state state_abbreviat… county  fips party candidate votes fraction_votes division region country
+##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  
+## </span><span style='color: #BCBCBC;'> 1</span><span> Alab… AL               Autau… </span><span style='text-decoration: underline;'>1</span><span>001. Demo… Bernie S…  544.         0.182  SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'> 2</span><span> Alab… AL               Autau… </span><span style='text-decoration: underline;'>1</span><span>001. Demo… Hillary … </span><span style='text-decoration: underline;'>2</span><span>387.         0.800  SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'> 3</span><span> Alab… AL               Baldw… </span><span style='text-decoration: underline;'>1</span><span>003. Demo… Bernie S… </span><span style='text-decoration: underline;'>2</span><span>694.         0.329  SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'> 4</span><span> Alab… AL               Baldw… </span><span style='text-decoration: underline;'>1</span><span>003. Demo… Hillary … </span><span style='text-decoration: underline;'>5</span><span>290.         0.647  SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'> 5</span><span> Alab… AL               Barbo… </span><span style='text-decoration: underline;'>1</span><span>005. Demo… Bernie S…  222.         0.078</span><span style='text-decoration: underline;'>0</span><span> SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'> 6</span><span> Alab… AL               Barbo… </span><span style='text-decoration: underline;'>1</span><span>005. Demo… Hillary … </span><span style='text-decoration: underline;'>2</span><span>567.         0.906  SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'> 7</span><span> Alab… AL               Bibb   </span><span style='text-decoration: underline;'>1</span><span>007. Demo… Bernie S…  246.         0.197  SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'> 8</span><span> Alab… AL               Bibb   </span><span style='text-decoration: underline;'>1</span><span>007. Demo… Hillary …  942.         0.755  SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'> 9</span><span> Alab… AL               Blount </span><span style='text-decoration: underline;'>1</span><span>009. Demo… Bernie S…  395.         0.386  SE Cent… South  USA    
+## </span><span style='color: #BCBCBC;'>10</span><span> Alab… AL               Blount </span><span style='text-decoration: underline;'>1</span><span>009. Demo… Hillary …  564.         0.551  SE Cent… South  USA    
+## </span><span style='color: #949494;'># ... with 24,601 more rows</span><span>
+</span></code></pre>
+</div>
+<div id="create-and-parse-classifications" class="section level2">
+<h2>Create and parse classifications</h2>
+<p>The code below creates a single column in the data set that contains all of the levels of the geographic hierarchy for each location. It is then parsed using <code>parse_taxonomy_table</code> so that the other columns are preserved in the <code>taxmap</code> object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(metacoder)
+voting_data &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(data, <span class="dt">class_cols =</span> <span class="kw">c</span>(<span class="st">&quot;country&quot;</span>, <span class="st">&quot;region&quot;</span>, <span class="st">&quot;division&quot;</span>, <span class="st">&quot;state&quot;</span>, <span class="st">&quot;county&quot;</span>))
+<span class="kw">print</span>(voting_data)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   4279 taxa: <span style='color: #00BB00;'>aab</span><span>. USA, </span><span style='color: #00BB00;'>aac</span><span>. South ... </span><span style='color: #00BB00;'>gio</span><span>. Teton-Sublette, </span><span style='color: #00BB00;'>gip</span><span>. Uinta-Lincoln
+##   4279 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>acl</span><span>-&gt;</span><span style='color: #00BB00;'>gin</span><span>, </span><span style='color: #00BB00;'>acl</span><span>-&gt;</span><span style='color: #00BB00;'>gio</span><span>, </span><span style='color: #00BB00;'>acl</span><span>-&gt;</span><span style='color: #00BB00;'>gip</span><span>
+##   1 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 24,611 x 12</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>state state_abbreviat… county  fips party candidate votes fraction_votes
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;          &lt;dbl&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>acm</span><span>      Alab… AL               Autau… 1001. Demo… Bernie S…  544.          0.182
+##       2 </span><span style='color: #00BB00;'>acm</span><span>      Alab… AL               Autau… 1001. Demo… Hillary … 2387.          0.800
+##       3 </span><span style='color: #00BB00;'>acn</span><span>      Alab… AL               Baldw… 1003. Demo… Bernie S… 2694.          0.329
+##       # ... with 2.461e+04 more rows, and 3 more variables: division &lt;chr&gt;, region &lt;chr&gt;,
+##       #   country &lt;chr&gt;
+##   0 functions:
+</span></code></pre>
+</div>
+<div id="get-canidate-vote-counts" class="section level2">
+<h2>Get canidate vote counts</h2>
+<p>We have now need to sum the data for geographic region.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voting_data &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(voting_data, <span class="dt">data =</span>  <span class="st">&quot;place_data&quot;</span>,
+                          <span class="dt">taxon_id =</span> taxon_ids,
+                          <span class="dt">total_votes =</span> <span class="kw">unlist</span>(<span class="kw">obs_apply</span>(voting_data, <span class="st">&quot;tax_data&quot;</span>, sum, <span class="dt">value =</span> <span class="st">&quot;votes&quot;</span>)),
+                          <span class="dt">clinton_votes =</span> <span class="kw">sapply</span>(<span class="kw">obs</span>(voting_data, <span class="st">&quot;tax_data&quot;</span>),
+                                                 <span class="cf">function</span>(i) {
+                                                   subset &lt;-<span class="st"> </span>voting_data<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]
+                                                   <span class="kw">sum</span>(subset<span class="op">$</span>votes[subset<span class="op">$</span>candidate <span class="op">==</span><span class="st"> &quot;Hillary Clinton&quot;</span>])
+                                                 }),
+                          <span class="dt">sanders_votes =</span> <span class="kw">sapply</span>(<span class="kw">obs</span>(voting_data, <span class="st">&quot;tax_data&quot;</span>),
+                                                 <span class="cf">function</span>(i) {
+                                                   subset &lt;-<span class="st"> </span>voting_data<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]
+                                                   <span class="kw">sum</span>(subset<span class="op">$</span>votes[subset<span class="op">$</span>candidate <span class="op">==</span><span class="st"> &quot;Bernie Sanders&quot;</span>])
+                                                 })
+)</code></pre></div>
+<pre><code>## Adding a new 4279 x 4 table called &quot;place_data&quot;</code></pre>
+</div>
+<div id="get-top-counties" class="section level2">
+<h2>Get top counties</h2>
+<p>I will get a list of the “taxon” IDs for the county in each state with the most votes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">top_counties &lt;-<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">subtaxa_apply</span>(voting_data, <span class="dt">subset =</span> n_supertaxa <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">value =</span> <span class="st">&quot;votes&quot;</span>,
+                                     <span class="cf">function</span>(x) <span class="kw">names</span>(x[<span class="kw">which.max</span>(x)])))</code></pre></div>
+</div>
+<div id="plotting-results" class="section level2">
+<h2>Plotting results</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">voting_data <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_size =</span> total_votes,
+            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.0002</span>, <span class="fl">0.06</span>),
+            <span class="dt">node_color =</span> (clinton_votes <span class="op">-</span><span class="st"> </span>sanders_votes) <span class="op">/</span><span class="st"> </span>total_votes <span class="op">*</span><span class="st"> </span><span class="dv">100</span>,
+            <span class="dt">edge_label =</span> <span class="kw">ifelse</span>(taxon_ids <span class="op">%in%</span><span class="st"> </span>top_counties <span class="op">|</span><span class="st"> </span>n_supertaxa <span class="op">&lt;=</span><span class="st"> </span><span class="dv">3</span>, taxon_names, <span class="st">&quot;&quot;</span>),
+            <span class="dt">edge_label_size_trans =</span> <span class="st">&quot;area&quot;</span>,
+            <span class="dt">edge_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.008</span>, <span class="fl">0.025</span>),
+            <span class="dt">node_color_range =</span> <span class="kw">c</span>(<span class="st">&quot;#a6611a&quot;</span>, <span class="st">&quot;lightgray&quot;</span>, <span class="st">&quot;#018571&quot;</span>),
+            <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">50</span>),
+            <span class="dt">edge_color_range =</span> <span class="kw">c</span>(<span class="st">&quot;#a6611a&quot;</span>, <span class="st">&quot;lightgray&quot;</span>, <span class="st">&quot;#018571&quot;</span>),
+            <span class="dt">edge_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">50</span>),
+            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Clinton               Sanders&quot;</span>,
+            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Total votes&quot;</span>,
+            <span class="dt">repel_labels =</span> <span class="ot">FALSE</span>,
+            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;voting&quot;</span>))</code></pre></div>
+<p><img src="publication--08--voting_files/figure-html/unnamed-chunk-6-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="software-and-packages-used" class="section level2">
+<h2>Software and packages used</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre class="r-output"><code>## R version 3.4.4 (2018-03-15)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 16.04.5 LTS
+## 
+## Matrix products: default
+## BLAS: /usr/lib/libblas/libblas.so.3.6.0
+## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
+##  [4] LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
+## [10] LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] readr_1.2.0          metacoder_0.2.1.9011 taxa_0.3.1           stringr_1.3.1       
+## [5] glossary_0.1.0       knitcitations_1.0.8  knitr_1.20          
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.18     compiler_3.4.4   pillar_1.2.1     plyr_1.8.4       bindr_0.1.1     
+##  [6] tools_3.4.4      ggfittext_0.6.0  digest_0.6.15    gtable_0.2.0     lubridate_1.7.4 
+## [11] jsonlite_1.5     evaluate_0.10.1  tibble_1.4.2     pkgconfig_2.0.1  rlang_0.2.2     
+## [16] igraph_1.2.2     bibtex_0.4.2     cli_1.0.0        yaml_2.1.18      bindrcpp_0.2.2  
+## [21] RefManageR_1.2.0 dplyr_0.7.6      httr_1.3.1       xml2_1.2.0       hms_0.4.2.9001  
+## [26] grid_3.4.4       rprojroot_1.3-2  tidyselect_0.2.4 glue_1.3.0       R6_2.2.2        
+## [31] fansi_0.2.3      rmarkdown_1.9    ggplot2_3.0.0    reshape2_1.4.3   purrr_0.2.5     
+## [36] magrittr_1.5     scales_1.0.0     backports_1.1.2  htmltools_0.3.6  assertthat_0.2.0
+## [41] colorspace_1.3-2 labeling_0.3     utf8_1.1.3       stringi_1.2.4    munsell_0.5.0   
+## [46] lazyeval_0.2.1   crayon_1.3.4
+</code></pre>
+</div>
+
+<div class="footer_section">
+  <div class="footer_content">
+    <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Metacoder's documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://grunwaldlab.cgrb.oregonstate.edu/" property="cc:attributionName" rel="cc:attributionURL">The Grunwald lab and the USDA Horticultural Crops Research Unit</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/grunwaldlab/metacoder_documentation" rel="dct:source">https://github.com/grunwaldlab/metacoder_documentation</a>.
+  </div>
+</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

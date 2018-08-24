@@ -1,17 +1,25 @@
 ---
-title: "Example analysis"
 output: html_document
-bibliography: "bibtexlib.bib"
+bibliography: "bibliography.bibtex"
 ---
 
-```{r home_setup, echo=FALSE, warning=FALSE, message=FALSE}
-library(grid)
-source("style.R")
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
 ```
+
+```{r rendering_settings, include=FALSE}
+```
+
+# Example analysis
 
 This is a short example analysis to give you a feel for how `metacoder` and `taxa` are used in microbiome analysis.
 If something does not make sense now, don't worry!
-We will cover everything shown here in greater detail later.
+We will cover everything shown here in greater detail in other sections.
 
 ## Reading data
 

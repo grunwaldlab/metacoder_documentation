@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Human gene expression</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84254038-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><div class="logo_frame"><span class="logo_helper"></span><img src="images/hex_sticker.png" height=50px /></div> metacoder</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="example.html">Example</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Workshop
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="workshop--00--introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="workshop--00--required_software.html">Required software</a>
+    </li>
+    <li>
+      <a href="workshop--00--required_data.html">Required datasets</a>
+    </li>
+    <li>
+      <a href="workshop--03--parsing.html">Getting data into R</a>
+    </li>
+    <li>
+      <a href="workshop--04--manipulating.html">Manipulating taxonomic data</a>
+    </li>
+    <li>
+      <a href="workshop--05--plotting.html">Plotting taxonomic data</a>
+    </li>
+    <li>
+      <a href="workshop--06--quality_control.html">Data quality control</a>
+    </li>
+    <li>
+      <a href="workshop--07--diversity_stats.html">Diversity and Ordination</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Publication
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005404">PLOS Comp Bio paper</a>
+    </li>
+    <li>
+      <a href="publication--05--16s_human_microbiome.html">Human microbiome</a>
+    </li>
+    <li>
+      <a href="publication--06--tara_oceans.html">TARA Oceans</a>
+    </li>
+    <li>
+      <a href="publication--01--silva.html">Digital PCR: SILVA</a>
+    </li>
+    <li>
+      <a href="publication--02--rdp.html">Digital PCR: RDP</a>
+    </li>
+    <li>
+      <a href="publication--03--greengenes.html">Digital PCR: Greengenes</a>
+    </li>
+    <li>
+      <a href="publication--04--16s_database_comparision.html">Digital PCR: Comparing databases</a>
+    </li>
+    <li>
+      <a href="publication--08--voting.html">Voting Geography</a>
+    </li>
+    <li>
+      <a href="publication--09--gene_expression.html">Gene Expression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Appendices
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="appendix--00--intro_to_r.html">Introduction to R</a>
+    </li>
+    <li>
+      <a href="appendix--00--intro_to_rstudio.html">Introduction to RStudio</a>
+    </li>
+    <li>
+      <a href="appendix--00--glossary.html">Glossary</a>
+    </li>
+    <li>
+      <a href="appendix--00--presentation_page.html">Slide show</a>
+    </li>
+    <li>
+      <a href="appendix--00--poster_page.html">Poster</a>
+    </li>
+    <li>
+      <a href="https://github.com/grunwaldlab/metacoder">Metacoder source code</a>
+    </li>
+    <li>
+      <a href="https://github.com/grunwaldlab/metacoder_documentation">Website source code</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Human gene expression</h1>
+
+</div>
+
+
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<div id="document-rendering" class="section level3">
+</div>
+<div id="analysis-inputoutput" class="section level3">
+<h3>Analysis input/output</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span>
+output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span>
+output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span>
+pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span>
+revision_n &lt;-<span class="st"> </span><span class="dv">1</span>
+result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {
+  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))
+}
+save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {
+  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))
+}</code></pre></div>
+</div>
+<div id="analysis-settings" class="section level3">
+<h3>Analysis settings</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">min_p_value &lt;-<span class="st"> </span><span class="fl">0.05</span></code></pre></div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+</div>
+<div id="dependencies" class="section level2">
+<h2>Dependencies</h2>
+<p>This analysis requires Bioconductor packages to work. These packages are not available on CRAN and must be installed using the following code. The code below is not run during the compilation of this page, but is provided so others can quickly find the right software to replicate this analysis.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;https://bioconductor.org/biocLite.R&quot;</span>)
+<span class="kw">source</span>(<span class="st">&quot;http://bioconductor.org/workflows.R&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">workflowInstall</span>(<span class="st">&quot;rnaseqGene&quot;</span>)
+<span class="kw">biocLite</span>(<span class="st">&quot;GO.db&quot;</span>)
+<span class="kw">biocLite</span>(<span class="st">&quot;org.Hs.eg.db&quot;</span>)
+<span class="kw">biocLite</span>(<span class="st">&quot;airway&quot;</span>)
+<span class="kw">biocLite</span>(<span class="st">&quot;DESeq2&quot;</span>)</code></pre></div>
+</div>
+<div id="read-in-data" class="section level2">
+<h2>Read in data</h2>
+<div id="starting-from-summarizedexperiment" class="section level3">
+<h3>Starting from SummarizedExperiment</h3>
+<p><a href="http://www.bioconductor.org/help/workflows/rnaseqGene/" class="uri">http://www.bioconductor.org/help/workflows/rnaseqGene/</a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rnaseqGene)
+<span class="kw">library</span>(<span class="st">&quot;airway&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;airway&quot;</span>)
+se &lt;-<span class="st"> </span>airway</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">se<span class="op">$</span>dex &lt;-<span class="st"> </span><span class="kw">relevel</span>(se<span class="op">$</span>dex, <span class="st">&quot;untrt&quot;</span>)
+se<span class="op">$</span>dex</code></pre></div>
+<pre class="r-output"><code>## [1] untrt trt   untrt trt   untrt trt   untrt trt  
+## Levels: untrt trt
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;DESeq2&quot;</span>)
+dds &lt;-<span class="st"> </span><span class="kw">DESeqDataSet</span>(se, <span class="dt">design =</span> <span class="op">~</span><span class="st"> </span>cell <span class="op">+</span><span class="st"> </span>dex)</code></pre></div>
+</div>
+<div id="pre-filtering-the-dataset" class="section level3">
+<h3>Pre-filtering the dataset</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(dds)</code></pre></div>
+<pre class="r-output"><code>## [1] 64102
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dds &lt;-<span class="st"> </span>dds[ <span class="kw">rowSums</span>(<span class="kw">counts</span>(dds)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, ]
+<span class="kw">nrow</span>(dds)</code></pre></div>
+<pre class="r-output"><code>## [1] 29391
+</code></pre>
+</div>
+<div id="the-rlog-transformation" class="section level3">
+<h3>The rlog transformation</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rld &lt;-<span class="st"> </span><span class="kw">rlog</span>(dds, <span class="dt">blind=</span><span class="ot">FALSE</span>)
+<span class="kw">head</span>(<span class="kw">assay</span>(rld), <span class="dv">3</span>)</code></pre></div>
+<pre class="r-output"><code>##                 SRR1039508 SRR1039509 SRR1039512 SRR1039513 SRR1039516 SRR1039517 SRR1039520
+## ENSG00000000003   9.385683   9.052608   9.516875   9.285338   9.839085   9.530311   9.663255
+## ENSG00000000419   8.869616   9.138271   9.036116   9.075295   8.972126   9.131824   8.861534
+## ENSG00000000457   7.961369   7.881385   7.824079   7.921490   7.751699   7.886441   7.957121
+##                 SRR1039521
+## ENSG00000000003   9.277699
+## ENSG00000000419   9.060905
+## ENSG00000000457   7.912123
+</code></pre>
+</div>
+<div id="differential-expression-analysis" class="section level3">
+<h3>Differential expression analysis</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dds &lt;-<span class="st"> </span><span class="kw">estimateSizeFactors</span>(dds)
+dds &lt;-<span class="st"> </span><span class="kw">DESeq</span>(dds)</code></pre></div>
+<pre><code>## using pre-existing size factors</code></pre>
+<pre><code>## estimating dispersions</code></pre>
+<pre><code>## gene-wise dispersion estimates</code></pre>
+<pre><code>## mean-dispersion relationship</code></pre>
+<pre><code>## final dispersion estimates</code></pre>
+<pre><code>## fitting model and testing</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(res &lt;-<span class="st"> </span><span class="kw">results</span>(dds))</code></pre></div>
+<pre class="r-output"><code>## log2 fold change (MLE): dex trt vs untrt 
+## Wald test p-value: dex trt vs untrt 
+## DataFrame with 29391 rows and 6 columns
+##                    baseMean log2FoldChange     lfcSE        stat       pvalue        padj
+##                   &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;   &lt;numeric&gt;
+## ENSG00000000003 708.6021697    -0.38125388 0.1006560  -3.7876928 0.0001520527 0.001281516
+## ENSG00000000419 520.2979006     0.20681271 0.1122218   1.8428925 0.0653447023 0.196230403
+## ENSG00000000457 237.1630368     0.03792050 0.1434532   0.2643405 0.7915175170 0.911219223
+## ENSG00000000460  57.9326331    -0.08816322 0.2871677  -0.3070095 0.7588361136 0.894672849
+## ENSG00000000938   0.3180984    -1.37823397 3.4998753  -0.3937952 0.6937322727          NA
+## ...                     ...            ...       ...         ...          ...         ...
+## ENSG00000273485   1.2864477     -0.1271363 1.6005571 -0.07943253    0.9366886          NA
+## ENSG00000273486  15.4525365     -0.1509944 0.4865490 -0.31033758    0.7563043   0.8936787
+## ENSG00000273487   8.1632350      1.0464169 0.6990336  1.49694792    0.1344068   0.3291460
+## ENSG00000273488   8.5844790      0.1078190 0.6381646  0.16895172    0.8658346   0.9451750
+## ENSG00000273489   0.2758994      1.4837258 3.5139452  0.42223933    0.6728503          NA
+</code></pre>
+</div>
+<div id="converting-ensembl-ids-to-go-ids" class="section level3">
+<h3>Converting ENSEMBL IDs to GO IDs</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GO.db)
+<span class="kw">library</span>(org.Hs.eg.db)
+res<span class="op">$</span>go_id &lt;-<span class="st"> </span><span class="kw">mapIds</span>(org.Hs.eg.db,
+                    <span class="dt">keys=</span><span class="kw">rownames</span>(res),
+                    <span class="dt">column=</span><span class="st">&quot;GO&quot;</span>,
+                    <span class="dt">keytype=</span><span class="st">&quot;ENSEMBL&quot;</span>,
+                    <span class="dt">multiVals=</span><span class="st">&quot;first&quot;</span>)</code></pre></div>
+<pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+</div>
+<div id="fitlering-results" class="section level3">
+<h3>Fitlering results</h3>
+<p>Remove genes with no GO annotation</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(res)</code></pre></div>
+<pre class="r-output"><code>## [1] 29391
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span>res[<span class="op">!</span><span class="kw">is.na</span>(res<span class="op">$</span>go_id), ]
+res &lt;-<span class="st"> </span>res[res<span class="op">$</span>go_id <span class="op">%in%</span><span class="st"> </span><span class="kw">keys</span>(org.Hs.eg.db, <span class="dt">keytype =</span> <span class="st">&quot;GO&quot;</span>), ]
+<span class="kw">nrow</span>(res)</code></pre></div>
+<pre class="r-output"><code>## [1] 15514
+</code></pre>
+<p>Remove insignificant genes</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(res)
+res &lt;-<span class="st"> </span>res[(<span class="op">!</span><span class="st"> </span><span class="kw">is.na</span>(res<span class="op">$</span>padj)) <span class="op">&amp;</span><span class="st"> </span>res<span class="op">$</span>padj <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.05</span>, ]
+<span class="kw">nrow</span>(res)</code></pre></div>
+<p>Remove genes with small changes</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(res)
+res &lt;-<span class="st">  </span>res[<span class="kw">abs</span>(res<span class="op">$</span>log2FoldChange) <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>, ]
+<span class="kw">nrow</span>(res)</code></pre></div>
+</div>
+<div id="getting-classificaiton" class="section level3">
+<h3>Getting classificaiton</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">term_class &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">current =</span> x, <span class="dt">all_paths =</span> <span class="ot">TRUE</span>, <span class="dt">type =</span> GOCCPARENTS, <span class="dt">verbose =</span> <span class="ot">TRUE</span>, 
+                       <span class="dt">valid_relationships =</span> <span class="kw">c</span>(<span class="st">&quot;is_a&quot;</span>)) {
+  <span class="co"># Get immediate children of current taxon</span>
+  parents =<span class="st"> </span><span class="kw">tryCatch</span>({
+    possible_parents &lt;-<span class="st"> </span><span class="kw">as.list</span>(type[x[<span class="dv">1</span>]])[[<span class="dv">1</span>]]
+    <span class="cf">if</span> (<span class="op">!</span><span class="st"> </span><span class="kw">is.null</span>(valid_relationships)) {
+      possible_parents &lt;-<span class="st"> </span>possible_parents[<span class="kw">names</span>(possible_parents) <span class="op">%in%</span><span class="st"> </span>valid_relationships]
+    }
+    <span class="kw">names</span>(AnnotationDbi<span class="op">::</span><span class="kw">Term</span>(possible_parents))
+  }, <span class="dt">error =</span> <span class="cf">function</span>(e) {
+    <span class="kw">c</span>()
+  })
+  
+  <span class="co"># only go down one path if desired</span>
+  <span class="cf">if</span> (<span class="op">!</span><span class="st"> </span>all_paths) {
+    parents &lt;-<span class="st"> </span>parents[<span class="dv">1</span>]
+  }
+  parents &lt;-<span class="st"> </span>parents[parents <span class="op">!=</span><span class="st"> &quot;all&quot;</span>]
+  
+  <span class="cf">if</span> (<span class="kw">is.null</span>(parents)) {
+    <span class="kw">return</span>(<span class="kw">c</span>())
+  } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">length</span>(parents) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {
+    <span class="kw">return</span>(<span class="kw">paste0</span>(<span class="dt">collapse =</span> <span class="st">&quot;|&quot;</span>, AnnotationDbi<span class="op">::</span><span class="kw">Term</span>(x)))
+  } <span class="cf">else</span> {
+    next_x &lt;-<span class="st"> </span><span class="kw">lapply</span>(parents, <span class="cf">function</span>(y) <span class="kw">c</span>(y, x))
+    
+    <span class="co"># Run this function on them to get their output</span>
+    child_output &lt;-<span class="st"> </span><span class="kw">lapply</span>(next_x, term_class, <span class="dt">all_paths =</span> all_paths, <span class="dt">type =</span> type)
+    output &lt;-<span class="st"> </span><span class="kw">unlist</span>(child_output, <span class="dt">recursive =</span> <span class="ot">FALSE</span>)
+    
+    <span class="kw">return</span>(output)
+  }
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cc_class &lt;-<span class="st"> </span><span class="kw">lapply</span>(res<span class="op">$</span>go_id, term_class, <span class="dt">all_paths =</span> <span class="ot">FALSE</span>, <span class="dt">type =</span> GOCCPARENTS)
+mf_class &lt;-<span class="st"> </span><span class="kw">lapply</span>(res<span class="op">$</span>go_id, term_class, <span class="dt">all_paths =</span> <span class="ot">FALSE</span>, <span class="dt">type =</span> GOMFPARENTS)
+bp_class &lt;-<span class="st"> </span><span class="kw">lapply</span>(res<span class="op">$</span>go_id, term_class, <span class="dt">all_paths =</span> <span class="ot">FALSE</span>, <span class="dt">type =</span> GOBPPARENTS)</code></pre></div>
+</div>
+<div id="cellular-component" class="section level3">
+<h3>Cellular component</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cc_res &lt;-<span class="st"> </span>res[<span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(res), <span class="kw">sapply</span>(cc_class, length)), ]
+cc_res<span class="op">$</span>class &lt;-<span class="st"> </span><span class="kw">unlist</span>(cc_class)
+<span class="kw">library</span>(metacoder)
+obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(<span class="kw">as.data.frame</span>(cc_res), <span class="dt">class_cols =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;|&quot;</span>)
+obj<span class="op">$</span>funcs &lt;-<span class="st"> </span><span class="kw">c</span>(obj<span class="op">$</span>funcs,
+               <span class="dt">change =</span> <span class="cf">function</span>(x, <span class="dt">subset =</span> <span class="ot">NULL</span>) {
+                 <span class="kw">vapply</span>(<span class="kw">obs</span>(x, <span class="st">&quot;tax_data&quot;</span>),
+                        <span class="cf">function</span>(i) {
+                          obs_change &lt;-<span class="st"> </span>obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>log2FoldChange[obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>padj <span class="op">&lt;=</span><span class="st"> </span>min_p_value]
+                          <span class="kw">mean</span>(obs_change, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+                        },
+                        <span class="kw">numeric</span>(<span class="dv">1</span>))
+               },
+               <span class="dt">num_changed =</span> <span class="cf">function</span>(x, <span class="dt">subset =</span> <span class="ot">NULL</span>) {
+                 <span class="kw">vapply</span>(<span class="kw">obs</span>(x, <span class="st">&quot;tax_data&quot;</span>),
+                        <span class="cf">function</span>(i) {
+                          <span class="kw">sum</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>padj <span class="op">&lt;=</span><span class="st"> </span>min_p_value, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+                        },
+                        <span class="kw">numeric</span>(<span class="dv">1</span>))
+               })</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">3</span>)
+obj <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(num_changed <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(n_supertaxa <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># filter_taxa(n_supertaxa &gt;= 1) %&gt;% </span>
+<span class="st">  </span><span class="co"># filter_taxa(nchar(taxon_names) &lt;= 40) %&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_label =</span> <span class="kw">ifelse</span>(<span class="kw">nchar</span>(taxon_names) <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>, taxon_names, <span class="st">&quot;&quot;</span>),
+            <span class="dt">node_size =</span> num_changed,
+            <span class="co"># node_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.03</span>),
+            <span class="co"># node_label_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.02</span>),
+            <span class="co"># edge_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">edge_size_range =</span> <span class="kw">c</span>(<span class="fl">0.008</span>, <span class="fl">0.03</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>,
+            <span class="dt">node_color =</span> <span class="dv">2</span><span class="op">^</span><span class="kw">abs</span>(change) <span class="op">*</span><span class="st"> </span><span class="kw">sign</span>(change),
+            <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
+            <span class="dt">node_color_range =</span> <span class="kw">diverging_palette</span>(),
+            <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>),
+            <span class="co"># edge_color_trans = &quot;linear&quot;,</span>
+            <span class="co"># edge_color_range = diverging_palette(),</span>
+            <span class="co"># edge_color_interval =  c(-4, 4),</span>
+            <span class="co"># node_label_max = 500,</span>
+            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Factor change&quot;</span>,
+            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of genes&quot;</span>,
+            <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>, <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>,
+            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;gene_expression--cellular_component&quot;</span>))</code></pre></div>
+<p><img src="publication--09--gene_expression_files/figure-html/unnamed-chunk-18-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="biological-process" class="section level3">
+<h3>Biological Process</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bp_res &lt;-<span class="st"> </span>res[<span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(res), <span class="kw">sapply</span>(bp_class, length)), ]
+bp_res<span class="op">$</span>class &lt;-<span class="st"> </span><span class="kw">unlist</span>(bp_class)
+<span class="kw">library</span>(metacoder)
+
+obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(<span class="kw">as.data.frame</span>(bp_res), <span class="dt">class_cols =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;|&quot;</span>)
+obj<span class="op">$</span>funcs &lt;-<span class="st"> </span><span class="kw">c</span>(obj<span class="op">$</span>funcs,
+                      <span class="dt">change =</span> <span class="cf">function</span>(x, <span class="dt">subset =</span> <span class="ot">NULL</span>) {
+                        <span class="kw">vapply</span>(<span class="kw">obs</span>(x, <span class="st">&quot;tax_data&quot;</span>),
+                               <span class="cf">function</span>(i) {
+                                 obs_change &lt;-<span class="st"> </span>obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>log2FoldChange[obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>padj <span class="op">&lt;=</span><span class="st"> </span>min_p_value]
+                                 <span class="kw">mean</span>(obs_change, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+                               },
+                               <span class="kw">numeric</span>(<span class="dv">1</span>))
+                      },
+                      <span class="dt">num_changed =</span> <span class="cf">function</span>(x, <span class="dt">subset =</span> <span class="ot">NULL</span>) {
+                        <span class="kw">vapply</span>(<span class="kw">obs</span>(x, <span class="st">&quot;tax_data&quot;</span>),
+                               <span class="cf">function</span>(i) {
+                                 <span class="kw">sum</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>padj <span class="op">&lt;=</span><span class="st"> </span>min_p_value, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+                               },
+                               <span class="kw">numeric</span>(<span class="dv">1</span>))
+                      })</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">7</span>) <span class="co">#2, 4, 5, 7*, 19</span>
+mgsub &lt;-<span class="st"> </span><span class="cf">function</span>(pattern, replacement, x, ...) { <span class="co"># from: http://stackoverflow.com/questions/15253954/replace-multiple-arguments-with-gsub</span>
+  <span class="cf">if</span> (<span class="kw">length</span>(pattern)<span class="op">!=</span><span class="kw">length</span>(replacement)) {
+    <span class="kw">stop</span>(<span class="st">&quot;pattern and replacement do not have the same length.&quot;</span>)
+  }
+  result &lt;-<span class="st"> </span>x
+  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(pattern)) {
+    result &lt;-<span class="st"> </span><span class="kw">gsub</span>(pattern[i], replacement[i], result, ...)
+  }
+  result
+}
+
+to_replace &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>,
+                     <span class="kw">c</span>(<span class="st">&quot;regulation of growth&quot;</span>, <span class="st">&quot;&quot;</span>,
+                       <span class="st">&quot;activation of innate immune response&quot;</span>, <span class="st">&quot;&quot;</span>,
+                       <span class="st">&quot;system development&quot;</span>, <span class="st">&quot;&quot;</span>,
+                       <span class="st">&quot;regulation of response to stimulus&quot;</span>, <span class="st">&quot;&quot;</span>,
+                       <span class="st">&quot;lipid metabolic process&quot;</span>, <span class="st">&quot;&quot;</span>,
+                       <span class="st">&quot;selenium compound metabolic process&quot;</span>, <span class="st">&quot;selenium metabolic process&quot;</span>
+                       ))
+output_path &lt;-<span class="st"> </span><span class="kw">file.path</span>(output_folder,
+                                    <span class="kw">paste0</span>(<span class="st">&quot;gene_expression--biological_process&quot;</span>,
+                                           output_format))
+obj <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(num_changed <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(n_supertaxa <span class="op">&lt;=</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;plot_data&quot;</span>, 
+             <span class="dt">taxon_id =</span> taxon_ids,
+             <span class="dt">plotted_name =</span> <span class="kw">gsub</span>(<span class="st">&quot;_&quot;</span>, <span class="st">&quot; &quot;</span>, taxon_names),
+              <span class="dt">f_change =</span> <span class="dv">2</span><span class="op">^</span><span class="kw">abs</span>(change) <span class="op">*</span><span class="st"> </span><span class="kw">sign</span>(change)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;plot_data&quot;</span>,
+             <span class="dt">short_name =</span> <span class="kw">vapply</span>(plotted_name, <span class="dt">FUN.VALUE =</span> <span class="kw">character</span>(<span class="dv">1</span>), <span class="cf">function</span>(x) {
+               <span class="kw">mgsub</span>(<span class="dt">pattern =</span> to_replace[, <span class="dv">1</span>], <span class="dt">replacement =</span>  to_replace[, <span class="dv">2</span>], x, <span class="dt">fixed =</span> <span class="ot">TRUE</span>)
+             })) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_label =</span> <span class="kw">ifelse</span>(<span class="kw">abs</span>(f_change) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, short_name, <span class="ot">NA</span>),
+            <span class="dt">node_size =</span> num_changed,
+            <span class="co"># node_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.008</span>, <span class="fl">0.03</span>),
+            <span class="co"># node_label_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.012</span>, <span class="fl">0.02</span>),
+            <span class="co"># edge_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">edge_size_range =</span> <span class="kw">c</span>(<span class="fl">0.008</span>, <span class="fl">0.03</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>,
+            <span class="dt">node_color =</span> f_change,
+            <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
+            <span class="dt">node_color_range =</span> <span class="kw">diverging_palette</span>(),
+            <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>),
+            <span class="dt">edge_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
+            <span class="dt">edge_color_range =</span> <span class="kw">diverging_palette</span>(),
+            <span class="dt">edge_color_interval =</span>  <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>),
+            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Fold change&quot;</span>,
+            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of genes&quot;</span>,
+            <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>, <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>,
+            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;gene_expression--biological_process&quot;</span>))</code></pre></div>
+<pre><code>## Adding a new 176 x 3 table called &quot;plot_data&quot;</code></pre>
+<p><img src="publication--09--gene_expression_files/figure-html/unnamed-chunk-20-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="molecular-function" class="section level3">
+<h3>Molecular Function</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mf_res &lt;-<span class="st"> </span>res[<span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(res), <span class="kw">sapply</span>(mf_class, length)), ]
+mf_res<span class="op">$</span>class &lt;-<span class="st"> </span><span class="kw">unlist</span>(mf_class)
+<span class="kw">library</span>(metacoder)
+obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(<span class="kw">as.data.frame</span>(mf_res), <span class="dt">class_cols =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;|&quot;</span>)
+obj<span class="op">$</span>funcs &lt;-<span class="st"> </span><span class="kw">c</span>(obj<span class="op">$</span>funcs,
+                      <span class="dt">change =</span> <span class="cf">function</span>(x, <span class="dt">subset =</span> <span class="ot">NULL</span>) {
+                        <span class="kw">vapply</span>(<span class="kw">obs</span>(x, <span class="st">&quot;tax_data&quot;</span>),
+                               <span class="cf">function</span>(i) {
+                                 obs_change &lt;-<span class="st"> </span>obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>log2FoldChange[obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>padj <span class="op">&lt;=</span><span class="st"> </span>min_p_value]
+                                 <span class="kw">mean</span>(obs_change, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+                               },
+                               <span class="kw">numeric</span>(<span class="dv">1</span>))
+                      },
+                      <span class="dt">num_changed =</span> <span class="cf">function</span>(x, <span class="dt">subset =</span> <span class="ot">NULL</span>) {
+                        <span class="kw">vapply</span>(<span class="kw">obs</span>(x, <span class="st">&quot;tax_data&quot;</span>),
+                               <span class="cf">function</span>(i) {
+                                 <span class="kw">sum</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data[i, ]<span class="op">$</span>padj <span class="op">&lt;=</span><span class="st"> </span>min_p_value, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+                               },
+                               <span class="kw">numeric</span>(<span class="dv">1</span>))
+                      })</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(num_changed <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(n_supertaxa <span class="op">&lt;=</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># filter_taxa(n_supertaxa &gt;= 1) %&gt;% </span>
+<span class="st">  </span><span class="co"># filter_taxa(nchar(taxon_names) &lt;= 40) %&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_label =</span> <span class="kw">ifelse</span>(<span class="kw">nchar</span>(taxon_names) <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>, taxon_names, <span class="st">&quot;&quot;</span>),
+            <span class="dt">node_size =</span> num_changed,
+            <span class="co"># node_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.03</span>),
+            <span class="co"># node_label_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.015</span>),
+            <span class="co"># edge_size_trans = &quot;log10&quot;,</span>
+            <span class="dt">edge_size_range =</span> <span class="kw">c</span>(<span class="fl">0.008</span>, <span class="fl">0.03</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>,
+            <span class="dt">node_color =</span> <span class="dv">2</span><span class="op">^</span><span class="kw">abs</span>(change) <span class="op">*</span><span class="st"> </span><span class="kw">sign</span>(change),
+            <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
+            <span class="dt">node_color_range =</span> <span class="kw">diverging_palette</span>(),
+            <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>),
+            <span class="dt">edge_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
+            <span class="dt">edge_color_range =</span> <span class="kw">diverging_palette</span>(),
+            <span class="dt">edge_color_interval =</span>  <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>),
+            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Factor change&quot;</span>,
+            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of genes&quot;</span>,
+            <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>, <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>,
+            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;gene_expression--molecular_function&quot;</span>))</code></pre></div>
+<p><img src="publication--09--gene_expression_files/figure-html/unnamed-chunk-22-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="software-and-packages-used" class="section level2">
+<h2>Software and packages used</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre class="r-output"><code>## R version 3.4.4 (2018-03-15)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 16.04.5 LTS
+## 
+## Matrix products: default
+## BLAS: /usr/lib/libblas/libblas.so.3.6.0
+## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
+##  [4] LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
+## [10] LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+##  [1] grid      parallel  stats4    stats     graphics  grDevices utils     datasets  methods  
+## [10] base     
+## 
+## other attached packages:
+##  [1] GO.db_3.5.0                rnaseqGene_1.0.2           fission_0.112.0           
+##  [4] sva_3.26.0                 mgcv_1.8-24                nlme_3.1-137              
+##  [7] Gviz_1.22.3                ReportingTools_2.17.3      org.Hs.eg.db_3.5.0        
+## [10] genefilter_1.60.0          ggbeeswarm_0.6.0           PoiClaClu_1.0.2           
+## [13] RColorBrewer_1.1-2         pheatmap_1.0.10            ggplot2_3.0.0             
+## [16] dplyr_0.7.6                vsn_3.46.0                 DESeq2_1.18.1             
+## [19] magrittr_1.5               BiocParallel_1.12.0        GenomicAlignments_1.14.2  
+## [22] GenomicFeatures_1.30.3     AnnotationDbi_1.40.0       Rsamtools_1.30.0          
+## [25] Biostrings_2.46.0          XVector_0.18.0             airway_0.112.0            
+## [28] SummarizedExperiment_1.8.1 DelayedArray_0.4.1         matrixStats_0.54.0        
+## [31] Biobase_2.38.0             GenomicRanges_1.30.3       GenomeInfoDb_1.14.0       
+## [34] IRanges_2.12.0             S4Vectors_0.16.0           BiocGenerics_0.24.0       
+## [37] BiocStyle_2.6.1            metacoder_0.2.1.9011       taxa_0.3.1                
+## [40] stringr_1.3.1              glossary_0.1.0             knitcitations_1.0.8       
+## [43] knitr_1.20                
+## 
+## loaded via a namespace (and not attached):
+##   [1] utf8_1.1.4                    R.utils_2.6.0                 tidyselect_0.2.4             
+##   [4] RSQLite_2.1.1                 htmlwidgets_1.2               munsell_0.5.0                
+##   [7] preprocessCore_1.40.0         withr_2.1.2                   colorspace_1.3-2             
+##  [10] BiocInstaller_1.28.0          Category_2.44.0               OrganismDbi_1.20.0           
+##  [13] rstudioapi_0.7                labeling_0.3                  GenomeInfoDbData_1.0.0       
+##  [16] hwriter_1.3.2                 bit64_0.9-7                   rprojroot_1.3-2              
+##  [19] biovizBase_1.26.0             R6_2.2.2                      locfit_1.5-9.1               
+##  [22] AnnotationFilter_1.2.0        bitops_1.0-6                  reshape_0.8.7                
+##  [25] assertthat_0.2.0              promises_1.0.1                scales_1.0.0                 
+##  [28] nnet_7.3-12                   beeswarm_0.2.3                gtable_0.2.0                 
+##  [31] affy_1.56.0                   ggbio_1.26.1                  ensembldb_2.2.2              
+##  [34] rlang_0.2.2                   splines_3.4.4                 rtracklayer_1.38.3           
+##  [37] lazyeval_0.2.1                acepack_1.4.1                 dichromat_2.0-0              
+##  [40] checkmate_1.8.5               yaml_2.2.0                    reshape2_1.4.3               
+##  [43] backports_1.1.2               httpuv_1.4.5                  Hmisc_4.1-1                  
+##  [46] RMySQL_0.10.15                RBGL_1.54.0                   tools_3.4.4                  
+##  [49] affyio_1.48.0                 Rcpp_0.12.18                  plyr_1.8.4                   
+##  [52] base64enc_0.1-3               progress_1.2.0                zlibbioc_1.24.0              
+##  [55] purrr_0.2.5                   RCurl_1.95-4.11               prettyunits_1.0.2            
+##  [58] rpart_4.1-13                  cluster_2.0.7-1               data.table_1.11.4            
+##  [61] ProtGenerics_1.10.0           hms_0.4.2.9001                mime_0.5                     
+##  [64] evaluate_0.11                 xtable_1.8-2                  XML_3.98-1.16                
+##  [67] gridExtra_2.3                 compiler_3.4.4                biomaRt_2.34.2               
+##  [70] tibble_1.4.2                  crayon_1.3.4                  R.oo_1.22.0                  
+##  [73] htmltools_0.3.6               GOstats_2.44.0                later_0.7.3                  
+##  [76] Formula_1.2-3                 geneplotter_1.56.0            lubridate_1.7.4              
+##  [79] DBI_1.0.0                     Matrix_1.2-14                 readr_1.2.0                  
+##  [82] cli_1.0.0                     R.methodsS3_1.7.1             igraph_1.2.2                 
+##  [85] bindr_0.1.1                   pkgconfig_2.0.2               RefManageR_1.2.0             
+##  [88] foreign_0.8-70                xml2_1.2.0                    annotate_1.56.2              
+##  [91] vipor_0.4.5                   AnnotationForge_1.20.0        bibtex_0.4.2                 
+##  [94] VariantAnnotation_1.24.5      digest_0.6.16                 graph_1.56.0                 
+##  [97] rmarkdown_1.10                htmlTable_1.12                edgeR_3.20.9                 
+## [100] GSEABase_1.40.1               curl_3.2                      shiny_1.1.0                  
+## [103] jsonlite_1.5                  PFAM.db_3.5.0                 bindrcpp_0.2.2               
+## [106] limma_3.34.9                  BSgenome_1.46.0               fansi_0.3.0                  
+## [109] pillar_1.3.0                  lattice_0.20-35               GGally_1.4.0                 
+## [112] httr_1.3.1                    survival_2.42-6               interactiveDisplayBase_1.16.0
+## [115] glue_1.3.0                    bit_1.1-14                    Rgraphviz_2.22.0             
+## [118] stringi_1.2.4                 ggfittext_0.6.0               blob_1.1.1                   
+## [121] AnnotationHub_2.10.1          latticeExtra_0.6-28           memoise_1.1.0
+</code></pre>
+</div>
+
+<div class="footer_section">
+  <div class="footer_content">
+    <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Metacoder's documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://grunwaldlab.cgrb.oregonstate.edu/" property="cc:attributionName" rel="cc:attributionURL">The Grunwald lab and the USDA Horticultural Crops Research Unit</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/grunwaldlab/metacoder_documentation" rel="dct:source">https://github.com/grunwaldlab/metacoder_documentation</a>.
+  </div>
+</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

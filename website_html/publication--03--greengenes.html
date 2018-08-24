@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Graphing the Greengenes database</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84254038-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><div class="logo_frame"><span class="logo_helper"></span><img src="images/hex_sticker.png" height=50px /></div> metacoder</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="example.html">Example</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Workshop
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="workshop--00--introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="workshop--00--required_software.html">Required software</a>
+    </li>
+    <li>
+      <a href="workshop--00--required_data.html">Required datasets</a>
+    </li>
+    <li>
+      <a href="workshop--03--parsing.html">Getting data into R</a>
+    </li>
+    <li>
+      <a href="workshop--04--manipulating.html">Manipulating taxonomic data</a>
+    </li>
+    <li>
+      <a href="workshop--05--plotting.html">Plotting taxonomic data</a>
+    </li>
+    <li>
+      <a href="workshop--06--quality_control.html">Data quality control</a>
+    </li>
+    <li>
+      <a href="workshop--07--diversity_stats.html">Diversity and Ordination</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Publication
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005404">PLOS Comp Bio paper</a>
+    </li>
+    <li>
+      <a href="publication--05--16s_human_microbiome.html">Human microbiome</a>
+    </li>
+    <li>
+      <a href="publication--06--tara_oceans.html">TARA Oceans</a>
+    </li>
+    <li>
+      <a href="publication--01--silva.html">Digital PCR: SILVA</a>
+    </li>
+    <li>
+      <a href="publication--02--rdp.html">Digital PCR: RDP</a>
+    </li>
+    <li>
+      <a href="publication--03--greengenes.html">Digital PCR: Greengenes</a>
+    </li>
+    <li>
+      <a href="publication--04--16s_database_comparision.html">Digital PCR: Comparing databases</a>
+    </li>
+    <li>
+      <a href="publication--08--voting.html">Voting Geography</a>
+    </li>
+    <li>
+      <a href="publication--09--gene_expression.html">Gene Expression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Appendices
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="appendix--00--intro_to_r.html">Introduction to R</a>
+    </li>
+    <li>
+      <a href="appendix--00--intro_to_rstudio.html">Introduction to RStudio</a>
+    </li>
+    <li>
+      <a href="appendix--00--glossary.html">Glossary</a>
+    </li>
+    <li>
+      <a href="appendix--00--presentation_page.html">Slide show</a>
+    </li>
+    <li>
+      <a href="appendix--00--poster_page.html">Poster</a>
+    </li>
+    <li>
+      <a href="https://github.com/grunwaldlab/metacoder">Metacoder source code</a>
+    </li>
+    <li>
+      <a href="https://github.com/grunwaldlab/metacoder_documentation">Website source code</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Graphing the Greengenes database</h1>
+
+</div>
+
+
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
+<p><strong>NOTE:</strong> This analysis requires at least 10Gb of RAM to run. It uses large files not included in the repository and many steps can take a few minutes to run.</p>
+</div>
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<div id="analysis-inputoutput" class="section level3">
+<h3>Analysis input/output</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span>
+output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span>
+output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span>
+pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span>
+revision_n &lt;-<span class="st"> </span><span class="dv">1</span>
+result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {
+  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))
+}
+save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {
+  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))
+}</code></pre></div>
+</div>
+<div id="analysis-parameters" class="section level3">
+<h3>Analysis parameters</h3>
+<p>These settings are shared between the RDP, SILVA, and Greengenes analyses, since the results of those three analyeses are combined in one plot later. This ensures that all of the graphs use the same color and size scales, instead of optimizing them for each data set, as would be done automatically otherwise.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">size_range &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.0004</span>, <span class="fl">0.015</span>) <span class="co"># The size range of nodes</span>
+label_size_range &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.002</span>, <span class="fl">0.05</span>) <span class="co"># The size range of labels</span>
+all_size_interval &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3000000</span>) <span class="co"># The range of read counts to display in the whole database plots</span>
+pcr_size_interval &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">25000</span>) <span class="co"># The range of read counts to display in the PCR plots</span>
+label_max &lt;-<span class="st"> </span><span class="dv">50</span> <span class="co"># The maximum number of labels to show on each graph</span>
+max_taxonomy_depth &lt;-<span class="st"> </span><span class="dv">4</span> <span class="co"># The maximum number of taxonomic ranks to show</span>
+min_seq_count &lt;-<span class="st"> </span><span class="ot">NULL</span> <span class="co"># The minimum number of sequeces need to show a taxon.</span>
+just_bacteria &lt;-<span class="st"> </span><span class="ot">TRUE</span> <span class="co"># If TRUE, only show bacterial taxa</span>
+max_mismatch &lt;-<span class="st"> </span><span class="dv">10</span> <span class="co"># Percentage mismatch tolerated in pcr</span>
+pcr_success_cutoff &lt;-<span class="st"> </span><span class="fl">0.90</span> <span class="co"># Any taxon with a greater proportion of PCR sucess will be excluded from the PCR plots</span>
+min_seq_length &lt;-<span class="st"> </span><span class="dv">1200</span> <span class="co"># Use to encourage full length sequences</span>
+forward_primer =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;515F&quot;</span> =<span class="st"> &quot;GTGYCAGCMGCCGCGGTAA&quot;</span>)
+reverse_primer =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;806R&quot;</span> =<span class="st"> &quot;GGACTACNVGGGTWTCTAAT&quot;</span>)
+pcr_success_color_scale =<span class="st"> </span><span class="kw">c</span>(viridis<span class="op">::</span><span class="kw">plasma</span>(<span class="dv">10</span>)[<span class="dv">4</span><span class="op">:</span><span class="dv">9</span>], <span class="st">&quot;lightgrey&quot;</span>)</code></pre></div>
+</div>
+</div>
+<div id="parse-database" class="section level2">
+<h2>Parse database</h2>
+<p>The greengenes database stores sequences in one file and taxonomy information in another and the order of the two files differ making parseing more difficult than the other databases. Since taxonomy inforamtion is needed for creating the <code>taxmap</code> data structure, we will parse it first and add the sequence information on after. The input files are not included in this repository because they are large, but you can download them from the Greengenes website here:</p>
+<p><a href="http://greengenes.lbl.gov/Download/" class="uri">http://greengenes.lbl.gov/Download/</a></p>
+<div id="parse-taxonomy-file" class="section level3">
+<h3>Parse taxonomy file</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gg_taxonomy_path &lt;-<span class="st"> </span><span class="kw">file.path</span>(input_folder, <span class="st">&quot;gg_13_5_taxonomy.txt&quot;</span>)
+gg_taxonomy &lt;-<span class="st"> </span><span class="kw">readLines</span>(gg_taxonomy_path)
+<span class="kw">print</span>(gg_taxonomy[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])</code></pre></div>
+<pre class="r-output"><code>## [1] "228054\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__"
+## [2] "844608\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__"
+## [3] "178780\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__"
+## [4] "198479\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__"
+## [5] "187280\tk__Bacteria; p__Cyanobacteria; c__Synechococcophycideae; o__Synechococcales; f__Synechococcaceae; g__Synechococcus; s__"
+</code></pre>
+<p>Note that there are some ranks with no names. These will be removed after parsing the file since they provide no information and an uniform-length taxonomy is not needed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(metacoder)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Parse taxonomy file</span>
+greengenes &lt;-<span class="st"> </span><span class="kw">extract_tax_data</span>(gg_taxonomy,
+                               <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">id =</span> <span class="st">&quot;info&quot;</span>, <span class="st">&quot;class&quot;</span>),
+                               <span class="dt">regex =</span> <span class="st">&quot;^([0-9]+)</span><span class="ch">\t</span><span class="st">(.*)$&quot;</span>,
+                               <span class="dt">class_sep =</span> <span class="st">&quot;; &quot;</span>,
+                               <span class="dt">class_regex =</span> <span class="st">&quot;^([a-z]{1})__(.*)$&quot;</span>,
+                               <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="dt">rank =</span> <span class="st">&quot;taxon_rank&quot;</span>, <span class="st">&quot;taxon_name&quot;</span>))
+greengenes<span class="op">$</span>data<span class="op">$</span>class_data &lt;-<span class="st"> </span><span class="ot">NULL</span>
+
+<span class="co"># Remove data for ranks with no information</span>
+greengenes &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(greengenes, taxon_names <span class="op">!=</span><span class="st"> &quot;&quot;</span>)
+<span class="kw">print</span>(greengenes)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   3093 taxa: <span style='color: #00BB00;'>aab</span><span>. Bacteria, </span><span style='color: #00BB00;'>aac</span><span>. Archaea ... </span><span style='color: #00BB00;'>kxj</span><span>. globerulus, </span><span style='color: #00BB00;'>kxs</span><span>. dorotheae
+##   3093 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>dgr</span><span>-&gt;</span><span style='color: #00BB00;'>kxb</span><span>, </span><span style='color: #00BB00;'>eeu</span><span>-&gt;</span><span style='color: #00BB00;'>kxj</span><span>, </span><span style='color: #00BB00;'>fco</span><span>-&gt;</span><span style='color: #00BB00;'>kxs</span><span>
+##   1 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 1,262,986 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>id     class                            input                           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;                            &lt;chr&gt;                           </span><span>
+##       1 </span><span style='color: #00BB00;'>dgl</span><span>      228054 k__Bacteria; p__Cyanobacteria; … "228054\tk__Bacteria; p__Cyanob…
+##       2 </span><span style='color: #00BB00;'>dgl</span><span>      844608 k__Bacteria; p__Cyanobacteria; … "844608\tk__Bacteria; p__Cyanob…
+##       3 </span><span style='color: #00BB00;'>dgl</span><span>      178780 k__Bacteria; p__Cyanobacteria; … "178780\tk__Bacteria; p__Cyanob…
+##       # ... with 1.263e+06 more rows
+##   0 functions:
+</span></code></pre>
+</div>
+<div id="parse-sequence-file" class="section level3">
+<h3>Parse sequence file</h3>
+<p>Next we will parse the sequence file so we can add it to the <code>obs_data</code> table of the <code>greengenes</code> object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gg_sequence_path &lt;-<span class="st"> </span><span class="kw">file.path</span>(input_folder, <span class="st">&quot;gg_13_5.fasta&quot;</span>)
+<span class="kw">substr</span>(<span class="kw">readLines</span>(gg_sequence_path, <span class="dt">n =</span> <span class="dv">10</span>), <span class="dv">1</span>, <span class="dv">100</span>)</code></pre></div>
+<pre class="r-output"><code>##  [1] "&gt;1111886"                                                                                            
+##  [2] "AACGAACGCTGGCGGCATGCCTAACACATGCAAGTCGAACGAGACCTTCGGGTCTAGTGGCGCACGGGTGCGTAACGCGTGGGAATCTGCCCTTGGGTAC"
+##  [3] "&gt;1111885"                                                                                            
+##  [4] "AGAGTTTGATCCTGGCTCAGAATGAACGCTGGCGGCGTGCCTAACACATGCAAGTCGTACGAGAAATCCCGAGCTTGCTTGGGAAAGTAAAGTGGCGCAC"
+##  [5] "&gt;1111883"                                                                                            
+##  [6] "GCTGGCGGCGTGCCTAACACATGTAAGTCGAACGGGACTGGGGGCAACTCCAGTTCAGTGGCAGACGGGTGCGTAACACGTGAGCAACTTGTCCGACGGC"
+##  [7] "&gt;1111882"                                                                                            
+##  [8] "AGAGTTTGATCATGGCTCAGGATGAACGCTAGCGGCAGGCCTAACACATGCAAGTCGAGGGGTAGAGGCTTTCGGGCCTTGAGACCGGCGCACGGGTGCG"
+##  [9] "&gt;1111879"                                                                                            
+## [10] "CCTAATGCATGCAAGTCGAACGCAGCAGGCGTGCCTGGCTGCGTGGCGAACGGCTGACGAACACGTGGGTGACCTGCCCCGGAGTGGGGGATACCCCGTC"
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gg_seq &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">read.FASTA</span>(gg_sequence_path)</code></pre></div>
+</div>
+<div id="integrating-sequence-and-taxonomy" class="section level3">
+<h3>Integrating sequence and taxonomy</h3>
+<p>We will need to use the Greengenes ID to match up which sequence goes with which row since they are in different orders.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">greengenes &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(greengenes, <span class="st">&quot;sequence&quot;</span>,
+                         <span class="kw">setNames</span>(gg_seq[id], greengenes<span class="op">$</span>data<span class="op">$</span>tax_data<span class="op">$</span>taxon_id))</code></pre></div>
+<pre><code>## Adding a new &quot;DNAbin&quot; vector of length 1262986.</code></pre>
+</div>
+</div>
+<div id="subset" class="section level2">
+<h2>Subset</h2>
+<p>Next I will subset the taxa in the dataset (depending on parameter settings). This can help make the graphs less cluttered and make it easier to compare databases.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="op">!</span><span class="st"> </span><span class="kw">is.null</span>(min_seq_count)) {
+  greengenes &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(greengenes, n_obs <span class="op">&gt;=</span><span class="st"> </span>min_seq_count)
+}
+<span class="cf">if</span> (just_bacteria) {
+  greengenes &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(greengenes, taxon_names <span class="op">==</span><span class="st"> &quot;Bacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>)
+}
+<span class="cf">if</span> (<span class="op">!</span><span class="st"> </span><span class="kw">is.null</span>(max_taxonomy_depth)) {
+  greengenes &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(greengenes, n_supertaxa <span class="op">&lt;=</span><span class="st"> </span>max_taxonomy_depth)
+}
+<span class="kw">print</span>(greengenes)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   1138 taxa: <span style='color: #00BB00;'>aab</span><span>. Bacteria, </span><span style='color: #00BB00;'>aad</span><span>. Cyanobacteria ... </span><span style='color: #00BB00;'>dga</span><span>. [Chloroherpetaceae]
+##   1138 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span> ... </span><span style='color: #00BB00;'>awi</span><span>-&gt;</span><span style='color: #00BB00;'>dfp</span><span>, </span><span style='color: #00BB00;'>bpb</span><span>-&gt;</span><span style='color: #00BB00;'>dfq</span><span>, </span><span style='color: #00BB00;'>bfb</span><span>-&gt;</span><span style='color: #00BB00;'>dga</span><span>
+##   2 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 1,242,330 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>id     class                            input                           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;                            &lt;chr&gt;                           </span><span>
+##       1 </span><span style='color: #00BB00;'>bpm</span><span>      228054 k__Bacteria; p__Cyanobacteria; … "228054\tk__Bacteria; p__Cyanob…
+##       2 </span><span style='color: #00BB00;'>bpm</span><span>      844608 k__Bacteria; p__Cyanobacteria; … "844608\tk__Bacteria; p__Cyanob…
+##       3 </span><span style='color: #00BB00;'>bpm</span><span>      178780 k__Bacteria; p__Cyanobacteria; … "178780\tk__Bacteria; p__Cyanob…
+##       # ... with 1.242e+06 more rows
+##     </span><span style='font-weight: bold;'>sequence</span><span>:
+##       1242330 DNA sequences in binary format stored in a list.
+##       
+##       Mean sequence length: 1401.569 
+##          Shortest sequence: 1111 
+##           Longest sequence: 2368 
+##       
+##       Labels:
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       ...
+##       
+##       More than 10 million nucleotides: not printing base composition
+##   0 functions:
+</span></code></pre>
+</div>
+<div id="remove-chloroplast-sequences" class="section level2">
+<h2>Remove chloroplast sequences</h2>
+<p>These are not bacterial and will bias the <em>in silico</em> PCR results. Note that the <code>invert</code> option makes it so taxa are included that <em>did not</em> pass the filter. This is different than simply using <code>name != &quot;Chloroplast&quot;, subtaxa = TRUE</code> since the effects of <code>invert</code> are applied after those of <code>subtaxa</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">greengenes &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(greengenes, taxon_names <span class="op">==</span><span class="st"> &quot;Chloroplast&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>)
+<span class="kw">print</span>(greengenes)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   1121 taxa: <span style='color: #00BB00;'>aab</span><span>. Bacteria, </span><span style='color: #00BB00;'>aad</span><span>. Cyanobacteria ... </span><span style='color: #00BB00;'>dfq</span><span>. SHAS460, </span><span style='color: #00BB00;'>dga</span><span>. [Chloroherpetaceae]
+##   1121 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span> ... </span><span style='color: #00BB00;'>awi</span><span>-&gt;</span><span style='color: #00BB00;'>dfp</span><span>, </span><span style='color: #00BB00;'>bpb</span><span>-&gt;</span><span style='color: #00BB00;'>dfq</span><span>, </span><span style='color: #00BB00;'>bfb</span><span>-&gt;</span><span style='color: #00BB00;'>dga</span><span>
+##   2 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 1,242,330 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>id     class                            input                           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;                            &lt;chr&gt;                           </span><span>
+##       1 </span><span style='color: #00BB00;'>bpm</span><span>      228054 k__Bacteria; p__Cyanobacteria; … "228054\tk__Bacteria; p__Cyanob…
+##       2 </span><span style='color: #00BB00;'>bpm</span><span>      844608 k__Bacteria; p__Cyanobacteria; … "844608\tk__Bacteria; p__Cyanob…
+##       3 </span><span style='color: #00BB00;'>bpm</span><span>      178780 k__Bacteria; p__Cyanobacteria; … "178780\tk__Bacteria; p__Cyanob…
+##       # ... with 1.242e+06 more rows
+##     </span><span style='font-weight: bold;'>sequence</span><span>:
+##       1242330 DNA sequences in binary format stored in a list.
+##       
+##       Mean sequence length: 1401.569 
+##          Shortest sequence: 1111 
+##           Longest sequence: 2368 
+##       
+##       Labels:
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       ...
+##       
+##       More than 10 million nucleotides: not printing base composition
+##   0 functions:
+</span></code></pre>
+</div>
+<div id="plot-whole-database" class="section level2">
+<h2>Plot whole database</h2>
+<p>Although graphing everything can be a bit overwhelming (1121 taxa), it gives an intuitive feel for the complexity of the database:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">greengenes_plot_all &lt;-<span class="st"> </span><span class="kw">heat_tree</span>(greengenes, 
+                                 <span class="dt">node_size =</span> n_obs,
+                                 <span class="dt">node_color =</span> n_obs,
+                                 <span class="dt">node_size_range =</span> size_range <span class="op">*</span><span class="st"> </span><span class="dv">2</span>,
+                                 <span class="dt">edge_size_range =</span> size_range,
+                                 <span class="dt">node_size_interval =</span> all_size_interval,
+                                 <span class="dt">edge_size_interval =</span> all_size_interval,
+                                 <span class="dt">node_color_interval =</span> all_size_interval,
+                                 <span class="dt">edge_color_interval =</span> all_size_interval,
+                                 <span class="dt">node_label =</span> taxon_names,
+                                 <span class="dt">node_label_max =</span> label_max,
+                                 <span class="dt">node_label_size_range =</span> label_size_range,
+                                 <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Sequence count&quot;</span>,
+                                 <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;greengenes--all&quot;</span>))
+<span class="kw">print</span>(greengenes_plot_all)</code></pre></div>
+<p><img src="publication--03--greengenes_files/figure-html/greengenes_plot_all-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pcr" class="section level2">
+<h2>PCR</h2>
+<p>Before doing the digital PCR, I will filter for only full length sequences, since shorter sequences might not have a primer binding site and the digital PCR would fail, not because of an inability of a real primer to bind to real DNA, but because of missing sequence information in the database. Ideally, this kind of filtering for full length sequences would involve something like a multiple sequences alignment so we don’t remove sequences that are actually full length, but just happen to be shorter than the cutoff of 1200 naturally. However, this method is easy and should work OK.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="op">!</span><span class="st"> </span><span class="kw">is.null</span>(min_seq_length)) {
+  greengenes &lt;-<span class="st"> </span><span class="kw">filter_obs</span>(greengenes, <span class="dt">data =</span> <span class="kw">c</span>(<span class="st">&quot;tax_data&quot;</span>, <span class="st">&quot;sequence&quot;</span>), <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>,
+                           <span class="kw">vapply</span>(sequence, length, <span class="kw">numeric</span>(<span class="dv">1</span>)) <span class="op">&gt;=</span><span class="st"> </span>min_seq_length)
+}
+<span class="kw">print</span>(greengenes)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   1121 taxa: <span style='color: #00BB00;'>aab</span><span>. Bacteria, </span><span style='color: #00BB00;'>aad</span><span>. Cyanobacteria ... </span><span style='color: #00BB00;'>dfq</span><span>. SHAS460, </span><span style='color: #00BB00;'>dga</span><span>. [Chloroherpetaceae]
+##   1121 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span> ... </span><span style='color: #00BB00;'>awi</span><span>-&gt;</span><span style='color: #00BB00;'>dfp</span><span>, </span><span style='color: #00BB00;'>bpb</span><span>-&gt;</span><span style='color: #00BB00;'>dfq</span><span>, </span><span style='color: #00BB00;'>bfb</span><span>-&gt;</span><span style='color: #00BB00;'>dga</span><span>
+##   2 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 1,242,315 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>id     class                            input                           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;                            &lt;chr&gt;                           </span><span>
+##       1 </span><span style='color: #00BB00;'>bpm</span><span>      228054 k__Bacteria; p__Cyanobacteria; … "228054\tk__Bacteria; p__Cyanob…
+##       2 </span><span style='color: #00BB00;'>bpm</span><span>      844608 k__Bacteria; p__Cyanobacteria; … "844608\tk__Bacteria; p__Cyanob…
+##       3 </span><span style='color: #00BB00;'>bpm</span><span>      178780 k__Bacteria; p__Cyanobacteria; … "178780\tk__Bacteria; p__Cyanob…
+##       # ... with 1.242e+06 more rows
+##     </span><span style='font-weight: bold;'>sequence</span><span>:
+##       1242315 DNA sequences in binary format stored in a list.
+##       
+##       Mean sequence length: 1401.572 
+##          Shortest sequence: 1205 
+##           Longest sequence: 2368 
+##       
+##       Labels:
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       bpm
+##       ...
+##       
+##       More than 10 million nucleotides: not printing base composition
+##   0 functions:
+</span></code></pre>
+<p>Next I will conduct digital PCR with a new set of universal 16S primers <span class="citation">(Walters et al. 2016)</span>, allowing for a maximum mismatch of 10%.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">greengenes_pcr &lt;-<span class="st"> </span><span class="kw">primersearch</span>(greengenes, sequence,
+                               <span class="dt">forward =</span> forward_primer,
+                               <span class="dt">reverse =</span> reverse_primer,
+                               <span class="dt">mismatch =</span> max_mismatch)</code></pre></div>
+<p>Now the object <code>greengenes_pcr</code> has all the information that <code>greengenes</code> has plus the results of the digital PCR. Lets plot the whole database again, but coloring based on digital PCR success.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">greengenes_plot_pcr_all &lt;-<span class="st"> </span><span class="kw">heat_tree</span>(greengenes_pcr,
+                                     <span class="dt">node_size =</span> seq_count,
+                                     <span class="dt">node_size_range =</span> size_range <span class="op">*</span><span class="st"> </span><span class="dv">2</span>,
+                                     <span class="dt">edge_size_range =</span> size_range,
+                                     <span class="dt">node_size_interval =</span> all_size_interval,
+                                     <span class="dt">edge_size_interval =</span> all_size_interval,
+                                     <span class="dt">node_label =</span> taxon_names,
+                                     <span class="dt">node_color =</span> prop_amplified,
+                                     <span class="dt">node_color_range =</span>  pcr_success_color_scale,
+                                     <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
+                                     <span class="dt">node_label_max =</span> label_max,
+                                     <span class="dt">node_label_size_range =</span> label_size_range,
+                                     <span class="dt">edge_color_interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),
+                                     <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),
+                                     <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Proportion PCR success&quot;</span>,
+                                     <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Sequence count&quot;</span>,
+                                     <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;greengenes--pcr_all&quot;</span>))
+<span class="kw">print</span>(greengenes_plot_pcr_all)</code></pre></div>
+<p><img src="publication--03--greengenes_files/figure-html/greengenes_plot_pcr_all-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>Since these are universal bacterial primers, we would expect most of the database to amplify. The plot shows this and very few sequences were not amplified. If we wanted to look at only those sequences that did not amplify, we could filter taxa by PCR success and plot what remains. I am including the supertaxa of those taxa that did not amplify since excluding them would split the tree into a cloud of fragments lacking taxonomic context.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">greengenes_plot_pcr_fail &lt;-<span class="st"> </span>greengenes_pcr <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(prop_amplified <span class="op">&lt;</span><span class="st"> </span>pcr_success_cutoff, <span class="dt">supertaxa =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_size =</span> query_count <span class="op">-</span><span class="st"> </span>seq_count,
+            <span class="dt">node_label =</span> taxon_names,
+            <span class="dt">node_color =</span> prop_amplified,
+            <span class="dt">node_size_range =</span> size_range <span class="op">*</span><span class="st"> </span><span class="dv">2</span>,
+            <span class="dt">edge_size_range =</span> size_range,
+            <span class="dt">node_size_interval =</span> pcr_size_interval,
+            <span class="dt">edge_size_interval =</span> pcr_size_interval,
+            <span class="dt">node_color_range =</span>  pcr_success_color_scale,
+            <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
+            <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),
+            <span class="dt">edge_color_interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),
+            <span class="dt">node_label_size_range =</span> label_size_range,
+            <span class="dt">node_label_max =</span> label_max,
+            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Proportion PCR success&quot;</span>,
+            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Sequences not amplified&quot;</span>,
+            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;greengenes--pcr_fail&quot;</span>))
+<span class="kw">print</span>(greengenes_plot_pcr_fail)</code></pre></div>
+<p><img src="publication--03--greengenes_files/figure-html/greengenes_plot_pcr_fail-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="save-outputs-for-composite-figure" class="section level2">
+<h2>Save outputs for composite figure</h2>
+<p>Some results from this file will be combined with others from similar analyses to make a composite figure. Below, the needed objects are saved so that they can be loaded by another Rmd file.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(<span class="dt">file =</span> <span class="kw">file.path</span>(output_folder, <span class="st">&quot;greengenes_data.RData&quot;</span>),
+     greengenes_plot_all, greengenes_plot_pcr_fail)</code></pre></div>
+</div>
+<div id="software-and-packages-used" class="section level2">
+<h2>Software and packages used</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
+<pre class="r-output"><code>## R version 3.4.4 (2018-03-15)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 16.04.4 LTS
+## 
+## Matrix products: default
+## BLAS: /usr/lib/libblas/libblas.so.3.6.0
+## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
+##  [4] LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
+## [10] LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] bindrcpp_0.2.2       metacoder_0.2.1.9009 taxa_0.3.1           stringr_1.3.1       
+## [5] glossary_0.1.0       knitcitations_1.0.8  knitr_1.20          
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.4  purrr_0.2.5       reshape2_1.4.3    lattice_0.20-35   colorspace_1.3-2 
+##  [6] htmltools_0.3.6   viridisLite_0.3.0 yaml_2.2.0        utf8_1.1.4        rlang_0.2.1      
+## [11] pillar_1.3.0      glue_1.3.0        bindr_0.1.1       plyr_1.8.4        ggfittext_0.6.0  
+## [16] munsell_0.5.0     gtable_0.2.0      codetools_0.2-15  evaluate_0.11     labeling_0.3     
+## [21] parallel_3.4.4    fansi_0.2.3       Rcpp_0.12.18      readr_1.1.1       backports_1.1.2  
+## [26] scales_0.5.0      jsonlite_1.5      gridExtra_2.3     ggplot2_3.0.0     hms_0.4.2        
+## [31] digest_0.6.15     stringi_1.2.4     dplyr_0.7.6       ade4_1.7-11       rprojroot_1.3-2  
+## [36] grid_3.4.4        bibtex_0.4.2      cli_1.0.0         tools_3.4.4       magrittr_1.5     
+## [41] lazyeval_0.2.1    tibble_1.4.2      RefManageR_1.2.0  seqinr_3.4-5      crayon_1.3.4     
+## [46] ape_5.1           pkgconfig_2.0.1   MASS_7.3-50       xml2_1.2.0        lubridate_1.7.4  
+## [51] assertthat_0.2.0  rmarkdown_1.10    httr_1.3.1        viridis_0.5.1     R6_2.2.2         
+## [56] igraph_1.2.1      nlme_3.1-137      compiler_3.4.4
+</code></pre>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-walters2016improved">
+<p>Walters, William, Embriette R Hyde, Donna Berg-Lyons, Gail Ackermann, Greg Humphrey, Alma Parada, Jack A Gilbert, et al. 2016. “Improved Bacterial 16s rRNA Gene (V4 and V4-5) and Fungal Internal Transcribed Spacer Marker Gene Primers for Microbial Community Surveys.” <em>mSystems</em> 1 (1). American Society for Microbiology Journals: e00009–15.</p>
+</div>
+</div>
+</div>
+
+<div class="footer_section">
+  <div class="footer_content">
+    <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Metacoder's documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://grunwaldlab.cgrb.oregonstate.edu/" property="cc:attributionName" rel="cc:attributionURL">The Grunwald lab and the USDA Horticultural Crops Research Unit</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/grunwaldlab/metacoder_documentation" rel="dct:source">https://github.com/grunwaldlab/metacoder_documentation</a>.
+  </div>
+</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

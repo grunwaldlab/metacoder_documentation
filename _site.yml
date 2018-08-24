@@ -1,66 +1,67 @@
-name: "metacoder"
+name: metacoder
 navbar:
-  title: '<div class="logo_frame"><span class="logo_helper"></span><img src="images/hex_sticker.png" height=50px /></div> metacoder'
+  title: <div class="logo_frame"><span class="logo_helper"></span><img src="images/hex_sticker.png"
+    height=50px /></div> metacoder
   href: index.html
   left:
-    - text: "Example"
-      href: example.html
-    - text: "Workshop"
-      menu:
-      - text: Introduction
-        href: workshop--00--introduction.html
-      - text: Required software
-        href: workshop--00--required_software.html
-      - text: Required datasets
-        href: workshop--00--required_data.html
-      - text: Getting data into R
-        href: workshop--03--parsing.html
-      - text: Manipulating taxonomic data
-        href: workshop--04--manipulating.html
-      - text: Plotting taxonomic data
-        href: workshop--05--plotting.html
-      - text: Data quality control
-        href: workshop--06--quality_control.html
-      - text: Diversity and Ordination
-        href: workshop--07--diversity_stats.html
-    - text: Publication
-      menu:
-      - text: "PLOS Comp Bio paper"
-        href: http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005404
-      - text: "Human microbiome"
-        href: publication--05--16s_human_microbiome.html
-      - text: "TARA Oceans"
-        href: publication--06--tara_oceans.html
-      - text: "Digital PCR: SILVA"
-        href: publication--01--silva.html
-      - text: "Digital PCR: RDP"
-        href: publication--02--rdp.html
-      - text: "Digital PCR: Greengenes"
-        href: publication--03--greengenes.html
-      - text: "Digital PCR: Comparing databases"
-        href: publication--04--16s_database_comparision.html
-      - text: "Voting Geography"
-        href: publication--08--voting.html
-      - text: "Gene Expression"
-        href: publication--09--gene_expression.html
-    - text: Appendices
-      menu:
-      - text: Introduction to R
-        href: appendix--00--intro_to_r.html
-      - text: Introduction to RStudio
-        href: appendix--00--intro_to_rstudio.html
-      - text: Glossary
-        href: appendix--00--glossary.html
-      - text: Slide show
-        href: appendix--00--presentation_page.html
-      - text: Poster
-        href: poster/poster.pdf
-      - text: Metacoder source code
-        href: https://github.com/grunwaldlab/metacoder
-      - text: Website source code
-        href: https://github.com/grunwaldlab/metacoder_documentation
-    - text: About
-      href: about.html
+  - text: Example
+    href: example.html
+  - text: Workshop
+    menu:
+    - text: Introduction
+      href: workshop--00--introduction.html
+    - text: Required software
+      href: workshop--00--required_software.html
+    - text: Required datasets
+      href: workshop--00--required_data.html
+    - text: Getting data into R
+      href: workshop--03--parsing.html
+    - text: Manipulating taxonomic data
+      href: workshop--04--manipulating.html
+    - text: Plotting taxonomic data
+      href: workshop--05--plotting.html
+    - text: Data quality control
+      href: workshop--06--quality_control.html
+    - text: Diversity and Ordination
+      href: workshop--07--diversity_stats.html
+  - text: Publication
+    menu:
+    - text: PLOS Comp Bio paper
+      href: http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005404
+    - text: Human microbiome
+      href: publication--05--16s_human_microbiome.html
+    - text: TARA Oceans
+      href: publication--06--tara_oceans.html
+    - text: 'Digital PCR: SILVA'
+      href: publication--01--silva.html
+    - text: 'Digital PCR: RDP'
+      href: publication--02--rdp.html
+    - text: 'Digital PCR: Greengenes'
+      href: publication--03--greengenes.html
+    - text: 'Digital PCR: Comparing databases'
+      href: publication--04--16s_database_comparision.html
+    - text: Voting Geography
+      href: publication--08--voting.html
+    - text: Gene Expression
+      href: publication--09--gene_expression.html
+  - text: Appendices
+    menu:
+    - text: Introduction to R
+      href: appendix--00--intro_to_r.html
+    - text: Introduction to RStudio
+      href: appendix--00--intro_to_rstudio.html
+    - text: Glossary
+      href: appendix--00--glossary.html
+    - text: Slide show
+      href: appendix--00--presentation_page.html
+    - text: Poster
+      href: appendix--00--poster_page.html
+    - text: Metacoder source code
+      href: https://github.com/grunwaldlab/metacoder
+    - text: Website source code
+      href: https://github.com/grunwaldlab/metacoder_documentation
+  - text: About
+    href: about.html
 output:
   html_document:
     theme: sandstone
@@ -72,3 +73,4 @@ output:
     lib_dir: site_libs
     self_contained: no
 output_dir: website_html
+
