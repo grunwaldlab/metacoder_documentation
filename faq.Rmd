@@ -1,0 +1,125 @@
+---
+output: html_document
+bibliography: "bibliography.bibtex"
+---
+
+```{r init, echo = FALSE, message = FALSE}
+library(knitr)
+if (! is.null(current_input())) { # if knitr is being used
+  knitr::read_chunk("settings.R")
+} else {
+  source("settings.R")
+}
+```
+
+```{r rendering_settings, include=FALSE}
+```
+
+
+# Frequently asked questions
+
+### Error:otu_table slot is empty
+
+This happens when you have `phyloseq` loaded after `metacoder`. 
+There is also a `filter_taxa` in `phyloseq`, so the one from the `taxa` package is masked.
+Try prefixing `filter_taxa` with `taxa::` or loading `metacoder` after `phyloseq`.
+
+### The labels are too small!
+
+This is a common issue.
+For plots with many taxa (> 300 or so) it might not be possible to make a plot where all taxon labels will be readable in a standard publication figure without zooming in.
+However, there are a few tricks can help maximize the readability of your labels:
+
+1) Only plot the taxa relevant to the purpose of the figure by filtering using `filter_taxa` before passing the result to `heat_tree`. If you are trying to show the diversity of an entire community, consider filtering out low-abundance or otherwise rare taxa. For example:
+
+```{r eval=FALSE}
+my_taxmap %>%
+  filter_taxa(taxon_names == "Bacteria", subtaxa = TRUE) %>%
+  heat_tree(
+    ...
+  )
+```
+
+
+2) Selectively suppress labels that do not need to be printed. For example, if you have taxon names like "unknown", they don't really need to be printed, even if you want the node to show in the graph. You can then say that unlabeled taxa are unknown in the figure caption. For example:
+
+```{r eval=FALSE}
+dont_print <- c("unknown", "unidentified")
+heat_tree(
+  ...,
+  node_label = ifelse(taxon_names %in% dont_print, "", taxon_names),
+  ...
+)
+```
+
+3) Try changing the layout of the graph. The default layout does not work well for all taxonomies. There are others that use simulated annealing to space out nodes more, which might make more room for labels. You should experiment with the `layout` and `initial_layout` options to see what works best. I like the following settings often:
+
+```{r eval=FALSE}
+heat_tree(
+  ...,
+  layout = "davidson-harel",
+  initial_layout = "reingold-tilford",
+  ...
+)
+```
+
+
+4) Force labels to be a specified size
+
+By default the labels are relative to the size of the nodes. If the nodes are really small, so are the labels. You can force the labels to be a specific size range using the `node_label_size_range` and `edge_label_size_range`. These options take a two-value vector of numbers between 0 and 1 indicating the proportion the the plotted area the text size is. For example, to make text height between 1% and 3% of the plot size:
+
+```{r eval=FALSE}
+heat_tree(
+  ...,
+  node_label_size_range = c(0.01, 0.03),
+  ...
+)
+```
+
+You could also use `node_size_range` and `edge_size_range` to change the size of the labels, along with nodes/edges.
+
+5) Shorten labels
+
+Do your labels have taxonomic rank codes or other unneeded text? If so get rid of it using text replacing functions that can use `gloss$add('reqular expressions')` like `sub` and `gsub`. Labels can also be printed over multiple lines, so you might consider replacing some spaces with newlines (`\n`).
+
+
+6) Split the plot into multiple plots
+
+If you have done all the above and the plot is still too dense, you can turn it into multiple plots of subsets of the data.
+Large groups you can give their own tree by filtering the taxonomy using `filter_taxa`:
+
+```{r eval=FALSE}
+my_taxmap %>%
+  filter_taxa(taxon_names == "Ascomycota", subtaxa = TRUE) %>%
+  heat_tree(
+    ...
+  )
+
+my_taxmap %>%
+  filter_taxa(taxon_names == "Basidiomycota", subtaxa = TRUE) %>%
+  heat_tree(
+    ...
+  )
+```
+
+If you have a bunch of small groups left over after plotting the big ones, make a single tree of those by removing the big ones plotted elsewhere using the `subtaxa` and `invert` options:
+
+```{r eval=FALSE}
+my_taxmap %>%
+  filter_taxa(taxon_names %in% c("Ascomycota", "Basidiomycota"), subtaxa = TRUE, invert = TRUE) %>%
+  heat_tree(
+    ...
+  )
+```
+
+
+### How do I get my data into metacoder?
+
+That depends on your data's format. For some formats, there are easy to user "parsers". All of them start with `parse_`, so you can type (after loading `metacoder`) `parse_` and hit tab and see what are available. If you format is not one of those, you can very likely use one of the all-purpose parsers supplied by the `taxa` package. You can read about those here:
+
+https://github.com/ropensci/taxa#parsing-data
+
+
+### Does this work with phyloseq?
+
+Kind of. Metacoder and phyloseq use different data formats, but they both can store the same information. The `parse_phyloseq` converts from the `phyloseq` object to the `taxmap` object format that `metacoder` uses. The `as_phyloseq` function converts from `taxmap` to `phyloseq`, so you can use both on the same data.

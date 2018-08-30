@@ -60,6 +60,8 @@ navbar:
       href: https://github.com/grunwaldlab/metacoder
     - text: Website source code
       href: https://github.com/grunwaldlab/metacoder_documentation
+  - text: FAQ
+    href: faq.html
   - text: About
     href: about.html
 output:
