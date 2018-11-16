@@ -187,6 +187,13 @@ c("hello", "world")
 Ranks are the level a taxon appears in a nested hierarchy of taxa.
 Common ranks include species, genus, family, order, class, phylum, and domain, although there might be others.
 
+## Taxonomy
+
+In general, taxonomy is the study of classifying things in to groups.
+Typically these groups are nested inside eachother (i.e. a hierarchy).
+For our purpose "taxonomy" referrs to how we organize lifeforms into phyla, families, genera, species, etc.
+See the entry on "Taxonomic classifications" for more information.
+
 ## Rarefaction
 
 Subsets counts of types (e.g. OTUs or species) in a sample to some total number of counts.

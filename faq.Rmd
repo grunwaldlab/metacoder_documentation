@@ -123,3 +123,139 @@ https://github.com/ropensci/taxa#parsing-data
 ### Does this work with phyloseq?
 
 Kind of. Metacoder and phyloseq use different data formats, but they both can store the same information. The `parse_phyloseq` converts from the `phyloseq` object to the `taxmap` object format that `metacoder` uses. The `as_phyloseq` function converts from `taxmap` to `phyloseq`, so you can use both on the same data.
+
+
+### How do I subset a table for just one taxonomic rank (or other per-taxon data)?
+
+This answer also applies to subsetting by any other per-taxon piece of information, such as taxon abundance or number of supertaxa.
+
+Some functions in `metacoder` return per-taxon information, such as ` calc_taxon_abund`.
+All taxonomic ranks are represented in this type of output, so you if you see a row for "proteobacteria", "Bacteria" is probably also there (depending on your taxonomy). 
+Often users want to subset these tables for rows corresponding to a given rank, such as all the species.
+Lets get an example data set to play with:
+
+```{r}
+library(metacoder)
+library(dplyr)
+
+# Parse data for example
+x = parse_tax_data(hmp_otus, class_cols = "lineage", class_sep = ";",
+                   class_key = c(tax_rank = "taxon_rank", tax_name = "taxon_name"),
+                   class_regex = "^(.+)__(.+)$")
+                   
+# Calculate the taxon abundance for each numeric column (i.e. sample)
+x$data$tax_abund <- calc_taxon_abund(x, "tax_data", groups = hmp_samples$sex)
+
+# Add taxon name to tax_abund to see filtering effects easier
+x$data$tax_abund <- x$data$tax_abund %>%
+  mutate(taxon = taxon_names(x)) %>%
+  select(taxon_id, taxon, everything())
+
+x
+```
+
+Say I want to subset "tax_abund" to just values for genera.
+Typically, people try this first:
+
+```{r}
+filter_taxa(x, taxon_ranks == "g")
+```
+
+That will ruin you taxonomy since all the other taxa got filtered out, but as a side effect, it does filter that table as intended.
+You can use `get_dataset()` to pull out the table without saving the resulting bad taxonomy:
+
+```{r}
+filter_taxa(x, taxon_ranks == "g") %>%
+  get_dataset("tax_abund")
+```
+
+You might be tempted to use `filter_obs`, since you are trying to filter a specific table:
+
+```{r}
+filter_obs(x, "tax_abund", taxon_ranks == "g")
+```
+
+This does what we want, but only because "tax_abund" corresponds to the taxa one-to-one, so `taxon_names()` returns information that also applies to "tax_abund".
+However, if you change the taxonomy  or "tax_abund" at all, this is no longer true and you can get errors like this:
+
+```{r error=TRUE}
+x %>%
+  filter_taxa(n_obs > 10) %>%
+  filter_obs("tax_abund", taxon_ranks == "g")
+```
+
+This happens because the taxonomy was filtered, so `taxon_ranks` changed, but rows were not removed from "tax_abund" since rows of deleted taxa were automatically reassigned to the deleted taxa's supertaxa.
+This is desirable for data like the OTU table (you don't lose OTUs because a taxon is filtered), but makes what we are trying to do harder.
+You can disable this behavior like so:
+
+```{r}
+x %>%
+  filter_taxa(n_obs > 10, reassign_obs = FALSE) %>%
+  filter_obs("tax_abund", taxon_ranks == "g")
+```
+
+This worked, but we also filtered the OTU table, which might be not be what we wanted to do. 
+We can instead do the following to make that option apply to just "tax_abund":
+
+```{r}
+x %>%
+  filter_taxa(n_obs > 10, reassign_obs = c(tax_abund = FALSE)) %>%
+  filter_obs("tax_abund", taxon_ranks == "g")
+```
+
+So that works well. 
+However, we are still relying on the taxa in the taxonomy to line up with the table, so using `filter_taxa` and not saving the whole object, as described above, is the most reliable strategy. 
+
+
+### Error: cannot coerce type 'environment' to ...
+
+Did you do this?
+
+```{r error=TRUE}
+library(metacoder)
+ex_taxmap %>%
+  filter_taxa(ex_taxmap, n_obs > 10)
+```
+
+Note the extra `ex_taxmap` in the call to `filter_taxa`.
+Thats the same as this:
+
+```{r error=TRUE}
+filter_taxa(ex_taxmap, ex_taxmap, n_obs > 10)
+```
+
+
+### Can I only show some labels but keep the nodes in a heat tree?
+
+Yes! Its even somewhat easy:
+
+```{r eval=FALSE}
+dont_print <- c("unknown", "unidentified")
+heat_tree(
+  ...,
+  node_label = ifelse(taxon_names %in% dont_print, "", taxon_names),
+  ...
+)
+
+```
+
+
+
+
+### Is there a reccomended protocol or best practices guide? 
+
+Not one made by us currently and we probably wont make one anytime soon.
+This is because `metacoder` and `taxa` are meant to be data analysis *tools*, not the analysis itself.
+Even the tutorials in this documentation are not meant to be used as is or considered a "best practice".
+Best practices are a moving target, so we have focused on developing more abstract tools that should useful for many purposes.
+We try to make [hammers and screwdrivers, not assembly lines](https://en.wikipedia.org/wiki/Unix_philosophy#Do_One_Thing_and_Do_It_Well).
+Also, every dataset and study are different and something that might make sense for one might completely invalidate another.
+**I highly reccomend against copying large sections of code in this documentation and using it for your analysis without understanding what the code is doing.**
+On the other hand, if you do understand what an example analysis is doing, I welcome you to use it however you want!
+
+
+### How do I cite metacoder?
+
+How kind of you to ask!
+
+Foster Z, Sharpton T and Grunwald N (2017). "Metacoder: An R package for visualization and manipulation of community taxonomic diversity data." PLOS Computational Biology, 13(2), pp. 1-15. doi: 10.1371/journal.pcbi.1005404
