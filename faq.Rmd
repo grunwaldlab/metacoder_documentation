@@ -259,3 +259,63 @@ On the other hand, if you do understand what an example analysis is doing, I wel
 How kind of you to ask!
 
 Foster Z, Sharpton T and Grunwald N (2017). "Metacoder: An R package for visualization and manipulation of community taxonomic diversity data." PLOS Computational Biology, 13(2), pp. 1-15. doi: 10.1371/journal.pcbi.1005404
+
+
+### How can I make a heat tree look the same each time?
+
+Some of the layout options in `heat_tree` have a random component, so each time you run the function they will appear different.
+If you have multiple figures, each using the same taxonomy, you might want them all to have the same layout so that they are easy to compare.
+Or perhaps, you want a single tree to just always appear the same way for reproducibility. 
+Most "random" things in computers are not actually random, but instead rely on [pseudorandom number generators](https://en.wikipedia.org/wiki/Pseudorandom_number_generator).
+A function is given an initial "seed" (often the number of microseconds in the computers clock at the time by default) and returns some other apparently unrelated number.
+That other number is then supplied to the function again and next time a random value is needed and so on.
+The numbers may appear random, but a given seed will always result in the same series of numbers, and thus determine the result of any analysis with a random component.
+In R, you can set the random seed whenever you want using `set.seed`.
+For example, I can make a set of random numbers like so:
+
+```{r}
+rnorm(5)
+```
+
+If I run it again, it will be different:
+
+```{r}
+rnorm(5)
+```
+
+However, if I set a seed before each run, they will always be the same:
+
+```{r}
+set.seed(1)
+rnorm(5)
+set.seed(1)
+rnorm(5)
+```
+
+You can do the same thing before calling `heat_tree` to make the layout always be the same for a given taxonomy and different seeds will produce different layouts.
+Note how this layout has a random component:
+
+```{r}
+library(metacoder)
+heat_tree(ex_taxmap, layout = "da")
+heat_tree(ex_taxmap, layout = "da")
+```
+
+You can make it the same each time like so: 
+
+```{r}
+set.seed(1)
+heat_tree(ex_taxmap, layout = "da")
+set.seed(1)
+heat_tree(ex_taxmap, layout = "da")
+```
+
+You can also use seeds to choose a specific layout you like since each seed will change the layout:
+
+```{r}
+set.seed(2)
+heat_tree(ex_taxmap, layout = "da")
+set.seed(2)
+heat_tree(ex_taxmap, layout = "da")
+```
+
