@@ -8,7 +8,7 @@ source("settings.R")
 ```
 
 
-# Installing required software and data
+# Installing required software
 
 ## Installing R
 
