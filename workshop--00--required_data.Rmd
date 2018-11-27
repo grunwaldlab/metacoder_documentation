@@ -20,20 +20,20 @@ A copy of this data is included in this site and can be downloaded from links be
 A table with a sample in each row and info about the samples in each column, such as plant genotype and field site.
 It is a 170Kb `r gloss$add('tab-delimited text file')`.
 
-<a href="data/SMD.txt" download="data/SMD.txt">SMD.txt</a>
+<a href="SMD.txt" download="SMD.txt">SMD.txt</a>
 
 ## The OTU abundance table
 
 This has the number of reads associated with each `r gloss$add('Operational Taxonomic Units (OTUs)', shown = 'OTU')` in each sample.
 It is a 6Mb compressed tab-delimited text file.
 
-<a href="data/otuTable97.txt.bz2" download="data/otuTable97.txt.bz2">otuTable97.txt.bz2</a>
+<a href="otuTable97.txt.bz2" download="otuTable97.txt.bz2">otuTable97.txt.bz2</a>
 
 ## The OTU taxonomy file
 
 This has the `r gloss$add('taxonomic classifications')` for each OTU.
 It is a 6Mb tab-delimited text file.
 
-<a href="data/taxAssignments97.txt" download="data/taxAssignments97.txt">taxAssignments97.txt</a>
+<a href="taxAssignments97.txt" download="taxAssignments97.txt">taxAssignments97.txt</a>
 
 ## References

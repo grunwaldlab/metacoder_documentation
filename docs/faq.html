@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84254038-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><div class="logo_frame"><span class="logo_helper"></span><img src="images/hex_sticker.png" height=50px /></div> metacoder</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="example.html">Example</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Workshop
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="workshop--00--introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="workshop--00--required_software.html">Required software</a>
+    </li>
+    <li>
+      <a href="workshop--00--required_data.html">Required datasets</a>
+    </li>
+    <li>
+      <a href="workshop--03--parsing.html">Getting data into R</a>
+    </li>
+    <li>
+      <a href="workshop--04--manipulating.html">Manipulating taxonomic data</a>
+    </li>
+    <li>
+      <a href="workshop--05--plotting.html">Plotting taxonomic data</a>
+    </li>
+    <li>
+      <a href="workshop--06--quality_control.html">Data quality control</a>
+    </li>
+    <li>
+      <a href="workshop--07--diversity_stats.html">Diversity and Ordination</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Publication
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005404">PLOS Comp Bio paper</a>
+    </li>
+    <li>
+      <a href="publication--05--16s_human_microbiome.html">Human microbiome</a>
+    </li>
+    <li>
+      <a href="publication--06--tara_oceans.html">TARA Oceans</a>
+    </li>
+    <li>
+      <a href="publication--01--silva.html">Digital PCR: SILVA</a>
+    </li>
+    <li>
+      <a href="publication--02--rdp.html">Digital PCR: RDP</a>
+    </li>
+    <li>
+      <a href="publication--03--greengenes.html">Digital PCR: Greengenes</a>
+    </li>
+    <li>
+      <a href="publication--04--16s_database_comparision.html">Digital PCR: Comparing databases</a>
+    </li>
+    <li>
+      <a href="publication--08--voting.html">Voting Geography</a>
+    </li>
+    <li>
+      <a href="publication--09--gene_expression.html">Gene Expression</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Appendices
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="appendix--00--intro_to_r.html">Introduction to R</a>
+    </li>
+    <li>
+      <a href="appendix--00--intro_to_rstudio.html">Introduction to RStudio</a>
+    </li>
+    <li>
+      <a href="appendix--00--glossary.html">Glossary</a>
+    </li>
+    <li>
+      <a href="appendix--00--presentation_page.html">Slide show</a>
+    </li>
+    <li>
+      <a href="appendix--00--poster_page.html">Poster</a>
+    </li>
+    <li>
+      <a href="https://github.com/grunwaldlab/metacoder">Metacoder source code</a>
+    </li>
+    <li>
+      <a href="https://github.com/grunwaldlab/metacoder_documentation">Website source code</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="faq.html">FAQ</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+
+<div id="frequently-asked-questions" class="section level1">
+<h1>Frequently asked questions</h1>
+<div id="error-otu_table-slot-is-empty" class="section level3">
+<h3>Error: otu_table slot is empty</h3>
+<p>This happens when you have <code>phyloseq</code> loaded after <code>metacoder</code>. There is also a <code>filter_taxa</code> in <code>phyloseq</code>, so the one from the <code>taxa</code> package is masked. Try prefixing <code>filter_taxa</code> with <code>taxa::</code> or loading <code>metacoder</code> after <code>phyloseq</code>.</p>
+</div>
+<div id="the-labels-are-too-small" class="section level3">
+<h3>The labels are too small!</h3>
+<p>This is a common issue. For plots with many taxa (&gt; 300 or so) it might not be possible to make a plot where all taxon labels will be readable in a standard publication figure without zooming in. However, there are a few tricks can help maximize the readability of your labels:</p>
+<ol style="list-style-type: decimal">
+<li>Only plot the taxa relevant to the purpose of the figure by filtering using <code>filter_taxa</code> before passing the result to <code>heat_tree</code>. If you are trying to show the diversity of an entire community, consider filtering out low-abundance or otherwise rare taxa. For example:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_taxmap <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Bacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_count <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(
+    ...
+  )</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Selectively suppress labels that do not need to be printed. For example, if you have taxon names like “unknown”, they don’t really need to be printed, even if you want the node to show in the graph. You can then say that unlabeled taxa are unknown in the figure caption. For example:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dont_print &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;unknown&quot;</span>, <span class="st">&quot;unidentified&quot;</span>)
+<span class="kw">heat_tree</span>(
+  ...,
+  <span class="dt">node_label =</span> <span class="kw">ifelse</span>(taxon_names <span class="op">%in%</span><span class="st"> </span>dont_print, <span class="st">&quot;&quot;</span>, taxon_names),
+  ...
+)</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Try changing the layout of the graph. The default layout does not work well for all taxonomies. There are others that use simulated annealing to space out nodes more, which might make more room for labels. You should experiment with the <code>layout</code> and <code>initial_layout</code> options to see what works best. I like the following settings often:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat_tree</span>(
+  ...,
+  <span class="dt">layout =</span> <span class="st">&quot;davidson-harel&quot;</span>,
+  <span class="dt">initial_layout =</span> <span class="st">&quot;reingold-tilford&quot;</span>,
+  ...
+)</code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Force labels to be a specified size</li>
+</ol>
+<p>By default the labels are relative to the size of the nodes. If the nodes are really small, so are the labels. You can force the labels to be a specific size range using the <code>node_label_size_range</code> and <code>edge_label_size_range</code>. These options take a two-value vector of numbers between 0 and 1 indicating the proportion the the plotted area the text size is. For example, to make text height between 1% and 3% of the plot size:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat_tree</span>(
+  ...,
+  <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.03</span>),
+  ...
+)</code></pre></div>
+<p>You could also use <code>node_size_range</code> and <code>edge_size_range</code> to change the size of the labels as a side effect of changing the size of nodes/edges.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Shorten labels</li>
+</ol>
+<p>Do your labels have taxonomic rank codes or other unneeded text? If so get rid of it using text replacing functions that can use <code>gloss$add('reqular expressions')</code> like <code>sub</code> and <code>gsub</code>. Labels can also be printed over multiple lines, so you might consider replacing some spaces with newlines (<code>\n</code>).</p>
+<ol start="6" style="list-style-type: decimal">
+<li>Split the plot into multiple plots</li>
+</ol>
+<p>If you have done all the above and the plot is still too dense, you can turn it into multiple plots of subsets of the data. Large groups you can give their own tree by filtering the taxonomy using <code>filter_taxa</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_taxmap <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Ascomycota&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(
+    ...
+  )
+
+my_taxmap <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Basidiomycota&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(
+    ...
+  )</code></pre></div>
+<p>If you have a bunch of small groups left over after plotting the big ones, make a single tree of those by removing the big ones plotted elsewhere using the <code>subtaxa</code> and <code>invert</code> options:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_taxmap <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Ascomycota&quot;</span>, <span class="st">&quot;Basidiomycota&quot;</span>), <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">heat_tree</span>(
+    ...
+  )</code></pre></div>
+</div>
+<div id="how-do-i-get-my-data-into-metacoder" class="section level3">
+<h3>How do I get my data into metacoder?</h3>
+<p>That depends on your data’s format. For some formats, there are easy to user “parsers”. All of them start with <code>parse_</code>, so you can type (after loading <code>metacoder</code>) <code>parse_</code> and hit tab and see what are available. If you format is not one of those, you can very likely use one of the all-purpose parsers supplied by the <code>taxa</code> package. You can read about those here:</p>
+<p><a href="https://github.com/ropensci/taxa#parsing-data" class="uri">https://github.com/ropensci/taxa#parsing-data</a></p>
+</div>
+<div id="does-this-work-with-phyloseq" class="section level3">
+<h3>Does this work with phyloseq?</h3>
+<p>Kind of. Metacoder and phyloseq use different data formats, but they both can store the same information. The <code>parse_phyloseq</code> converts from the <code>phyloseq</code> object to the <code>taxmap</code> object format that <code>metacoder</code> uses. The <code>as_phyloseq</code> function converts from <code>taxmap</code> to <code>phyloseq</code>, so you can use both on the same data.</p>
+</div>
+<div id="how-do-i-subset-a-table-for-just-one-taxonomic-rank-or-other-per-taxon-data" class="section level3">
+<h3>How do I subset a table for just one taxonomic rank (or other per-taxon data)?</h3>
+<p>This answer also applies to subsetting by any other per-taxon piece of information, such as taxon abundance or number of supertaxa.</p>
+<p>Some functions in <code>metacoder</code> return per-taxon information, such as <code>calc_taxon_abund</code>. All taxonomic ranks are represented in this type of output, so you if you see a row for “proteobacteria”, “Bacteria” is probably also there (depending on your taxonomy). Often users want to subset these tables for rows corresponding to a given rank, such as all the species. Lets get an example data set to play with:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(metacoder)
+<span class="kw">library</span>(dplyr)</code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Parse data for example</span>
+x =<span class="st"> </span><span class="kw">parse_tax_data</span>(hmp_otus, <span class="dt">class_cols =</span> <span class="st">&quot;lineage&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>,
+                   <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="dt">tax_rank =</span> <span class="st">&quot;taxon_rank&quot;</span>, <span class="dt">tax_name =</span> <span class="st">&quot;taxon_name&quot;</span>),
+                   <span class="dt">class_regex =</span> <span class="st">&quot;^(.+)__(.+)$&quot;</span>)
+                   
+<span class="co"># Calculate the taxon abundance for each numeric column (i.e. sample)</span>
+x<span class="op">$</span>data<span class="op">$</span>tax_abund &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(x, <span class="st">&quot;tax_data&quot;</span>, <span class="dt">groups =</span> hmp_samples<span class="op">$</span>sex)</code></pre></div>
+<pre><code>## No `cols` specified, so using all numeric columns:
+##    700035949, 700097855, 700100489, 700111314 ... 700095535, 700102367, 700101358</code></pre>
+<pre><code>## Summing per-taxon counts from 50 columns in 2 groups for 174 taxa</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Add taxon name to tax_abund to see filtering effects easier</span>
+x<span class="op">$</span>data<span class="op">$</span>tax_abund &lt;-<span class="st"> </span>x<span class="op">$</span>data<span class="op">$</span>tax_abund <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">taxon =</span> <span class="kw">taxon_names</span>(x)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(taxon_id, taxon, <span class="kw">everything</span>())
+
+x</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   174 taxa: <span style='color: #00BB00;'>ab</span><span>. Root, </span><span style='color: #00BB00;'>ac</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>gr</span><span>. Blautia, </span><span style='color: #00BB00;'>gs</span><span>. Clostridium
+##   174 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>ab</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ac</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ad</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ae</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>af</span><span> ... </span><span style='color: #00BB00;'>dk</span><span>-&gt;</span><span style='color: #00BB00;'>gp</span><span>, </span><span style='color: #00BB00;'>cm</span><span>-&gt;</span><span style='color: #00BB00;'>gq</span><span>, </span><span style='color: #00BB00;'>cf</span><span>-&gt;</span><span style='color: #00BB00;'>gr</span><span>, </span><span style='color: #00BB00;'>cw</span><span>-&gt;</span><span style='color: #00BB00;'>gs</span><span>
+##   3 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 1,000 x 53</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id lineage `700035949` `700097855` `700100489` `700111314`
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       OTU_9… r__Roo…           0           2           1           0
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       OTU_9… r__Roo…           0           0           0           0
+##       3 </span><span style='color: #00BB00;'>do</span><span>       OTU_9… r__Roo…           0           1           0           0
+##       # ... with 997 more rows, and 46 more variables: `700033744` &lt;int&gt;,
+##       #   `700109581` &lt;int&gt;, `700111044` &lt;int&gt;, `700101365` &lt;int&gt;, `700100431` &lt;int&gt;,
+##       #   `700016050` &lt;int&gt;, `700032425` &lt;int&gt;, `700024855` &lt;int&gt;, `700103488` &lt;int&gt;,
+##       #   `700096869` &lt;int&gt;, …
+##     </span><span style='font-weight: bold;'>class_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 5,922 x 5</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>input_index tax_rank tax_name            regex_match           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;               &lt;chr&gt;                 </span><span>
+##       1 </span><span style='color: #00BB00;'>ab</span><span>                 1 r        Root                r__Root               
+##       2 </span><span style='color: #00BB00;'>ac</span><span>                 1 p        Proteobacteria      p__Proteobacteria     
+##       3 </span><span style='color: #00BB00;'>aj</span><span>                 1 c        Gammaproteobacteria c__Gammaproteobacteria
+##       # ... with 5,919 more rows
+##     </span><span style='font-weight: bold;'>tax_abund</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 174 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>taxon          female  male
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>ab</span><span>       Root            62402 62677
+##       2 </span><span style='color: #00BB00;'>ac</span><span>       Proteobacteria   9140  6727
+##       3 </span><span style='color: #00BB00;'>ad</span><span>       Bacteroidetes   16732 12241
+##       # ... with 171 more rows
+##   0 functions:
+</span></code></pre>
+<p>Say I want to subset “tax_abund” to just values for genera. Typically, people try this first:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter_taxa</span>(x, taxon_ranks <span class="op">==</span><span class="st"> &quot;g&quot;</span>)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   85 taxa: <span style='color: #00BB00;'>dm</span><span>. Haemophilus, </span><span style='color: #00BB00;'>dn</span><span>. Capnocytophaga ... </span><span style='color: #00BB00;'>gr</span><span>. Blautia, </span><span style='color: #00BB00;'>gs</span><span>. Clostridium
+##   85 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>dm</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>dn</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>do</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>dp</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>dq</span><span> ... </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>gp</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>gq</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>gr</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>gs</span><span>
+##   3 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 939 x 53</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id lineage `700035949` `700097855` `700100489` `700111314`
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       OTU_9… r__Roo…           0           2           1           0
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       OTU_9… r__Roo…           0           0           0           0
+##       3 </span><span style='color: #00BB00;'>do</span><span>       OTU_9… r__Roo…           0           1           0           0
+##       # ... with 936 more rows, and 46 more variables: `700033744` &lt;int&gt;,
+##       #   `700109581` &lt;int&gt;, `700111044` &lt;int&gt;, `700101365` &lt;int&gt;, `700100431` &lt;int&gt;,
+##       #   `700016050` &lt;int&gt;, `700032425` &lt;int&gt;, `700024855` &lt;int&gt;, `700103488` &lt;int&gt;,
+##       #   `700096869` &lt;int&gt;, …
+##     </span><span style='font-weight: bold;'>class_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 939 x 5</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>input_index tax_rank tax_name       regex_match      
+## </span><span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;            </span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>                 1 g        Haemophilus    g__Haemophilus   
+##       2 </span><span style='color: #00BB00;'>dn</span><span>                 2 g        Capnocytophaga g__Capnocytophaga
+##       3 </span><span style='color: #00BB00;'>do</span><span>                 3 g        Porphyromonas  g__Porphyromonas 
+##       # ... with 936 more rows
+##     </span><span style='font-weight: bold;'>tax_abund</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 85 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>taxon          female  male
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       Haemophilus      2388  1631
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       Capnocytophaga    410   320
+##       3 </span><span style='color: #00BB00;'>do</span><span>       Porphyromonas    3223  1809
+##       # ... with 82 more rows
+##   0 functions:
+</span></code></pre>
+<p>That will ruin you taxonomy since all the other taxa got filtered out, but as a side effect, it does filter that table as intended. You can use <code>get_dataset()</code> to pull out the table without saving the resulting bad taxonomy:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter_taxa</span>(x, taxon_ranks <span class="op">==</span><span class="st"> &quot;g&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">get_dataset</span>(<span class="st">&quot;tax_abund&quot;</span>)</code></pre></div>
+<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 85 x 4</span><span>
+##    taxon_id taxon             female  male
+##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+## </span><span style='color: #BCBCBC;'> 1</span><span> dm       Haemophilus         </span><span style='text-decoration: underline;'>2</span><span>388  </span><span style='text-decoration: underline;'>1</span><span>631
+## </span><span style='color: #BCBCBC;'> 2</span><span> dn       Capnocytophaga       410   320
+## </span><span style='color: #BCBCBC;'> 3</span><span> do       Porphyromonas       </span><span style='text-decoration: underline;'>3</span><span>223  </span><span style='text-decoration: underline;'>1</span><span>809
+## </span><span style='color: #BCBCBC;'> 4</span><span> dp       Propionibacterium   </span><span style='text-decoration: underline;'>9</span><span>515 </span><span style='text-decoration: underline;'>11</span><span>414
+## </span><span style='color: #BCBCBC;'> 5</span><span> dq       Neisseria           </span><span style='text-decoration: underline;'>3</span><span>958  </span><span style='text-decoration: underline;'>1</span><span>568
+## </span><span style='color: #BCBCBC;'> 6</span><span> dr       Staphylococcus      </span><span style='text-decoration: underline;'>3</span><span>358  </span><span style='text-decoration: underline;'>5</span><span>492
+## </span><span style='color: #BCBCBC;'> 7</span><span> ds       Bacteroides         </span><span style='text-decoration: underline;'>9</span><span>038  </span><span style='text-decoration: underline;'>4</span><span>612
+## </span><span style='color: #BCBCBC;'> 8</span><span> dt       Selenomonas         </span><span style='text-decoration: underline;'>1</span><span>262   238
+## </span><span style='color: #BCBCBC;'> 9</span><span> du       Alistipes            803   766
+## </span><span style='color: #BCBCBC;'>10</span><span> dv       Lautropia            139   155
+## </span><span style='color: #949494;'># ... with 75 more rows</span><span>
+</span></code></pre>
+<p>You might be tempted to use <code>filter_obs</code>, since you are trying to filter a specific table:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter_obs</span>(x, <span class="st">&quot;tax_abund&quot;</span>, taxon_ranks <span class="op">==</span><span class="st"> &quot;g&quot;</span>)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   174 taxa: <span style='color: #00BB00;'>ab</span><span>. Root, </span><span style='color: #00BB00;'>ac</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>gr</span><span>. Blautia, </span><span style='color: #00BB00;'>gs</span><span>. Clostridium
+##   174 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>ab</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ac</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ad</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ae</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>af</span><span> ... </span><span style='color: #00BB00;'>dk</span><span>-&gt;</span><span style='color: #00BB00;'>gp</span><span>, </span><span style='color: #00BB00;'>cm</span><span>-&gt;</span><span style='color: #00BB00;'>gq</span><span>, </span><span style='color: #00BB00;'>cf</span><span>-&gt;</span><span style='color: #00BB00;'>gr</span><span>, </span><span style='color: #00BB00;'>cw</span><span>-&gt;</span><span style='color: #00BB00;'>gs</span><span>
+##   3 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 1,000 x 53</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id lineage `700035949` `700097855` `700100489` `700111314`
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       OTU_9… r__Roo…           0           2           1           0
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       OTU_9… r__Roo…           0           0           0           0
+##       3 </span><span style='color: #00BB00;'>do</span><span>       OTU_9… r__Roo…           0           1           0           0
+##       # ... with 997 more rows, and 46 more variables: `700033744` &lt;int&gt;,
+##       #   `700109581` &lt;int&gt;, `700111044` &lt;int&gt;, `700101365` &lt;int&gt;, `700100431` &lt;int&gt;,
+##       #   `700016050` &lt;int&gt;, `700032425` &lt;int&gt;, `700024855` &lt;int&gt;, `700103488` &lt;int&gt;,
+##       #   `700096869` &lt;int&gt;, …
+##     </span><span style='font-weight: bold;'>class_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 5,922 x 5</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>input_index tax_rank tax_name            regex_match           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;               &lt;chr&gt;                 </span><span>
+##       1 </span><span style='color: #00BB00;'>ab</span><span>                 1 r        Root                r__Root               
+##       2 </span><span style='color: #00BB00;'>ac</span><span>                 1 p        Proteobacteria      p__Proteobacteria     
+##       3 </span><span style='color: #00BB00;'>aj</span><span>                 1 c        Gammaproteobacteria c__Gammaproteobacteria
+##       # ... with 5,919 more rows
+##     </span><span style='font-weight: bold;'>tax_abund</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 85 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>taxon          female  male
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       Haemophilus      2388  1631
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       Capnocytophaga    410   320
+##       3 </span><span style='color: #00BB00;'>do</span><span>       Porphyromonas    3223  1809
+##       # ... with 82 more rows
+##   0 functions:
+</span></code></pre>
+<p>This does what we want, but only because “tax_abund” corresponds to the taxa one-to-one, so <code>taxon_names()</code> returns information that also applies to “tax_abund”. However, if you change the taxonomy or “tax_abund” at all, this is no longer true and you can get errors like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(n_obs <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, taxon_ranks <span class="op">==</span><span class="st"> &quot;g&quot;</span>)</code></pre></div>
+<pre><code>## Error: All logical filtering criteria must be the same length as the data sets filtered.</code></pre>
+<p>This happens because the taxonomy was filtered, so <code>taxon_ranks</code> changed, but rows were not removed from “tax_abund” since rows of deleted taxa were automatically reassigned to the deleted taxa’s supertaxa. This is desirable for data like the OTU table (you don’t lose OTUs because a taxon is filtered), but makes what we are trying to do harder. You can disable this behavior like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(n_obs <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">reassign_obs =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, taxon_ranks <span class="op">==</span><span class="st"> &quot;g&quot;</span>)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   70 taxa: <span style='color: #00BB00;'>ab</span><span>. Root, </span><span style='color: #00BB00;'>ac</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>ev</span><span>. Oscillospira, </span><span style='color: #00BB00;'>fb</span><span>. Parabacteroides
+##   70 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>ab</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ac</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ad</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ae</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>af</span><span> ... </span><span style='color: #00BB00;'>cn</span><span>-&gt;</span><span style='color: #00BB00;'>ep</span><span>, </span><span style='color: #00BB00;'>cn</span><span>-&gt;</span><span style='color: #00BB00;'>es</span><span>, </span><span style='color: #00BB00;'>cn</span><span>-&gt;</span><span style='color: #00BB00;'>ev</span><span>, </span><span style='color: #00BB00;'>bs</span><span>-&gt;</span><span style='color: #00BB00;'>fb</span><span>
+##   3 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 844 x 53</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id lineage `700035949` `700097855` `700100489` `700111314`
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       OTU_9… r__Roo…           0           2           1           0
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       OTU_9… r__Roo…           0           0           0           0
+##       3 </span><span style='color: #00BB00;'>do</span><span>       OTU_9… r__Roo…           0           1           0           0
+##       # ... with 841 more rows, and 46 more variables: `700033744` &lt;int&gt;,
+##       #   `700109581` &lt;int&gt;, `700111044` &lt;int&gt;, `700101365` &lt;int&gt;, `700100431` &lt;int&gt;,
+##       #   `700016050` &lt;int&gt;, `700032425` &lt;int&gt;, `700024855` &lt;int&gt;, `700103488` &lt;int&gt;,
+##       #   `700096869` &lt;int&gt;, …
+##     </span><span style='font-weight: bold;'>class_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 5,674 x 5</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>input_index tax_rank tax_name            regex_match           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;               &lt;chr&gt;                 </span><span>
+##       1 </span><span style='color: #00BB00;'>ab</span><span>                 1 r        Root                r__Root               
+##       2 </span><span style='color: #00BB00;'>ac</span><span>                 1 p        Proteobacteria      p__Proteobacteria     
+##       3 </span><span style='color: #00BB00;'>aj</span><span>                 1 c        Gammaproteobacteria c__Gammaproteobacteria
+##       # ... with 5,671 more rows
+##     </span><span style='font-weight: bold;'>tax_abund</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 21 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>taxon          female  male
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       Haemophilus      2388  1631
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       Capnocytophaga    410   320
+##       3 </span><span style='color: #00BB00;'>do</span><span>       Porphyromonas    3223  1809
+##       # ... with 18 more rows
+##   0 functions:
+</span></code></pre>
+<p>This worked, but we also filtered the OTU table, which might be not be what we wanted to do. We can instead do the following to make that option apply to just “tax_abund”:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(n_obs <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">reassign_obs =</span> <span class="kw">c</span>(<span class="dt">tax_abund =</span> <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, taxon_ranks <span class="op">==</span><span class="st"> &quot;g&quot;</span>)</code></pre></div>
+<pre class="r-output"><code>## &lt;Taxmap&gt;
+##   70 taxa: <span style='color: #00BB00;'>ab</span><span>. Root, </span><span style='color: #00BB00;'>ac</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>ev</span><span>. Oscillospira, </span><span style='color: #00BB00;'>fb</span><span>. Parabacteroides
+##   70 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>ab</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ac</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ad</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>ae</span><span>, </span><span style='color: #00BB00;'>ab</span><span>-&gt;</span><span style='color: #00BB00;'>af</span><span> ... </span><span style='color: #00BB00;'>cn</span><span>-&gt;</span><span style='color: #00BB00;'>ep</span><span>, </span><span style='color: #00BB00;'>cn</span><span>-&gt;</span><span style='color: #00BB00;'>es</span><span>, </span><span style='color: #00BB00;'>cn</span><span>-&gt;</span><span style='color: #00BB00;'>ev</span><span>, </span><span style='color: #00BB00;'>bs</span><span>-&gt;</span><span style='color: #00BB00;'>fb</span><span>
+##   3 data sets:
+##     </span><span style='font-weight: bold;'>tax_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 1,000 x 53</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id lineage `700035949` `700097855` `700100489` `700111314`
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;         &lt;int&gt;       &lt;int&gt;       &lt;int&gt;       &lt;int&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       OTU_9… r__Roo…           0           2           1           0
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       OTU_9… r__Roo…           0           0           0           0
+##       3 </span><span style='color: #00BB00;'>do</span><span>       OTU_9… r__Roo…           0           1           0           0
+##       # ... with 997 more rows, and 46 more variables: `700033744` &lt;int&gt;,
+##       #   `700109581` &lt;int&gt;, `700111044` &lt;int&gt;, `700101365` &lt;int&gt;, `700100431` &lt;int&gt;,
+##       #   `700016050` &lt;int&gt;, `700032425` &lt;int&gt;, `700024855` &lt;int&gt;, `700103488` &lt;int&gt;,
+##       #   `700096869` &lt;int&gt;, …
+##     </span><span style='font-weight: bold;'>class_data</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 5,922 x 5</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>input_index tax_rank tax_name            regex_match           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;               &lt;chr&gt;                 </span><span>
+##       1 </span><span style='color: #00BB00;'>ab</span><span>                 1 r        Root                r__Root               
+##       2 </span><span style='color: #00BB00;'>ac</span><span>                 1 p        Proteobacteria      p__Proteobacteria     
+##       3 </span><span style='color: #00BB00;'>aj</span><span>                 1 c        Gammaproteobacteria c__Gammaproteobacteria
+##       # ... with 5,919 more rows
+##     </span><span style='font-weight: bold;'>tax_abund</span><span>:
+## </span><span style='font-style: italic;'>      # A tibble: 21 x 4</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>taxon          female  male
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>dm</span><span>       Haemophilus      2388  1631
+##       2 </span><span style='color: #00BB00;'>dn</span><span>       Capnocytophaga    410   320
+##       3 </span><span style='color: #00BB00;'>do</span><span>       Porphyromonas    3223  1809
+##       # ... with 18 more rows
+##   0 functions:
+</span></code></pre>
+<p>So that works well. However, we are still relying on the taxa in the taxonomy to line up with the table, so using <code>filter_taxa</code> and not saving the whole object, as described above, is the most reliable strategy.</p>
+</div>
+<div id="error-cannot-coerce-type-environment-to" class="section level3">
+<h3>Error: cannot coerce type ‘environment’ to …</h3>
+<p>Did you do this?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(metacoder)
+ex_taxmap <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter_taxa</span>(ex_taxmap, n_obs <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>)</code></pre></div>
+<pre><code>## Error in as.vector(x, mode): cannot coerce type &#39;environment&#39; to vector of type &#39;any&#39;</code></pre>
+<p>Note the extra <code>ex_taxmap</code> in the call to <code>filter_taxa</code>. Thats the same as this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter_taxa</span>(ex_taxmap, ex_taxmap, n_obs <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>)</code></pre></div>
+<pre><code>## Error in as.vector(x, mode): cannot coerce type &#39;environment&#39; to vector of type &#39;any&#39;</code></pre>
+</div>
+<div id="can-i-only-show-some-labels-but-keep-the-nodes-in-a-heat-tree" class="section level3">
+<h3>Can I only show some labels but keep the nodes in a heat tree?</h3>
+<p>Yes! Its even somewhat easy:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dont_print &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;unknown&quot;</span>, <span class="st">&quot;unidentified&quot;</span>)
+<span class="kw">heat_tree</span>(
+  ...,
+  <span class="dt">node_label =</span> <span class="kw">ifelse</span>(taxon_names <span class="op">%in%</span><span class="st"> </span>dont_print, <span class="st">&quot;&quot;</span>, taxon_names),
+  ...
+)</code></pre></div>
+</div>
+<div id="is-there-a-reccomended-protocol-or-best-practices-guide" class="section level3">
+<h3>Is there a reccomended protocol or best practices guide?</h3>
+<p>Not one made by us currently and we probably wont make one anytime soon. This is because <code>metacoder</code> and <code>taxa</code> are meant to be data analysis <em>tools</em>, not the analysis itself. Even the tutorials in this documentation are not meant to be used as is or considered a “best practice”. Best practices are a moving target, so we have focused on developing more abstract tools that should useful for many purposes. We try to make <a href="https://en.wikipedia.org/wiki/Unix_philosophy#Do_One_Thing_and_Do_It_Well">hammers and screwdrivers, not assembly lines</a>. Also, every dataset and study are different and something that might make sense for one might completely invalidate another. <strong>I highly reccomend against copying large sections of code in this documentation and using it for your analysis without understanding what the code is doing.</strong> On the other hand, if you do understand what an example analysis is doing, I welcome you to use it however you want!</p>
+</div>
+<div id="how-do-i-cite-metacoder" class="section level3">
+<h3>How do I cite metacoder?</h3>
+<p>How kind of you to ask!</p>
+<p>Foster Z, Sharpton T and Grunwald N (2017). “Metacoder: An R package for visualization and manipulation of community taxonomic diversity data.” PLOS Computational Biology, 13(2), pp. 1-15. doi: 10.1371/journal.pcbi.1005404</p>
+</div>
+<div id="how-can-i-make-a-heat-tree-look-the-same-each-time" class="section level3">
+<h3>How can I make a heat tree look the same each time?</h3>
+<p>Some of the layout options in <code>heat_tree</code> have a random component, so each time you run the function they will appear different. If you have multiple figures, each using the same taxonomy, you might want them all to have the same layout so that they are easy to compare. Or perhaps, you want a single tree to just always appear the same way for reproducibility. Most “random” things in computers are not actually random, but instead rely on <a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom number generators</a>. A function is given an initial “seed” (often the number of microseconds in the computers clock at the time by default) and returns some other apparently unrelated number. That other number is then supplied to the function again and next time a random value is needed and so on. The numbers may appear random, but a given seed will always result in the same series of numbers, and thus determine the result of any analysis with a random component. In R, you can set the random seed whenever you want using <code>set.seed</code>. For example, I can make a set of random numbers like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rnorm</span>(<span class="dv">5</span>)</code></pre></div>
+<pre class="r-output"><code>## [1]  1.5952808  0.3295078 -0.8204684  0.4874291  0.7383247
+</code></pre>
+<p>If I run it again, it will be different:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rnorm</span>(<span class="dv">5</span>)</code></pre></div>
+<pre class="r-output"><code>## [1]  0.5757814 -0.3053884  1.5117812  0.3898432 -0.6212406
+</code></pre>
+<p>However, if I set a seed before each run, they will always be the same:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="kw">rnorm</span>(<span class="dv">5</span>)</code></pre></div>
+<pre class="r-output"><code>## [1] -0.6264538  0.1836433 -0.8356286  1.5952808  0.3295078
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="kw">rnorm</span>(<span class="dv">5</span>)</code></pre></div>
+<pre class="r-output"><code>## [1] -0.6264538  0.1836433 -0.8356286  1.5952808  0.3295078
+</code></pre>
+<p>You can do the same thing before calling <code>heat_tree</code> to make the layout always be the same for a given taxonomy and different seeds will produce different layouts. Note how this layout has a random component:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(metacoder)
+<span class="kw">heat_tree</span>(ex_taxmap, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>)</code></pre></div>
+<p><img src="faq_files/figure-html/unnamed-chunk-20-1.png" width="960" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">heat_tree</span>(ex_taxmap, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>)</code></pre></div>
+<p><img src="faq_files/figure-html/unnamed-chunk-20-2.png" width="960" style="display: block; margin: auto;" /></p>
+<p>You can make it the same each time like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="kw">heat_tree</span>(ex_taxmap, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>)</code></pre></div>
+<p><img src="faq_files/figure-html/unnamed-chunk-21-1.png" width="960" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="kw">heat_tree</span>(ex_taxmap, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>)</code></pre></div>
+<p><img src="faq_files/figure-html/unnamed-chunk-21-2.png" width="960" style="display: block; margin: auto;" /></p>
+<p>You can also use seeds to choose a specific layout you like since each seed will change the layout:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2</span>)
+<span class="kw">heat_tree</span>(ex_taxmap, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>)</code></pre></div>
+<p><img src="faq_files/figure-html/unnamed-chunk-22-1.png" width="960" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2</span>)
+<span class="kw">heat_tree</span>(ex_taxmap, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>)</code></pre></div>
+<p><img src="faq_files/figure-html/unnamed-chunk-22-2.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+
+<div class="footer_section">
+  <div class="footer_content">
+    <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Metacoder's documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://grunwaldlab.cgrb.oregonstate.edu/" property="cc:attributionName" rel="cc:attributionURL">The Grunwald lab and the USDA Horticultural Crops Research Unit</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/grunwaldlab/metacoder_documentation" rel="dct:source">https://github.com/grunwaldlab/metacoder_documentation</a>.
+  </div>
+</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

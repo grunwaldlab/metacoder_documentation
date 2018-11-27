@@ -309,7 +309,7 @@ $(document).ready(function () {
       <a href="appendix--00--presentation_page.html">Slide show</a>
     </li>
     <li>
-      <a href="poster/poster.pdf">Poster</a>
+      <a href="appendix--00--poster_page.html">Poster</a>
     </li>
     <li>
       <a href="https://github.com/grunwaldlab/metacoder">Metacoder source code</a>
@@ -318,6 +318,9 @@ $(document).ready(function () {
       <a href="https://github.com/grunwaldlab/metacoder_documentation">Website source code</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="faq.html">FAQ</a>
 </li>
 <li>
   <a href="about.html">About</a>
@@ -641,7 +644,7 @@ table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">r
 ## cols(
 ##   common_name = col_character(),
 ##   ncbi_seq_id = col_character(),
-##   itis_taxon_id = col_integer(),
+##   itis_taxon_id = col_double(),
 ##   my_taxonomy = col_character()
 ## )</code></pre>
 </div>
@@ -662,21 +665,15 @@ Show solution
 <pre class="r-output"><code>## Classes 'tbl_df', 'tbl' and 'data.frame':    3 obs. of  4 variables:
 ##  $ common_name  : chr  "Lions" "Tigers" "Bears"
 ##  $ ncbi_seq_id  : chr  "FJ712037" "KC879292" "HW243304"
-##  $ itis_taxon_id: int  183803 183806 180544
+##  $ itis_taxon_id: num  183803 183806 180544
 ##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
-##  - attr(*, "spec")=List of 2
-##   ..$ cols   :List of 4
-##   .. ..$ common_name  : list()
-##   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-##   .. ..$ ncbi_seq_id  : list()
-##   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-##   .. ..$ itis_taxon_id: list()
-##   .. .. ..- attr(*, "class")= chr  "collector_integer" "collector"
-##   .. ..$ my_taxonomy  : list()
-##   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-##   ..$ default: list()
-##   .. ..- attr(*, "class")= chr  "collector_guess" "collector"
-##   ..- attr(*, "class")= chr "col_spec"
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   common_name = col_character(),
+##   ..   ncbi_seq_id = col_character(),
+##   ..   itis_taxon_id = col_double(),
+##   ..   my_taxonomy = col_character()
+##   .. )
 </code></pre>
 </div>
 <p><br /></p>
@@ -701,19 +698,13 @@ table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">r
 ##  $ ncbi_seq_id  : chr  "FJ712037" "KC879292" "HW243304"
 ##  $ itis_taxon_id: chr  "183803" "183806" "180544"
 ##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
-##  - attr(*, "spec")=List of 2
-##   ..$ cols   :List of 4
-##   .. ..$ common_name  : list()
-##   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-##   .. ..$ ncbi_seq_id  : list()
-##   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-##   .. ..$ itis_taxon_id: list()
-##   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-##   .. ..$ my_taxonomy  : list()
-##   .. .. ..- attr(*, "class")= chr  "collector_character" "collector"
-##   ..$ default: list()
-##   .. ..- attr(*, "class")= chr  "collector_guess" "collector"
-##   ..- attr(*, "class")= chr "col_spec"
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   common_name = col_character(),
+##   ..   ncbi_seq_id = col_character(),
+##   ..   itis_taxon_id = col_character(),
+##   ..   my_taxonomy = col_character()
+##   .. )
 </code></pre>
 </div>
 <p><br /></p>
@@ -726,13 +717,13 @@ table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">r
 ## cols(
 ##   common_name = col_character(),
 ##   ncbi_seq_id = col_character(),
-##   itis_taxon_id = col_integer(),
+##   itis_taxon_id = col_double(),
 ##   my_taxonomy = col_character()
 ## )</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(my_data)</code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 3 x 4</span><span>
 ##   common_name ncbi_seq_id itis_taxon_id my_taxonomy                         
-##   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                               
+##   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                               
 ## </span><span style='color: #BCBCBC;'>1</span><span> Lions       FJ712037           </span><span style='text-decoration: underline;'>183</span><span>803 mammalia, felidae, panthera, leo    
 ## </span><span style='color: #BCBCBC;'>2</span><span> Tigers      KC879292           </span><span style='text-decoration: underline;'>183</span><span>806 mammalia, felidae, panthera, tigris 
 ## </span><span style='color: #BCBCBC;'>3</span><span> Bears       HW243304           </span><span style='text-decoration: underline;'>180</span><span>544 mammalia, ursidae, ursus, americanus
@@ -760,7 +751,7 @@ Show solution
 ##     </span><span style='font-weight: bold;'>tax_data</span><span>:
 ## </span><span style='font-style: italic;'>      # A tibble: 3 x 5</span><span>
 ##        </span><span style='color: #00BB00;'> taxon_id </span><span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                       
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;int&gt; &lt;chr&gt;                             </span><span>
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                             </span><span>
 ##       1 </span><span style='color: #00BB00;'>g</span><span>        Lions       FJ712037           183803 mammalia, felidae, panthera, leo  
 ##       2 </span><span style='color: #00BB00;'>h</span><span>        Tigers      KC879292           183806 mammalia, felidae, panthera, tigr…
 ##       3 </span><span style='color: #00BB00;'>i</span><span>        Bears       HW243304           180544 mammalia, ursidae, ursus, america…
@@ -789,7 +780,7 @@ Show solution
 ##     </span><span style='font-weight: bold;'>query_data</span><span>:
 ## </span><span style='font-style: italic;'>      # A tibble: 3 x 5</span><span>
 ##        </span><span style='color: #00BB00;'> taxon_id </span><span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                       
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;int&gt; &lt;chr&gt;                             </span><span>
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                             </span><span>
 ##       1 </span><span style='color: #00BB00;'>9689</span><span>     Lions       FJ712037           183803 mammalia, felidae, panthera, leo  
 ##       2 </span><span style='color: #00BB00;'>9694</span><span>     Tigers      KC879292           183806 mammalia, felidae, panthera, tigr…
 ##       3 </span><span style='color: #00BB00;'>9643</span><span>     Bears       HW243304           180544 mammalia, ursidae, ursus, america…
@@ -818,7 +809,7 @@ Show solution
 ##     </span><span style='font-weight: bold;'>query_data</span><span>:
 ## </span><span style='font-style: italic;'>      # A tibble: 3 x 5</span><span>
 ##        </span><span style='color: #00BB00;'> taxon_id </span><span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                       
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;int&gt; &lt;chr&gt;                             </span><span>
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                             </span><span>
 ##       1 </span><span style='color: #00BB00;'>183803</span><span>   Lions       FJ712037           183803 mammalia, felidae, panthera, leo  
 ##       2 </span><span style='color: #00BB00;'>183806</span><span>   Tigers      KC879292           183806 mammalia, felidae, panthera, tigr…
 ##       3 </span><span style='color: #00BB00;'>180544</span><span>   Bears       HW243304           180544 mammalia, ursidae, ursus, america…
@@ -872,7 +863,8 @@ Show solution
 ## 
 ## Base composition:
 ##     a     c     g     t 
-## 0.282 0.154 0.260 0.304
+## 0.282 0.154 0.260 0.304 
+## (Total: 1.37 kb)
 </code></pre>
 </div>
 <p><br /></p>

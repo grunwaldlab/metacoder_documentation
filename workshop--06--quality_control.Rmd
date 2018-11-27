@@ -67,14 +67,19 @@ print(obj)
 
 ## Rarefaction
 
-Rarefaction is used to simulate even numbers of samples (i.e. reads).
+Rarefaction is used to simulate even numbers of reads per sample.
 Even sampling is important for at least two reasons:
 
 * When comparing diversity of samples, more samples make it more likely to observe rare species. This will have a larger effect on some diversity indexes than others, depending on how they weigh rare species.
 * When comparing the similarity of samples, the presence of rare species due to higher sampling depth in one sample but not another can make the two samples appear more different than they actually are.
 
-Therefore, when comparing the diversity or similarity of samples, it is important to rarefy, or subsample, to a constant depth.
-Typically, the depth chosen is the minimum sample depth.
+Therefore, when comparing the diversity or similarity of samples, it is important to take into account differences in sampling depth.
+
+**Rarefying can waste a lot of data and is not needed in many cases.
+See @mcmurdie2014waste for an in-depth discussion on alternatives to rarefaction.
+We cover it here because it is a popular technique.**
+
+Typically, the rarefaction depth chosen is the minimum sample depth.
 If the minimum depth is very small, the samples with the smallest depth can be removed and the minimum depth of the remaining samples can be used.
 
 Lets take a look at the distribution of read depths of our samples:
@@ -85,7 +90,7 @@ hist(colSums(obj$data$otu_counts[, sample_data$SampleID]))
 
 We have a minimum depth of `r min(colSums(obj$data$otu_counts[, sample_data$SampleID]))`, a median of `r as.integer(median(colSums(obj$data$otu_counts[, sample_data$SampleID])))` and a maximum depth of `r max(colSums(obj$data$otu_counts[, sample_data$SampleID]))`.
 We could try to remove one or two of the samples with the smallest depth, since it seems like a waste to throw out so much data, but for this tutorial we will just rarefy to the minimum of `r min(colSums(obj$data$otu_counts[, sample_data$SampleID]))` reads.
-The `vegan` package implements many functions to help with rarefying data, but we will use a function from `metacoder` that calls the functions from `vegan` and reformats the input and outputs to make them easier to use with the way our data is formatted.
+The `vegan` package implements many functions to help with rarefying data, but we will use a function from `metacoder` that calls the functions from `vegan` and re-formats the input and outputs to make them easier to use with the way our data is formatted.
 
 ```{r}
 obj$data$otu_rarefied <- rarefy_obs(obj, "otu_counts", other_cols = TRUE)
@@ -102,12 +107,25 @@ obj <- filter_obs(obj, "otu_rarefied", ! no_reads)
 print(obj)
 ```
 
+## Proportions
+
+An easy alternative to rarefaction is to convert read counts to proportions of reads per-sample.
+This makes samples directly comparable, but does not solve the problem with inflated diversity estimates discussed in the rarefaction section.
+See @mcmurdie2014waste for an in-depth discussion on the relative merits of proportions, rarefaction, and other (better) methods.
+
+To convert counts to proportions in `metacoder`, we can use the `calc_obs_props` function:
+
+```{r}
+obj$data$otu_props <- calc_obs_props(obj, "otu_counts", other_cols = TRUE)
+print(obj)
+```
+
 
 ## Rarefaction curves
 
 The relationship between the number of reads and the number of OTUs can be described using `r gloss$add('Rarefaction', shown = 'rarefaction curves')`.
 Each line represents a different sample (i.e. column) and shows how many OTUs are found in a random subsets of different numbers of reads.
-The `rarecurve` function from the `vegan` package will do the random subsampling and plot the results for an abundance matrix.
+The `rarecurve` function from the `vegan` package will do the random sub-sampling and plot the results for an abundance matrix.
 For example, the code below plots the rarefaction curve for a single sample:
 
 ```{r fig.width=10, fig.height=5}
@@ -127,6 +145,7 @@ rarecurve(t(obj$data$otu_counts[, sample_data$SampleID]), step = 20,
           sample = min(colSums(obj$data$otu_counts[, sample_data$SampleID])),
           col = "blue", cex = 0.6)
 ```
+
 
 
 ## Converting to presence/absence
@@ -207,3 +226,6 @@ Rarefaction and converting counts to proportions.
 * Some organisms (e.g. spore-forming bacteria) are more resistant to DNA extraction techniques, so might not be as well represented in the DNA extract.
 * Some species have more DNA per individual / weight than others.
 ```
+
+
+## References

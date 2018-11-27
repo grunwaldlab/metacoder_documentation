@@ -309,7 +309,7 @@ $(document).ready(function () {
       <a href="appendix--00--presentation_page.html">Slide show</a>
     </li>
     <li>
-      <a href="poster/poster.pdf">Poster</a>
+      <a href="appendix--00--poster_page.html">Poster</a>
     </li>
     <li>
       <a href="https://github.com/grunwaldlab/metacoder">Metacoder source code</a>
@@ -318,6 +318,9 @@ $(document).ready(function () {
       <a href="https://github.com/grunwaldlab/metacoder_documentation">Website source code</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="faq.html">FAQ</a>
 </li>
 <li>
   <a href="about.html">About</a>
@@ -379,7 +382,7 @@ $(document).ready(function () {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(sample_data, <span class="kw">aes</span>(<span class="dt">x =</span> Site, <span class="dt">y =</span> alpha)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>()</code></pre></div>
 <p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>We can use <a href ="appendix--00--glossary.html#analysis_of_variance_(anova)_anchor">analysis of variance (ANOVA)</a> to tell if at least one of the diversity means is different from the rest.</p>
+<p>We can use <b><a href ="appendix--00--glossary.html#analysis_of_variance_(anova)_anchor">analysis of variance (ANOVA)</a></b> to tell if at least one of the diversity means is different from the rest.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">anova_result &lt;-<span class="st"> </span><span class="kw">aov</span>(alpha <span class="op">~</span><span class="st"> </span>Site, sample_data)
 <span class="kw">summary</span>(anova_result)</code></pre></div>
 <pre class="r-output"><code>##              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
@@ -388,7 +391,7 @@ $(document).ready(function () {
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </code></pre>
-<p>That tells us that there is a difference, but does not tell us which means are different. A <a href ="appendix--00--glossary.html#tukey's_honest_significant_difference_(hsd)_anchor">Tukey’s Honest Significant Difference (HSD)</a> test can do pairwise comparisons of the means to find this out. We will use the <code>HSD.test</code> function from the <code>agricolae</code> package since it provides grouping codes that are useful for graphing.</p>
+<p>That tells us that there is a difference, but does not tell us which means are different. A <b><a href ="appendix--00--glossary.html#tukey's_honest_significant_difference_(hsd)_anchor">Tukey’s Honest Significant Difference (HSD)</a></b> test can do pairwise comparisons of the means to find this out. We will use the <code>HSD.test</code> function from the <code>agricolae</code> package since it provides grouping codes that are useful for graphing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(agricolae)
 tukey_result &lt;-<span class="st"> </span><span class="kw">HSD.test</span>(anova_result, <span class="st">&quot;Site&quot;</span>, <span class="dt">group =</span> <span class="ot">TRUE</span>)
 <span class="kw">print</span>(tukey_result)</code></pre></div>
@@ -482,54 +485,53 @@ tukey_result &lt;-<span class="st"> </span><span class="kw">HSD.test</span>(anov
 <span class="kw">plot_richness</span>(ps_obj, <span class="dt">color =</span> <span class="st">&quot;Type&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Site&quot;</span>)</code></pre></div>
 <p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>Each dot is a sample and the error bars in some of the indexes are the standard error.</p>
-<p><em>NOTE: the <code>as_phyloseq</code> function is only available in the development version of metacoder. If you want to try it, you can install it by typing:</em></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;ropensci/taxa&quot;</span>)
-devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;grunwaldlab/metacoder&quot;</span>)</code></pre></div>
-<p><em>or you can use the current version of metacoder, download the file “ps_obj.Rdata” <a href="ps_obj.Rdata" download="ps_obj.Rdata">here</a>, and load the <code>ps_obj</code> object this way:</em></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&quot;ps_obj.Rdata&quot;</span>)</code></pre></div>
 </div>
 <div id="plotting-taxon-abundance-with-heat-trees" class="section level2">
 <h2>Plotting taxon abundance with heat trees</h2>
-<p>Alpha diversity statistics capture the diversity of whole samples in a single number, but to see the abundance of each taxon in a group of samples (e.g., root samples), we need to use other techniques. Stacked barcharts are typically used for this purpose, but we will be using heat trees. First, we need to calculate the abundance of each taxon for a set of samples from our OTU abundance information. We can use the <code>calc_taxon_abund</code> function to do this, grouping by a sample characteristic:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>type_abund &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(obj, <span class="st">&quot;otu_rarefied&quot;</span>,
-                                        <span class="dt">cols =</span> sample_data<span class="op">$</span>SampleID,
-                                        <span class="dt">groups =</span> sample_data<span class="op">$</span>Type)</code></pre></div>
-<pre><code>## Summing per-taxon counts from 292 columns in 2 groups for 489 taxa</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(obj<span class="op">$</span>data<span class="op">$</span>type_abund)</code></pre></div>
+<p>Alpha diversity statistics capture the diversity of whole samples in a single number, but to see the abundance of each taxon in a group of samples (e.g., root samples), we need to use other techniques. Stacked barcharts are typically used for this purpose, but we will be using heat trees. First, we need to calculate the abundance of each taxon for a set of samples from our OTU abundance information. We can use the <code>calc_taxon_abund</code> function to do this, and then find the mean abundance using a sample characteristic:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>tax_abund &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(obj, <span class="st">&quot;otu_props&quot;</span>)</code></pre></div>
+<pre><code>## No `cols` specified, so using all numeric columns:
+##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
+<pre><code>## Summing per-taxon counts from 292 columns for 489 taxa</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>type_abund &lt;-<span class="st"> </span><span class="kw">calc_group_mean</span>(obj, <span class="st">&quot;tax_abund&quot;</span>,
+                                       <span class="dt">cols =</span> sample_data<span class="op">$</span>SampleID,
+                                       <span class="dt">groups =</span> sample_data<span class="op">$</span>Type)
+
+<span class="kw">print</span>(obj<span class="op">$</span>data<span class="op">$</span>type_abund)</code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 489 x 3</span><span>
-##    taxon_id   leaf   root
-##  </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> aad      </span><span style='text-decoration: underline;'>271</span><span>122 </span><span style='text-decoration: underline;'>271</span><span>122
-## </span><span style='color: #BCBCBC;'> 2</span><span> aaf      </span><span style='text-decoration: underline;'>175</span><span>195 </span><span style='text-decoration: underline;'>123</span><span>773
-## </span><span style='color: #BCBCBC;'> 3</span><span> aag       </span><span style='text-decoration: underline;'>28</span><span>010  </span><span style='text-decoration: underline;'>75</span><span>115
-## </span><span style='color: #BCBCBC;'> 4</span><span> aah       </span><span style='text-decoration: underline;'>19</span><span>116   </span><span style='text-decoration: underline;'>4</span><span>137
-## </span><span style='color: #BCBCBC;'> 5</span><span> aai       </span><span style='text-decoration: underline;'>43</span><span>662  </span><span style='text-decoration: underline;'>29</span><span>404
-## </span><span style='color: #BCBCBC;'> 6</span><span> aaj        </span><span style='text-decoration: underline;'>1</span><span>144   </span><span style='text-decoration: underline;'>1</span><span>195
-## </span><span style='color: #BCBCBC;'> 7</span><span> aak         369   </span><span style='text-decoration: underline;'>7</span><span>350
-## </span><span style='color: #BCBCBC;'> 8</span><span> aal         284   </span><span style='text-decoration: underline;'>8</span><span>723
-## </span><span style='color: #BCBCBC;'> 9</span><span> aam         213   </span><span style='text-decoration: underline;'>3</span><span>625
-## </span><span style='color: #BCBCBC;'>10</span><span> aan        </span><span style='text-decoration: underline;'>1</span><span>548  </span><span style='text-decoration: underline;'>12</span><span>523
+##    taxon_id     leaf    root
+##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+## </span><span style='color: #BCBCBC;'> 1</span><span> aad      1        1      
+## </span><span style='color: #BCBCBC;'> 2</span><span> aaf      0.647    0.456  
+## </span><span style='color: #BCBCBC;'> 3</span><span> aag      0.103    0.277  
+## </span><span style='color: #BCBCBC;'> 4</span><span> aah      0.070</span><span style='text-decoration: underline;'>4</span><span>   0.015</span><span style='text-decoration: underline;'>5</span><span> 
+## </span><span style='color: #BCBCBC;'> 5</span><span> aai      0.161    0.109  
+## </span><span style='color: #BCBCBC;'> 6</span><span> aaj      0.004</span><span style='text-decoration: underline;'>38</span><span>  0.004</span><span style='text-decoration: underline;'>37</span><span>
+## </span><span style='color: #BCBCBC;'> 7</span><span> aak      0.001</span><span style='text-decoration: underline;'>34</span><span>  0.026</span><span style='text-decoration: underline;'>6</span><span> 
+## </span><span style='color: #BCBCBC;'> 8</span><span> aal      0.001</span><span style='text-decoration: underline;'>09</span><span>  0.031</span><span style='text-decoration: underline;'>8</span><span> 
+## </span><span style='color: #BCBCBC;'> 9</span><span> aam      0.000</span><span style='text-decoration: underline;'>665</span><span> 0.013</span><span style='text-decoration: underline;'>5</span><span> 
+## </span><span style='color: #BCBCBC;'>10</span><span> aan      0.005</span><span style='text-decoration: underline;'>71</span><span>  0.046</span><span style='text-decoration: underline;'>2</span><span> 
 ## </span><span style='color: #949494;'># ... with 479 more rows</span><span>
 </span></code></pre>
-<p>Now we can use these taxon counts to make heat trees of the primary taxa present in leafs and roots:</p>
+<p>Now we can use these per-taxon abundances to make heat trees of the primary taxa present in leafs and roots:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2</span>)
 obj <span class="op">%&gt;%</span>
-<span class="st">  </span>taxa<span class="op">::</span><span class="kw">filter_taxa</span>(leaf <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># taxa:: needed because of phyloseq::filter_taxa</span>
+<span class="st">  </span>taxa<span class="op">::</span><span class="kw">filter_taxa</span>(leaf <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.001</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># taxa:: needed because of phyloseq::filter_taxa</span>
 <span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_label =</span> taxon_names,
             <span class="dt">node_size =</span> leaf, 
             <span class="dt">node_color =</span> leaf, 
             <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>, <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, 
             <span class="dt">title =</span> <span class="st">&quot;Taxa in leafs&quot;</span>)</code></pre></div>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-14-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-11-1.png" width="960" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">3</span>)
 obj <span class="op">%&gt;%</span>
-<span class="st">  </span>taxa<span class="op">::</span><span class="kw">filter_taxa</span>(root <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># taxa:: needed because of phyloseq::filter_taxa</span>
+<span class="st">  </span>taxa<span class="op">::</span><span class="kw">filter_taxa</span>(leaf <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.001</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># taxa:: needed because of phyloseq::filter_taxa</span>
 <span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_label =</span> taxon_names,
             <span class="dt">node_size =</span> root, 
             <span class="dt">node_color =</span> root, 
             <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>, <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, 
             <span class="dt">title =</span> <span class="st">&quot;Taxa in roots&quot;</span>)</code></pre></div>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-15-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-12-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>Note that we needed to qualify <code>filter_taxa</code> with <code>taxa::</code>. This is because <code>phyloseq</code> is loaded and it also has a function called <code>filter_taxa</code>.</p>
 </div>
 <div id="beta-between-sample-diversity" class="section level2">
@@ -552,7 +554,7 @@ obj <span class="op">%&gt;%</span>
 <p>The <code>vegan</code> function <code>vegdist</code> is used to calculate the pairwise beta diversity indexes for a set of samples. Since this is a pairwise comparison, the output is a triangular matrix. In R, a <code>matrix</code> is like a <code>data.frame</code>, but all of the same type (e.g. all numeric), and has some different behavior.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta_dist &lt;-<span class="st"> </span><span class="kw">vegdist</span>(<span class="kw">t</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_rarefied[, sample_data<span class="op">$</span>SampleID]),
                      <span class="dt">index =</span> <span class="st">&quot;bray&quot;</span>)</code></pre></div>
-<p>Since <code>vegdist</code> does not have a <code>MARGIN</code> option like <code>diversity</code>, we need to <a href ="appendix--00--glossary.html#transpose_anchor">transpose</a> the matrix with the <code>t</code> function.</p>
+<p>Since <code>vegdist</code> does not have a <code>MARGIN</code> option like <code>diversity</code>, we need to <b><a href ="appendix--00--glossary.html#transpose_anchor">transpose</a></b> the matrix with the <code>t</code> function.</p>
 </div>
 </div>
 <div id="ordination" class="section level2">
@@ -560,32 +562,32 @@ obj <span class="op">%&gt;%</span>
 <p>The typical way beta diversity is plotted is using ordination. Ordination is a way to display “high dimensional” data in a viable number of dimensions (2 to 3). Our data is “high dimensional” because we have many samples with many species and species can be considered a “dimension”. If we had only two species, we could make a scatter plot of their abundance in each sample and get an idea of how the samples differ. With thousands of species, this is not possible. Instead, ordination is used to try to capture the information in many dimensions by in a smaller number of new “artificial” dimensions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mds &lt;-<span class="st"> </span><span class="kw">metaMDS</span>(beta_dist)</code></pre></div>
 <pre class="r-output"><code>## Run 0 stress 0.1135986 
-## Run 1 stress 0.1145507 
-## Run 2 stress 0.1171672 
-## Run 3 stress 0.1147155 
-## Run 4 stress 0.1140962 
-## ... Procrustes: rmse 0.005560005  max resid 0.06364374 
-## Run 5 stress 0.1143069 
-## Run 6 stress 0.114307 
-## Run 7 stress 0.1139656 
-## ... Procrustes: rmse 0.006689502  max resid 0.06359377 
-## Run 8 stress 0.1171309 
-## Run 9 stress 0.1147615 
-## Run 10 stress 0.1188162 
-## Run 11 stress 0.1148852 
-## Run 12 stress 0.1134437 
+## Run 1 stress 0.1164075 
+## Run 2 stress 0.1144255 
+## Run 3 stress 0.1165582 
+## Run 4 stress 0.115859 
+## Run 5 stress 0.1158776 
+## Run 6 stress 0.1139653 
+## ... Procrustes: rmse 0.006671228  max resid 0.06352893 
+## Run 7 stress 0.1150267 
+## Run 8 stress 0.1143067 
+## Run 9 stress 0.1134437 
 ## ... New best solution
-## ... Procrustes: rmse 0.006256015  max resid 0.0635505 
-## Run 13 stress 0.1167022 
-## Run 14 stress 0.1153466 
-## Run 15 stress 0.1222078 
-## Run 16 stress 0.1452282 
-## Run 17 stress 0.1140963 
-## Run 18 stress 0.115696 
-## Run 19 stress 0.1155482 
-## Run 20 stress 0.1153944 
+## ... Procrustes: rmse 0.006225904  max resid 0.06342385 
+## Run 10 stress 0.1158082 
+## Run 11 stress 0.1165675 
+## Run 12 stress 0.1151704 
+## Run 13 stress 0.1142885 
+## Run 14 stress 0.114307 
+## Run 15 stress 0.1145502 
+## Run 16 stress 0.1166072 
+## Run 17 stress 0.1147154 
+## Run 18 stress 0.1143461 
+## Run 19 stress 0.1144841 
+## Run 20 stress 0.1140963 
 ## *** No convergence -- monoMDS stopping criteria:
-##     20: stress ratio &gt; sratmax
+##     18: stress ratio &gt; sratmax
+##      2: scale factor of the gradient &lt; sfgrmin
 </code></pre>
 <p>That transformed our beta diversity matrix into a set of coordinates in two dimensions, which attempt to capture the differences in the data. However, it is in a format specific to <code>vegan</code>, so we will have to convert the data to a form that we can use for plotting.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mds_data &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(mds<span class="op">$</span>points)</code></pre></div>
@@ -597,79 +599,73 @@ mds_data &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span clas
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(mds_data, <span class="kw">aes</span>(<span class="dt">x =</span> MDS1, <span class="dt">y =</span> MDS2, <span class="dt">color =</span> Type)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>This shows that leaf and root samples are quite distinct, as we would expect. We can also color them by Site:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(mds_data, <span class="kw">aes</span>(<span class="dt">x =</span> MDS1, <span class="dt">y =</span> MDS2, <span class="dt">color =</span> Site)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>It appears that within the leaf and root clusters, we “sub-clusters” corresponding to site. Finally, lets look at genotype:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(mds_data, <span class="kw">aes</span>(<span class="dt">x =</span> MDS1, <span class="dt">y =</span> MDS2, <span class="dt">color =</span> Genotype)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>There is no discernible pattern there, suggesting plant genotype does not correspond to community structure.</p>
 <p>We can also do the above quickly in <code>phyloseq</code> using the <code>ordinate</code> and <code>plot_ordination</code> functions. Lets look at the differences between leaf and root samples again, but using a difference index this time.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ps_ord &lt;-<span class="st"> </span><span class="kw">ordinate</span>(ps_obj, <span class="dt">method =</span> <span class="st">&quot;NMDS&quot;</span>, <span class="dt">distance =</span> <span class="st">&quot;jsd&quot;</span>)</code></pre></div>
 <pre class="r-output"><code>## Run 0 stress 0.1075255 
-## Run 1 stress 0.1099666 
-## Run 2 stress 0.109621 
-## Run 3 stress 0.1104914 
-## Run 4 stress 0.1097421 
-## Run 5 stress 0.111776 
-## Run 6 stress 0.1109954 
-## Run 7 stress 0.1077025 
-## ... Procrustes: rmse 0.004331257  max resid 0.06958127 
-## Run 8 stress 0.1284405 
-## Run 9 stress 0.1075837 
-## ... Procrustes: rmse 0.004119326  max resid 0.069701 
-## Run 10 stress 0.110995 
-## Run 11 stress 0.1106618 
-## Run 12 stress 0.1084692 
-## Run 13 stress 0.1077016 
-## ... Procrustes: rmse 0.00432872  max resid 0.06958328 
-## Run 14 stress 0.1109646 
-## Run 15 stress 0.1090517 
-## Run 16 stress 0.1096225 
-## Run 17 stress 0.1091781 
-## Run 18 stress 0.1084687 
-## Run 19 stress 0.1096201 
-## Run 20 stress 0.1083517 
+## Run 1 stress 0.1094483 
+## Run 2 stress 0.1091787 
+## Run 3 stress 0.1179209 
+## Run 4 stress 0.1106636 
+## Run 5 stress 0.109966 
+## Run 6 stress 0.1084412 
+## Run 7 stress 0.1871714 
+## Run 8 stress 0.1105635 
+## Run 9 stress 0.1082954 
+## Run 10 stress 0.1084412 
+## Run 11 stress 0.1082949 
+## Run 12 stress 0.1108606 
+## Run 13 stress 0.1091785 
+## Run 14 stress 0.1130221 
+## Run 15 stress 0.1075836 
+## ... Procrustes: rmse 0.004120319  max resid 0.06970022 
+## Run 16 stress 0.108441 
+## Run 17 stress 0.1084414 
+## Run 18 stress 0.1104903 
+## Run 19 stress 0.1241454 
+## Run 20 stress 0.1104908 
 ## *** No convergence -- monoMDS stopping criteria:
 ##     18: stress ratio &gt; sratmax
 ##      2: scale factor of the gradient &lt; sfgrmin
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ordination</span>(ps_obj, ps_ord, <span class="dt">type =</span> <span class="st">&quot;samples&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;Type&quot;</span>)</code></pre></div>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="differential-heat-trees" class="section level2">
 <h2>Differential heat trees</h2>
 <p>Beta diversity summarizes the difference between two samples in a single number, but does not tell you why the samples are different. We developed a plotting technique we call “differential heat trees” to display differences in abundance of each taxon in two samples or groups of samples. These are like the heat trees shown in the plotting section, but colored with a diverging color scale the indicates which sample a each taxon is more abundant in. In this way, it is similar to heat maps used for the same purpose and in gene expression studies.</p>
 <div id="comparing-taxon-abundance-in-two-groups" class="section level3">
 <h3>Comparing taxon abundance in two groups</h3>
-<p>Before we can make a differential heat tree, we need to calculate the difference in abundance for each taxon between groups of samples, such as root vs leaf samples. There are many ways this can be done, ranging from simple differences in mean read counts, to outputs from specialized programs designed for microbiome data. We will be using a function in <code>metacoder</code> called <code>compare_groups</code> to do the comparisons. First however, we need to calculate the per-taxon abundance from our OTU counts. We can use the <code>calc_taxon_abund</code> function to do this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>tax_abund &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(obj, <span class="st">&quot;otu_rarefied&quot;</span>,
-                                       <span class="dt">cols =</span> sample_data<span class="op">$</span>SampleID)</code></pre></div>
-<pre><code>## Summing per-taxon counts from 292 columns for 489 taxa</code></pre>
-<p>For each taxon, at every rank, the <code>compare_groups</code> function compares two groups of counts. We have to define which sample belongs to which groups using <code>groups</code> option:</p>
+<p>Before we can make a differential heat tree, we need to calculate the difference in abundance for each taxon between groups of samples, such as root vs leaf samples. There are many ways this can be done, ranging from simple differences in mean read counts, to outputs from specialized programs designed for microbiome data. We will be using a function in <code>metacoder</code> called <code>compare_groups</code> to do the comparisons. We can use the per-taxon read propotions we got with <code>calc_taxon_abund</code> eariler for this. For each taxon, at every rank, the <code>compare_groups</code> function compares two groups of counts. We have to define which sample belongs to which groups using <code>groups</code> option:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>diff_table &lt;-<span class="st"> </span><span class="kw">compare_groups</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_abund&quot;</span>,
                                       <span class="dt">cols =</span> sample_data<span class="op">$</span>SampleID,
                                       <span class="dt">groups =</span> sample_data<span class="op">$</span>Type)
 <span class="kw">print</span>(obj<span class="op">$</span>data<span class="op">$</span>diff_table)</code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 489 x 7</span><span>
-##    taxon_id treatment_1 treatment_2 log2_median_ratio median_diff mean_diff wilcox_p_value
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> aad      leaf        root                    0             0       0         </span><span style='color: #BB0000;'>NaN</span><span>   </span><span style='color: #949494;'> </span><span>   
-## </span><span style='color: #BCBCBC;'> 2</span><span> aaf      leaf        root                    0.446       312.    352.          2.51</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-17</span><span>
-## </span><span style='color: #BCBCBC;'> 3</span><span> aag      leaf        root                   -</span><span style='color: #BB0000;'>1.22</span><span>       -</span><span style='color: #BB0000;'>266.</span><span>   -</span><span style='color: #BB0000;'>323.</span><span>          9.87</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-43</span><span>
-## </span><span style='color: #BCBCBC;'> 4</span><span> aah      leaf        root                    2            46.5   103.          3.86</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-18</span><span>
-## </span><span style='color: #BCBCBC;'> 5</span><span> aai      leaf        root                    0.440        69.5    97.7         1.03</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span><span>
-## </span><span style='color: #BCBCBC;'> 6</span><span> aaj      leaf        root                   -</span><span style='color: #BB0000;'>1.81</span><span>         -</span><span style='color: #BB0000;'>5</span><span>      -</span><span style='color: #BB0000;'>0.349</span><span>       2.88</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 8</span><span>
-## </span><span style='color: #BCBCBC;'> 7</span><span> aak      leaf        root                 -</span><span style='color: #BB0000;'>Inf</span><span>           -</span><span style='color: #BB0000;'>50</span><span>     -</span><span style='color: #BB0000;'>47.8</span><span>         4.36</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-49</span><span>
-## </span><span style='color: #BCBCBC;'> 8</span><span> aal      leaf        root                 -</span><span style='color: #BB0000;'>Inf</span><span>           -</span><span style='color: #BB0000;'>54</span><span>     -</span><span style='color: #BB0000;'>57.8</span><span>         2.71</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-51</span><span>
-## </span><span style='color: #BCBCBC;'> 9</span><span> aam      leaf        root                 -</span><span style='color: #BB0000;'>Inf</span><span>           -</span><span style='color: #BB0000;'>24</span><span>     -</span><span style='color: #BB0000;'>23.4</span><span>         2.42</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-49</span><span>
-## </span><span style='color: #BCBCBC;'>10</span><span> aan      leaf        root                   -</span><span style='color: #BB0000;'>4.82</span><span>        -</span><span style='color: #BB0000;'>81.5</span><span>   -</span><span style='color: #BB0000;'>75.2</span><span>         1.04</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-44</span><span>
+##    taxon_id treatment_1 treatment_2 log2_median_ratio median_diff  mean_diff wilcox_p_value
+##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+## </span><span style='color: #BCBCBC;'> 1</span><span> aad      leaf        root                    0         0        0               3.21</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
+## </span><span style='color: #BCBCBC;'> 2</span><span> aaf      leaf        root                    0.420     0.159    0.191           1.66</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-17</span><span>
+## </span><span style='color: #BCBCBC;'> 3</span><span> aag      leaf        root                   -</span><span style='color: #BB0000;'>1.18</span><span>     -</span><span style='color: #BB0000;'>0.137</span><span>   -</span><span style='color: #BB0000;'>0.174</span><span>           4.06</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-43</span><span>
+## </span><span style='color: #BCBCBC;'> 4</span><span> aah      leaf        root                    1.83      0.022</span><span style='text-decoration: underline;'>5</span><span>   0.054</span><span style='text-decoration: underline;'>9</span><span>          8.87</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-18</span><span>
+## </span><span style='color: #BCBCBC;'> 5</span><span> aai      leaf        root                    0.448     0.038</span><span style='text-decoration: underline;'>5</span><span>   0.051</span><span style='text-decoration: underline;'>9</span><span>          1.94</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span><span>
+## </span><span style='color: #BCBCBC;'> 6</span><span> aaj      leaf        root                   -</span><span style='color: #BB0000;'>1.27</span><span>     -</span><span style='color: #BB0000;'>0.001</span><span style='color: #BB0000;text-decoration: underline;'>94</span><span>  0.000</span><span style='text-decoration: underline;'>011</span><span>5       3.32</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 9</span><span>
+## </span><span style='color: #BCBCBC;'> 7</span><span> aak      leaf        root                   -</span><span style='color: #BB0000;'>6.72</span><span>     -</span><span style='color: #BB0000;'>0.024</span><span style='color: #BB0000;text-decoration: underline;'>9</span><span>  -</span><span style='color: #BB0000;'>0.025</span><span style='color: #BB0000;text-decoration: underline;'>2</span><span>          1.62</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-48</span><span>
+## </span><span style='color: #BCBCBC;'> 8</span><span> aal      leaf        root                 -</span><span style='color: #BB0000;'>Inf</span><span>        -</span><span style='color: #BB0000;'>0.029</span><span style='color: #BB0000;text-decoration: underline;'>3</span><span>  -</span><span style='color: #BB0000;'>0.030</span><span style='color: #BB0000;text-decoration: underline;'>7</span><span>          8.43</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-51</span><span>
+## </span><span style='color: #BCBCBC;'> 9</span><span> aam      leaf        root                 -</span><span style='color: #BB0000;'>Inf</span><span>        -</span><span style='color: #BB0000;'>0.012</span><span style='color: #BB0000;text-decoration: underline;'>9</span><span>  -</span><span style='color: #BB0000;'>0.012</span><span style='color: #BB0000;text-decoration: underline;'>8</span><span>          2.63</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-50</span><span>
+## </span><span style='color: #BCBCBC;'>10</span><span> aan      leaf        root                   -</span><span style='color: #BB0000;'>4.66</span><span>     -</span><span style='color: #BB0000;'>0.042</span><span style='color: #BB0000;text-decoration: underline;'>3</span><span>  -</span><span style='color: #BB0000;'>0.040</span><span style='color: #BB0000;text-decoration: underline;'>5</span><span>          1.61</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-44</span><span>
 ## </span><span style='color: #949494;'># ... with 479 more rows</span><span>
 </span></code></pre>
-<p>By default, <a href ="appendix--00--glossary.html#wilcoxon_rank_sum_test_anchor">Wilcoxon Rank Sum test</a> is used to test for statistical significance of differences and various summary statistics are reported to measure the size of the difference. Since we have done many independent tests (one for each taxon), we need to <a href ="appendix--00--glossary.html#multiple_comparison_corrections_anchor">correct for multiple comparisions</a>. We will do that with a false discovery rate (FDR) correction, but other types can be used as well.</p>
+<p>By default, <b><a href ="appendix--00--glossary.html#wilcoxon_rank_sum_test_anchor">Wilcoxon Rank Sum test</a></b> is used to test for statistical significance of differences and various summary statistics are reported to measure the size of the difference. Since we have done many independent tests (one for each taxon), we need to <b><a href ="appendix--00--glossary.html#multiple_comparison_corrections_anchor">correct for multiple comparisions</a></b>. We will do that with a false discovery rate (FDR) correction, but other types can be used as well.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(obj, <span class="st">&quot;diff_table&quot;</span>,
                   <span class="dt">wilcox_p_value =</span> <span class="kw">p.adjust</span>(wilcox_p_value, <span class="dt">method =</span> <span class="st">&quot;fdr&quot;</span>))</code></pre></div>
 <p>The most useful statistic for plotting is the log of ratio of median abundances in the two groups, since it is centered on 0 and is symmetric (e.g., a value of -4 is the same magnitude as 4). Lets set any differences that are not significant to 0 so all differences shown on the plot are significant.</p>
@@ -689,7 +685,7 @@ mds_data &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span clas
           <span class="dt">node_color_range =</span> <span class="kw">c</span>(<span class="st">&quot;cyan&quot;</span>, <span class="st">&quot;gray&quot;</span>, <span class="st">&quot;magenta&quot;</span>), <span class="co"># diverging colors</span>
           <span class="dt">node_size_axis_label =</span> <span class="st">&quot;OTU count&quot;</span>,
           <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Log 2 ratio of median counts&quot;</span>)</code></pre></div>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-28-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-24-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>That’s not too bad looking, but we can tweak it a bit to make it better by changing the layout, adding a title, and filtering out some of the taxa with odd names (depending on what the plot is for, you might not want to remove these). Here <code>mutate_obs</code> is used to add a temporary variable to the taxmap object that will contain the taxon names with special characters like <code>[</code> removed.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
 obj <span class="op">%&gt;%</span>
@@ -705,7 +701,7 @@ obj <span class="op">%&gt;%</span>
             <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>, <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, <span class="co"># good layout for large trees</span>
             <span class="dt">title =</span> <span class="st">&quot;leaf vs root samples&quot;</span>)</code></pre></div>
 <pre><code>## Adding a new &quot;character&quot; vector of length 489.</code></pre>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-29-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-25-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>What color corresponds to each group depends on the order they were given in the <code>compare_groups</code> function. Since “leaf” is “treatment_1” in the “diff_table”, and “log2_median_ratio” is defined as “log2(treatment_1 / treatment_2)”, when a taxon has more counts in leaf samples, the ratio is positive, therefore taxa more abundant in leafs are colored magenta in this case.</p>
 </div>
 <div id="comparing-taxon-abundance-with-more-than-2-groups" class="section level3">
@@ -718,16 +714,16 @@ obj <span class="op">%&gt;%</span>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 1,467 x 7</span><span>
 ##    taxon_id treatment_1 treatment_2 log2_median_ratio median_diff mean_diff wilcox_p_value
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> aad      Mah         Jam                     0             0       0         </span><span style='color: #BB0000;'>NaN</span><span>   </span><span style='color: #949494;'> </span><span>   
-## </span><span style='color: #BCBCBC;'> 2</span><span> aaf      Mah         Jam                     0.186       114    -</span><span style='color: #BB0000;'>174.</span><span>          8.01</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
-## </span><span style='color: #BCBCBC;'> 3</span><span> aag      Mah         Jam                    -</span><span style='color: #BB0000;'>0.107</span><span>       -</span><span style='color: #BB0000;'>27.5</span><span>   -</span><span style='color: #BB0000;'>58.4</span><span>         7.99</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
-## </span><span style='color: #BCBCBC;'> 4</span><span> aah      Mah         Jam                     0.752        13      13.5         2.64</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
-## </span><span style='color: #BCBCBC;'> 5</span><span> aai      Mah         Jam                     0.867       103     197.          2.09</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-13</span><span>
-## </span><span style='color: #BCBCBC;'> 6</span><span> aaj      Mah         Jam                     0.322         1       0.622       4.17</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
-## </span><span style='color: #BCBCBC;'> 7</span><span> aak      Mah         Jam                    -</span><span style='color: #BB0000;'>0.112</span><span>        -</span><span style='color: #BB0000;'>1.5</span><span>    -</span><span style='color: #BB0000;'>2.60</span><span>        9.68</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
-## </span><span style='color: #BCBCBC;'> 8</span><span> aal      Mah         Jam                     0.307         4.5     9.90        1.32</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
-## </span><span style='color: #BCBCBC;'> 9</span><span> aam      Mah         Jam                    -</span><span style='color: #BB0000;'>0.900</span><span>        -</span><span style='color: #BB0000;'>6.5</span><span>    -</span><span style='color: #BB0000;'>3.78</span><span>        7.18</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span><span>
-## </span><span style='color: #BCBCBC;'>10</span><span> aan      Mah         Jam                     0.186         4      12.3         6.23</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span>
+## </span><span style='color: #BCBCBC;'> 1</span><span> aad      Mah         Jam                    0        0          0              2.70</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
+## </span><span style='color: #BCBCBC;'> 2</span><span> aaf      Mah         Jam                    0.187    0.062</span><span style='text-decoration: underline;'>1</span><span>    -</span><span style='color: #BB0000;'>0.093</span><span style='color: #BB0000;text-decoration: underline;'>7</span><span>         7.70</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
+## </span><span style='color: #BCBCBC;'> 3</span><span> aag      Mah         Jam                   -</span><span style='color: #BB0000;'>0.202</span><span>   -</span><span style='color: #BB0000;'>0.027</span><span style='color: #BB0000;text-decoration: underline;'>7</span><span>    -</span><span style='color: #BB0000;'>0.033</span><span style='color: #BB0000;text-decoration: underline;'>0</span><span>         7.74</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
+## </span><span style='color: #BCBCBC;'> 4</span><span> aah      Mah         Jam                    0.785    0.007</span><span style='text-decoration: underline;'>34</span><span>    0.007</span><span style='text-decoration: underline;'>96</span><span>        1.76</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
+## </span><span style='color: #BCBCBC;'> 5</span><span> aai      Mah         Jam                    0.867    0.054</span><span style='text-decoration: underline;'>8</span><span>     0.107          7.29</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-14</span><span>
+## </span><span style='color: #BCBCBC;'> 6</span><span> aaj      Mah         Jam                   -</span><span style='color: #BB0000;'>0.050</span><span style='color: #BB0000;text-decoration: underline;'>9</span><span>  -</span><span style='color: #BB0000;'>0.000</span><span style='color: #BB0000;text-decoration: underline;'>090</span><span style='color: #BB0000;'>7</span><span>  0.000</span><span style='text-decoration: underline;'>561</span><span>       3.79</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
+## </span><span style='color: #BCBCBC;'> 7</span><span> aak      Mah         Jam                   -</span><span style='color: #BB0000;'>0.391</span><span>   -</span><span style='color: #BB0000;'>0.002</span><span style='color: #BB0000;text-decoration: underline;'>95</span><span>   -</span><span style='color: #BB0000;'>0.001</span><span style='color: #BB0000;text-decoration: underline;'>83</span><span>        7.84</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span><span>
+## </span><span style='color: #BCBCBC;'> 8</span><span> aal      Mah         Jam                    0.180    0.001</span><span style='text-decoration: underline;'>62</span><span>    0.005</span><span style='text-decoration: underline;'>64</span><span>        7.09</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span><span>
+## </span><span style='color: #BCBCBC;'> 9</span><span> aam      Mah         Jam                   -</span><span style='color: #BB0000;'>0.672</span><span>   -</span><span style='color: #BB0000;'>0.003</span><span style='color: #BB0000;text-decoration: underline;'>00</span><span>   -</span><span style='color: #BB0000;'>0.002</span><span style='color: #BB0000;text-decoration: underline;'>16</span><span>        4.15</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span><span>
+## </span><span style='color: #BCBCBC;'>10</span><span> aan      Mah         Jam                    0.084</span><span style='text-decoration: underline;'>2</span><span>   0.000</span><span style='text-decoration: underline;'>995</span><span>   0.006</span><span style='text-decoration: underline;'>41</span><span>        3.20</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 3</span><span>
 ## </span><span style='color: #949494;'># ... with 1,457 more rows</span><span>
 </span></code></pre>
 <p>We then need to correct for multiple comparisons and set non-significant differences to zero like we did before:</p>
@@ -754,7 +750,7 @@ obj<span class="op">$</span>data<span class="op">$</span>diff_table<span class="
                    <span class="dt">key_size =</span> <span class="fl">0.67</span>,
                    <span class="dt">seed =</span> <span class="dv">2</span>)</code></pre></div>
 <pre><code>## Adding a new &quot;character&quot; vector of length 247.</code></pre>
-<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-32-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-28-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>We have only compared three groups here, due to the nature of this dataset, so this technique is not much better than 3 separate, full sized graphs in this case, but with more groups it can be a uniquely effective way to show lots of comparisons. See the end of the <a href="02--quick_example.html">example analysis</a> for a better example of this technique.</p>
 </div>
 </div>
@@ -763,70 +759,75 @@ obj<span class="op">$</span>data<span class="op">$</span>diff_table<span class="
 <p>In these exercises, we will be using the <code>ps_obj</code> and <code>obj</code> from the analysis above. If you did not run the code above or had problems, run the following code to get the objects used. You can download the “diversity_data.Rdata” file <a href="diversity_data.Rdata" download="diversity_data.Rdata">here</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&quot;diversity_data.Rdata&quot;</span>)</code></pre></div>
 <p><strong>1a)</strong> Look at the documentation for the <code>plot_richness</code> function from <code>phyloseq</code>. Try to make a plot using only the Simpson and inverse Simpson indexes, colored by site and split up by sample type (leaf vs root).</p>
-<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-35">
+<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-31">
 Show solution
 </button>
-<div id="hide_buttonunnamed-chunk-35" class="collapse">
+<div id="hide_buttonunnamed-chunk-31" class="collapse">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_richness</span>(ps_obj, <span class="dt">color =</span> <span class="st">&quot;Site&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Genotype&quot;</span>, <span class="dt">measures =</span> <span class="kw">c</span>(<span class="st">&quot;Simpson&quot;</span>, <span class="st">&quot;InvSimpson&quot;</span>))</code></pre></div>
-<img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-35-1.png" width="480" style="display: block; margin: auto;" />
+<img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-31-1.png" width="480" style="display: block; margin: auto;" />
 </div>
 <p><br /></p>
 <p><strong>1b)</strong> The Simpson and inverse Simpson indexes display the same information in different ways (if you know one, you can calculate the other). How do they differ?</p>
-<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-36">
+<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-32">
 Show Answer
 </button>
-<div id="hide_buttonunnamed-chunk-36" class="collapse">
+<div id="hide_buttonunnamed-chunk-32" class="collapse">
 The Simpson index is bound between 0 and 1, wheras the inverse Simpson index is greater than zero. Also, the inverse Simpson index tends to spread out higher diversity values more.
 </div>
 <p><br /></p>
 <p><strong>2)</strong> Rarefaction and converting counts to proportions are two ways of accounting for unequal sample depth. Although proportions are more intuitive and easier to understand, why might rarefaction be better when calculating diveristy indexes?</p>
-<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-37">
+<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-33">
 Show Answer
 </button>
-<div id="hide_buttonunnamed-chunk-37" class="collapse">
+<div id="hide_buttonunnamed-chunk-33" class="collapse">
 Some diversity indexes take into account the number of species. This especially important for those that use presence/absence instead of abundance, such as the Sørensen and Jaccard indexes. When read counts are rarefied, some low counts go to zero, effectively reducing the number of species in the sample, whereas converting to proportions will never make a count go to zero, so will not remove the effect of unequal sampling depth on these indexes.
 </div>
 <p><br /></p>
 <p><strong>3a)</strong> Using the techniques presented in the section on plotting the abundance of taxa, make a plot of taxon abundance for the site encoded “Jam”.</p>
-<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-38">
+<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-34">
 Show solution
 </button>
-<div id="hide_buttonunnamed-chunk-38" class="collapse">
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>site_abund &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(obj, <span class="st">&quot;otu_rarefied&quot;</span>,
-                                        <span class="dt">cols =</span> sample_data<span class="op">$</span>SampleID,
-                                        <span class="dt">groups =</span> sample_data<span class="op">$</span>Site)</code></pre></div>
-<pre><code>## Summing per-taxon counts from 292 columns in 3 groups for 489 taxa</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj <span class="op">%&gt;%</span>
+<div id="hide_buttonunnamed-chunk-34" class="collapse">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>tax_abund &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(obj, <span class="st">&quot;otu_props&quot;</span>)</code></pre></div>
+<pre><code>## No `cols` specified, so using all numeric columns:
+##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
+<pre><code>## Summing per-taxon counts from 292 columns for 489 taxa</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>site_abund &lt;-<span class="st"> </span><span class="kw">calc_group_mean</span>(obj, <span class="st">&quot;tax_abund&quot;</span>,
+                                       <span class="dt">cols =</span> sample_data<span class="op">$</span>SampleID,
+                                       <span class="dt">groups =</span> sample_data<span class="op">$</span>Site)
+
+obj <span class="op">%&gt;%</span>
 <span class="st">  </span>taxa<span class="op">::</span><span class="kw">filter_taxa</span>(Jam <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># taxa:: needed because of phyloseq::filter_taxa</span>
 <span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_label =</span> taxon_names,
             <span class="dt">node_size =</span> Jam, 
             <span class="dt">node_color =</span> Jam, 
             <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>, <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, 
             <span class="dt">title =</span> <span class="st">&quot;Taxa in leafs&quot;</span>)</code></pre></div>
-<img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" />
+<pre class="r-output"><code>## NULL
+</code></pre>
 </div>
 <p><br /></p>
 <p><strong>3b)</strong> What are some of the most abundant families in the site “Jam”?</p>
-<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-39">
+<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-35">
 Show Answer
 </button>
-<div id="hide_buttonunnamed-chunk-39" class="collapse">
+<div id="hide_buttonunnamed-chunk-35" class="collapse">
 Sphingobacteriaceae, Chitinophagaceae, Sphingomonadaceae, Comamonadaceae, Microbacteriaceae, etc..
 </div>
 <p><br /></p>
 <p><strong>3c)</strong> What is the most abundant phylum in the site “Jam”?</p>
-<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-40">
+<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-36">
 Show Answer
 </button>
-<div id="hide_buttonunnamed-chunk-40" class="collapse">
+<div id="hide_buttonunnamed-chunk-36" class="collapse">
 Proteobacteria
 </div>
 <p><br /></p>
 <p><strong>4a)</strong> The ordination analysis colored by genotype showed no community differences corresponding to genotype. Try to use <code>compare_groups</code> to see if any taxa are significantly differentially abundant between genotypes to verify this result.</p>
-<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-41">
+<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-37">
 Show solution
 </button>
-<div id="hide_buttonunnamed-chunk-41" class="collapse">
+<div id="hide_buttonunnamed-chunk-37" class="collapse">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;dplyr&#39;</code></pre>
@@ -849,10 +850,10 @@ Show solution
 </div>
 <p><br /></p>
 <p><strong>4b)</strong> How many taxa have significant differences between genotypes?</p>
-<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-42">
+<button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-38">
 Show Answer
 </button>
-<div id="hide_buttonunnamed-chunk-42" class="collapse">
+<div id="hide_buttonunnamed-chunk-38" class="collapse">
 None
 </div>
 <p><br /></p>

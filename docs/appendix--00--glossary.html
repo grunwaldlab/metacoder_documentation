@@ -266,7 +266,7 @@ $(document).ready(function () {
       <a href="appendix--00--presentation_page.html">Slide show</a>
     </li>
     <li>
-      <a href="poster/poster.pdf">Poster</a>
+      <a href="appendix--00--poster_page.html">Poster</a>
     </li>
     <li>
       <a href="https://github.com/grunwaldlab/metacoder">Metacoder source code</a>
@@ -275,6 +275,9 @@ $(document).ready(function () {
       <a href="https://github.com/grunwaldlab/metacoder_documentation">Website source code</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="faq.html">FAQ</a>
 </li>
 <li>
   <a href="about.html">About</a>
@@ -483,7 +486,7 @@ However, using NSE, you can call it this way:
 </p>
 <pre class="r"><code>library(metacoder)</code></pre>
 <pre><code>## Loading required package: taxa</code></pre>
-<pre><code>## This is metacoder verison 0.2.1.9009 [1m(development version)[22m. If you use metacoder for published research, please cite our paper:
+<pre><code>## This is metacoder verison 0.3.0.1 [1m(development version)[22m. If you use metacoder for published research, please cite our paper:
 ## 
 ## Foster Z, Sharpton T and Grunwald N (2017). "Metacoder: An R package for visualization and manipulation of community taxonomic diversity data." [3mPLOS Computational Biology[23m, [1m13[22m(2), pp. 1-15. doi: 10.1371/journal.pcbi.1005404
 ## 
@@ -558,9 +561,9 @@ Plain text is the term used to describe text editors like Notepad or TextEdit th
 Random number generators are used by computers to simulate randomness, but are not actually random. They work by taking a starting number and running that number through a function that returns another number, which is then run through the same function to produce another number and so on. The first number is the “seed” and a given seed will always produce the same series of random numbers. Random number generators appear random because the seed that is chosen when the generator is created is usually something like the milliseconds on your computer’s internal clock. You can however set the seed yourself if you always want the same “random” behavior using the <code>set.seed</code> function. For example:
 </p>
 <pre class="r"><code>rnorm(3) # produces 3 "random" numbers from a normal distribution</code></pre>
-<pre><code>## [1] -0.363304 -1.178434 -1.107769</code></pre>
+<pre><code>## [1]  0.6742917 -1.8653779 -0.8887908</code></pre>
 <pre class="r"><code>rnorm(3)</code></pre>
-<pre><code>## [1] -0.5483160  0.4147597  0.1837779</code></pre>
+<pre><code>## [1]  1.3976930  1.3877276 -0.2921507</code></pre>
 <pre class="r"><code>set.seed(1)
 rnorm(3)</code></pre>
 <pre><code>## [1] -0.6264538  0.1836433 -0.8356286</code></pre>
@@ -709,6 +712,14 @@ Animalia &gt; Chordata &gt; Mammalia &gt; Primates &gt; Haplorhini &gt; Simiifor
 </h3>
 <p>
 Ranks are the level a taxon appears in a nested hierarchy of taxa. Common ranks include species, genus, family, order, class, phylum, and domain, although there might be others.
+</p>
+</div>
+<div id="taxonomy" class="section level3">
+<h3>
+<a class="glossary_anchor" id="taxonomy_anchor">Taxonomy</a>
+</h3>
+<p>
+In general, taxonomy is the study of classifying things in to groups. Typically these groups are nested inside eachother (i.e. a hierarchy). For our purpose “taxonomy” referrs to how we organize lifeforms into phyla, families, genera, species, etc. See the entry on “Taxonomic classifications” for more information.
 </p>
 </div>
 <div id="the-comprehensive-r-archive-network-cran" class="section level3">

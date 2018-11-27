@@ -11,7 +11,7 @@
 
 <meta name="author" content="Zachary S. L. Foster and Niklaus J. Grünwald" />
 
-<meta name="date" content="2018-08-10" />
+<meta name="date" content="2018-11-23" />
 
 <title>Metacoder documentation</title>
 
@@ -311,7 +311,7 @@ $(document).ready(function () {
       <a href="appendix--00--presentation_page.html">Slide show</a>
     </li>
     <li>
-      <a href="poster/poster.pdf">Poster</a>
+      <a href="appendix--00--poster_page.html">Poster</a>
     </li>
     <li>
       <a href="https://github.com/grunwaldlab/metacoder">Metacoder source code</a>
@@ -320,6 +320,9 @@ $(document).ready(function () {
       <a href="https://github.com/grunwaldlab/metacoder_documentation">Website source code</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="faq.html">FAQ</a>
 </li>
 <li>
   <a href="about.html">About</a>
@@ -338,14 +341,14 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Metacoder documentation</h1>
 <h4 class="author"><em>Zachary S. L. Foster and Niklaus J. Grünwald</em></h4>
-<h4 class="date"><em>2018-08-10</em></h4>
+<h4 class="date"><em>2018-11-23</em></h4>
 
 </div>
 
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Metacoder is an R package for <a href ="appendix--00--glossary.html#parsing_anchor">parsing</a>, plotting, and manipulating large taxonomic data sets, like those generated from modern high-throughput sequencing, like metabarcoding (i.e. amplification metagenomics, 16S metagenomics, etc). It provides a tree-based visualization called “heat trees” used to depict statistics for every taxon in a taxonomy using color and size. It also provides various functions to do common tasks in microbiome bioinformatics on data in the <code>taxmap</code> format defined by the <code>taxa</code> package, such as:</p>
+<p>Metacoder is an R package for <a href ="appendix--00--glossary.html#parsing_anchor">parsing</a>, plotting, and manipulating large <a href ="appendix--00--glossary.html#taxonomy_anchor">taxonomic</a> data sets, like those generated from modern high-throughput sequencing, like metabarcoding (i.e. amplification metagenomics, 16S metagenomics, etc). It provides a tree-based visualization called “heat trees” used to depict statistics for every taxon in a taxonomy using color and size. It also provides various functions to do common tasks in microbiome bioinformatics on data in the <code>taxmap</code> format defined by the <code>taxa</code> package, such as:</p>
 <ul>
 <li>Summing read counts/abundance per taxon</li>
 <li>Converting counts to proportions and <a href ="appendix--00--glossary.html#rarefaction_anchor">rarefaction</a> of counts using <code>vegan</code></li>
@@ -358,7 +361,7 @@ $(document).ready(function () {
 </div>
 <div id="relationship-with-other-packages" class="section level2">
 <h2>Relationship with other packages</h2>
-<p>Many of these operations can be done using other packages like <code>phyloseq</code>, which also provides tools for diversity analysis. The main strength of <code>metacoder</code> is that its functions use the flexible data types defined by <code>taxa</code>, which has powerful parsing and subsetting abilities that take into account the hierarchical relationship between taxa and user-defined data. In general, <code>metacoder</code> and <code>taxa</code> are more of an abstracted tool kit, whereas <code>phyloseq</code> has more specialized functions for community diversity data, but they both can do similar things. I encourage you to try both to see which fits your needs and style best. You can also combine the two in a single analysis by converting between the two data types when needed.</p>
+<p>Many of these operations can be done using other packages like <code>phyloseq</code>, which also provides tools for diversity analysis. The main strength of <code>metacoder</code> is that its functions use the flexible data types defined by <code>taxa</code>, which has powerful parsing and subsetting abilities that take into account the hierarchical relationship between taxa and user-defined data. In general, <code>metacoder</code> and <code>taxa</code> are more of an abstracted tool kit, whereas <code>phyloseq</code> has more specialized functions for community diversity data, but they both can do similar things. I encourage you to try both to see which fits your needs and style best. You can also combine the two in a single analysis by converting between the two data types when needed using the <code>parse_phyloseq</code> and <code>as_phyloseq</code> functions.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
@@ -382,10 +385,10 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
 <li>Adding the ability to plot specific edge lengths in the heat trees so they can be used for phylogenetic trees.</li>
 <li>Adding more data import and export functions to make parsing and writing common formats easier.</li>
 </ul>
-<p>To see the details of what is being worked on, check out the <a href="https://github.com/grunwaldlab/metacoder/issues">issues</a> tab of the Metacoder <a href="https://github.com/grunwaldlab">Github site</a>.</p>
+<p>To see the details of what is being worked on, check out the <a href="https://github.com/grunwaldlab/metacoder/issues">issues</a> tab of the metacoder <a href="https://github.com/grunwaldlab">Github site</a>.</p>
 </div>
-<div id="aknowledgements" class="section level2">
-<h2>Aknowledgements</h2>
+<div id="acknowledgements" class="section level2">
+<h2>Acknowledgements</h2>
 <p>Metacoder’s major dependencies are <code>taxa</code>, <code>taxize</code>, <code>vegan</code>, <code>igraph</code>, <code>dplyr</code>, and <code>ggplot2</code>.</p>
 </div>
 <div id="feedback-and-contributions" class="section level2">

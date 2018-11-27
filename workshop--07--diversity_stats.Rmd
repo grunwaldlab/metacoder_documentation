@@ -156,45 +156,30 @@ plot_richness(ps_obj, color = "Type", x = "Site")
 
 Each dot is a sample and the error bars in some of the indexes are the standard error.
 
-```{r include=FALSE}
-save(ps_obj, file = "ps_obj.Rdata")
-```
-
-
-*NOTE: the `as_phyloseq` function is only available in the development version of metacoder. If you want to try it, you can install it by typing:*
-
-```{r eval = FALSE}
-devtools::install_github("ropensci/taxa")
-devtools::install_github("grunwaldlab/metacoder")
-```
-
-*or you can use the current version of metacoder, download the file "ps_obj.Rdata" <a href="ps_obj.Rdata" download="ps_obj.Rdata">here</a>, and load the `ps_obj` object this way:*
-
-```{r}
-load("ps_obj.Rdata")
-```
-
 
 ## Plotting taxon abundance with heat trees 
 
 Alpha diversity statistics capture the diversity of whole samples in a single number, but to see the abundance of each taxon in a group of samples (e.g., root samples), we need to use other techniques.
 Stacked barcharts are typically used for this purpose, but we will be using heat trees.
 First, we need to calculate the abundance of each taxon for a set of samples from our OTU abundance information.
-We can use the `calc_taxon_abund` function to do this, grouping by a sample characteristic:
+We can use the `calc_taxon_abund` function to do this, and then find the mean abundance using a sample characteristic:
 
 ```{r}
-obj$data$type_abund <- calc_taxon_abund(obj, "otu_rarefied",
-                                        cols = sample_data$SampleID,
-                                        groups = sample_data$Type)
+obj$data$tax_abund <- calc_taxon_abund(obj, "otu_props")
+
+obj$data$type_abund <- calc_group_mean(obj, "tax_abund",
+                                       cols = sample_data$SampleID,
+                                       groups = sample_data$Type)
+
 print(obj$data$type_abund)
 ```
 
-Now we can use these taxon counts to make heat trees of the primary taxa present in leafs and roots:
+Now we can use these per-taxon abundances to make heat trees of the primary taxa present in leafs and roots:
 
 ```{r fig.width = 10, fig.height = 10}
 set.seed(2)
 obj %>%
-  taxa::filter_taxa(leaf > 50) %>% # taxa:: needed because of phyloseq::filter_taxa
+  taxa::filter_taxa(leaf > 0.001) %>% # taxa:: needed because of phyloseq::filter_taxa
   heat_tree(node_label = taxon_names,
             node_size = leaf, 
             node_color = leaf, 
@@ -205,7 +190,7 @@ obj %>%
 ```{r fig.width = 10, fig.height = 10}
 set.seed(3)
 obj %>%
-  taxa::filter_taxa(root > 50) %>% # taxa:: needed because of phyloseq::filter_taxa
+  taxa::filter_taxa(leaf > 0.001) %>% # taxa:: needed because of phyloseq::filter_taxa
   heat_tree(node_label = taxon_names,
             node_size = root, 
             node_color = root, 
@@ -320,14 +305,7 @@ In this way, it is similar to heat maps used for the same purpose and in gene ex
 Before we can make a differential heat tree, we need to calculate the difference in abundance for each taxon between groups of samples, such as root vs leaf samples.
 There are many ways this can be done, ranging from simple differences in mean read counts, to outputs from specialized programs designed for microbiome data.
 We will be using a function in `metacoder` called `compare_groups` to do the comparisons.
-First however, we need to calculate the per-taxon abundance from our OTU counts.
-We can use the `calc_taxon_abund` function to do this:
-
-```{r}
-obj$data$tax_abund <- calc_taxon_abund(obj, "otu_rarefied",
-                                       cols = sample_data$SampleID)
-```
-
+We can use the per-taxon read propotions we got with `calc_taxon_abund` eariler for this.
 For each taxon, at every rank, the `compare_groups` function compares two groups of counts.
 We have to define which sample belongs to which groups using `groups` option:
 
@@ -480,9 +458,12 @@ Some diversity indexes take into account the number of species. This especially 
 **3a)** Using the techniques presented in the section on plotting the abundance of taxa, make a plot of taxon abundance for the site encoded "Jam".
 
 ```{r hide_button = TRUE}
-obj$data$site_abund <- calc_taxon_abund(obj, "otu_rarefied",
-                                        cols = sample_data$SampleID,
-                                        groups = sample_data$Site)
+obj$data$tax_abund <- calc_taxon_abund(obj, "otu_props")
+
+obj$data$site_abund <- calc_group_mean(obj, "tax_abund",
+                                       cols = sample_data$SampleID,
+                                       groups = sample_data$Site)
+
 obj %>%
   taxa::filter_taxa(Jam > 50) %>% # taxa:: needed because of phyloseq::filter_taxa
   heat_tree(node_label = taxon_names,
