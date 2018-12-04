@@ -46,7 +46,7 @@ print(sample_data)
 
 This is a large data set and not all the `r nrow(sample_data)` samples are used in the main publication of @wagner2016host.
 Only the samples in the "ecotypes" experiment are part of the main study.
-Using standard R subsetting we could remove those like so:
+Using standard R subsetting we could get just those rows like so:
 
 ```{r eval = FALSE}
 sample_data <- sample_data[sample_data$Experiment == "ecotypes", ]
@@ -54,7 +54,7 @@ sample_data <- sample_data[sample_data$Experiment == "ecotypes", ]
 
 Using the `dplyr` functions, the same operation would be: 
 
-```{r}
+```{r message=FALSE}
 library(dplyr)
 sample_data <- filter(sample_data, Experiment == "ecotypes")
 ```
@@ -104,14 +104,14 @@ Next we will subset the abundance data to just these samples to get the dataset 
 ## Subsetting a taxonomy
 
 The analog to `filter` for taxonomic data is `filter_taxa` from the `taxa` package.
-This works in a similar way, but has much more options for taxonomic relationships are used and what is done with data associated with removed taxa.
+This works in a similar way, but has many more options for how taxonomic relationships are used and what is done with data associated with removed taxa.
 Lets take another look at our data object:
 
 ```{r}
 print(obj)
 ```
 
-If we look at the second line, we can see that some taxa do not have names.
+If we look at the second line, we can see that some taxa do not have names (the taxon with the ID "chy").
 These are the ones that only had  `r gloss$add('Taxonomic ranks', shown = 'rank')` information in the classification we parsed in the last section (e.g. `o__` in  `"Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__"`).
 Since these do not add any information, lets remove them.
 
@@ -123,7 +123,7 @@ print(obj)
 
 There were OTUs associated with the nameless taxa, but no OTUs were filtered out, so what happened to them?
 By default, they are reassigned to the closest supertaxon that passes the filter.
-For example, for the `r gloss$add('Taxonomic classifications', shown = 'classification')` `"Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__"`, the OTU would be reassigned to the class "SJA-28".
+For example, for the `r gloss$add('Taxonomic classifications', shown = 'classification')` `"Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__"`, the OTU would be reassigned to the class "SJA-28" and the taxon ID for that OTU would be changed to the taxon ID for "SJA-28".
 
 Like `filter`, `filter_taxa` can use variables contained in the input objects as if they were independent variables.
 In this case, `taxon_names` is actually a function that is called when referenced in this way.
@@ -155,13 +155,14 @@ If we left this option off, we would would have only a single taxon with all OTU
 filter_taxa(obj, taxon_names == "Bacteria")
 ```
 
+Note how the taxon IDs for OTUs change when taxa are filtered.
 Next, lets remove the columns from the abundance matrix that were removed from the sample data at the start of the section.
 
 ```{r}
 obj$data$otu_counts <- obj$data$otu_counts[c("taxon_id", "OTU_ID", sample_data$SampleID)]
 ```
 
-This leaves us with a data set of `r nrow(obj$data$otu_counts)` OTUs in `r nrow(sample_data)` samples, classified by `r length(obj$taxon_ids())` taxa:
+This leaves us with a data set of `r format(nrow(obj$data$otu_counts), big.mark = ",")` OTUs in `r nrow(sample_data)` samples, classified by `r length(obj$taxon_ids())` taxa:
 
 ```{r}
 print(obj)
@@ -193,7 +194,7 @@ We can use `sum` to count the number of `TRUE` values and hence the number of OT
 sum(has_no_reads)
 ```
 
-There are `r sum(has_no_reads)` of `r length(has_no_reads)` OTUs that now have no reads.
+There are `r format(sum(has_no_reads), big.mark = ",")` of `r format(length(has_no_reads), big.mark = ",")` OTUs that now have no reads.
 Now that we know which they are, we can remove them using `filter_obs`.
 
 ```{r}
@@ -205,6 +206,7 @@ To remove taxa that are no longer observed in any OTUs, we need to add the `drop
 
 ```{r}
 obj <- filter_obs(obj, "otu_counts", ! has_no_reads, drop_taxa = TRUE)
+print(obj)
 ```
 
 If there were other tables in `obj$data` the data for those taxa would have been removed as well unless `drop_obs = FALSE` was added.
@@ -355,14 +357,15 @@ Using the `groups` option, it can do the calculation on columns grouped by treat
 calc_n_samples(obj, data = "otu_counts", groups = sample_data$Type)
 ```
 
-Run the following code to add this as a table in your `taxmap` object:
+Run the following code to add this as a table to a copy of your `taxmap` object:
 
 ```{r}
-obj$data$sample_counts <- calc_n_samples(obj,
+obj2 <- obj$clone(deep = TRUE)
+obj2$data$sample_counts <- calc_n_samples(obj,
                                          data = "otu_counts",
                                          groups = sample_data$Type,
                                          other_cols = "OTU_ID") # Preserves OTU_ID column
-print(obj)
+print(obj2)
 ```
 
 Since the "sample_counts" table is derived from the "otu_counts" table and in the same order, we can use values from it to subset "otu_counts".
@@ -370,26 +373,26 @@ Using `filter_obs`, try to subset "otu_counts" to taxa that do not appear in lea
 Remove any taxa not represented by these OTUs unique to roots.
 
 ```{r hide_button = TRUE}
-filter_obs(obj, "otu_counts", leaf == 0, root > 100, drop_taxa = TRUE)
+filter_obs(obj2, "otu_counts", leaf == 0, root > 100, drop_taxa = TRUE)
 ```
 
 **10b)** The function `arrange_obs` sorts tables in `taxmap` object. For example, you can sort the OTU table in `obj` by the number of reads in sample "M1981P563" like so:
 
 ```{r}
-arrange_obs(obj, "otu_counts", M1981P563)
+arrange_obs(obj2, "otu_counts", M1981P563)
 ```
 
 To sort in descending order wrap the sorting parameter in `desc()`:
 
 ```{r}
-arrange_obs(obj, "otu_counts", desc(M1981P563))
+arrange_obs(obj2, "otu_counts", desc(M1981P563))
 ```
 
 Try to sort the OTU table by the difference between the number of leaf samples and OTU was found in and the number of root samples and OTU was found in.
 This effectively sorts by how "characteristic" an OTU is to root samples.
 
 ```{r hide_button = TRUE}
-arrange_obs(obj, "sample_counts", leaf - root)
+arrange_obs(obj2, "sample_counts", leaf - root)
 ```
 
 **10c)** What is the ID of the OTU most "characteristic" of roots vs leafs?
@@ -403,14 +406,14 @@ cat(
 **10d)** `mutate_obs` is used to add new columns to tables in a `taxmap` objects. Look at the documentation and see if you can figure out how to add the results of the `classifications` function as a column in the "sample_counts" table. Note that you will need to use the "taxon_id" column of the "sample_counts" table to subset the results of the `classifications` function so that they match the taxon IDs in the "sample_counts" table.
 
 ```{r hide_button = TRUE}
-mutate_obs(obj, "sample_counts", class = classifications(obj)[obj$data$sample_counts$taxon_id])
+mutate_obs(obj2, "sample_counts", class = classifications(obj2)[obj2$data$sample_counts$taxon_id])
 ```
 
 **10e)** Now use the `%>%` operator to pipe the code for part **d** into the code for part **b** to sort it and see what taxa are most "characteristic" of roots vs leafs.
 
 ```{r hide_button = TRUE}
-obj %>%
-  mutate_obs("sample_counts", class = classifications(obj)[obj$data$sample_counts$taxon_id]) %>%
+obj2 %>%
+  mutate_obs("sample_counts", class = classifications(obj2)[obj2$data$sample_counts$taxon_id]) %>%
   arrange_obs("sample_counts", leaf - root)
 ```
 

@@ -152,7 +152,7 @@ obj %>%
 
 These types of layouts have a random component to how they are made, so running the same code twice will produce different layouts.
 Try running the above code again to see this.
-We can force it to be the same each time by setting the `r gloss$add('Random number generator seeds', shown = 'seed')` for the random number generator used by R, as is done in the next example.
+We can force it to be the same each time by setting the `r gloss$add('Random number generator seeds', shown = 'seed')` for the random number generator used by R before each plot, as is done in the next example.
 The last layout is not too bad, but does not make good use of space.
 Lets try davidson-harel:
 

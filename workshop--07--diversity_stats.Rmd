@@ -37,7 +37,7 @@ Common alpha diversity statistics include:
 
 * **Shannon**: How difficult it is to predict the identity of a randomly chosen individual.
 * **Simpson**: The probability that two randomly chosen individuals are the same species.
-* **Inverse Simpson**: This is a bit confusing to think about. Assuming a theoretically community where all species were equally abundant, this would be the number of species needed to have the same Simpson index value for the community being analyzed.
+* **Inverse Simpson**: This is a bit confusing to think about. Assuming a theoretical community where all species were equally abundant, this would be the number of species needed to have the same Simpson index value for the community being analyzed.
 
 There are also some diversity indexes that take into account the taxonomic similarity of the species called "taxonomic diversity" and "taxonomic distinctness", but we will not go into those.
 
@@ -46,7 +46,7 @@ Like other vegan functions, it assumes that samples are in rows, but they are in
 We also need to exclude the taxon ID column by subsetting the columns to only samples (i.e. all column besides the first one).
 Since alpha diversity is a per-sample attribute, we can just add this as a column to the sample data table:
 
-```{r }
+```{r message=FALSE}
 library(vegan)
 sample_data$alpha <- diversity(obj$data$otu_rarefied[, sample_data$SampleID],
                                  MARGIN = 2,
@@ -56,7 +56,7 @@ hist(sample_data$alpha)
 
 Adding this as a column to the sample data table makes it easy to graph using `ggplot2`.
 
-```{r }
+```{r message=FALSE}
 library(ggplot2)
 ggplot(sample_data, aes(x = Site, y = alpha)) + 
   geom_boxplot()
@@ -144,7 +144,7 @@ Looks like there is no difference in the alpha diversity between genotypes, but 
 The `phyloseq` package (@mcmurdie2013phyloseq) can be used to quickly plot a variety of alpha diversity indexes per sample using the `plot_richness` function.
 First we need to convert the `taxmap` object to a `phyloseq` object, since all of the `phyloseq` functions expect `phyloseq` objects.
 
-```{r fig.width=10, fig.height=5}
+```{r message=FALSE, fig.width=10, fig.height=5}
 library(phyloseq)
 ps_obj <- as_phyloseq(obj,
                       otu_table = "otu_rarefied",
@@ -190,7 +190,7 @@ obj %>%
 ```{r fig.width = 10, fig.height = 10}
 set.seed(3)
 obj %>%
-  taxa::filter_taxa(leaf > 0.001) %>% # taxa:: needed because of phyloseq::filter_taxa
+  taxa::filter_taxa(root > 0.001) %>% # taxa:: needed because of phyloseq::filter_taxa
   heat_tree(node_label = taxon_names,
             node_size = root, 
             node_color = root, 
@@ -200,6 +200,7 @@ obj %>%
 
 Note that we needed to qualify `filter_taxa` with `taxa::`.
 This is because `phyloseq` is loaded and it also has a function called `filter_taxa`.
+When two functions from different packages have the same name, the function from the package that was loaded last is called, unless `package_name::` is added. 
 
 
 ## Beta (between sample) diversity
@@ -234,8 +235,8 @@ Since `vegdist` does not have a `MARGIN` option like `diversity`, we need to `r 
 ## Ordination
 
 The typical way beta diversity is plotted is using ordination.
-Ordination is a way to display "high dimensional" data in a viable number of dimensions (2 to 3).
-Our data is "high dimensional" because we have many samples with many species and species can be considered a "dimension".
+Ordination is a way to display "high dimensional" data in a visible number of dimensions (2 to 3).
+Our data is "high dimensional" because we have many samples with many OTUs and the abundance of each OTU can be considered a "dimension".
 If we had only two species, we could make a scatter plot of their abundance in each sample and get an idea of how the samples differ.
 With thousands of species, this is not possible.
 Instead, ordination is used to try to capture the information in many dimensions by in a smaller number of new "artificial" dimensions.
@@ -244,7 +245,7 @@ Instead, ordination is used to try to capture the information in many dimensions
 mds <- metaMDS(beta_dist)
 ```
 
-That transformed our beta diversity matrix into a set of coordinates in two dimensions, which attempt to capture the differences in the data.
+That transformed our beta diversity matrix into a set of coordinates in two dimensions, which are intended to capture the differences in the data.
 However, it is in a format specific to `vegan`, so we will have to convert the data to a form that we can use for plotting.
 
 ```{r}
@@ -297,8 +298,8 @@ plot_ordination(ps_obj, ps_ord, type = "samples", color = "Type")
 
 Beta diversity summarizes the difference between two samples in a single number, but does not tell you why the samples are different.
 We developed a plotting technique we call "differential heat trees" to display differences in abundance of each taxon in two samples or groups of samples.
-These are like the heat trees shown in the plotting section, but colored with a diverging color scale the indicates which sample a each taxon is more abundant in.
-In this way, it is similar to heat maps used for the same purpose and in gene expression studies.
+These are like the heat trees shown in the plotting section, but colored with a diverging color scale the indicates which sample each taxon is more abundant in and by how much.
+In this way, it is similar to heat maps used for the same purpose in gene expression studies.
 
 ### Comparing taxon abundance in two groups
 
