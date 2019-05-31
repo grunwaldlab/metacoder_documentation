@@ -81,7 +81,7 @@ You could also use `node_size_range` and `edge_size_range` to change the size of
 
 5) Shorten labels
 
-Do your labels have taxonomic rank codes or other unneeded text? If so get rid of it using text replacing functions that can use `gloss$add('reqular expressions')` like `sub` and `gsub`. Labels can also be printed over multiple lines, so you might consider replacing some spaces with newlines (`\n`).
+Do your labels have taxonomic rank codes or other unneeded text? If so get rid of it using text replacing functions that can use `r gloss$add('reqular expressions')` like `sub` and `gsub`. Labels can also be printed over multiple lines, so you might consider replacing some spaces with newlines (`\n`).
 
 
 6) Split the plot into multiple plots
@@ -320,3 +320,53 @@ set.seed(2)
 heat_tree(ex_taxmap, layout = "da")
 ```
 
+
+### Differential heat trees with `compare_groups`: which color is which treatment?
+
+This is not automatically indicated becuase the `compare_groups` function allows you to define a custom comparison function and that function indicates which color correspons to which group a taxon is more abundant in.
+If you use the default function, then you are using this function: 
+
+```{r eval=FALSE}
+function(abund_1, abund_2) {
+  log_ratio <- log2(median(abund_1) / median(abund_2))
+  if (is.nan(log_ratio)) {
+    log_ratio <- 0
+  }
+  list(log2_median_ratio = log_ratio,
+       median_diff = median(abund_1) - median(abund_2),
+       mean_diff = mean(abund_1) - mean(abund_2),
+       wilcox_p_value = wilcox.test(abund_1, abund_2)$p.value)
+}
+```
+
+Using this function, and plotting the `log2_median_ratio`, then positive values indicate that `abund_1` is greater and negative values indicate `abund_2` is greater:
+
+```{r}
+log2(2 / 1)
+log2(1 / 2)
+```
+
+Which group is `abund_1` and which is `abund_2` in each comparison can be seen in the `treatment_1` and `treatment_2` columns in output of `compare_groups`: 
+
+```{r}
+# Parse data for plotting
+x = parse_tax_data(hmp_otus, class_cols = "lineage", class_sep = ";",
+                   class_key = c(tax_rank = "info", tax_name = "taxon_name"),
+                   class_regex = "^(.+)__(.+)$")
+
+# Convert counts to proportions
+x$data$otu_table <- calc_obs_props(x, data = "tax_data", cols = hmp_samples$sample_id)
+
+# Get per-taxon counts
+x$data$tax_table <- calc_taxon_abund(x, data = "otu_table", cols = hmp_samples$sample_id)
+
+# Calculate difference between groups
+x$data$diff_table <- compare_groups(x, data = "tax_table",
+                                    cols = hmp_samples$sample_id,
+                                    groups = hmp_samples$body_site)
+
+print(x$data$diff_table)
+```
+
+So in this case, "Nose" is `abund_1` and "Saliva" is `abund_2`.
+If you then plotted that comparison as a heat tree, then the color corresponding to positive values would mean the taxon is more abundant in "Nose" communities and the color corresponding to negative values would mean the taxon is more abundant in "Saliva" communities.
