@@ -1,0 +1,33 @@
+---
+output: html_document
+bibliography: "bibliography.bibtex"
+---
+
+```{r setup, include=FALSE}
+source("settings.R")
+knitr::opts_chunk$set(prompt = TRUE, comment = NA)
+library(DT)
+```
+
+# Reading data into the `taxmap` format
+
+Getting your data into the proper format one of the more tedious and annoying tasks in bioinformatics.
+The `taxa` package supplies generic parsers that can read almost any format of taxonomic data, but they often require some understanding of regular expressions.
+The `metacoder` package has easier-to-use functions to parse common formats, but there might not be a function for your particular formats.
+This page shows examples for how to parse specific formats, using either the dedicated `metacoder` functions or the more general `taxa` functions.
+
+
+## Dada2
+
+Unlike most metabarcoding pipelines, dada2 is entirely in R, so the abundance matrix and taxonomy information returned will be stored in a `matrix` in R rather than a .txt file.
+Below is an example of such data, taken from the [dada2 tutorial](https://benjjneb.github.io/dada2/tutorial.html):
+
+```{r}
+load("cookbook_data/dada2.RData")
+DT::datatable(seqtab.nochim)
+DT::datatable(taxa)
+seq_table = seqtab.nochim
+tax_table = taxa
+parse_dada2(seq_table, tax_table)
+```
+

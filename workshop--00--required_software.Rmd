@@ -58,8 +58,9 @@ You can enter the following script in the R console to install these packages:
 
 ```{r, eval = FALSE}
 # Install phyloseq from Bioconductor
-source('http://bioconductor.org/biocLite.R')
-biocLite("phyloseq")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("phyloseq")
 
 # Install the rest of the packages from CRAN
 install.packages(c("vegan", "metacoder", "taxa", "ggplot2", "dplyr", "readr", "stringr", "agricolae", "ape"),

@@ -370,3 +370,4 @@ print(x$data$diff_table)
 
 So in this case, "Nose" is `abund_1` and "Saliva" is `abund_2`.
 If you then plotted that comparison as a heat tree, then the color corresponding to positive values would mean the taxon is more abundant in "Nose" communities and the color corresponding to negative values would mean the taxon is more abundant in "Saliva" communities.
+
