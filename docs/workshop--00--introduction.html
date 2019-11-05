@@ -7,11 +7,12 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
-<title></title>
+<title>workshop--00--introduction.utf8.md</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -63,9 +64,7 @@ h6 {
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -79,7 +78,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -89,6 +87,9 @@ img {
 }
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -104,7 +105,6 @@ body {
   padding-top: 66px;
   margin-top: -66px;
 }
-
 .section h2 {
   padding-top: 66px;
   margin-top: -66px;
@@ -124,6 +124,43 @@ body {
 .section h6 {
   padding-top: 66px;
   margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -145,19 +182,73 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -357,16 +448,16 @@ $(document).ready(function () {
 <p>Callahan, Benjamin J, Paul J McMurdie, Michael J Rosen, Andrew W Han, Amy Jo A Johnson, and Susan P Holmes. 2016. “DADA2: High-Resolution Sample Inference from Illumina Amplicon Data.” <em>Nature Methods</em> 13 (7). Nature Publishing Group: 581.</p>
 </div>
 <div id="ref-caporaso2010qiime">
-<p>Caporaso, J Gregory, Justin Kuczynski, Jesse Stombaugh, Kyle Bittinger, Frederic D Bushman, Elizabeth K Costello, Noah Fierer, et al. 2010. “QIIME Allows Analysis of High-Throughput Community Sequencing Data.” <em>Nature Methods</em> 7 (5). Nature Publishing Group: 335–36. <a href="https://www.nature.com/articles/nmeth.f.303" class="uri">https://www.nature.com/articles/nmeth.f.303</a>.</p>
+<p>Caporaso, J Gregory, Justin Kuczynski, Jesse Stombaugh, Kyle Bittinger, Frederic D Bushman, Elizabeth K Costello, Noah Fierer, et al. 2010. “QIIME Allows Analysis of High-Throughput Community Sequencing Data.” <em>Nature Methods</em> 7 (5). Nature Publishing Group: 335–36. <a href="https://www.nature.com/articles/nmeth.f.303">https://www.nature.com/articles/nmeth.f.303</a>.</p>
 </div>
 <div id="ref-comeau2017microbiome">
-<p>Comeau, André M, Gavin M Douglas, and Morgan GI Langille. 2017. “Microbiome Helper: A Custom and Streamlined Workflow for Microbiome Research.” <em>mSystems</em> 2 (1). Am Soc Microbiol: e00127–16. <a href="http://msystems.asm.org/content/2/1/e00127-16" class="uri">http://msystems.asm.org/content/2/1/e00127-16</a>.</p>
+<p>Comeau, André M, Gavin M Douglas, and Morgan GI Langille. 2017. “Microbiome Helper: A Custom and Streamlined Workflow for Microbiome Research.” <em>mSystems</em> 2 (1). Am Soc Microbiol: e00127–16. <a href="http://msystems.asm.org/content/2/1/e00127-16">http://msystems.asm.org/content/2/1/e00127-16</a>.</p>
 </div>
 <div id="ref-foster2017metacoder">
-<p>Foster, Zachary SL, Thomas J Sharpton, and Niklaus J Grünwald. 2017. “Metacoder: An R Package for Visualization and Manipulation of Community Taxonomic Diversity Data.” <em>PLoS Computational Biology</em> 13 (2). Public Library of Science: e1005404. <a href="https://doi.org/10.1371/journal.pcbi.1005404" class="uri">https://doi.org/10.1371/journal.pcbi.1005404</a>.</p>
+<p>Foster, Zachary SL, Thomas J Sharpton, and Niklaus J Grünwald. 2017. “Metacoder: An R Package for Visualization and Manipulation of Community Taxonomic Diversity Data.” <em>PLoS Computational Biology</em> 13 (2). Public Library of Science: e1005404. <a href="https://doi.org/10.1371/journal.pcbi.1005404">https://doi.org/10.1371/journal.pcbi.1005404</a>.</p>
 </div>
 <div id="ref-schloss2009introducing">
-<p>Schloss, Patrick D, Sarah L Westcott, Thomas Ryabin, Justine R Hall, Martin Hartmann, Emily B Hollister, Ryan A Lesniewski, et al. 2009. “Introducing Mothur: Open-Source, Platform-Independent, Community-Supported Software for Describing and Comparing Microbial Communities.” <em>Applied and Environmental Microbiology</em> 75 (23). Am Soc Microbiol: 7537–41. <a href="http://aem.asm.org/cgi/pmidlookup?view=long&amp;pmid=19801464" class="uri">http://aem.asm.org/cgi/pmidlookup?view=long&amp;pmid=19801464</a>.</p>
+<p>Schloss, Patrick D, Sarah L Westcott, Thomas Ryabin, Justine R Hall, Martin Hartmann, Emily B Hollister, Ryan A Lesniewski, et al. 2009. “Introducing Mothur: Open-Source, Platform-Independent, Community-Supported Software for Describing and Comparing Microbial Communities.” <em>Applied and Environmental Microbiology</em> 75 (23). Am Soc Microbiol: 7537–41. <a href="http://aem.asm.org/cgi/pmidlookup?view=long&amp;pmid=19801464">http://aem.asm.org/cgi/pmidlookup?view=long&amp;pmid=19801464</a>.</p>
 </div>
 </div>
 </div>
@@ -394,6 +485,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

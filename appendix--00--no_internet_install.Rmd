@@ -1,0 +1,132 @@
+---
+output: html_document
+bibliography: "bibliography.bibtex"
+---
+
+```{r setup, include=FALSE}
+source("settings.R")
+knitr::opts_chunk$set(prompt = TRUE, comment = NA)
+library(dplyr)
+library(tibble)
+library(readr)
+```
+
+
+This page contains instructions on how to install the dependencies for this workshop without internet access.
+If you are doing this, you are probably reading this page from a file provided by the instructor rather than over the internet.
+Along with the website files (what you are reading now), there should be a directory called "software" that contains the software to install.
+**If you have internet access, use the standard way of installing software described [here](workshop--00--required_software.html)**
+
+
+## Installing R
+
+For Mac and Windows, use the installer included in the "software/mac/R" or "software/windows/R".
+This tutorial does currently not provide a way to install R on Linux offline.
+
+## Installing Rstudio
+
+Use the installers in "software/mac/Rstudio, "software/windows/Rstudio" or "software/linux/Rstudio", depending on your operating system.
+
+## Installing R packages
+
+The following packages are used in this workshop:
+
+```{r include = FALSE}
+needed_packages <- c("vegan", "metacoder", "taxa", "ggplot2", "dplyr", "readr", "stringr", "agricolae", "ape", "phyloseq")
+```
+
+```{r echo=FALSE}
+needed_packages
+```
+
+However, these depend on many other packages that must also be installed, so the complete list is:
+
+```{r include = FALSE}
+# based on https://www.r-bloggers.com/installing-packages-without-internet/
+get_dependencies <- function(packs) {
+  dependencyNames <- unlist(
+    tools::package_dependencies(packages = packs, 
+                                db = available.packages(repos = BiocManager::repositories()), 
+                                which = c("Depends", "Imports"),
+                                recursive = TRUE))
+  packageNames <- union(packs, dependencyNames)
+  packageNames
+}
+
+all_packages <- get_dependencies(needed_packages)
+```
+
+```{r echo=FALSE}
+all_packages
+```
+
+
+```{r include=FALSE}
+windows_path <- file.path('software', 'packages', 'windows')
+osx_path <- file.path('software', 'packages', 'mac_osx_el_capitan')
+source_path <- file.path('software', 'packages', 'source')
+pkg_info_path <- file.path('software', 'packages', 'package_info.csv')
+```
+
+```{r include=FALSE, eval=FALSE}
+# This chuck is invisible and not evaluated when this page is built.
+# Run manually to update packages included in the "software" folder.
+
+# Make folders to store packages in
+dir.create(windows_path, recursive = TRUE)
+dir.create(osx_path, recursive = TRUE)
+dir.create(source_path, recursive = TRUE)
+
+# Download packages
+win_pkg_info <- download.packages(pkgs = all_packages, 
+                                  destdir = windows_path,
+                                  repos = BiocManager::repositories(),
+                                  type = "win.binary",
+                                  quiet = TRUE)
+osx_pkg_info <- download.packages(pkgs = all_packages, 
+                                  destdir = osx_path,
+                                  repos = BiocManager::repositories(),
+                                  type = "mac.binary.el-capitan",
+                                  quiet = TRUE)
+source_pkg_info <- download.packages(pkgs = all_packages, 
+                                     destdir = source_path,
+                                     repos = BiocManager::repositories(),
+                                     type = "source",
+                                     quiet = TRUE)
+colnames(win_pkg_info) <- c('package', 'win_path')
+colnames(osx_pkg_info) <- c('package', 'osx_path')
+colnames(source_pkg_info) <- c('package', 'source_path')
+win_pkg_info <- as_tibble(win_pkg_info)
+osx_pkg_info <- as_tibble(osx_pkg_info)
+source_pkg_info <- as_tibble(source_pkg_info)
+combined_pkg_info <- source_pkg_info %>%
+  left_join(win_pkg_info) %>%
+  left_join(osx_pkg_info) 
+write_csv(combined_pkg_info, path = pkg_info_path)
+```
+
+### Windows
+
+```{r eval=FALSE}
+setwd('path/to/workshop/folder') # If the workshop folder is an rstudio project, this is not needed
+pkg_info <- read.csv(file = 'software/packages/package_info.csv', stringsAsFactors = FALSE)
+install.packages(pkg_info$win_path, repos = NULL, type = "win.binary")
+```
+
+### macOS and Linux
+
+```{r eval=FALSE}
+setwd('path/to/workshop/folder') # If the workshop folder is an rstudio project, this is not needed
+pkg_info <- read.csv(file = 'software/packages/package_info.csv', stringsAsFactors = FALSE)
+install.packages(pkg_info$source_path, repos = NULL, type = "source")
+```
+
+### Mac OSX (El Capitan)
+
+```{r eval=FALSE}
+setwd('path/to/workshop/folder') # If the workshop folder is an rstudio project, this is not needed
+pkg_info <- read.csv(file = 'software/packages/package_info.csv', stringsAsFactors = FALSE)
+install.packages(pkg_info$osx_path, repos = NULL, type = "mac.binary.el-capitan")
+```
+
+

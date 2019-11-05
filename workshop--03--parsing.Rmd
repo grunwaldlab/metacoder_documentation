@@ -292,6 +292,10 @@ parse_tax_data(my_data, class_cols = "my_taxonomy", class_sep = ", ")
 
 **8)** Try using `lookup_tax_data` to convert the table to a `taxmap` object, using the `ncbi_seq_id` column to look up the taxonomy associated with these Genbank accession numbers. NOTE: This requires an internet connection.
 
+```{r include=FALSE}
+httr::set_config(httr::config(http_version = 0))
+```
+
 ```{r hide_button = TRUE, message=FALSE}
 lookup_tax_data(my_data, type = "seq_id", column = "ncbi_seq_id", database = "ncbi")
 ```

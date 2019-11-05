@@ -47,7 +47,6 @@ options(width = 100)
 library(glossary)
 gloss <- glossary(definitions_path = "_glossary_definitions.Rmd", glossary_path = "appendix--00--glossary.Rmd")
 
-
 ## ---- io_settings ----
 input_folder <- "raw_input" # Where all the large input files are. Ignored by git. 
 output_folder <- "results" # Where plots will be saved
