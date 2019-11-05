@@ -20,12 +20,12 @@ Along with the website files (what you are reading now), there should be a direc
 
 ## Installing R
 
-For Mac and Windows, use the installer included in the "software/mac/R" or "software/windows/R".
+For Mac and Windows, use the installer included in the "software/r/mac" or "software/r/windows".
 This tutorial does currently not provide a way to install R on Linux offline.
 
 ## Installing Rstudio
 
-Use the installers in "software/mac/Rstudio, "software/windows/Rstudio" or "software/linux/Rstudio", depending on your operating system.
+Use the installers in "software/rstudio/mac, "software/rstudio/windows" or "software/rstudio/linux", depending on your operating system.
 
 ## Installing R packages
 
