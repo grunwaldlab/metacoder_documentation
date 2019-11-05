@@ -516,8 +516,8 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">anova_result &lt;-<span class="st"> </span><span class="kw">aov</span>(alpha <span class="op">~</span><span class="st"> </span>Site, sample_data)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">summary</span>(anova_result)</a></code></pre></div>
 <pre class="r-output"><code>##              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-## Site          2  74463   37231   13.88 1.75e-06 ***
-## Residuals   289 775201    2682                     
+## Site          2  80244   40122   14.69 8.42e-07 ***
+## Residuals   289 789514    2732                     
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 </code></pre>
@@ -532,26 +532,26 @@ $(document).ready(function () {
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">print</span>(tukey_result)</a></code></pre></div>
 <pre class="r-output"><code>## $statistics
 ##    MSerror  Df     Mean       CV
-##   2682.358 289 57.51741 90.04489
+##   2731.882 289 57.43052 91.00981
 ## 
 ## $parameters
 ##    test name.t ntr StudentizedRange alpha
 ##   Tukey   Site   3          3.33168  0.05
 ## 
 ## $means
-##        alpha      std   r      Min      Max       Q25      Q50       Q75
-## Jam 33.44103 32.40664  84 1.271839 101.8413  1.714459 32.81414  60.57701
-## Mah 61.82243 48.93261 104 2.056481 156.0879 12.961928 56.82704 103.98609
-## Sil 72.65869 65.46417 104 3.432204 228.5406 11.766048 36.71135 135.50758
+##        alpha      std   r      Min       Max       Q25      Q50       Q75
+## Jam 32.73475 31.23777  84 1.253188  95.52755  1.745386 33.65329  59.12646
+## Mah 61.07740 48.69535 104 2.045294 154.05178 12.714725 56.75261 108.81348
+## Sil 73.73023 67.13884 104 3.681719 240.22633 11.549273 34.04309 140.44495
 ## 
 ## $comparison
 ## NULL
 ## 
 ## $groups
 ##        alpha groups
-## Sil 72.65869      a
-## Mah 61.82243      a
-## Jam 33.44103      b
+## Sil 73.73023      a
+## Mah 61.07740      a
+## Jam 32.73475      b
 ## 
 ## attr(,"class")
 ## [1] "group"
@@ -691,39 +691,34 @@ $(document).ready(function () {
 <h2>Ordination</h2>
 <p>The typical way beta diversity is plotted is using ordination. Ordination is a way to display “high dimensional” data in a visible number of dimensions (2 to 3). Our data is “high dimensional” because we have many samples with many OTUs and the abundance of each OTU can be considered a “dimension”. If we had only two species, we could make a scatter plot of their abundance in each sample and get an idea of how the samples differ. With thousands of species, this is not possible. Instead, ordination is used to try to capture the information in many dimensions by in a smaller number of new “artificial” dimensions.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">mds &lt;-<span class="st"> </span><span class="kw">metaMDS</span>(beta_dist)</a></code></pre></div>
-<pre class="r-output"><code>## Run 0 stress 0.1138354 
-## Run 1 stress 0.1148488 
-## Run 2 stress 0.1162394 
-## Run 3 stress 0.1165214 
-## Run 4 stress 0.1135377 
-## ... New best solution
-## ... Procrustes: rmse 0.006463929  max resid 0.07082505 
-## Run 5 stress 0.1167039 
-## Run 6 stress 0.1346453 
-## Run 7 stress 0.1155028 
-## Run 8 stress 0.1159295 
-## Run 9 stress 0.1135356 
-## ... New best solution
-## ... Procrustes: rmse 0.0002212514  max resid 0.002694696 
-## ... Similar to previous best
-## Run 10 stress 0.1135369 
-## ... Procrustes: rmse 0.0001898714  max resid 0.002085952 
-## ... Similar to previous best
-## Run 11 stress 0.200383 
-## Run 12 stress 0.1160692 
-## Run 13 stress 0.1169986 
-## Run 14 stress 0.1170691 
-## Run 15 stress 0.1136944 
-## ... Procrustes: rmse 0.004536114  max resid 0.06999772 
-## Run 16 stress 0.1135356 
-## ... Procrustes: rmse 0.000103802  max resid 0.001176868 
-## ... Similar to previous best
-## Run 17 stress 0.1138057 
-## ... Procrustes: rmse 0.001471038  max resid 0.02444091 
-## Run 18 stress 0.1161018 
-## Run 19 stress 0.1146786 
-## Run 20 stress 0.116504 
-## *** Solution reached
+<pre class="r-output"><code>## Run 0 stress 0.113175 
+## Run 1 stress 0.1144218 
+## Run 2 stress 0.1165573 
+## Run 3 stress 0.1149069 
+## Run 4 stress 0.1177234 
+## Run 5 stress 0.1171039 
+## Run 6 stress 0.1212253 
+## Run 7 stress 0.115744 
+## Run 8 stress 0.1162666 
+## Run 9 stress 0.1156569 
+## Run 10 stress 0.1135999 
+## ... Procrustes: rmse 0.005077667  max resid 0.06733162 
+## Run 11 stress 0.2062587 
+## Run 12 stress 0.1143722 
+## Run 13 stress 0.1135764 
+## ... Procrustes: rmse 0.001684377  max resid 0.02779178 
+## Run 14 stress 0.1571284 
+## Run 15 stress 0.1149548 
+## Run 16 stress 0.1135996 
+## ... Procrustes: rmse 0.005077383  max resid 0.06733071 
+## Run 17 stress 0.1138308 
+## Run 18 stress 0.1163363 
+## Run 19 stress 0.1138409 
+## Run 20 stress 0.1136046 
+## ... Procrustes: rmse 0.003071705  max resid 0.03814259 
+## *** No convergence -- monoMDS stopping criteria:
+##     18: stress ratio &gt; sratmax
+##      2: scale factor of the gradient &lt; sfgrmin
 </code></pre>
 <p>That transformed our beta diversity matrix into a set of coordinates in two dimensions, which are intended to capture the differences in the data. However, it is in a format specific to <code>vegan</code>, so we will have to convert the data to a form that we can use for plotting.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">mds_data &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(mds<span class="op">$</span>points)</a></code></pre></div>
@@ -747,36 +742,35 @@ $(document).ready(function () {
 <p>There is no discernible pattern there, suggesting plant genotype does not correspond to community structure.</p>
 <p>We can also do the above quickly in <code>phyloseq</code> using the <code>ordinate</code> and <code>plot_ordination</code> functions. Lets look at the differences between leaf and root samples again, but using a difference index this time.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">ps_ord &lt;-<span class="st"> </span><span class="kw">ordinate</span>(ps_obj, <span class="dt">method =</span> <span class="st">&quot;NMDS&quot;</span>, <span class="dt">distance =</span> <span class="st">&quot;jsd&quot;</span>)</a></code></pre></div>
-<pre class="r-output"><code>## Run 0 stress 0.1074715 
-## Run 1 stress 0.1099607 
-## Run 2 stress 0.1092519 
-## Run 3 stress 0.1100987 
-## Run 4 stress 0.1080589 
-## Run 5 stress 0.1073114 
+<pre class="r-output"><code>## Run 0 stress 0.1069813 
+## Run 1 stress 0.1106674 
+## Run 2 stress 0.2111608 
+## Run 3 stress 0.1095381 
+## Run 4 stress 0.1069809 
 ## ... New best solution
-## ... Procrustes: rmse 0.004676532  max resid 0.073719 
-## Run 6 stress 0.1095445 
-## Run 7 stress 0.107312 
-## ... Procrustes: rmse 7.666687e-05  max resid 0.0006871481 
+## ... Procrustes: rmse 8.294225e-05  max resid 0.0006542398 
 ## ... Similar to previous best
-## Run 8 stress 0.1082784 
-## Run 9 stress 0.1101083 
-## Run 10 stress 0.110794 
-## Run 11 stress 0.1174438 
-## Run 12 stress 0.1075745 
-## ... Procrustes: rmse 0.004375895  max resid 0.07345207 
-## Run 13 stress 0.1081678 
-## Run 14 stress 0.10996 
-## Run 15 stress 0.1097151 
-## Run 16 stress 0.1095447 
-## Run 17 stress 0.1080576 
-## Run 18 stress 0.1080581 
-## Run 19 stress 0.1073128 
-## ... Procrustes: rmse 0.0001178229  max resid 0.0009971971 
-## ... Similar to previous best
-## Run 20 stress 0.1073124 
-## ... Procrustes: rmse 0.0001110944  max resid 0.001002946 
-## ... Similar to previous best
+## Run 5 stress 0.1071591 
+## ... Procrustes: rmse 0.004396486  max resid 0.07444158 
+## Run 6 stress 0.1101608 
+## Run 7 stress 0.1073273 
+## ... Procrustes: rmse 0.004716408  max resid 0.07424901 
+## Run 8 stress 0.1081149 
+## Run 9 stress 0.1110516 
+## Run 10 stress 0.1105936 
+## Run 11 stress 0.1182282 
+## Run 12 stress 0.1071961 
+## ... Procrustes: rmse 0.001574461  max resid 0.02622294 
+## Run 13 stress 0.1077178 
+## Run 14 stress 0.1073267 
+## ... Procrustes: rmse 0.004712654  max resid 0.07425063 
+## Run 15 stress 0.1080436 
+## Run 16 stress 0.1100737 
+## Run 17 stress 0.1085898 
+## Run 18 stress 0.10859 
+## Run 19 stress 0.1077221 
+## Run 20 stress 0.1073264 
+## ... Procrustes: rmse 0.004709157  max resid 0.07425423 
 ## *** Solution reached
 </code></pre>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">plot_ordination</span>(ps_obj, ps_ord, <span class="dt">type =</span> <span class="st">&quot;samples&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;Type&quot;</span>)</a></code></pre></div>
