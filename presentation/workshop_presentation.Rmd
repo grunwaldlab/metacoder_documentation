@@ -38,7 +38,7 @@ knitr::include_graphics("images/whitakker.png")
 
 ### Barcoding
 
-* PCR amplification of a gene sequence to identify a single organism.
+* Barcoding is using PCR amplification of a gene sequence to identify a single organism.
 * This allows non-experts to identify organisms accurately.
 * Only a small piece of the organism is needed.
 * Reference databases of curated sequences are needed.
@@ -73,21 +73,23 @@ knitr::include_graphics("images/metabarcoding.png")
 
 \section{Metabarcoding}
 
+General outline of how metabarcoding data is generated
+
 ### Metabarcoding analysis outline
 
 1. Extract DNA from samples
 2. Amplify a given gene with PCR for each sample
-3. Sequences PCR products of each sample with Illumina
+3. Sequence PCR products of each sample with Illumina
 4. Remove primer sequences and quality filter
 5. Merge paired-end reads if applicable
 6. Make groups of similar sequences
 7. Assign taxonomy to each group
-8. Make "abundance matrix" of counts of reads in each group in each sample
+8. Make an "abundance matrix" of counts of reads in each group in each sample
 9. Conduct project-specific analysis on abundance matrix
 
 ### Software for creating abundance matrices
 
-* **dada2**: An R package. Fast and statistically-sound.
+* **dada2**: An R package. Fast and statistically-sound. This is the newest of the tools listed here.
 * **Mothur**: Command-line tools set. Has some additional diversity analyses.
 * **USEARCH/VSEARCH**: Command-line tool set. Generally faster than mothur.
 * **QIIME**: Large python-based analysis pipeline. Combines other tools, including dada2 and VSEARCH. Has plugins for specific analyses.
@@ -98,7 +100,7 @@ All of these are free and open source!
 
 The raw data of metabarcoding is millions of short reads the must be grouped into something analogous to "species" in traditional community ecology. They can be grouped in the following ways:
 
-* Unique sequences: Every unique sequence is treated as a different "organism"
+* Unique sequences: Every unique sequence is treated as a different "species"
 * Amplicon Sequence Variants (**ASVs**): Error-corrected unique sequences
 * Operation Taxonomic Units (**OTUs**): Sequences clustered into "species-level" units
 * Taxa: Sequences assigned to taxa in a reference database
@@ -126,9 +128,9 @@ knitr::include_graphics("images/abundance_bias.png")
 
 * The total number of reads per sample are the same (ideally).
 * For a few specific applications, untransformed counts are used.
-* However, usually a correction for unequal sample read count is made:
+* However, usually a correction for unequal sample read count is made, such as:
    + Proportions
-   + "Rarefied" counts (unrelated to rarefaction curves)
+   + "Rarefied" counts
    + Presence/Absence
 
 **What kind of normalization done (if any) depends on the analysis, especially if statistics are used.**
@@ -143,14 +145,14 @@ knitr::include_graphics("images/rarefaction_normalization.png")
 
 \section{Abundance}
 
-Bioinformatic analysis techniques for exploring abundance.
+Bioinformatic analysis techniques for exploring abundance
 
 
 ### How abundance data is stored
 
-* Abundance data is usually stored in a sample by OTU/ASV/Taxon matrix
-* Samples might be rows or columns, depending on software and style
-* Another table is used to store per-sample data
+* Abundance data is usually stored in a sample by OTU/ASV/Taxon matrix.
+* Samples might be rows or columns, depending on software and style.
+* Another table is used to store per-sample data.
 * The sample IDs in the sample data table should match the columns/row names in the abundance matrix.
 
 ```{r, out.height = "50px"}
@@ -164,7 +166,7 @@ knitr::include_graphics("images/preferred_data_format.png")
 * These are often of limited usefulness due to the reliance on color to differentiate taxa.
 * Some plotting methods incorporate taxonomic hierarchy, including:
   * heat trees
-  * circos plots
+  * "sunburst" plots
   * nested circles
 
 ```{r, out.width= "300px", fig.cap="Wagner et al 2016"}
@@ -179,19 +181,19 @@ sharedbib::add_document('adam2018cucurbita')
 knitr::include_graphics("images/barchart_example_adam2018cucurbita.png")
 ```
 
-### Less good stacked barchart example
+### Problematic stacked barchart example
 
 ```{r, out.height= "200px"}
 knitr::include_graphics("images/bad_barchart_1.png")
 ```
 
-### Less good stacked barchart example
+### Problematic stacked barchart example
 
 ```{r, out.width= "300px"}
 knitr::include_graphics("images/bad_barchart_2.png")
 ```
 
-### Even less good pie chart example
+### Problematic pie chart example
 
 ```{r, out.width= "300px"}
 knitr::include_graphics("images/bad_piechart_example.png")
@@ -220,8 +222,9 @@ knitr::include_graphics("images/nested_circles_plot_perez2017linking.png")
 ### Heat trees
 
 * Used to plot per-taxon information on a taxonomic tree
-* The color and size of nodes and edges can each display a different statistic.
-* The provide more information than stacked barcharts, but cannot display as many samples.
+* The color and size of nodes and edges can each display a different statistic
+* They provide more information than stacked barcharts, but cannot display as many samples
+* Generated using the R package `metacoder`
 
 ```{r, out.width= "300px", fig.cap="Foster et al 2017"}
 sharedbib::add_document('foster2017metacoder')
@@ -233,12 +236,12 @@ knitr::include_graphics("images/figure_2.png")
 
 \section{Differential Abundance}
 
-Bioinformatic analysis techniques for exploring differences in taxon abundance among experimental factors.
+Bioinformatic analysis techniques for exploring differences in taxon abundance among experimental factors
 
 ### Comparing abundances
 
 * The abundance of the same OTU/ASV/Taxon can be compared in multiple Treatments/Hosts/Sites/etc.
-* The abundance of different OTUs/ASVs/Taxa cannot usually be compared.
+* The abundance of different OTUs/ASVs/Taxa usually cannot be compared.
 * Absolute abundance is not known for metabarcoding and shotgun metagenomics.
 * Differences in relative abundance should not be confused with differences in absolute abundance.
 
@@ -280,7 +283,7 @@ knitr::include_graphics("images/figure_5.png")
 
 \section{Alpha diversity}
 
-Bioinformatic analysis techniques for exploring sample diversity.
+Bioinformatic analysis techniques for exploring sample diversity
 
 
 ### Alpha diversity: What is being measured?
@@ -296,7 +299,7 @@ knitr::include_graphics("images/alpha_diversity.jpg")
 
 ### Common measures and Hill numbers
 
-* The commonly used measures Richness, Shannon, Simpson are all transformations of the more general "Hill numbers".
+* The commonly used measures Richness, Shannon, Simpson are all transformations of the "Hill numbers" [@morris2014choosing].
 * Hill numbers are a related set of diversity measures that differ in the value of a single variable called the "Hill's power".
 * The higher the value of the Hill's power, the less sensitive the measure is to rare species.
 * There is also a variant of Hill numbers that takes into account phylogenetic/taxonomic relatedness [@chao2010phylogenetic].
@@ -327,7 +330,8 @@ knitr::include_graphics("images/alpha_div_example_2.png")
 
 ### Statistical tests
 
-* If Levene tests for homogeneity of variance and Shapiro-Wilk tests for normality pass:
+* What kind of statistics are used to test for differences in alpha diversity depend on if the data meets the assumptions of normality and homogeneity of variance.
+* If the Levene test for homogeneity of variance and the Shapiro-Wilk test for normality pass:
    + For two factors: A T-test
    + For more than two factors: An ANOVA followed by Tukey's HSD post-hoc test
 * If Levene or Shapiro-Wilk tests do not pass: 
@@ -339,7 +343,7 @@ knitr::include_graphics("images/alpha_div_example_2.png")
 
 \section{Beta diversity}
 
-Bioinformatic analysis techniques for exploring comparing communities.
+Bioinformatic analysis techniques for comparing communities
 
 
 ### Beta diversity
@@ -355,7 +359,7 @@ knitr::include_graphics("images/beta_diversity_table.png")
 
 ### Unifrac
 
-**Unifrac** is the proportion of branch length of a phylogenetic tree the is shared by two communities.
+**Unifrac** is the proportion of branch length of a phylogenetic tree that is shared by two communities.
 
 ```{r, out.height= "100px", fig.cap="Mothur Wiki"}
 knitr::include_graphics("images/UnweightedUniFracMeasure.jpg")
@@ -365,7 +369,7 @@ knitr::include_graphics("images/UnweightedUniFracMeasure.jpg")
 
 ### How the data is stored
 
-Beta diversity is typically stored as a pairwise triangular matrix
+Beta diversity is typically stored as a pairwise triangular matrix.
 
 ```{r, out.height= "160px", fig.cap="Mahnert 2015"}
 knitr::include_graphics("images/beta_div_matrix_example.png")
