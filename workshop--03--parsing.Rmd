@@ -13,7 +13,7 @@ source("settings.R")
 ## Typical format for microbiome data
 
 Most `r gloss$add('pipelines')` for processing high-throughput `r gloss$add('amplicon')` data, such as mothur, QIIME, and dada2, result in a matrix of read counts.
-One dimension of this matrix (i.e. the rows or the columns) consists of `r gloss$add('Operational Taxonomic Units (OTUs)')`, `r gloss$add('phylotypes')`, or `r gloss$add('exact sequence variants (ESVs)')` (all ways to "bin" similar read sequences).
+One dimension of this matrix (i.e. the rows or the columns) consists of `r gloss$add('Operational Taxonomic Units (OTUs)')`, `r gloss$add('phylotypes')`, or `r gloss$add('amplicon sequence variants (ASVs)')` (all ways to "bin" similar read sequences).
 The other dimension consists of samples.
 Different tools will expect/output different orientations of the matrix, but, in our case, columns are samples and rows are OTUs. Sometimes the `r gloss$add('Operational Taxonomic Units (OTUs)', show = 'OTU')` data and the abundance matrix are two separate tables.
 There is usually another table with sample information in rows.

@@ -138,11 +138,11 @@ Phylotypes are groupings of sequences based on their similarity to a reference s
 These differ from *de novo* OTUs due to their reliance on a similar reference sequence.
 They are the same as "closed reference" OTUs. 
 
-## Exact sequence variants (ESVs)
+## Amplicon sequence variants (ASVs)
 
-Also called Amplicon Sequence Variants (ASVs).
-ESVs are the inferred unique sequences present in the original sample, after correcting for sequencing and PCR errors.
-See the following for reasons to use ESVs instead of OTUs:
+Also called Exact Sequence Variants (ESVs).
+ASVs are the inferred unique sequences present in the original sample, after correcting for sequencing and PCR errors.
+See the following for reasons to use ASVs instead of OTUs:
 
 Callahan, Benjamin J., Paul J. McMurdie, and Susan P. Holmes. "Exact sequence variants should replace operational taxonomic units in marker-gene data analysis." The ISME journal 11.12 (2017): 2639.
 

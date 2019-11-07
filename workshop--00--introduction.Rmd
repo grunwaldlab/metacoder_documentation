@@ -20,7 +20,7 @@ While this primer does not require extensive knowledge of programming in R, the 
 This primer provides a concise introduction to conducting the statistical analyses and visualize microbiome data in R based on metabarcoding and high throughput sequencing (HTS). 
 This primer does not cover "shotgun" metagenomic analysis, which is very different in nature.
 The reader is expected to have a very basic understanding of ecological diversity theory and some experience with R. 
-The techniques presented here assume the raw sequences have been converted to `r gloss$add('exact sequence variants (ESVs)')` or `r gloss$add('operational Taxonomic Units (OTUs)')` and `r gloss$add('Taxonomic classifications', shown = 'classified')` (i.e., assigned a taxonomy) using tools such as QIIME, mothur, or dada2 [@schloss2009introducing; @caporaso2010qiime; @callahan2016dada2]. 
+The techniques presented here assume the raw sequences have been converted to `r gloss$add('amplicon sequence variants (ASVs)')` or `r gloss$add('operational Taxonomic Units (OTUs)')` and `r gloss$add('Taxonomic classifications', shown = 'classified')` (i.e., assigned a taxonomy) using tools such as QIIME, mothur, or dada2 [@schloss2009introducing; @caporaso2010qiime; @callahan2016dada2]. 
 
 
 ## Why use R?
@@ -51,7 +51,7 @@ Data that can be analysed using techniques presented here is typically the resul
 1. Sample environments/soil/tissue/water and extract DNA.
 1. Perform PCR using standard primers.
 1. Sequence using a high-throughput sequencing platform such as the Illumina MiSeq.
-1. Call OTUs/ESVs and assign a taxonomic classification by comparing them to a reference database, such as Greengenes.
+1. Call OTUs/ASVs and assign a taxonomic classification by comparing them to a reference database, such as Greengenes.
 1. Construct an abundance matrix of read counts for each OTU in each sample.
 
 Here we focus on the statistical analysis and visualizations following OTU calling that include:

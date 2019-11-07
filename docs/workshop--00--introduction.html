@@ -395,7 +395,7 @@ $(document).ready(function () {
 <p><strong>Please install the required <a href="00--required_software.html">software</a> and download the <a href="00--required_data.html">example data</a> before coming to the workshop.</strong></p>
 <div id="what-is-covered" class="section level2">
 <h2>What is covered</h2>
-<p>This primer provides a concise introduction to conducting the statistical analyses and visualize microbiome data in R based on metabarcoding and high throughput sequencing (HTS). This primer does not cover “shotgun” metagenomic analysis, which is very different in nature. The reader is expected to have a very basic understanding of ecological diversity theory and some experience with R. The techniques presented here assume the raw sequences have been converted to <b><a href ="appendix--00--glossary.html#exact_sequence_variants_(esvs)_anchor">exact sequence variants (ESVs)</a></b> or <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">operational Taxonomic Units (OTUs)</a></b> and <b><a href ="appendix--00--glossary.html#taxonomic_classifications_anchor">classified</a></b> (i.e., assigned a taxonomy) using tools such as QIIME, mothur, or dada2 <span class="citation">(Schloss et al. 2009; Caporaso et al. 2010; Callahan et al. 2016)</span>.</p>
+<p>This primer provides a concise introduction to conducting the statistical analyses and visualize microbiome data in R based on metabarcoding and high throughput sequencing (HTS). This primer does not cover “shotgun” metagenomic analysis, which is very different in nature. The reader is expected to have a very basic understanding of ecological diversity theory and some experience with R. The techniques presented here assume the raw sequences have been converted to <b><a href ="appendix--00--glossary.html#amplicon_sequence_variants_(asvs)_anchor">amplicon sequence variants (ASVs)</a></b> or <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">operational Taxonomic Units (OTUs)</a></b> and <b><a href ="appendix--00--glossary.html#taxonomic_classifications_anchor">classified</a></b> (i.e., assigned a taxonomy) using tools such as QIIME, mothur, or dada2 <span class="citation">(Schloss et al. 2009; Caporaso et al. 2010; Callahan et al. 2016)</span>.</p>
 </div>
 <div id="why-use-r" class="section level2">
 <h2>Why use R?</h2>
@@ -419,7 +419,7 @@ $(document).ready(function () {
 <li>Sample environments/soil/tissue/water and extract DNA.</li>
 <li>Perform PCR using standard primers.</li>
 <li>Sequence using a high-throughput sequencing platform such as the Illumina MiSeq.</li>
-<li>Call OTUs/ESVs and assign a taxonomic classification by comparing them to a reference database, such as Greengenes.</li>
+<li>Call OTUs/ASVs and assign a taxonomic classification by comparing them to a reference database, such as Greengenes.</li>
 <li>Construct an abundance matrix of read counts for each OTU in each sample.</li>
 </ol>
 <p>Here we focus on the statistical analysis and visualizations following OTU calling that include:</p>
