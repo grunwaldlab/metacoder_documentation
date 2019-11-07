@@ -466,7 +466,7 @@ obj$data$site_abund <- calc_group_mean(obj, "tax_abund",
                                        groups = sample_data$Site)
 
 obj %>%
-  taxa::filter_taxa(Jam > 50) %>% # taxa:: needed because of phyloseq::filter_taxa
+  taxa::filter_taxa(Jam > 0) %>% # taxa:: needed because of phyloseq::filter_taxa
   heat_tree(node_label = taxon_names,
             node_size = Jam, 
             node_color = Jam, 

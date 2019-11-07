@@ -933,14 +933,13 @@ Show solution
 <a class="sourceLine" id="cb44-3" data-line-number="3">                                       <span class="dt">groups =</span> sample_data<span class="op">$</span>Site)</a>
 <a class="sourceLine" id="cb44-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb44-5" data-line-number="5">obj <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb44-6" data-line-number="6"><span class="st">  </span>taxa<span class="op">::</span><span class="kw">filter_taxa</span>(Jam <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># taxa:: needed because of phyloseq::filter_taxa</span></a>
+<a class="sourceLine" id="cb44-6" data-line-number="6"><span class="st">  </span>taxa<span class="op">::</span><span class="kw">filter_taxa</span>(Jam <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># taxa:: needed because of phyloseq::filter_taxa</span></a>
 <a class="sourceLine" id="cb44-7" data-line-number="7"><span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_label =</span> taxon_names,</a>
 <a class="sourceLine" id="cb44-8" data-line-number="8">            <span class="dt">node_size =</span> Jam, </a>
 <a class="sourceLine" id="cb44-9" data-line-number="9">            <span class="dt">node_color =</span> Jam, </a>
 <a class="sourceLine" id="cb44-10" data-line-number="10">            <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>, <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, </a>
 <a class="sourceLine" id="cb44-11" data-line-number="11">            <span class="dt">title =</span> <span class="st">&quot;Taxa in leafs&quot;</span>)</a></code></pre></div>
-<pre class="r-output"><code>## NULL
-</code></pre>
+<img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-34-1.png" width="480" style="display: block; margin: auto;" />
 </div>
 <p><br /></p>
 <p><strong>3b)</strong> What are some of the most abundant families in the site “Jam”?</p>
