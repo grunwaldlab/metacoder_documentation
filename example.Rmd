@@ -160,7 +160,7 @@ print(obj)
 We can also easily calculate the number of samples that have reads for each taxon:
 
 ```{r}
-obj$data$tax_occ <- calc_n_samples(obj, "tax_abund", groups = hmp_samples$body_site)
+obj$data$tax_occ <- calc_n_samples(obj, "tax_abund", groups = hmp_samples$body_site, cols = hmp_samples$sample_id)
 print(obj)
 ```
 
@@ -339,7 +339,7 @@ There is a special function to plot this type of data called `heat_tree_matrix`:
 ```{r}
 set.seed(1)
 heat_tree_matrix(obj,
-                 dataset = "diff_table",
+                 data = "diff_table",
                  node_size = n_obs, # n_obs is a function that calculates, in this case, the number of OTUs per taxon
                  node_label = taxon_names,
                  node_color = log2_median_ratio, # A column from `obj$data$diff_table`
