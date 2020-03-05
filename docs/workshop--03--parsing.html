@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
-<title>workshop--03--parsing.utf8.md</title>
+<title>workshop--03--parsing.utf8</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -316,6 +315,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -483,14 +483,14 @@ $(document).ready(function () {
 <h1>Getting data into R</h1>
 <div id="typical-format-for-microbiome-data" class="section level2">
 <h2>Typical format for microbiome data</h2>
-<p>Most <b><a href ="appendix--00--glossary.html#pipelines_anchor">pipelines</a></b> for processing high-throughput <b><a href ="appendix--00--glossary.html#amplicon_anchor">amplicon</a></b> data, such as mothur, QIIME, and dada2, result in a matrix of read counts. One dimension of this matrix (i.e. the rows or the columns) consists of <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">Operational Taxonomic Units (OTUs)</a></b>, <b><a href ="appendix--00--glossary.html#phylotypes_anchor">phylotypes</a></b>, or <b><a href ="appendix--00--glossary.html#exact_sequence_variants_(esvs)_anchor">exact sequence variants (ESVs)</a></b> (all ways to “bin” similar read sequences). The other dimension consists of samples. Different tools will expect/output different orientations of the matrix, but, in our case, columns are samples and rows are OTUs. Sometimes the <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">OTU</a></b> data and the abundance matrix are two separate tables. There is usually another table with sample information in rows. This makes it easy to add lots of additional sample data columns that can be used to subset the data. Each sample and OTU will have an unique ID.</p>
-<p><img src="figure_sources/typical_input_format.png" style="display: block; margin: auto;" /></p>
+<p>Most <b><a href ="appendix--00--glossary.html#pipelines_anchor">pipelines</a></b> for processing high-throughput <b><a href ="appendix--00--glossary.html#amplicon_anchor">amplicon</a></b> data, such as mothur, QIIME, and dada2, result in a matrix of read counts. One dimension of this matrix (i.e. the rows or the columns) consists of <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">Operational Taxonomic Units (OTUs)</a></b>, <b><a href ="appendix--00--glossary.html#phylotypes_anchor">phylotypes</a></b>, or <b><a href ="appendix--00--glossary.html#amplicon_sequence_variants_(asvs)_anchor">amplicon sequence variants (ASVs)</a></b> (all ways to “bin” similar read sequences). The other dimension consists of samples. Different tools will expect/output different orientations of the matrix, but, in our case, columns are samples and rows are OTUs. Sometimes the <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">OTU</a></b> data and the abundance matrix are two separate tables. There is usually another table with sample information in rows. This makes it easy to add lots of additional sample data columns that can be used to subset the data. Each sample and OTU will have an unique ID.</p>
+<p><img src="figure_sources/typical_input_format.png" width="780" style="display: block; margin: auto;" /></p>
 </div>
 <div id="importing-data-into-r" class="section level2">
 <h2>Importing data into R</h2>
 <p>Importing data into R can be quite easy if the data is formatted well, but can be a very frustrating experience otherwise. An example of well-formatted data is <b><a href ="appendix--00--glossary.html#comma-delimited_text_file_anchor">.csv (comma-separated value)</a></b> or <b><a href ="appendix--00--glossary.html#tab-delimited_text_file_anchor">.tsv (tab-separated value)</a></b> files, each with a single table and no additional comments or formatting (e.g. merged cells). Either of these formats might also have a .txt extension (the extension does not really matter; its for humans, not computers). For more information on correct data formatting, see the <a href="http://grunwaldlab.github.io/Reproducible-science-in-R/03--Data_formatting.html">data formating section</a> of our <a href="http://grunwaldlab.github.io/Reproducible-science-in-R/index.html">guide for reporducible research</a>. You should always import the raw output data whenever possible and avoid any “manual” (i.e. non-scripted) modification of the data, especially in programs like Excel, which are known to mangle data from time to time (<span class="citation">Zeeberg et al. (2004)</span>).</p>
 <p>Throughout this workshop, we will be using data from <span class="citation">Wagner et al. (2016)</span>, a study on the effects of plant age, genotype, and environment on the bacterial microbiome of <a href="https://en.wikipedia.org/wiki/Boechera_stricta"><em>Boechera stricta</em></a>, a perennial herb in the mustard family. Here is a photo of <em>Boechera stricta</em> taken by Mary Ellen Harte:</p>
-<p><img src="images/boechera_stricta.jpg" style="display: block; margin: auto;" /></p>
+<p><img src="images/boechera_stricta.jpg" width="375" style="display: block; margin: auto;" /></p>
 <p><span class="citation">Wagner et al. (2016)</span> released their raw data with the article and it is available <a href="http://datadryad.org/resource/doi:10.5061/dryad.g60r3">here</a> on <a href="http://datadryad.org/">dryad</a>. This is a great example of how to share your raw data!</p>
 <p>There are many <b><a href ="appendix--00--glossary.html#function_anchor">functions</a></b> commonly used to read tabular data, including the <b><a href ="appendix--00--glossary.html#base_r_anchor">base R</a></b> ones like <code>read.table</code> and <code>read.csv</code>, but we will be using functions from the new <a href="http://readr.tidyverse.org/articles/readr.html"><code>readr</code> package</a>, which returns <b><a href ="appendix--00--glossary.html#tibble_anchor">tibbles</a></b> instead of <code>data.frame</code>s (A “table” in R).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(readr) <span class="co"># Loads the readr package so we can use `read_tsv`</span></a></code></pre></div>
@@ -499,7 +499,7 @@ $(document).ready(function () {
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">print</span>(otu_data) <span class="co"># You can also enter just `otu_data` to print it</span></a></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 1,699</span><span>
 ##    OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38 M1551P90 M1551P71
-##     </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+##     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 ## </span><span style='color: #BCBCBC;'> 1</span><span>      1          0        0        0        0        0        0        0        0        0
 ## </span><span style='color: #BCBCBC;'> 2</span><span>      2         41       22        4      726   </span><span style='text-decoration: underline;'>112</span><span>492        2      413        2        1
 ## </span><span style='color: #BCBCBC;'> 3</span><span>      3         67       65       12    </span><span style='text-decoration: underline;'>13</span><span>514        1        4    </span><span style='text-decoration: underline;'>13</span><span>314       70     </span><span style='text-decoration: underline;'>5</span><span>929
@@ -510,7 +510,7 @@ $(document).ready(function () {
 ## </span><span style='color: #BCBCBC;'> 8</span><span>      8        840     </span><span style='text-decoration: underline;'>7</span><span>079     </span><span style='text-decoration: underline;'>3</span><span>760       22        0     </span><span style='text-decoration: underline;'>2</span><span>699       22     </span><span style='text-decoration: underline;'>2</span><span>870       32
 ## </span><span style='color: #BCBCBC;'> 9</span><span>      9         40       82       91      881        1      449     </span><span style='text-decoration: underline;'>1</span><span>121       90     </span><span style='text-decoration: underline;'>2</span><span>283
 ## </span><span style='color: #BCBCBC;'>10</span><span>     10         11       79      277     </span><span style='text-decoration: underline;'>2</span><span>879        1        0     </span><span style='text-decoration: underline;'>6</span><span>811       14      243
-## </span><span style='color: #949494;'># ... with 47,796 more rows, and 1,689 more variables: M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
+## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,689 more variables: M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
 ## #   M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
 ## #   M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P88 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
 </span></code></pre>
@@ -519,19 +519,19 @@ $(document).ready(function () {
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">tax_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;taxAssignments97.txt&quot;</span>)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">print</span>(tax_data) <span class="co"># You can also enter `tax_data` to print it</span></a></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 8</span><span>
-##    `OTU ID`  taxonomy                       Kingdom  Phylum  Class    Order    Family    Confidence
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                          </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> OTU_1     Unassigned                     Unassig… Unassi… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 2</span><span> OTU_10    Root;k__Bacteria;p__Bacteroid… Bacteria Bacter… Sphingo… Sphingo… Sphingob…       1   
-## </span><span style='color: #BCBCBC;'> 3</span><span> OTU_100   Root;k__Bacteria;p__Cyanobact… Bacteria Cyanob… Chlorop… Chlorop… </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #BCBCBC;'> 4</span><span> OTU_1000  Root;k__Bacteria;p__Actinobac… Bacteria Actino… Actinob… Actinom… Actinosy…       0.67
-## </span><span style='color: #BCBCBC;'> 5</span><span> OTU_10000 Unassigned                     Unassig… Unassi… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 6</span><span> OTU_10001 Root;k__Bacteria;p__Chlamydia… Bacteria Chlamy… Chlamyd… Chlamyd… Parachla…       1   
-## </span><span style='color: #BCBCBC;'> 7</span><span> OTU_10002 Root;k__Bacteria;p__Proteobac… Bacteria Proteo… Alphapr… </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #BCBCBC;'> 8</span><span> OTU_10003 Unassigned                     Unassig… Unassi… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 9</span><span> OTU_10004 Unassigned                     Unassig… Unassi… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'>10</span><span> OTU_10005 Root;k__Bacteria;p__Cyanobact… Bacteria Cyanob… 4C0d-2   MLE1-12  </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #949494;'># ... with 47,796 more rows</span><span>
+##    `OTU ID`  taxonomy                        Kingdom  Phylum  Class    Order    Family    Confidence
+##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+## </span><span style='color: #BCBCBC;'> 1</span><span> OTU_1     Unassigned                      Unassig… Unassi… Unassig… Unassig… Unassign…       1   
+## </span><span style='color: #BCBCBC;'> 2</span><span> OTU_10    Root;k__Bacteria;p__Bacteroide… Bacteria Bacter… Sphingo… Sphingo… Sphingob…       1   
+## </span><span style='color: #BCBCBC;'> 3</span><span> OTU_100   Root;k__Bacteria;p__Cyanobacte… Bacteria Cyanob… Chlorop… Chlorop… </span><span style='color: #BB0000;'>NA</span><span>              1   
+## </span><span style='color: #BCBCBC;'> 4</span><span> OTU_1000  Root;k__Bacteria;p__Actinobact… Bacteria Actino… Actinob… Actinom… Actinosy…       0.67
+## </span><span style='color: #BCBCBC;'> 5</span><span> OTU_10000 Unassigned                      Unassig… Unassi… Unassig… Unassig… Unassign…       1   
+## </span><span style='color: #BCBCBC;'> 6</span><span> OTU_10001 Root;k__Bacteria;p__Chlamydiae… Bacteria Chlamy… Chlamyd… Chlamyd… Parachla…       1   
+## </span><span style='color: #BCBCBC;'> 7</span><span> OTU_10002 Root;k__Bacteria;p__Proteobact… Bacteria Proteo… Alphapr… </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>              1   
+## </span><span style='color: #BCBCBC;'> 8</span><span> OTU_10003 Unassigned                      Unassig… Unassi… Unassig… Unassig… Unassign…       1   
+## </span><span style='color: #BCBCBC;'> 9</span><span> OTU_10004 Unassigned                      Unassig… Unassi… Unassig… Unassig… Unassign…       1   
+## </span><span style='color: #BCBCBC;'>10</span><span> OTU_10005 Root;k__Bacteria;p__Cyanobacte… Bacteria Cyanob… 4C0d-2   MLE1-12  </span><span style='color: #BB0000;'>NA</span><span>              1   
+## </span><span style='color: #949494;'># … with 47,796 more rows</span><span>
 </span></code></pre>
 <p>Although these data are very well-formatted compared to most, there are still a few issues. The “OTU ID” column contains a space in the name (hence the back ticks), which makes it a bit more annoying to work with in R. More importantly, the OTU IDs in the taxonomy table are prefixed with “OTU_” and those in the OTU table are not, so we have to remove that prefix to make the two match up. The functions <code>sub</code> and <code>gsub</code> are used to search and replace parts of text; <code>sub</code> replaces only the first match and <code>gsub</code> replaces all matches. Replacing with nothing (<code>&quot;&quot;</code>) effectively searches and deletes.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span> &lt;-<span class="st"> </span><span class="kw">sub</span>(tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span>, <span class="co"># ` are needed because of the space</span></a>
@@ -640,7 +640,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>aab</span><span>      1               0        0        0        0        0        0        0
 ##       2 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
 ##       3 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
-##       # … with 4.78e+04 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
+##       # … with 47,803 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
 ##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##   0 functions:
@@ -693,7 +693,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>aab</span><span>      1               0        0        0        0        0        0        0
 ##       2 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
 ##       3 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
-##       # … with 4.78e+04 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
+##       # … with 47,803 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
 ##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##     </span><span style='font-weight: bold;'>class_data</span><span>:
@@ -702,8 +702,8 @@ $(document).ready(function () {
 ## </span><span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;      </span><span>
 ##       1 </span><span style='color: #00BB00;'>aab</span><span>                1 ""       Unassigned Unassigned 
 ##       2 </span><span style='color: #00BB00;'>aac</span><span>                2 ""       Root       Root       
-##       3 </span><span style='color: #00BB00;'>aad</span><span>                2 k        Bacteria   k__Bacteria
-##       # … with 2.164e+05 more rows
+##       3 </span><span style='color: #00BB00;'>aad</span><span>                2 "k"      Bacteria   k__Bacteria
+##       # … with 216,414 more rows
 ##   0 functions:
 </span></code></pre>
 <p>Note how the taxon names do not have the rank information anymore:</p>
@@ -720,14 +720,14 @@ $(document).ready(function () {
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                 
 ## </span><span style='color: #BCBCBC;'> 1</span><span> aab                1 </span><span style='color: #949494;'>""</span><span>       Unassigned          Unassigned            
 ## </span><span style='color: #BCBCBC;'> 2</span><span> aac                2 </span><span style='color: #949494;'>""</span><span>       Root                Root                  
-## </span><span style='color: #BCBCBC;'> 3</span><span> aad                2 k        Bacteria            k__Bacteria           
-## </span><span style='color: #BCBCBC;'> 4</span><span> aaf                2 p        Proteobacteria      p__Proteobacteria     
-## </span><span style='color: #BCBCBC;'> 5</span><span> add                2 c        Alphaproteobacteria c__Alphaproteobacteria
-## </span><span style='color: #BCBCBC;'> 6</span><span> amg                2 o        Rickettsiales       o__Rickettsiales      
-## </span><span style='color: #BCBCBC;'> 7</span><span> ben                2 f        mitochondria        f__mitochondria       
+## </span><span style='color: #BCBCBC;'> 3</span><span> aad                2 </span><span style='color: #949494;'>"</span><span>k</span><span style='color: #949494;'>"</span><span>      Bacteria            k__Bacteria           
+## </span><span style='color: #BCBCBC;'> 4</span><span> aaf                2 </span><span style='color: #949494;'>"</span><span>p</span><span style='color: #949494;'>"</span><span>      Proteobacteria      p__Proteobacteria     
+## </span><span style='color: #BCBCBC;'> 5</span><span> add                2 </span><span style='color: #949494;'>"</span><span>c</span><span style='color: #949494;'>"</span><span>      Alphaproteobacteria c__Alphaproteobacteria
+## </span><span style='color: #BCBCBC;'> 6</span><span> amg                2 </span><span style='color: #949494;'>"</span><span>o</span><span style='color: #949494;'>"</span><span>      Rickettsiales       o__Rickettsiales      
+## </span><span style='color: #BCBCBC;'> 7</span><span> ben                2 </span><span style='color: #949494;'>"</span><span>f</span><span style='color: #949494;'>"</span><span>      mitochondria        f__mitochondria       
 ## </span><span style='color: #BCBCBC;'> 8</span><span> aac                3 </span><span style='color: #949494;'>""</span><span>       Root                Root                  
-## </span><span style='color: #BCBCBC;'> 9</span><span> aad                3 k        Bacteria            k__Bacteria           
-## </span><span style='color: #BCBCBC;'>10</span><span> aaf                3 p        Proteobacteria      p__Proteobacteria     
+## </span><span style='color: #BCBCBC;'> 9</span><span> aad                3 </span><span style='color: #949494;'>"</span><span>k</span><span style='color: #949494;'>"</span><span>      Bacteria            k__Bacteria           
+## </span><span style='color: #BCBCBC;'>10</span><span> aaf                3 </span><span style='color: #949494;'>"</span><span>p</span><span style='color: #949494;'>"</span><span>      Proteobacteria      p__Proteobacteria     
 ## </span><span style='color: #949494;'># … with 216,407 more rows</span><span>
 </span></code></pre>
 <p>However, ranks can also be accessed using the <code>taxon_ranks</code> function:</p>
@@ -751,7 +751,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>aab</span><span>      1               0        0        0        0        0        0        0
 ##       2 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
 ##       3 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
-##       # … with 4.78e+04 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
+##       # … with 47,803 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
 ##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##   0 functions:
@@ -800,11 +800,11 @@ Show solution
 ##  $ my_taxonomy  : Factor w/ 3 levels "mammalia, felidae, panthera, leo",..: 1 2 3
 </code></pre>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">str</span>(table_<span class="dv">2</span>)</a></code></pre></div>
-<pre class="r-output"><code>## Classes 'spec_tbl_df', 'tbl_df', 'tbl' and 'data.frame': 3 obs. of  4 variables:
-##  $ common_name  : chr  "Lions" "Tigers" "Bears"
-##  $ ncbi_seq_id  : chr  "FJ712037" "KC879292" "HW243304"
-##  $ itis_taxon_id: num  183803 183806 180544
-##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
+<pre class="r-output"><code>## tibble [3 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ common_name  : chr [1:3] "Lions" "Tigers" "Bears"
+##  $ ncbi_seq_id  : chr [1:3] "FJ712037" "KC879292" "HW243304"
+##  $ itis_taxon_id: num [1:3] 183803 183806 180544
+##  $ my_taxonomy  : chr [1:3] "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 ##  - attr(*, "spec")=
 ##   .. cols(
 ##   ..   common_name = <span style='color: #BB0000;'>col_character()</span><span>,
@@ -831,11 +831,11 @@ Show solution
 ##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 </code></pre>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">str</span>(table_<span class="dv">2</span>)</a></code></pre></div>
-<pre class="r-output"><code>## Classes 'spec_tbl_df', 'tbl_df', 'tbl' and 'data.frame': 3 obs. of  4 variables:
-##  $ common_name  : chr  "Lions" "Tigers" "Bears"
-##  $ ncbi_seq_id  : chr  "FJ712037" "KC879292" "HW243304"
-##  $ itis_taxon_id: chr  "183803" "183806" "180544"
-##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
+<pre class="r-output"><code>## tibble [3 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ common_name  : chr [1:3] "Lions" "Tigers" "Bears"
+##  $ ncbi_seq_id  : chr [1:3] "FJ712037" "KC879292" "HW243304"
+##  $ itis_taxon_id: chr [1:3] "183803" "183806" "180544"
+##  $ my_taxonomy  : chr [1:3] "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 ##  - attr(*, "spec")=
 ##   .. cols(
 ##   ..   common_name = <span style='color: #BB0000;'>col_character()</span><span>,
@@ -1065,12 +1065,12 @@ Show solution
 ##   8 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>b</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>c</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>d</span><span>, </span><span style='color: #00BB00;'>c</span><span>-&gt;</span><span style='color: #00BB00;'>e</span><span>, </span><span style='color: #00BB00;'>d</span><span>-&gt;</span><span style='color: #00BB00;'>f</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>g</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>h</span><span>, </span><span style='color: #00BB00;'>f</span><span>-&gt;</span><span style='color: #00BB00;'>i</span><span>
 ##   1 data sets:
 ##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 3 x 4</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>my_acc_no my_class                       input                           
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;                          &lt;chr&gt;                           </span><span>
-##       1 </span><span style='color: #00BB00;'>g</span><span>        FJ712037  class_mammalia;family_felidae… FJ712037::class_mammalia;family…
-##       2 </span><span style='color: #00BB00;'>h</span><span>        KC879292  class_mammalia;family_felidae… KC879292::class_mammalia;family…
-##       3 </span><span style='color: #00BB00;'>i</span><span>        HW243304  class_mammalia;family_ursidae… HW243304::class_mammalia;family…
+## </span><span style='font-style: italic;'>      # A tibble: 3 x 3</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>my_acc_no input                                                          
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;                                                          </span><span>
+##       1 </span><span style='color: #00BB00;'>g</span><span>        FJ712037  FJ712037::class_mammalia;family_felidae;genus_panthera;species…
+##       2 </span><span style='color: #00BB00;'>h</span><span>        KC879292  KC879292::class_mammalia;family_felidae;genus_panthera;species…
+##       3 </span><span style='color: #00BB00;'>i</span><span>        HW243304  HW243304::class_mammalia;family_ursidae;genus_ursus;species_am…
 ##   0 functions:
 </span></code></pre>
 </div>
@@ -1091,12 +1091,12 @@ Show solution
 ##   8 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>b</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>c</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>d</span><span>, </span><span style='color: #00BB00;'>c</span><span>-&gt;</span><span style='color: #00BB00;'>e</span><span>, </span><span style='color: #00BB00;'>d</span><span>-&gt;</span><span style='color: #00BB00;'>f</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>g</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>h</span><span>, </span><span style='color: #00BB00;'>f</span><span>-&gt;</span><span style='color: #00BB00;'>i</span><span>
 ##   2 data sets:
 ##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 3 x 4</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>acc_no  my_class                        input                            
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;                           &lt;chr&gt;                            </span><span>
-##       1 </span><span style='color: #00BB00;'>g</span><span>        FJ7120… class_mammalia;family_felidae;… FJ712037::class_mammalia;family_…
-##       2 </span><span style='color: #00BB00;'>h</span><span>        KC8792… class_mammalia;family_felidae;… KC879292::class_mammalia;family_…
-##       3 </span><span style='color: #00BB00;'>i</span><span>        HW2433… class_mammalia;family_ursidae;… HW243304::class_mammalia;family_…
+## </span><span style='font-style: italic;'>      # A tibble: 3 x 3</span><span>
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>acc_no   input                                                           
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                                                           </span><span>
+##       1 </span><span style='color: #00BB00;'>g</span><span>        FJ712037 FJ712037::class_mammalia;family_felidae;genus_panthera;species_…
+##       2 </span><span style='color: #00BB00;'>h</span><span>        KC879292 KC879292::class_mammalia;family_felidae;genus_panthera;species_…
+##       3 </span><span style='color: #00BB00;'>i</span><span>        HW243304 HW243304::class_mammalia;family_ursidae;genus_ursus;species_ame…
 ##     </span><span style='font-weight: bold;'>class_data</span><span>:
 ## </span><span style='font-style: italic;'>      # A tibble: 12 x 4</span><span>
 ##        </span><span style='color: #00BB00;'> taxon_id </span><span>input_index tax_rank name    

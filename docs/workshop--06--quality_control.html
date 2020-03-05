@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
-<title>workshop--06--quality_control.utf8.md</title>
+<title>workshop--06--quality_control.utf8</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -316,6 +315,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -517,7 +517,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              0          0         0         0         0         0
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -752,15 +752,15 @@ Show solution
 ##    taxon_id M1981P563 M1977P1709 M1980P502 M1981P606 M1981P599 M1981P611 M1981P587 M1982P729
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 ## </span><span style='color: #BCBCBC;'> 1</span><span> ben              0          0         0         0         0         0         0         0
-## </span><span style='color: #BCBCBC;'> 2</span><span> beo            202          0       252         1        69         1       183         0
-## </span><span style='color: #BCBCBC;'> 3</span><span> ben             30         22        43        56        72        16        42        23
-## </span><span style='color: #BCBCBC;'> 4</span><span> bep              0          1         2         7         0         6         4         8
-## </span><span style='color: #BCBCBC;'> 5</span><span> beq              3         31         4        26         0        28         1        25
-## </span><span style='color: #BCBCBC;'> 6</span><span> amk             43          5        86        12       122         3        51         2
-## </span><span style='color: #BCBCBC;'> 7</span><span> bes              0         26         0        17         0        20        11        17
-## </span><span style='color: #BCBCBC;'> 8</span><span> bet              2          0         1         0         9         0         5         1
-## </span><span style='color: #BCBCBC;'> 9</span><span> beu             76          1        74         1         0         0        59         0
-## </span><span style='color: #BCBCBC;'>10</span><span> bev              1         12         0        12         0        18         0        27
+## </span><span style='color: #BCBCBC;'> 2</span><span> beo            202          0       241         3        72         2       187         0
+## </span><span style='color: #BCBCBC;'> 3</span><span> ben             30         12        36        34        82        28        27        20
+## </span><span style='color: #BCBCBC;'> 4</span><span> bep              3          3         6         8         0         6         5         5
+## </span><span style='color: #BCBCBC;'> 5</span><span> beq              1         23         4        21         0        32         0        15
+## </span><span style='color: #BCBCBC;'> 6</span><span> amk             40          2        83         9       115         2        63         2
+## </span><span style='color: #BCBCBC;'> 7</span><span> bes              1         32         0        18         0        31         7        23
+## </span><span style='color: #BCBCBC;'> 8</span><span> bet              2          1         1         0         8         0         5         0
+## </span><span style='color: #BCBCBC;'> 9</span><span> beu             46          0        64         1         0         0        69         0
+## </span><span style='color: #BCBCBC;'>10</span><span> bev              4         18         0        24         0        24         0        33
 ## </span><span style='color: #949494;'># … with 6,684 more rows, and 284 more variables: M1979P447 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1982P701 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
 ## #   M1982P661 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1978P293 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1980P462 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1555P221 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1980P471 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
 ## #   M1979P422 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1982P655 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1554P182 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>

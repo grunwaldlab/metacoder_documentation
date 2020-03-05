@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
-<title>workshop--04--manipulating.utf8.md</title>
+<title>workshop--04--manipulating.utf8</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -316,6 +315,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -543,7 +543,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>aab</span><span>      1               0        0        0        0        0        0        0
 ##       2 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
 ##       3 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
-##       # … with 4.78e+04 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
+##       # … with 47,803 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
 ##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##   0 functions:
@@ -563,7 +563,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>aab</span><span>      1               0        0        0        0        0        0        0
 ##       2 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
 ##       3 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
-##       # … with 4.78e+04 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
+##       # … with 47,803 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
 ##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##   0 functions:
@@ -578,20 +578,26 @@ $(document).ready(function () {
 </code></pre>
 <p>Other values that can be used this way include columns in tables and <b><a href ="appendix--00--glossary.html#list_anchor">lists</a></b>/<b><a href ="appendix--00--glossary.html#vector_anchor">vectors</a></b> stored in the <code>obj$data</code> list in <code>taxmap</code> objects. Since <code>taxmap</code> objects can store any number of lists, vectors, or tables mapped to a taxonomy, there can be many variables that can be referenced by name. The <code>all_names</code> function returns the name and location of variables that can be used this way:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">all_names</span>(obj), <span class="dv">20</span>)</a></code></pre></div>
-<pre class="r-output"><code>##                taxon_names                  taxon_ids              taxon_indexes 
-##              "taxon_names"                "taxon_ids"            "taxon_indexes" 
-##            classifications                n_supertaxa              n_supertaxa_1 
-##          "classifications"              "n_supertaxa"            "n_supertaxa_1" 
-##                  n_subtaxa                n_subtaxa_1                   n_leaves 
-##                "n_subtaxa"              "n_subtaxa_1"                 "n_leaves" 
-##                 n_leaves_1                taxon_ranks                    is_root 
-##               "n_leaves_1"              "taxon_ranks"                  "is_root" 
-##                    is_stem                  is_branch                    is_leaf 
-##                  "is_stem"                "is_branch"                  "is_leaf" 
-##               is_internode                      n_obs                    n_obs_1 
-##             "is_internode"                    "n_obs"                  "n_obs_1" 
-##     data$otu_counts$OTU_ID data$otu_counts$M1024P1833 
-##                   "OTU_ID"               "M1024P1833"
+<pre class="r-output"><code>##                          taxon_names                            taxon_ids 
+##                        "taxon_names"                          "taxon_ids" 
+##                        taxon_indexes                      classifications 
+##                      "taxon_indexes"                    "classifications" 
+##                          n_supertaxa                        n_supertaxa_1 
+##                        "n_supertaxa"                      "n_supertaxa_1" 
+##                            n_subtaxa                          n_subtaxa_1 
+##                          "n_subtaxa"                        "n_subtaxa_1" 
+##                             n_leaves                           n_leaves_1 
+##                           "n_leaves"                         "n_leaves_1" 
+##                          taxon_ranks                              is_root 
+##                        "taxon_ranks"                            "is_root" 
+##                              is_stem                            is_branch 
+##                            "is_stem"                          "is_branch" 
+##                              is_leaf                         is_internode 
+##                            "is_leaf"                       "is_internode" 
+##                                n_obs                              n_obs_1 
+##                              "n_obs"                            "n_obs_1" 
+##     data[['otu_counts']][['OTU_ID']] data[['otu_counts']][['M1024P1833']] 
+##                             "OTU_ID"                         "M1024P1833"
 </code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">length</span>(<span class="kw">all_names</span>(obj))</a></code></pre></div>
 <pre class="r-output"><code>## [1] 1724
@@ -610,7 +616,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4            3229    13679     1832      951      113     2496      567
-##       # … with 3.364e+04 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
+##       # … with 33,638 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
 ##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##   0 functions:
@@ -628,7 +634,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>aad</span><span>      2              41       22        4      726   112492        2      413
 ##       2 </span><span style='color: #00BB00;'>aad</span><span>      3              67       65       12    13514        1        4    13314
 ##       3 </span><span style='color: #00BB00;'>aad</span><span>      4            3229    13679     1832      951      113     2496      567
-##       # … with 3.364e+04 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
+##       # … with 33,638 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
 ##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##   0 functions:
@@ -648,7 +654,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 3.364e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 33,638 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -677,7 +683,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -697,7 +703,7 @@ $(document).ready(function () {
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -910,7 +916,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -967,7 +973,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>NA</span><span>       2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>NA</span><span>       3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>NA</span><span>       4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1000,7 +1006,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>aaf</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>aaf</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>aaf</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1033,7 +1039,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1069,7 +1075,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 1.99e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 19,900 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1195,7 +1201,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1206,7 +1212,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2        126   119
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3        146   146
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4        146   146
-##       # … with 2.168e+04 more rows
+##       # … with 21,681 more rows
 ##   0 functions:
 </span></code></pre>
 <p>Since the “sample_counts” table is derived from the “otu_counts” table and in the same order, we can use values from it to subset “otu_counts”. Using <code>filter_obs</code>, try to subset “otu_counts” to taxa that do not appear in leaf samples, but appear in at least 100 root samples. Remove any taxa not represented by these OTUs unique to roots.</p>
@@ -1254,7 +1260,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>amo</span><span>      17             0       1459         1      2164         0      2990
 ##       2 </span><span style='color: #00BB00;'>bfb</span><span>      21             0          1         0         0         0         0
 ##       3 </span><span style='color: #00BB00;'>bfc</span><span>      22             0        244         0       259         0        14
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1265,7 +1271,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2        126   119
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3        146   146
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4        146   146
-##       # … with 2.168e+04 more rows
+##       # … with 21,681 more rows
 ##   0 functions:
 </span></code></pre>
 <p>To sort in descending order wrap the sorting parameter in <code>desc()</code>:</p>
@@ -1281,7 +1287,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       2 </span><span style='color: #00BB00;'>bfb</span><span>      25          3594          4      3372        31         2         3
 ##       3 </span><span style='color: #00BB00;'>bex</span><span>      13          3083         31      4407       102        26        39
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1292,7 +1298,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2        126   119
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3        146   146
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4        146   146
-##       # … with 2.168e+04 more rows
+##       # … with 21,681 more rows
 ##   0 functions:
 </span></code></pre>
 <p>Try to sort the OTU table by the difference between the number of leaf samples and OTU was found in and the number of root samples and OTU was found in. This effectively sorts by how “characteristic” an OTU is to root samples.</p>
@@ -1312,7 +1318,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1323,7 +1329,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>bfw</span><span>      436        5   146
 ##       2 </span><span style='color: #00BB00;'>bji</span><span>      881        1   142
 ##       3 </span><span style='color: #00BB00;'>bil</span><span>      927        4   145
-##       # … with 2.168e+04 more rows
+##       # … with 21,681 more rows
 ##   0 functions:
 </span></code></pre>
 </div>
@@ -1353,7 +1359,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1364,7 +1370,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2        126   119 Bacteria;Proteobacteria;Alphaproteobacteria;Rickettsi…
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3        146   146 Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomo…
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4        146   146 Bacteria;Proteobacteria;Alphaproteobacteria;Rickettsi…
-##       # … with 2.168e+04 more rows
+##       # … with 21,681 more rows
 ##   0 functions:
 </span></code></pre>
 </div>
@@ -1388,7 +1394,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>ben</span><span>      2              7          0         2         7         1         7
 ##       2 </span><span style='color: #00BB00;'>beo</span><span>      3          10251         59     15857       309       134        90
 ##       3 </span><span style='color: #00BB00;'>ben</span><span>      4           1447       2496      2421      3331       143      1847
-##       # … with 2.168e+04 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
+##       # … with 21,681 more rows, and 286 more variables: M1981P587 &lt;dbl&gt;,
 ##       #   M1982P729 &lt;dbl&gt;, M1979P447 &lt;dbl&gt;, M1982P701 &lt;dbl&gt;, M1982P661 &lt;dbl&gt;,
 ##       #   M1978P293 &lt;dbl&gt;, M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;,
 ##       #   M1979P422 &lt;dbl&gt;, …
@@ -1399,7 +1405,7 @@ Show solution
 ##       1 </span><span style='color: #00BB00;'>bfw</span><span>      436        5   146 Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobial…
 ##       2 </span><span style='color: #00BB00;'>bji</span><span>      881        1   142 Bacteria;Firmicutes;Bacilli;Bacillales;Paenibacillace…
 ##       3 </span><span style='color: #00BB00;'>bil</span><span>      927        4   145 Bacteria;Planctomycetes;Planctomycetia;Gemmatales;Gem…
-##       # … with 2.168e+04 more rows
+##       # … with 21,681 more rows
 ##   0 functions:
 </span></code></pre>
 </div>
