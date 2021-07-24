@@ -1,0 +1,40 @@
+---
+title: "Parsing, manipulating, and visualizing taxonomic data in R"
+author: "Zachary S. L. Foster"
+date: "September 20, 2017"
+fontsize: 8pt
+margins: 1cm
+output:
+  beamer_presentation:
+    theme: "default"
+    colortheme: "beaver"
+    fonttheme: "structurebold"
+    highlight: "pygments"
+    fig_caption: false
+  includes:
+    in_header: header.tex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, mysize = TRUE, size = '\\small', warning = FALSE)
+knitr::knit_hooks$set(mysize = function(before, options, envir) {
+  if (before) 
+    return(options$size)
+})
+options(width = 90)
+library(metacoder)
+```
+
+## Parsing, manipulating, and visualizing taxonomic data in R
+
+### Motivation:
+
+* High-throughput sequencing of environmental DNA has led to large taxonomic data sets
+* The hierarchical nature of taxonomic classifications make manipulating them and associated data difficult
+
+### The `taxa` package:
+
+* Flexible reading of most sources of taxonomic information
+* `dplyr`-inspired filtering and subsetting of taxa and associated information
+* A standard set of classes for taxonomic data
+

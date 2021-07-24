@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,12 +34,21 @@
 
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -46,14 +58,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -62,9 +76,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  { background-color: #f8f8f8; }
+  {  background-color: #f8f8f8; }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -494,18 +508,18 @@ $(document).ready(function () {
 <div id="load-example-data" class="section level2">
 <h2>Load example data</h2>
 <p>If you are starting the workshop at this section, or had problems running code in a previous section, use the following to load the data used in this section. You can download the “filtered_data.Rdata” file <a href="filtered_data.Rdata" download="filtered_data.Rdata">here</a>. If <code>obj</code> and <code>sample_data</code> are already in your environment, you can ignore this and proceed.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">load</span>(<span class="st">&quot;filtered_data.Rdata&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">load</span>(<span class="st">&quot;filtered_data.Rdata&quot;</span>)</span></code></pre></div>
 </div>
 <div id="removing-low-abundance-counts" class="section level2">
 <h2>Removing low-abundance counts</h2>
 <p>The easiest way to get rid of some error in your data is to throw out any count information below some threshold. The threshold is up to you; removing singletons or <b><a href ="appendix--00--glossary.html#doubletons_anchor">doubletons</a></b> is common, but lets be more conservative and remove any counts less than 10. The <code>zero_low_counts</code> counts can be used to convert any counts less than some number to zero.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(metacoder)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">obj<span class="op">$</span>data<span class="op">$</span>otu_counts &lt;-<span class="st"> </span><span class="kw">zero_low_counts</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">min_count =</span> <span class="dv">10</span>,</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">                                       <span class="dt">other_cols =</span> <span class="ot">TRUE</span>) <span class="co"># keep OTU_ID column</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(metacoder)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>obj<span class="op">$</span>data<span class="op">$</span>otu_counts &lt;-<span class="st"> </span><span class="kw">zero_low_counts</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">min_count =</span> <span class="dv">10</span>,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>                                       <span class="dt">other_cols =</span> <span class="ot">TRUE</span>) <span class="co"># keep OTU_ID column</span></span></code></pre></div>
 <pre><code>## No `cols` specified, so using all numeric columns:
 ##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
 <pre><code>## Zeroing 576512 of 6331728 counts less than 10.</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -524,13 +538,13 @@ $(document).ready(function () {
 ##   0 functions:
 </span></code></pre>
 <p>That set all read counts less than 10 to zero. It did not filter out any OTUs or their associated taxa however. We can do that using <code>filter_obs</code>, which is used to filter data associated with a taxonomy in a <code>taxmap</code> object. First lets find which OTUs now have now reads associated with them.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">no_reads &lt;-<span class="st"> </span><span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, sample_data<span class="op">$</span>SampleID]) <span class="op">==</span><span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">sum</span>(no_reads) <span class="co"># when `sum` is used on a TRUE/FALSE vector it counts TRUEs</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>no_reads &lt;-<span class="st"> </span><span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, sample_data<span class="op">$</span>SampleID]) <span class="op">==</span><span class="st"> </span><span class="dv">0</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">sum</span>(no_reads) <span class="co"># when `sum` is used on a TRUE/FALSE vector it counts TRUEs</span></span></code></pre></div>
 <pre class="r-output"><code>## [1] 14990
 </code></pre>
 <p>So now 14,990 of 21,684 OTUs have no reads. We can remove them and the taxa they are associated with like so:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">obj &lt;-<span class="st"> </span><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="op">!</span><span class="st"> </span>no_reads, <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>obj &lt;-<span class="st"> </span><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="op">!</span><span class="st"> </span>no_reads, <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   489 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>ccz</span><span>. Enterococcaceae, </span><span style='color: #00BB00;'>cfp</span><span>. Dermacoccaceae
 ##   489 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>byk</span><span>, </span><span style='color: #00BB00;'>aqy</span><span>-&gt;</span><span style='color: #00BB00;'>ccz</span><span>, </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>cfp</span><span>
@@ -559,14 +573,14 @@ $(document).ready(function () {
 <p><strong>Rarefying can waste a lot of data and is not needed in many cases. See <span class="citation">McMurdie and Holmes (2014)</span> for an in-depth discussion on alternatives to rarefaction. We cover it here because it is a popular technique.</strong></p>
 <p>Typically, the rarefaction depth chosen is the minimum sample depth. If the minimum depth is very small, the samples with the smallest depth can be removed and the minimum depth of the remaining samples can be used.</p>
 <p>Lets take a look at the distribution of read depths of our samples:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">hist</span>(<span class="kw">colSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, sample_data<span class="op">$</span>SampleID]))</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">hist</span>(<span class="kw">colSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, sample_data<span class="op">$</span>SampleID]))</span></code></pre></div>
 <p><img src="workshop--06--quality_control_files/figure-html/unnamed-chunk-5-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>We have a minimum depth of 1857, a median of 78767 and a maximum depth of 1.8935310^{5}. We could try to remove one or two of the samples with the smallest depth, since it seems like a waste to throw out so much data, but for this tutorial we will just rarefy to the minimum of 1857 reads. The <code>vegan</code> package implements many functions to help with rarefying data, but we will use a function from <code>metacoder</code> that calls the functions from <code>vegan</code> and re-formats the input and outputs to make them easier to use with the way our data is formatted.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">obj<span class="op">$</span>data<span class="op">$</span>otu_rarefied &lt;-<span class="st"> </span><span class="kw">rarefy_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">other_cols =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>obj<span class="op">$</span>data<span class="op">$</span>otu_rarefied &lt;-<span class="st"> </span><span class="kw">rarefy_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">other_cols =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## No `cols` specified, so using all numeric columns:
 ##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
 <pre><code>## Rarefying to 1857 since that is the lowest sample total.</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   489 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>ccz</span><span>. Enterococcaceae, </span><span style='color: #00BB00;'>cfp</span><span>. Dermacoccaceae
 ##   489 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>byk</span><span>, </span><span style='color: #00BB00;'>aqy</span><span>-&gt;</span><span style='color: #00BB00;'>ccz</span><span>, </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>cfp</span><span>
@@ -594,9 +608,9 @@ $(document).ready(function () {
 ##   0 functions:
 </span></code></pre>
 <p>This probably means that some OTUs now have no reads in the rarefied dataset. Lets remove those like we did before. However, since there is now two tables, we should not remove any taxa since they still might be used in the rarefied table, so we will not add the <code>drop_taxa = TRUE</code> option this time.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">no_reads &lt;-<span class="st"> </span><span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_rarefied[, sample_data<span class="op">$</span>SampleID]) <span class="op">==</span><span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">obj &lt;-<span class="st"> </span><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_rarefied&quot;</span>, <span class="op">!</span><span class="st"> </span>no_reads)</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>no_reads &lt;-<span class="st"> </span><span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_rarefied[, sample_data<span class="op">$</span>SampleID]) <span class="op">==</span><span class="st"> </span><span class="dv">0</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>obj &lt;-<span class="st"> </span><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_rarefied&quot;</span>, <span class="op">!</span><span class="st"> </span>no_reads)</span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   489 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>ccz</span><span>. Enterococcaceae, </span><span style='color: #00BB00;'>cfp</span><span>. Dermacoccaceae
 ##   489 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>byk</span><span>, </span><span style='color: #00BB00;'>aqy</span><span>-&gt;</span><span style='color: #00BB00;'>ccz</span><span>, </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>cfp</span><span>
@@ -628,11 +642,11 @@ $(document).ready(function () {
 <h2>Proportions</h2>
 <p>An easy alternative to rarefaction is to convert read counts to proportions of reads per-sample. This makes samples directly comparable, but does not solve the problem with inflated diversity estimates discussed in the rarefaction section. See <span class="citation">McMurdie and Holmes (2014)</span> for an in-depth discussion on the relative merits of proportions, rarefaction, and other (better) methods.</p>
 <p>To convert counts to proportions in <code>metacoder</code>, we can use the <code>calc_obs_props</code> function:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">obj<span class="op">$</span>data<span class="op">$</span>otu_props &lt;-<span class="st"> </span><span class="kw">calc_obs_props</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">other_cols =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>obj<span class="op">$</span>data<span class="op">$</span>otu_props &lt;-<span class="st"> </span><span class="kw">calc_obs_props</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">other_cols =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## No `cols` specified, so using all numeric columns:
 ##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
 <pre><code>## Calculating proportions from counts for 292 columns for 6694 observations.</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   489 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>ccz</span><span>. Enterococcaceae, </span><span style='color: #00BB00;'>cfp</span><span>. Dermacoccaceae
 ##   489 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>byk</span><span>, </span><span style='color: #00BB00;'>aqy</span><span>-&gt;</span><span style='color: #00BB00;'>ccz</span><span>, </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>cfp</span><span>
@@ -674,13 +688,13 @@ $(document).ready(function () {
 <h2>Rarefaction curves</h2>
 <p>The relationship between the number of reads and the number of OTUs can be described using <b><a href ="appendix--00--glossary.html#rarefaction_anchor">rarefaction curves</a></b>. This is actually different concept than rarefaction, and it is done for different reasons. Rarefaction is a subsampling technique meant to correct for uneven sample size whereas rarefaction curves are used to estimate whether all the diveristy of the true community was captured.<br />
 Each line represents a different sample (i.e. column) and shows how many OTUs are found in a random subsets of different numbers of reads. The <code>rarecurve</code> function from the <code>vegan</code> package will do the random sub-sampling and plot the results for an abundance matrix. For example, the code below plots the rarefaction curve for a single sample:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">library</span>(vegan)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">library</span>(vegan)</span></code></pre></div>
 <pre><code>## Loading required package: permute</code></pre>
 <pre><code>## Loading required package: lattice</code></pre>
 <pre><code>## This is vegan 2.5-6</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">rarecurve</span>(<span class="kw">t</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, <span class="st">&quot;M1981P563&quot;</span>]), <span class="dt">step =</span> <span class="dv">20</span>,</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2">          <span class="dt">sample =</span> <span class="kw">min</span>(<span class="kw">colSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, sample_data<span class="op">$</span>SampleID])),</a>
-<a class="sourceLine" id="cb22-3" data-line-number="3">          <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">rarecurve</span>(<span class="kw">t</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, <span class="st">&quot;M1981P563&quot;</span>]), <span class="dt">step =</span> <span class="dv">20</span>,</span>
+<span id="cb22-2"><a href="#cb22-2"></a>          <span class="dt">sample =</span> <span class="kw">min</span>(<span class="kw">colSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, sample_data<span class="op">$</span>SampleID])),</span>
+<span id="cb22-3"><a href="#cb22-3"></a>          <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.5</span>)</span></code></pre></div>
 <p><img src="workshop--06--quality_control_files/figure-html/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>For this sample, few new OTUs are observed after about 20,000 reads. Since the number of OTUs found flattens out, it suggests that the sample had sufficient reads to capture most of the diversity (or reach a point of diminishing returns). Like other functions in <code>vegan</code>, <code>rarecurve</code> expects samples to in rows instead of columns, so we had to <b><a href ="appendix--00--glossary.html#transpose_anchor">transpose</a></b> (make rows columns) the matrix with the <code>t</code> function before passing it to <code>rarecurve</code>. If you plot all the samples, which takes a few minutes, it looks like this:</p>
 <p><img src="workshop--06--quality_control_files/figure-html/unnamed-chunk-10-1.png" width="960" style="display: block; margin: auto;" /></p>
@@ -688,7 +702,7 @@ Each line represents a different sample (i.e. column) and shows how many OTUs a
 <div id="converting-to-presenceabsence" class="section level2">
 <h2>Converting to presence/absence</h2>
 <p>Many researchers believe that read depth is not informative due to PCR and sequencing biases. Therefore, instead of comparing read counts, the counts can be converted to presence or absence of an OTU in a given sample. This can be done like so:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">counts_to_presence</span>(obj, <span class="st">&quot;otu_rarefied&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">counts_to_presence</span>(obj, <span class="st">&quot;otu_rarefied&quot;</span>)</span></code></pre></div>
 <pre><code>## No `cols` specified, so using all numeric columns:
 ##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 5,025 x 293</span><span>
@@ -704,16 +718,16 @@ Each line represents a different sample (i.e. column) and shows how many OTUs a
 ## </span><span style='color: #BCBCBC;'> 8</span><span> bet      TRUE      TRUE       TRUE      TRUE      TRUE      FALSE     TRUE      FALSE    
 ## </span><span style='color: #BCBCBC;'> 9</span><span> beu      TRUE      TRUE       TRUE      TRUE      FALSE     FALSE     TRUE      FALSE    
 ## </span><span style='color: #BCBCBC;'>10</span><span> bev      FALSE     TRUE       FALSE     TRUE      FALSE     TRUE      TRUE      TRUE     
-## </span><span style='color: #949494;'># … with 5,015 more rows, and 284 more variables: M1979P447 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1982P701 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>,
-## #   M1982P661 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1978P293 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1980P462 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1555P221 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1980P471 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>,
-## #   M1979P422 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1982P655 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1554P182 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, …</span><span>
+## </span><span style='color: #949494;'># … with 5,015 more rows, and 284 more variables: M1979P447 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1982P701 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1982P661 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1978P293 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1980P462 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1555P221 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1980P471 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1979P422 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1982P655 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, M1554P182 </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, …</span><span>
 </span></code></pre>
 <p>For this workshop however, we will use the read counts.</p>
 </div>
 <div id="exercises" class="section level2">
 <h2>Exercises</h2>
 <p>In these exercises, we will be using the <code>obj</code> from the analysis above. If you did not run the code above or had problems, run the following code to get the objects used. You can download the “clean_data.Rdata” file <a href="clean_data.Rdata" download="clean_data.Rdata">here</a>.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">load</span>(<span class="st">&quot;clean_data.Rdata&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">load</span>(<span class="st">&quot;clean_data.Rdata&quot;</span>)</span></code></pre></div>
 <p><strong>1a)</strong> Consider the following rarefaction curves:</p>
 <p><img src="workshop--06--quality_control_files/figure-html/unnamed-chunk-14-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p><strong>1b)</strong> Which sample is more diverse?</p>
@@ -745,7 +759,7 @@ Around 40,000 reads.
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-18" class="collapse">
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">rarefy_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">sample_size =</span> <span class="dv">1000</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">rarefy_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">sample_size =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## No `cols` specified, so using all numeric columns:
 ##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 6,694 x 293</span><span>
@@ -761,9 +775,9 @@ Show solution
 ## </span><span style='color: #BCBCBC;'> 8</span><span> bet              2          1         1         0         8         0         5         0
 ## </span><span style='color: #BCBCBC;'> 9</span><span> beu             46          0        64         1         0         0        69         0
 ## </span><span style='color: #BCBCBC;'>10</span><span> bev              4         18         0        24         0        24         0        33
-## </span><span style='color: #949494;'># … with 6,684 more rows, and 284 more variables: M1979P447 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1982P701 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   M1982P661 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1978P293 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1980P462 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1555P221 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1980P471 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   M1979P422 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1982P655 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1554P182 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
+## </span><span style='color: #949494;'># … with 6,684 more rows, and 284 more variables: M1979P447 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1982P701 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1982P661 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1978P293 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1980P462 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1555P221 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1980P471 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1979P422 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1982P655 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1554P182 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
 </span></code></pre>
 </div>
 <p><br /></p>
@@ -796,7 +810,7 @@ Show Answer
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-mcmurdie2014waste">
-<p>McMurdie, Paul J, and Susan Holmes. 2014. “Waste Not, Want Not: Why Rarefying Microbiome Data Is Inadmissible.” <em>PLoS Computational Biology</em> 10 (4). Public Library of Science: e1003531.</p>
+<p>McMurdie, Paul J, and Susan Holmes. 2014. “Waste Not, Want Not: Why Rarefying Microbiome Data Is Inadmissible.” <em>PLoS Computational Biology</em> 10 (4): e1003531.</p>
 </div>
 </div>
 </div>
@@ -816,7 +830,7 @@ Show Answer
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

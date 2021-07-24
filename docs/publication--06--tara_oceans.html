@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,45 +34,103 @@
 
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-pre, code { background-color: #f8f8f8; }
-code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code > span.dt { color: #204a87; } /* DataType */
-code > span.dv { color: #0000cf; } /* DecVal */
-code > span.bn { color: #0000cf; } /* BaseN */
-code > span.fl { color: #0000cf; } /* Float */
-code > span.ch { color: #4e9a06; } /* Char */
-code > span.st { color: #4e9a06; } /* String */
-code > span.co { color: #8f5902; font-style: italic; } /* Comment */
-code > span.ot { color: #8f5902; } /* Other */
-code > span.al { color: #ef2929; } /* Alert */
-code > span.fu { color: #000000; } /* Function */
-code > span.er { color: #a40000; font-weight: bold; } /* Error */
-code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #000000; } /* SpecialChar */
-code > span.vs { color: #4e9a06; } /* VerbatimString */
-code > span.ss { color: #4e9a06; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #000000; } /* Variable */
-code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code > span.ex { } /* Extension */
-code > span.at { color: #c4a000; } /* Attribute */
-code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -106,9 +167,7 @@ h6 {
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -122,7 +181,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -132,6 +190,9 @@ img {
 }
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -147,7 +208,6 @@ body {
   padding-top: 66px;
   margin-top: -66px;
 }
-
 .section h2 {
   padding-top: 66px;
   margin-top: -66px;
@@ -167,6 +227,43 @@ body {
 .section h6 {
   padding-top: 66px;
   margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -188,19 +285,74 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -348,17 +500,17 @@ $(document).ready(function () {
 </div>
 <div id="parameters" class="section level2">
 <h2>Parameters</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span>
-output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span>
-output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span>
-pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span>
-revision_n &lt;-<span class="st"> </span><span class="dv">1</span>
-result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {
-  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))
-}
-save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {
-  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))
-}</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>revision_n &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {</span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))</span>
+<span id="cb1-8"><a href="#cb1-8"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9"></a>save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {</span>
+<span id="cb1-10"><a href="#cb1-10"></a>  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))</span>
+<span id="cb1-11"><a href="#cb1-11"></a>}</span></code></pre></div>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
@@ -368,180 +520,169 @@ save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</sp
 <h2>Parsing taxonomic data</h2>
 <p>The data set at the below URL was downloaded and uncompressed:</p>
 <p><a href="http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W5_OTU_occurences.tsv.zip" class="uri">http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W5_OTU_occurences.tsv.zip</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(metacoder)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">raw_data &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(<span class="kw">file.path</span>(input_folder, <span class="st">&quot;Database_W5_OTU_occurences.tsv&quot;</span>))
-obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(raw_data, <span class="dt">class_cols =</span> <span class="st">&quot;lineage&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">|&quot;</span>, <span class="dt">sep_is_regex =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(metacoder)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>raw_data &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(<span class="kw">file.path</span>(input_folder, <span class="st">&quot;Database_W5_OTU_occurences.tsv&quot;</span>))</span>
+<span id="cb3-2"><a href="#cb3-2"></a>obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(raw_data, <span class="dt">class_cols =</span> <span class="st">&quot;lineage&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">|&quot;</span>, <span class="dt">sep_is_regex =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 </div>
 <div id="getting-sample-data" class="section level2">
 <h2>Getting sample data</h2>
 <p>The sample data was downloaded from the URL below:</p>
 <p><a href="http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W1_Sample_parameters.xls" class="uri">http://taraoceans.sb-roscoff.fr/EukDiv/data/Database_W1_Sample_parameters.xls</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readxl)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sample_data &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="kw">file.path</span>(input_folder, <span class="st">&quot;Database_W1_Sample_parameters.xls&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(readxl)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>sample_data &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="kw">file.path</span>(input_folder, <span class="st">&quot;Database_W1_Sample_parameters.xls&quot;</span>))</span></code></pre></div>
 </div>
 <div id="caluculate-read-abundance-per-taxon" class="section level2">
 <h2>Caluculate read abundance per taxon</h2>
 <p>The input data included read abundance for each sample-OTU combination, but we need the abundances associated with each taxon for graphing. The <code>obs</code> function is used here to get a list of row indexes corresponding to OTUs for each taxon. There will usually be multiple OTUs assigned to the same taxon, especially for coarse taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obj<span class="op">$</span>data<span class="op">$</span>tax_abund &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_data&quot;</span>,
-                                       <span class="dt">cols =</span> sample_data[[<span class="st">&quot;PANGAEA ACCESSION NUMBER&quot;</span>]])</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>obj<span class="op">$</span>data<span class="op">$</span>tax_abund &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_data&quot;</span>,</span>
+<span id="cb6-2"><a href="#cb6-2"></a>                                       <span class="dt">cols =</span> sample_data[[<span class="st">&quot;PANGAEA ACCESSION NUMBER&quot;</span>]])</span></code></pre></div>
 <pre><code>## Summing per-taxon counts from 334 columns for 9512 taxa</code></pre>
 </div>
 <div id="plot-read-and-otu-abundance" class="section level2">
 <h2>Plot read and OTU abundance</h2>
 <p>First lets get an idea of the taxonomic distribution of reads and OTUs. This data set has many taxa (9512) and deep taxonomies (a max depth of 10), so graphing all of it effectively will be a challenge. To make it more likly that the layout algorithms can untangle it all, we filter out taxa with less than 100 reads and remove some of the coarse taxonomic ranks so that we get multiple trees per graph. Each tree is then easier to layout for the computer and easier to read for us humans (assuming you saved it as a PDF and zoom in). Additionally, we will remove some taxa that have ambiguous names since they do not provide any information. Note that we are not throwing out read or OTU counts when we do this filtering; the reads and OTU counts still apply to supertaxa (e.g. Metazoa) that were not filtered out.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seed =<span class="st"> </span><span class="dv">9</span> <span class="co">#9, 10, 12 is good</span>
-<span class="kw">set.seed</span>(seed)
-taxa_patterns_to_hide &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)
-taxa_patterns_to_remove &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)
-background_color &lt;-<span class="st"> &quot;#ccfff7&quot;</span>
-obj <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_abund[sample_data[[<span class="st">&quot;PANGAEA ACCESSION NUMBER&quot;</span>]]])) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Eukaryota&quot;</span>, <span class="dt">supertaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(<span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_remove, grepl, <span class="dt">x =</span> taxon_names))) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">title =</span> <span class="st">&quot;Plankton diversity in the sunlit ocean&quot;</span>,
-            <span class="dt">title_size =</span> <span class="fl">0.03</span>,
-            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Number of reads (Abundance)&quot;</span>,
-            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of species (OTUs)&quot;</span>,
-            <span class="dt">node_size =</span> n_obs,
-            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.0012</span>, <span class="ot">NA</span>),
-            <span class="dt">node_color =</span> abundance,
-            <span class="dt">node_color_range =</span> <span class="kw">c</span>(<span class="st">&quot;grey&quot;</span>, <span class="st">&quot;#80cdc1&quot;</span>, <span class="st">&quot;#018571&quot;</span>, <span class="st">&quot;#dfc27d&quot;</span>, <span class="st">&quot;#a6611a&quot;</span>),
-            <span class="dt">node_color_trans =</span> <span class="st">&quot;log10&quot;</span>,
-            <span class="dt">node_label =</span> <span class="kw">ifelse</span>(<span class="kw">grepl</span>(<span class="dt">pattern =</span> <span class="st">&quot;^[a-zA-z</span><span class="ch">\\</span><span class="st">-]{1,25}$&quot;</span>, taxon_names) <span class="op">&amp;</span>
-<span class="st">                                  </span><span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_hide, grepl, <span class="dt">x =</span> taxon_names)) <span class="op">&amp;</span>
-<span class="st">                                  </span>abundance <span class="op">&gt;</span><span class="st"> </span><span class="dv">10000</span>,
-                                taxon_names, <span class="st">&quot;&quot;</span>),
-            <span class="dt">node_label_color =</span> <span class="st">&quot;#000000&quot;</span>,
-            <span class="dt">node_label_color_trans =</span> <span class="st">&quot;area&quot;</span>,
-            <span class="dt">node_label_size =</span> (n_obs <span class="op">/</span><span class="st"> </span>(n_supertaxa <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">^</span><span class="st"> </span><span class="fl">0.5</span>,
-            <span class="dt">node_label_size_trans =</span> <span class="st">&quot;area&quot;</span>,
-            <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.001</span>, <span class="ot">NA</span>),
-            <span class="dt">tree_label =</span> taxon_names,
-            <span class="dt">tree_label_color =</span> <span class="st">&quot;#00806c&quot;</span>,
-            <span class="dt">tree_label_max =</span> <span class="dv">100</span>,
-            <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>,
-            <span class="dt">overlap_avoidance =</span> .<span class="dv">65</span>,
-            <span class="dt">background_color =</span> background_color,
-            <span class="co"># maxiter = 50, fineiter = 50,</span>
-            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;sup_figure_1--tara_all_plankton_diversity&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>seed =<span class="st"> </span><span class="dv">9</span> <span class="co">#9, 10, 12 is good</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">set.seed</span>(seed)</span>
+<span id="cb8-3"><a href="#cb8-3"></a>taxa_patterns_to_hide &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a>taxa_patterns_to_remove &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a>background_color &lt;-<span class="st"> &quot;#ccfff7&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>obj <span class="op">%&gt;%</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_abund[sample_data[[<span class="st">&quot;PANGAEA ACCESSION NUMBER&quot;</span>]]])) <span class="op">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Eukaryota&quot;</span>, <span class="dt">supertaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="st">  </span><span class="kw">filter_taxa</span>(<span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_remove, grepl, <span class="dt">x =</span> taxon_names))) <span class="op">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">title =</span> <span class="st">&quot;Plankton diversity in the sunlit ocean&quot;</span>,</span>
+<span id="cb8-12"><a href="#cb8-12"></a>            <span class="dt">title_size =</span> <span class="fl">0.03</span>,</span>
+<span id="cb8-13"><a href="#cb8-13"></a>            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Number of reads (Abundance)&quot;</span>,</span>
+<span id="cb8-14"><a href="#cb8-14"></a>            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of species (OTUs)&quot;</span>,</span>
+<span id="cb8-15"><a href="#cb8-15"></a>            <span class="dt">node_size =</span> n_obs,</span>
+<span id="cb8-16"><a href="#cb8-16"></a>            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.0012</span>, <span class="ot">NA</span>),</span>
+<span id="cb8-17"><a href="#cb8-17"></a>            <span class="dt">node_color =</span> abundance,</span>
+<span id="cb8-18"><a href="#cb8-18"></a>            <span class="dt">node_color_range =</span> <span class="kw">c</span>(<span class="st">&quot;grey&quot;</span>, <span class="st">&quot;#80cdc1&quot;</span>, <span class="st">&quot;#018571&quot;</span>, <span class="st">&quot;#dfc27d&quot;</span>, <span class="st">&quot;#a6611a&quot;</span>),</span>
+<span id="cb8-19"><a href="#cb8-19"></a>            <span class="dt">node_color_trans =</span> <span class="st">&quot;log10&quot;</span>,</span>
+<span id="cb8-20"><a href="#cb8-20"></a>            <span class="dt">node_label =</span> <span class="kw">ifelse</span>(<span class="kw">grepl</span>(<span class="dt">pattern =</span> <span class="st">&quot;^[a-zA-z</span><span class="ch">\\</span><span class="st">-]{1,25}$&quot;</span>, taxon_names) <span class="op">&amp;</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="st">                                  </span><span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_hide, grepl, <span class="dt">x =</span> taxon_names)) <span class="op">&amp;</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="st">                                  </span>abundance <span class="op">&gt;</span><span class="st"> </span><span class="dv">10000</span>,</span>
+<span id="cb8-23"><a href="#cb8-23"></a>                                taxon_names, <span class="st">&quot;&quot;</span>),</span>
+<span id="cb8-24"><a href="#cb8-24"></a>            <span class="dt">node_label_color =</span> <span class="st">&quot;#000000&quot;</span>,</span>
+<span id="cb8-25"><a href="#cb8-25"></a>            <span class="dt">node_label_color_trans =</span> <span class="st">&quot;area&quot;</span>,</span>
+<span id="cb8-26"><a href="#cb8-26"></a>            <span class="dt">node_label_size =</span> (n_obs <span class="op">/</span><span class="st"> </span>(n_supertaxa <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">^</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb8-27"><a href="#cb8-27"></a>            <span class="dt">node_label_size_trans =</span> <span class="st">&quot;area&quot;</span>,</span>
+<span id="cb8-28"><a href="#cb8-28"></a>            <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.001</span>, <span class="ot">NA</span>),</span>
+<span id="cb8-29"><a href="#cb8-29"></a>            <span class="dt">tree_label =</span> taxon_names,</span>
+<span id="cb8-30"><a href="#cb8-30"></a>            <span class="dt">tree_label_color =</span> <span class="st">&quot;#00806c&quot;</span>,</span>
+<span id="cb8-31"><a href="#cb8-31"></a>            <span class="dt">tree_label_max =</span> <span class="dv">100</span>,</span>
+<span id="cb8-32"><a href="#cb8-32"></a>            <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>,</span>
+<span id="cb8-33"><a href="#cb8-33"></a>            <span class="dt">overlap_avoidance =</span> <span class="fl">.65</span>,</span>
+<span id="cb8-34"><a href="#cb8-34"></a>            <span class="dt">background_color =</span> background_color,</span>
+<span id="cb8-35"><a href="#cb8-35"></a>            <span class="co"># maxiter = 50, fineiter = 50,</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a>            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;sup_figure_1--tara_all_plankton_diversity&quot;</span>))</span></code></pre></div>
 <p><img src="publication--06--tara_oceans_files/figure-html/tara_plot_all-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="plot-propotion-of-otus-identified" class="section level2">
 <h2>Plot propotion of OTUs identified</h2>
 <p>Next we will look at how well the reference database used was able to classify OTUs. This will give us an idea of how well current references databases account for the diversity of eukaryotes in the oceans. For each taxon we will identify the proportion of OTUs with less than a 90% match to the most similar reference sequence to approximate classification certainty.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># color_range &lt;- c(&quot;firebrick1&quot;, &quot;orangered&quot;,  &quot;orange&quot;, &quot;yellow3&quot;, &quot;yellowgreen&quot;, &quot;green&quot;)</span>
-color_range &lt;-<span class="st"> </span><span class="kw">c</span>(viridis<span class="op">::</span><span class="kw">plasma</span>(<span class="dv">10</span>)[<span class="dv">4</span><span class="op">:</span><span class="dv">9</span>], <span class="st">&quot;lightgrey&quot;</span>)
-obj &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_abund&quot;</span>, <span class="dt">mean_pid =</span> <span class="kw">vapply</span>(<span class="kw">obs</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_data&quot;</span>),
-                                                 <span class="cf">function</span>(x) <span class="kw">mean</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data<span class="op">$</span>pid[x], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="kw">numeric</span>(<span class="dv">1</span>)))
-<span class="co"># Percentage of OTUs with less than 90% idententiy</span>
-obj &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(obj, <span class="st">&quot;tax_abund&quot;</span>, <span class="dt">percent_known =</span> <span class="kw">vapply</span>(<span class="kw">obs</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_data&quot;</span>),
-                                                 <span class="cf">function</span>(x) <span class="kw">sum</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data<span class="op">$</span>pid[x] <span class="op">&gt;=</span><span class="st"> </span><span class="dv">90</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, <span class="kw">numeric</span>(<span class="dv">1</span>)))</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># color_range &lt;- c(&quot;firebrick1&quot;, &quot;orangered&quot;,  &quot;orange&quot;, &quot;yellow3&quot;, &quot;yellowgreen&quot;, &quot;green&quot;)</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>color_range &lt;-<span class="st"> </span><span class="kw">c</span>(viridis<span class="op">::</span><span class="kw">plasma</span>(<span class="dv">10</span>)[<span class="dv">4</span><span class="op">:</span><span class="dv">9</span>], <span class="st">&quot;lightgrey&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a>obj &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_abund&quot;</span>, <span class="dt">mean_pid =</span> <span class="kw">vapply</span>(<span class="kw">obs</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_data&quot;</span>),</span>
+<span id="cb9-4"><a href="#cb9-4"></a>                                                 <span class="cf">function</span>(x) <span class="kw">mean</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data<span class="op">$</span>pid[x], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="kw">numeric</span>(<span class="dv">1</span>)))</span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># Percentage of OTUs with less than 90% idententiy</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>obj &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(obj, <span class="st">&quot;tax_abund&quot;</span>, <span class="dt">percent_known =</span> <span class="kw">vapply</span>(<span class="kw">obs</span>(obj, <span class="dt">data =</span> <span class="st">&quot;tax_data&quot;</span>),</span>
+<span id="cb9-7"><a href="#cb9-7"></a>                                                 <span class="cf">function</span>(x) <span class="kw">sum</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data<span class="op">$</span>pid[x] <span class="op">&gt;=</span><span class="st"> </span><span class="dv">90</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, <span class="kw">numeric</span>(<span class="dv">1</span>)))</span></code></pre></div>
 <p>We can plot this the same way that we plotted OTU and read abundance. In fact, we can preserve abundance information by letting the size of nodes and edges correspond to OTU and read abundance and using color to plot classification certainty. Since this figure will be part of the publication, we have not added node labels since they would not be visible at the scale publication figures are viewed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seed =<span class="st"> </span><span class="dv">13</span>
-<span class="kw">set.seed</span>(seed)
-taxa_patterns_to_hide &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)
-taxa_patterns_to_remove &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)
-identified_plot &lt;-<span class="st"> </span>obj <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_abund[sample_data[[<span class="st">&quot;PANGAEA ACCESSION NUMBER&quot;</span>]]])) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Eukaryota&quot;</span>, <span class="dt">supertaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(<span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_remove, grepl, <span class="dt">x =</span> taxon_names))) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(n_subtaxa <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span> <span class="op">&amp;</span><span class="st"> </span>n_supertaxa <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">heat_tree</span>(
-    <span class="dt">title_size =</span> <span class="fl">0.03</span>,
-    <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Percent of species (OTUs) identified&quot;</span>,
-    <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of species (OTUs)&quot;</span>,
-    <span class="dt">node_size =</span> n_obs,
-    <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.0012</span>, <span class="ot">NA</span>),
-    <span class="dt">node_color =</span> percent_known,
-    <span class="dt">node_color_range =</span> color_range,
-    <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
-    <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100</span>),
-    <span class="dt">node_label_size =</span> (n_obs <span class="op">/</span><span class="st"> </span>(n_supertaxa <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">^</span><span class="st"> </span><span class="fl">0.5</span>,
-    <span class="dt">node_label_size_trans =</span> <span class="st">&quot;area&quot;</span>,
-    <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.001</span>, <span class="ot">NA</span>),
-    <span class="dt">tree_label =</span> taxon_names,
-    <span class="dt">tree_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.008</span>, <span class="fl">0.035</span>),
-    <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>,
-    <span class="dt">overlap_avoidance =</span> .<span class="dv">65</span>,
-    <span class="co"># maxiter = 50, fineiter = 50,</span>
-    <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;sup_figure_2--tara_proportion_identified&quot;</span>))
-identified_plot</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>seed =<span class="st"> </span><span class="dv">13</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">set.seed</span>(seed)</span>
+<span id="cb10-3"><a href="#cb10-3"></a>taxa_patterns_to_hide &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)</span>
+<span id="cb10-4"><a href="#cb10-4"></a>taxa_patterns_to_remove &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>identified_plot &lt;-<span class="st"> </span>obj <span class="op">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_abund[sample_data[[<span class="st">&quot;PANGAEA ACCESSION NUMBER&quot;</span>]]])) <span class="op">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Eukaryota&quot;</span>, <span class="dt">supertaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="st">  </span><span class="kw">filter_taxa</span>(<span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_remove, grepl, <span class="dt">x =</span> taxon_names))) <span class="op">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="st">  </span><span class="kw">filter_taxa</span>(n_subtaxa <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span> <span class="op">&amp;</span><span class="st"> </span>n_supertaxa <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="st">  </span><span class="kw">heat_tree</span>(</span>
+<span id="cb10-12"><a href="#cb10-12"></a>    <span class="dt">title_size =</span> <span class="fl">0.03</span>,</span>
+<span id="cb10-13"><a href="#cb10-13"></a>    <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Percent of species (OTUs) identified&quot;</span>,</span>
+<span id="cb10-14"><a href="#cb10-14"></a>    <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of species (OTUs)&quot;</span>,</span>
+<span id="cb10-15"><a href="#cb10-15"></a>    <span class="dt">node_size =</span> n_obs,</span>
+<span id="cb10-16"><a href="#cb10-16"></a>    <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.0012</span>, <span class="ot">NA</span>),</span>
+<span id="cb10-17"><a href="#cb10-17"></a>    <span class="dt">node_color =</span> percent_known,</span>
+<span id="cb10-18"><a href="#cb10-18"></a>    <span class="dt">node_color_range =</span> color_range,</span>
+<span id="cb10-19"><a href="#cb10-19"></a>    <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,</span>
+<span id="cb10-20"><a href="#cb10-20"></a>    <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100</span>),</span>
+<span id="cb10-21"><a href="#cb10-21"></a>    <span class="dt">node_label_size =</span> (n_obs <span class="op">/</span><span class="st"> </span>(n_supertaxa <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">^</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb10-22"><a href="#cb10-22"></a>    <span class="dt">node_label_size_trans =</span> <span class="st">&quot;area&quot;</span>,</span>
+<span id="cb10-23"><a href="#cb10-23"></a>    <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.001</span>, <span class="ot">NA</span>),</span>
+<span id="cb10-24"><a href="#cb10-24"></a>    <span class="dt">tree_label =</span> taxon_names,</span>
+<span id="cb10-25"><a href="#cb10-25"></a>    <span class="dt">tree_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.008</span>, <span class="fl">0.035</span>),</span>
+<span id="cb10-26"><a href="#cb10-26"></a>    <span class="dt">initial_layout =</span> <span class="st">&quot;re&quot;</span>, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>,</span>
+<span id="cb10-27"><a href="#cb10-27"></a>    <span class="dt">overlap_avoidance =</span> <span class="fl">.65</span>,</span>
+<span id="cb10-28"><a href="#cb10-28"></a>    <span class="co"># maxiter = 50, fineiter = 50,</span></span>
+<span id="cb10-29"><a href="#cb10-29"></a>    <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;sup_figure_2--tara_proportion_identified&quot;</span>))</span>
+<span id="cb10-30"><a href="#cb10-30"></a>identified_plot</span></code></pre></div>
 <p><img src="publication--06--tara_oceans_files/figure-html/tara_plot_all_identified-1.png" width="960" style="display: block; margin: auto;" /></p>
 <div id="just-metazoa" class="section level3">
 <h3>Just Metazoa</h3>
 <p>We can also plot a single tree for a little less overwhelming graph. Below, we plot only the metazoa using the same meanings for color and size. This is also a publication figure, so taxa have been filtered out more aggressively and only a few labels are shown.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seed &lt;-<span class="st"> </span><span class="dv">21</span>
-<span class="kw">set.seed</span>(seed)
-taxa_patterns_to_hide &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>, <span class="st">&quot;neglecta&quot;</span>, <span class="st">&quot;Bothriocroton&quot;</span>, <span class="st">&quot;Thysanoessa&quot;</span>, <span class="st">&quot;Metridia&quot;</span>, <span class="st">&quot;Aidanosagitta&quot;</span>, <span class="st">&quot;Cephalopoda&quot;</span>, <span class="st">&quot;Craniata&quot;</span>), <span class="st">&quot;$&quot;</span>)
-taxa_patterns_to_remove &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)
-metazoa_plot &lt;-<span class="st"> </span>obj <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_abund[sample_data[[<span class="st">&quot;PANGAEA ACCESSION NUMBER&quot;</span>]]])) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="dv">3100</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(<span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_remove, grepl, <span class="dt">x =</span> taxon_names))) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Metazoa&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_color_axis_label =</span> <span class="st">&quot;Percent of OTUs identified&quot;</span>,
-            <span class="dt">edge_color_axis_label =</span> <span class="st">&quot;Percent of OTUs identified&quot;</span>,
-            <span class="dt">edge_size =</span> abundance,
-            <span class="dt">edge_size_range =</span> <span class="kw">c</span>(<span class="fl">0.0005</span>, <span class="fl">0.013</span>),
-            <span class="dt">edge_size_trans =</span> <span class="st">&quot;area&quot;</span>,
-            <span class="dt">edge_color =</span> percent_known,
-            <span class="dt">edge_color_range =</span> color_range,
-            <span class="dt">edge_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
-            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of OTUs&quot;</span>,
-            <span class="dt">edge_size_axis_label =</span> <span class="st">&quot;Number of reads&quot;</span>,
-            <span class="dt">node_size =</span> n_obs,
-            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.005</span>, <span class="fl">0.03</span>),
-            <span class="dt">node_color =</span> percent_known,
-            <span class="dt">node_color_range =</span> color_range,
-            <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
-            <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100</span>),
-            <span class="dt">node_label =</span> <span class="kw">ifelse</span>(<span class="kw">grepl</span>(<span class="dt">pattern =</span> <span class="st">&quot;^[a-zA-z</span><span class="ch">\\</span><span class="st">-]{1,25}$&quot;</span>, taxon_names) <span class="op">&amp;</span>
-<span class="st">                                  </span><span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_hide, grepl, <span class="dt">x =</span> taxon_names)),
-                                taxon_names, <span class="st">&quot;&quot;</span>),
-            <span class="dt">node_label_size =</span> n_obs,
-            <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.013</span>, <span class="fl">0.018</span>),
-            <span class="dt">node_label_size_trans =</span> <span class="st">&quot;area&quot;</span>,
-            <span class="dt">node_label_max =</span> <span class="dv">100</span>,
-            <span class="dt">initial_layout =</span> <span class="st">&quot;fr&quot;</span>, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>,
-            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="kw">paste0</span>(<span class="st">&quot;figure_1--tara_metazoa--seed_&quot;</span>, seed)))
-<span class="kw">print</span>(metazoa_plot)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>seed &lt;-<span class="st"> </span><span class="dv">21</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">set.seed</span>(seed)</span>
+<span id="cb11-3"><a href="#cb11-3"></a>taxa_patterns_to_hide &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>, <span class="st">&quot;neglecta&quot;</span>, <span class="st">&quot;Bothriocroton&quot;</span>, <span class="st">&quot;Thysanoessa&quot;</span>, <span class="st">&quot;Metridia&quot;</span>, <span class="st">&quot;Aidanosagitta&quot;</span>, <span class="st">&quot;Cephalopoda&quot;</span>, <span class="st">&quot;Craniata&quot;</span>), <span class="st">&quot;$&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>taxa_patterns_to_remove &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;^&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;[X]+&quot;</span>, <span class="st">&quot;X</span><span class="ch">\\</span><span class="st">+sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;root&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">*&quot;</span>, <span class="st">&quot;sp</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;sp&quot;</span>), <span class="st">&quot;$&quot;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5"></a>metazoa_plot &lt;-<span class="st"> </span>obj <span class="op">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_abund&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_abund[sample_data[[<span class="st">&quot;PANGAEA ACCESSION NUMBER&quot;</span>]]])) <span class="op">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="dv">3100</span>) <span class="op">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="st">  </span><span class="kw">filter_taxa</span>(<span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_remove, grepl, <span class="dt">x =</span> taxon_names))) <span class="op">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">==</span><span class="st"> &quot;Metazoa&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_color_axis_label =</span> <span class="st">&quot;Percent of OTUs identified&quot;</span>,</span>
+<span id="cb11-11"><a href="#cb11-11"></a>            <span class="dt">edge_color_axis_label =</span> <span class="st">&quot;Percent of OTUs identified&quot;</span>,</span>
+<span id="cb11-12"><a href="#cb11-12"></a>            <span class="dt">edge_size =</span> abundance,</span>
+<span id="cb11-13"><a href="#cb11-13"></a>            <span class="dt">edge_size_range =</span> <span class="kw">c</span>(<span class="fl">0.0005</span>, <span class="fl">0.013</span>),</span>
+<span id="cb11-14"><a href="#cb11-14"></a>            <span class="dt">edge_size_trans =</span> <span class="st">&quot;area&quot;</span>,</span>
+<span id="cb11-15"><a href="#cb11-15"></a>            <span class="dt">edge_color =</span> percent_known,</span>
+<span id="cb11-16"><a href="#cb11-16"></a>            <span class="dt">edge_color_range =</span> color_range,</span>
+<span id="cb11-17"><a href="#cb11-17"></a>            <span class="dt">edge_color_trans =</span> <span class="st">&quot;linear&quot;</span>,</span>
+<span id="cb11-18"><a href="#cb11-18"></a>            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of OTUs&quot;</span>,</span>
+<span id="cb11-19"><a href="#cb11-19"></a>            <span class="dt">edge_size_axis_label =</span> <span class="st">&quot;Number of reads&quot;</span>,</span>
+<span id="cb11-20"><a href="#cb11-20"></a>            <span class="dt">node_size =</span> n_obs,</span>
+<span id="cb11-21"><a href="#cb11-21"></a>            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.005</span>, <span class="fl">0.03</span>),</span>
+<span id="cb11-22"><a href="#cb11-22"></a>            <span class="dt">node_color =</span> percent_known,</span>
+<span id="cb11-23"><a href="#cb11-23"></a>            <span class="dt">node_color_range =</span> color_range,</span>
+<span id="cb11-24"><a href="#cb11-24"></a>            <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,</span>
+<span id="cb11-25"><a href="#cb11-25"></a>            <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100</span>),</span>
+<span id="cb11-26"><a href="#cb11-26"></a>            <span class="dt">node_label =</span> <span class="kw">ifelse</span>(<span class="kw">grepl</span>(<span class="dt">pattern =</span> <span class="st">&quot;^[a-zA-z</span><span class="ch">\\</span><span class="st">-]{1,25}$&quot;</span>, taxon_names) <span class="op">&amp;</span></span>
+<span id="cb11-27"><a href="#cb11-27"></a><span class="st">                                  </span><span class="op">!</span><span class="st"> </span><span class="kw">Reduce</span>(<span class="st">`</span><span class="dt">|</span><span class="st">`</span>, <span class="kw">lapply</span>(taxa_patterns_to_hide, grepl, <span class="dt">x =</span> taxon_names)),</span>
+<span id="cb11-28"><a href="#cb11-28"></a>                                taxon_names, <span class="st">&quot;&quot;</span>),</span>
+<span id="cb11-29"><a href="#cb11-29"></a>            <span class="dt">node_label_size =</span> n_obs,</span>
+<span id="cb11-30"><a href="#cb11-30"></a>            <span class="dt">node_label_size_range =</span> <span class="kw">c</span>(<span class="fl">0.013</span>, <span class="fl">0.018</span>),</span>
+<span id="cb11-31"><a href="#cb11-31"></a>            <span class="dt">node_label_size_trans =</span> <span class="st">&quot;area&quot;</span>,</span>
+<span id="cb11-32"><a href="#cb11-32"></a>            <span class="dt">node_label_max =</span> <span class="dv">100</span>,</span>
+<span id="cb11-33"><a href="#cb11-33"></a>            <span class="dt">initial_layout =</span> <span class="st">&quot;fr&quot;</span>, <span class="dt">layout =</span> <span class="st">&quot;da&quot;</span>,</span>
+<span id="cb11-34"><a href="#cb11-34"></a>            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="kw">paste0</span>(<span class="st">&quot;figure_1--tara_metazoa--seed_&quot;</span>, seed)))</span>
+<span id="cb11-35"><a href="#cb11-35"></a><span class="kw">print</span>(metazoa_plot)</span></code></pre></div>
 <p><img src="publication--06--tara_oceans_files/figure-html/tara_plot_metazoa_identified-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="combine-plots" class="section level3">
 <h3>Combine plots</h3>
 <p>Finally, lets combine the two graphs to produce the publication figure.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(gridExtra)
-<span class="kw">library</span>(cowplot)</code></pre></div>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## 
-## Attaching package: &#39;ggplot2&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:taxa&#39;:
-## 
-##     map_data</code></pre>
-<pre><code>## 
-## Attaching package: &#39;cowplot&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
-## 
-##     ggsave</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">combined_plot &lt;-<span class="st"> </span><span class="kw">plot_grid</span>(metazoa_plot, identified_plot, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>))
-<span class="kw">save_plot</span>(<span class="dt">filename =</span> <span class="kw">result_path</span>(<span class="st">&quot;figure_1--tara_metazoa_combined&quot;</span>),
-          combined_plot, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">base_height =</span> <span class="dv">5</span>, <span class="dt">base_width =</span> <span class="dv">8</span>)
-combined_plot</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">library</span>(gridExtra)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">library</span>(cowplot)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>combined_plot &lt;-<span class="st"> </span><span class="kw">plot_grid</span>(metazoa_plot, identified_plot, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>))</span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="kw">save_plot</span>(<span class="dt">filename =</span> <span class="kw">result_path</span>(<span class="st">&quot;figure_1--tara_metazoa_combined&quot;</span>),</span>
+<span id="cb13-3"><a href="#cb13-3"></a>          combined_plot, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">base_height =</span> <span class="dv">5</span>, <span class="dt">base_width =</span> <span class="dv">8</span>)</span>
+<span id="cb13-4"><a href="#cb13-4"></a>combined_plot</span></code></pre></div>
 <p><img src="publication--06--tara_oceans_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="software-and-packages-used" class="section level2">
 <h2>Software and packages used</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
-<pre class="r-output"><code>## R version 3.4.4 (2018-03-15)
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre class="r-output"><code>## R version 4.0.3 (2020-10-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 16.04.5 LTS
+## Running under: Pop!_OS 20.04 LTS
 ## 
 ## Matrix products: default
-## BLAS: /usr/lib/libblas/libblas.so.3.6.0
-## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
@@ -553,21 +694,22 @@ combined_plot</code></pre></div>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] cowplot_0.9.3        ggplot2_3.0.0        gridExtra_2.3        readxl_1.1.0        
-##  [5] metacoder_0.2.1.9011 taxa_0.3.1           stringr_1.3.1        glossary_0.1.0      
-##  [9] knitcitations_1.0.8  knitr_1.20          
+## [1] cowplot_1.1.0        gridExtra_2.3        readxl_1.3.1         metacoder_0.3.5     
+## [5] stringr_1.4.0        glossary_0.1.0       knitcitations_1.0.12 knitr_1.30          
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.18     cellranger_1.1.0 compiler_3.4.4   pillar_1.3.0     plyr_1.8.4      
-##  [6] bindr_0.1.1      tools_3.4.4      ggfittext_0.6.0  digest_0.6.16    gtable_0.2.0    
-## [11] lubridate_1.7.4  jsonlite_1.5     evaluate_0.11    tibble_1.4.2     pkgconfig_2.0.2 
-## [16] rlang_0.2.2      bibtex_0.4.2     cli_1.0.0        yaml_2.2.0       bindrcpp_0.2.2  
-## [21] withr_2.1.2      RefManageR_1.2.0 dplyr_0.7.6      httr_1.3.1       xml2_1.2.0      
-## [26] hms_0.4.2.9001   grid_3.4.4       rprojroot_1.3-2  tidyselect_0.2.4 glue_1.3.0      
-## [31] R6_2.2.2         fansi_0.3.0      rmarkdown_1.10   purrr_0.2.5      readr_1.2.0     
-## [36] magrittr_1.5     scales_1.0.0     backports_1.1.2  htmltools_0.3.6  assertthat_0.2.0
-## [41] colorspace_1.3-2 utf8_1.1.4       stringi_1.2.4    munsell_0.5.0    lazyeval_0.2.1  
-## [46] crayon_1.3.4
+##  [1] tidyselect_1.1.0  xfun_0.19         purrr_0.3.4       GA_3.2            colorspace_1.4-1 
+##  [6] vctrs_0.3.4       generics_0.1.0    viridisLite_0.3.0 htmltools_0.5.1.1 yaml_2.2.1       
+## [11] utf8_1.1.4        rlang_0.4.10      pillar_1.4.6      glue_1.4.2        foreach_1.5.1    
+## [16] lifecycle_0.2.0   plyr_1.8.6        ggfittext_0.9.0   munsell_0.5.0     gtable_0.3.0     
+## [21] cellranger_1.1.0  codetools_0.2-16  evaluate_0.14     labeling_0.4.2    fansi_0.4.1      
+## [26] Rcpp_1.0.5        readr_1.4.0       scales_1.1.1      jsonlite_1.7.1    farver_2.0.3     
+## [31] ggplot2_3.3.2     hms_0.5.3         digest_0.6.27     stringi_1.5.3     dplyr_1.0.2      
+## [36] grid_4.0.3        bibtex_0.4.2.3    cli_2.1.0         tools_4.0.3       magrittr_2.0.1   
+## [41] lazyeval_0.2.2    tibble_3.0.4      RefManageR_1.2.12 crayon_1.3.4      pkgconfig_2.0.3  
+## [46] ellipsis_0.3.1    xml2_1.3.2        lubridate_1.7.9   assertthat_0.2.1  rmarkdown_2.5    
+## [51] httr_1.4.2        rstudioapi_0.11   iterators_1.0.13  viridis_0.5.1     R6_2.5.0         
+## [56] igraph_1.2.6      compiler_4.0.3
 </code></pre>
 </div>
 <div id="references" class="section level2 unnumbered">
@@ -593,7 +735,7 @@ combined_plot</code></pre></div>
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -601,6 +743,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

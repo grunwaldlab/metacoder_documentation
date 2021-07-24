@@ -1,0 +1,6 @@
+bib_path: "~/files/library/references.bib"
+library_path: "~/files/library"
+local_references: TRUE
+local_references_dir: "references" 
+link_references: FALSE
+overwrite_references: FALSE

@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
-<title>appendix--00--no_internet_install.utf8.md</title>
+<title>appendix--00--no_internet_install.utf8</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -32,12 +34,21 @@
 
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -47,14 +58,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -63,9 +76,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  { background-color: #f8f8f8; }
+  {  background-color: #f8f8f8; }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -316,6 +329,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -486,62 +500,97 @@ $(document).ready(function () {
 </div>
 <div id="installing-rstudio" class="section level2">
 <h2>Installing Rstudio</h2>
-<p>Use the installers in “software/rstudio/mac,”software/rstudio/windows&quot; or “software/rstudio/linux”, depending on your operating system.</p>
+<p>Use the installers in “software/rstudio/mac,”software/rstudio/windows" or “software/rstudio/linux”, depending on your operating system.</p>
 </div>
 <div id="installing-r-packages" class="section level2">
 <h2>Installing R packages</h2>
 <p>The following packages are used in this workshop:</p>
-<pre class="r-output"><code> [1] "vegan"     "metacoder" "taxa"      "ggplot2"   "dplyr"     "readr"     "stringr"   "agricolae"
- [9] "ape"       "phyloseq" 
+<pre class="r-output"><code>[1] "vegan"     "metacoder" "ggplot2"   "dplyr"     "readr"     "stringr"   "agricolae" "ape"      
+[9] "phyloseq" 
 </code></pre>
 <p>However, these depend on many other packages that must also be installed, so the complete list is:</p>
-<pre class="r-output"><code>  [1] "vegan"        "metacoder"    "taxa"         "ggplot2"      "dplyr"        "readr"       
-  [7] "stringr"      "agricolae"    "ape"          "phyloseq"     "permute"      "lattice"     
- [13] "MASS"         "cluster"      "mgcv"         "graphics"     "grDevices"    "stats"       
- [19] "utils"        "grid"         "methods"      "nlme"         "Matrix"       "splines"     
- [25] "igraph"       "scales"       "taxize"       "seqinr"       "reshape2"     "zoo"         
- [31] "traits"       "RColorBrewer" "RCurl"        "reshape"      "lazyeval"     "magrittr"    
- [37] "rlang"        "biomformat"   "phylotate"    "ggfittext"    "ggrepel"      "cowplot"     
- [43] "GA"           "Rcpp"         "crayon"       "svglite"      "viridisLite"  "tibble"      
- [49] "tools"        "parallel"     "plyr"         "jsonlite"     "rhdf5"        "gtable"      
- [55] "assertthat"   "glue"         "pkgconfig"    "R6"           "tidyselect"   "foreach"     
- [61] "iterators"    "cli"          "stringi"      "shades"       "digest"       "withr"       
- [67] "bitops"       "hms"          "clipr"        "labeling"     "munsell"      "ade4"        
- [73] "segmented"    "gdtools"      "knitr"        "tidyr"        "crul"         "xml2"        
- [79] "bold"         "data.table"   "rredlist"     "rotl"         "ritis"        "worrms"      
- [85] "natserv"      "wikitaxa"     "phangorn"     "fansi"        "pillar"       "httr"        
- [91] "rvest"        "hoardr"       "curl"         "urltools"     "httpcode"     "mime"        
- [97] "codetools"    "systemfonts"  "vctrs"        "rappdirs"     "openssl"      "evaluate"    
-[103] "highr"        "markdown"     "yaml"         "xfun"         "colorspace"   "quadprog"    
-[109] "fastmatch"    "utf8"         "Rhdf5lib"     "solrium"      "rentrez"      "rncl"        
-[115] "selectr"      "ellipsis"     "purrr"        "lifecycle"    "WikidataR"    "askpass"     
-[121] "XML"          "progress"     "triebeard"    "backports"    "zeallot"      "WikipediR"   
-[127] "sys"          "prettyunits"  "klaR"         "spdep"        "AlgDesign"    "combinat"    
-[133] "questionr"    "sp"           "spData"       "sf"           "deldir"       "boot"        
-[139] "LearnBayes"   "coda"         "expm"         "gmodels"      "gdata"        "shiny"       
-[145] "miniUI"       "rstudioapi"   "classInt"     "htmltools"    "labelled"     "DBI"         
-[151] "units"        "e1071"        "class"        "KernSmooth"   "gtools"       "haven"       
-[157] "httpuv"       "xtable"       "sourcetools"  "later"        "promises"     "fastmap"     
-[163] "forcats"      "Biobase"      "BiocGenerics" "Biostrings"   "multtest"     "S4Vectors"   
-[169] "IRanges"      "XVector"      "survival"     "stats4"       "zlibbioc"    
+<pre class="r-output"><code>  [1] "vegan"                 "metacoder"             "ggplot2"              
+  [4] "dplyr"                 "readr"                 "stringr"              
+  [7] "agricolae"             "ape"                   "phyloseq"             
+ [10] "permute"               "lattice"               "MASS"                 
+ [13] "cluster"               "mgcv"                  "graphics"             
+ [16] "grDevices"             "stats"                 "utils"                
+ [19] "grid"                  "methods"               "nlme"                 
+ [22] "Matrix"                "splines"               "igraph"               
+ [25] "taxize"                "seqinr"                "RCurl"                
+ [28] "lazyeval"              "magrittr"              "rlang"                
+ [31] "ggfittext"             "cowplot"               "GA"                   
+ [34] "Rcpp"                  "crayon"                "tibble"               
+ [37] "R6"                    "tools"                 "parallel"             
+ [40] "gtable"                "scales"                "ellipsis"             
+ [43] "generics"              "glue"                  "lifecycle"            
+ [46] "tidyselect"            "vctrs"                 "pillar"               
+ [49] "foreach"               "iterators"             "cli"                  
+ [52] "stringi"               "shades"                "digest"               
+ [55] "isoband"               "withr"                 "pkgconfig"            
+ [58] "bitops"                "clipr"                 "hms"                  
+ [61] "vroom"                 "ade4"                  "segmented"            
+ [64] "crul"                  "xml2"                  "jsonlite"             
+ [67] "zoo"                   "data.table"            "bold"                 
+ [70] "rredlist"              "rotl"                  "ritis"                
+ [73] "worrms"                "natserv"               "wikitaxa"             
+ [76] "phangorn"              "conditionz"            "fansi"                
+ [79] "pixmap"                "sp"                    "reshape"              
+ [82] "plyr"                  "uuid"                  "curl"                 
+ [85] "urltools"              "httpcode"              "mime"                 
+ [88] "codetools"             "fastmatch"             "quadprog"             
+ [91] "utf8"                  "solrium"               "assertthat"           
+ [94] "httr"                  "rentrez"               "rncl"                 
+ [97] "farver"                "labeling"              "munsell"              
+[100] "RColorBrewer"          "viridisLite"           "purrr"                
+[103] "bit64"                 "tzdb"                  "WikidataR"            
+[106] "bit"                   "openssl"               "colorspace"           
+[109] "XML"                   "progress"              "triebeard"            
+[112] "WikipediR"             "WikidataQueryServiceR" "Hmisc"                
+[115] "pbapply"               "survival"              "Formula"              
+[118] "latticeExtra"          "rpart"                 "nnet"                 
+[121] "foreign"               "gridExtra"             "htmlTable"            
+[124] "viridis"               "htmltools"             "base64enc"            
+[127] "askpass"               "prettyunits"           "ratelimitr"           
+[130] "rex"                   "sys"                   "knitr"                
+[133] "checkmate"             "htmlwidgets"           "rstudioapi"           
+[136] "png"                   "jpeg"                  "backports"            
+[139] "yaml"                  "evaluate"              "highr"                
+[142] "markdown"              "xfun"                  "klaR"                 
+[145] "AlgDesign"             "combinat"              "questionr"            
+[148] "shiny"                 "miniUI"                "styler"               
+[151] "classInt"              "labelled"              "e1071"                
+[154] "class"                 "KernSmooth"            "haven"                
+[157] "tidyr"                 "httpuv"                "xtable"               
+[160] "sourcetools"           "later"                 "promises"             
+[163] "fastmap"               "commonmark"            "bslib"                
+[166] "cachem"                "R.cache"               "rematch2"             
+[169] "rprojroot"             "sass"                  "jquerylib"            
+[172] "proxy"                 "forcats"               "R.methodsS3"          
+[175] "R.oo"                  "R.utils"               "fs"                   
+[178] "rappdirs"              "Biobase"               "BiocGenerics"         
+[181] "biomformat"            "Biostrings"            "multtest"             
+[184] "reshape2"              "rhdf5"                 "S4Vectors"            
+[187] "IRanges"               "XVector"               "stats4"               
+[190] "Rhdf5lib"              "zlibbioc"             
 </code></pre>
 <div id="windows" class="section level3">
 <h3>Windows</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw">setwd</span>(<span class="st">&#39;path/to/workshop/folder&#39;</span>) <span class="co"># If the workshop folder is an rstudio project, this is not needed</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="op">&gt;</span><span class="st"> </span>pkg_info &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="st">&#39;software/packages/package_info.csv&#39;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(pkg_info<span class="op">$</span>win_path, <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;win.binary&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">setwd</span>(<span class="st">&#39;path/to/workshop/folder&#39;</span>) <span class="co"># If the workshop folder is an rstudio project, this is not needed</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="op">&gt;</span><span class="st"> </span>pkg_info &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="st">&#39;software/packages/package_info.csv&#39;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(pkg_info<span class="op">$</span>win_path, <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;win.binary&quot;</span>)</span></code></pre></div>
 </div>
 <div id="macos-and-linux" class="section level3">
 <h3>macOS and Linux</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw">setwd</span>(<span class="st">&#39;path/to/workshop/folder&#39;</span>) <span class="co"># If the workshop folder is an rstudio project, this is not needed</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="op">&gt;</span><span class="st"> </span>pkg_info &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="st">&#39;software/packages/package_info.csv&#39;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(pkg_info<span class="op">$</span>source_path, <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">setwd</span>(<span class="st">&#39;path/to/workshop/folder&#39;</span>) <span class="co"># If the workshop folder is an rstudio project, this is not needed</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="op">&gt;</span><span class="st"> </span>pkg_info &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="st">&#39;software/packages/package_info.csv&#39;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(pkg_info<span class="op">$</span>source_path, <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</span></code></pre></div>
 </div>
 <div id="mac-osx-el-capitan" class="section level3">
 <h3>Mac OSX (El Capitan)</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw">setwd</span>(<span class="st">&#39;path/to/workshop/folder&#39;</span>) <span class="co"># If the workshop folder is an rstudio project, this is not needed</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="op">&gt;</span><span class="st"> </span>pkg_info &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="st">&#39;software/packages/package_info.csv&#39;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(pkg_info<span class="op">$</span>osx_path, <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;mac.binary.el-capitan&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">setwd</span>(<span class="st">&#39;path/to/workshop/folder&#39;</span>) <span class="co"># If the workshop folder is an rstudio project, this is not needed</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="op">&gt;</span><span class="st"> </span>pkg_info &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="st">&#39;software/packages/package_info.csv&#39;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(pkg_info<span class="op">$</span>osx_path, <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;mac.binary.el-capitan&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 
@@ -559,7 +608,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

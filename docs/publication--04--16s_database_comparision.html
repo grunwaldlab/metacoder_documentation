@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -19,7 +19,17 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,84 +41,117 @@
 
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
-<style type="text/css">code{white-space: pre;}</style>
+
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-pre, code { background-color: #f8f8f8; }
-code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code > span.dt { color: #204a87; } /* DataType */
-code > span.dv { color: #0000cf; } /* DecVal */
-code > span.bn { color: #0000cf; } /* BaseN */
-code > span.fl { color: #0000cf; } /* Float */
-code > span.ch { color: #4e9a06; } /* Char */
-code > span.st { color: #4e9a06; } /* String */
-code > span.co { color: #8f5902; font-style: italic; } /* Comment */
-code > span.ot { color: #8f5902; } /* Other */
-code > span.al { color: #ef2929; } /* Alert */
-code > span.fu { color: #000000; } /* Function */
-code > span.er { color: #a40000; font-weight: bold; } /* Error */
-code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #000000; } /* SpecialChar */
-code > span.vs { color: #4e9a06; } /* VerbatimString */
-code > span.ss { color: #4e9a06; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #000000; } /* Variable */
-code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code > span.ex { } /* Extension */
-code > span.at { color: #c4a000; } /* Attribute */
-code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
   }
 </style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
 
-
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -116,13 +159,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -133,44 +171,56 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 61px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 66px;
-  margin-top: -66px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 66px;
-  margin-top: -66px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 66px;
-  margin-top: -66px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 66px;
-  margin-top: -66px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 66px;
-  margin-top: -66px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 66px;
-  margin-top: -66px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -181,26 +231,93 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -333,7 +450,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -348,62 +465,62 @@ $(document).ready(function () {
 </div>
 <div id="analysis-inputoutput" class="section level2">
 <h2>Analysis input/output</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span>
-output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span>
-output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span>
-pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span>
-revision_n &lt;-<span class="st"> </span><span class="dv">1</span>
-result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {
-  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))
-}
-save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {
-  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))
-}</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>revision_n &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {</span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))</span>
+<span id="cb1-8"><a href="#cb1-8"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9"></a>save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {</span>
+<span id="cb1-10"><a href="#cb1-10"></a>  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))</span>
+<span id="cb1-11"><a href="#cb1-11"></a>}</span></code></pre></div>
 </div>
 <div id="run-individual-analyses" class="section level2">
 <h2>Run individual analyses</h2>
 <p>This analysis just compiles the results from the three seperate analyses corresponding to the three reference databases being compared: RDP <span class="citation">(Maidak et al. 2001)</span>, SILVA <span class="citation">(Quast et al. 2012)</span>, and Greengenes <span class="citation">(DeSantis et al. 2006)</span>. The code below will run those three analyses, but it is not needed if they have been already run independently and it is not run during the rendering of this page.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rmarkdown)
-<span class="kw">render</span>(<span class="dt">input =</span> <span class="st">&quot;publication--01--silva.Rmd&quot;</span>)
-<span class="kw">render</span>(<span class="dt">input =</span> <span class="st">&quot;publication--02--rdp.Rmd&quot;</span>)
-<span class="kw">render</span>(<span class="dt">input =</span> <span class="st">&quot;publication--03--greengenes.Rmd&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(rmarkdown)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">render</span>(<span class="dt">input =</span> <span class="st">&quot;publication--01--silva.Rmd&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">render</span>(<span class="dt">input =</span> <span class="st">&quot;publication--02--rdp.Rmd&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="kw">render</span>(<span class="dt">input =</span> <span class="st">&quot;publication--03--greengenes.Rmd&quot;</span>)</span></code></pre></div>
 </div>
 <div id="load-plots" class="section level2">
 <h2>Load plots</h2>
 <p>After the three analyses have been completed, I loaded their results.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="kw">file.path</span>(output_folder, <span class="st">&quot;silva_data.RData&quot;</span>))
-<span class="kw">load</span>(<span class="kw">file.path</span>(output_folder, <span class="st">&quot;rdp_data.RData&quot;</span>))
-<span class="kw">load</span>(<span class="kw">file.path</span>(output_folder, <span class="st">&quot;greengenes_data.RData&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">load</span>(<span class="kw">file.path</span>(output_folder, <span class="st">&quot;silva_data.RData&quot;</span>))</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">load</span>(<span class="kw">file.path</span>(output_folder, <span class="st">&quot;rdp_data.RData&quot;</span>))</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">load</span>(<span class="kw">file.path</span>(output_folder, <span class="st">&quot;greengenes_data.RData&quot;</span>))</span></code></pre></div>
 </div>
 <div id="combine-plots" class="section level2">
 <h2>Combine plots</h2>
 <p>I then combine plots from the three analyses into a single graph and save the result.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(gridExtra)
-<span class="kw">library</span>(grid)
-<span class="kw">library</span>(metacoder)
-combo_plot &lt;-<span class="st"> </span><span class="kw">grid.arrange</span>(<span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">nrow =</span> <span class="dv">3</span>,
-                           <span class="dt">top =</span> <span class="st">&quot;Whole database                                                           Not amplified        &quot;</span>,
-                           <span class="dt">left =</span> <span class="st">&quot;Greengenes                                                      RDP                                                              SILVA&quot;</span>,
-                           silva_plot_all, silva_plot_pcr_fail,
-                           rdp_plot_all, rdp_plot_pcr_fail,
-                           greengenes_plot_all, greengenes_plot_pcr_fail)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(gridExtra)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">library</span>(grid)</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">library</span>(metacoder)</span>
+<span id="cb4-4"><a href="#cb4-4"></a>combo_plot &lt;-<span class="st"> </span><span class="kw">grid.arrange</span>(<span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">nrow =</span> <span class="dv">3</span>,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>                           <span class="dt">top =</span> <span class="st">&quot;Whole database                                                           Not amplified        &quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6"></a>                           <span class="dt">left =</span> <span class="st">&quot;Greengenes                                                      RDP                                                              SILVA&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7"></a>                           silva_plot_all, silva_plot_pcr_fail,</span>
+<span id="cb4-8"><a href="#cb4-8"></a>                           rdp_plot_all, rdp_plot_pcr_fail,</span>
+<span id="cb4-9"><a href="#cb4-9"></a>                           greengenes_plot_all, greengenes_plot_pcr_fail)</span></code></pre></div>
 <p><img src="publication--04--16s_database_comparision_files/figure-html/combine-1.png" width="720" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">output_path &lt;-<span class="st"> </span><span class="kw">file.path</span>(output_folder, <span class="st">&quot;figure_2--16s_database_comparison.pdf&quot;</span>)
-ggplot2<span class="op">::</span><span class="kw">ggsave</span>(output_path, combo_plot, <span class="dt">width =</span> <span class="fl">7.5</span>, <span class="dt">height =</span> <span class="dv">10</span>)
-<span class="kw">file.copy</span>(output_path, <span class="st">&quot;publication/revision_1/figure_4.pdf&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>output_path &lt;-<span class="st"> </span><span class="kw">file.path</span>(output_folder, <span class="st">&quot;figure_2--16s_database_comparison.pdf&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>ggplot2<span class="op">::</span><span class="kw">ggsave</span>(output_path, combo_plot, <span class="dt">width =</span> <span class="fl">7.5</span>, <span class="dt">height =</span> <span class="dv">10</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="kw">file.copy</span>(output_path, <span class="st">&quot;publication/revision_1/figure_4.pdf&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## [1] FALSE
 </code></pre>
 </div>
 <div id="software-and-packages-used" class="section level2">
 <h2>Software and packages used</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
-<pre class="r-output"><code>## R version 3.4.4 (2018-03-15)
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre class="r-output"><code>## R version 4.0.3 (2020-10-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 16.04.4 LTS
+## Running under: Pop!_OS 20.04 LTS
 ## 
 ## Matrix products: default
-## BLAS: /usr/lib/libblas/libblas.so.3.6.0
-## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
@@ -415,33 +532,34 @@ ggplot2<span class="op">::</span><span class="kw">ggsave</span>(output_path, com
 ## [1] grid      stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] gridExtra_2.3        metacoder_0.2.1.9009 taxa_0.3.1           stringr_1.3.1       
-## [5] glossary_0.1.0       knitcitations_1.0.8  knitr_1.20          
+## [1] gridExtra_2.3        metacoder_0.3.5      stringr_1.4.0        glossary_0.1.0      
+## [5] knitcitations_1.0.12 knitr_1.33          
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.18     compiler_3.4.4   pillar_1.3.0     plyr_1.8.4       bindr_0.1.1     
-##  [6] tools_3.4.4      ggfittext_0.6.0  digest_0.6.15    gtable_0.2.0     lubridate_1.7.4 
-## [11] jsonlite_1.5     evaluate_0.11    tibble_1.4.2     pkgconfig_2.0.1  rlang_0.2.1     
-## [16] bibtex_0.4.2     cli_1.0.0        yaml_2.2.0       bindrcpp_0.2.2   RefManageR_1.2.0
-## [21] dplyr_0.7.6      httr_1.3.1       xml2_1.2.0       hms_0.4.2        rprojroot_1.3-2 
-## [26] tidyselect_0.2.4 glue_1.3.0       R6_2.2.2         fansi_0.2.3      rmarkdown_1.10  
-## [31] purrr_0.2.5      readr_1.1.1      ggplot2_3.0.0    magrittr_1.5     codetools_0.2-15
-## [36] scales_0.5.0     backports_1.1.2  htmltools_0.3.6  assertthat_0.2.0 colorspace_1.3-2
-## [41] labeling_0.3     utf8_1.1.4       stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0   
-## [46] crayon_1.3.4
+##  [1] tidyselect_1.1.1  xfun_0.24         bslib_0.2.5.1     purrr_0.3.4       colorspace_2.0-2 
+##  [6] vctrs_0.3.8       generics_0.1.0    htmltools_0.5.1.1 yaml_2.2.1        utf8_1.2.1       
+## [11] rlang_0.4.11      jquerylib_0.1.4   pillar_1.6.1      glue_1.4.2        DBI_1.1.1        
+## [16] lifecycle_1.0.0   plyr_1.8.6        ggfittext_0.9.1   munsell_0.5.0     gtable_0.3.0     
+## [21] codetools_0.2-16  evaluate_0.14     labeling_0.4.2    tzdb_0.1.2        fansi_0.5.0      
+## [26] highr_0.9         Rcpp_1.0.7        readr_2.0.0       scales_1.1.1      jsonlite_1.7.2   
+## [31] farver_2.1.0      ggplot2_3.3.5     hms_1.1.0         digest_0.6.27     stringi_1.7.3    
+## [36] dplyr_1.0.7       bibtex_0.4.2.3    cli_3.0.1         tools_4.0.3       magrittr_2.0.1   
+## [41] sass_0.4.0        tibble_3.1.3      RefManageR_1.3.0  crayon_1.4.1      pkgconfig_2.0.3  
+## [46] ellipsis_0.3.2    xml2_1.3.2        lubridate_1.7.10  assertthat_0.2.1  rmarkdown_2.9    
+## [51] httr_1.4.2        rstudioapi_0.13   R6_2.5.0          compiler_4.0.3
 </code></pre>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-desantis2006greengenes">
-<p>DeSantis, Todd Z, Philip Hugenholtz, Neils Larsen, Mark Rojas, Eoin L Brodie, Keith Keller, Thomas Huber, Daniel Dalevi, Ping Hu, and Gary L Andersen. 2006. “Greengenes, a Chimera-Checked 16s rRNA Gene Database and Workbench Compatible with Arb.” <em>Applied and Environmental Microbiology</em> 72 (7). Am Soc Microbiol: 5069–72.</p>
+<p>DeSantis, Todd Z, Philip Hugenholtz, Neils Larsen, Mark Rojas, Eoin L Brodie, Keith Keller, Thomas Huber, Daniel Dalevi, Ping Hu, and Gary L Andersen. 2006. “Greengenes, a Chimera-Checked 16S rRNA Gene Database and Workbench Compatible with Arb.” <em>Applied and Environmental Microbiology</em> 72 (7): 5069–72.</p>
 </div>
 <div id="ref-maidak2001rdp">
-<p>Maidak, Bonnie L, James R Cole, Timothy G Lilburn, Charles T Parker Jr, Paul R Saxman, Ryan J Farris, George M Garrity, Gary J Olsen, Thomas M Schmidt, and James M Tiedje. 2001. “The Rdp-Ii (Ribosomal Database Project).” <em>Nucleic Acids Research</em> 29 (1). Oxford Univ Press: 173–74.</p>
+<p>Maidak, Bonnie L, James R Cole, Timothy G Lilburn, Charles T Parker Jr, Paul R Saxman, Ryan J Farris, George M Garrity, Gary J Olsen, Thomas M Schmidt, and James M Tiedje. 2001. “The Rdp-Ii (Ribosomal Database Project).” <em>Nucleic Acids Research</em> 29 (1): 173–74.</p>
 </div>
 <div id="ref-quast2012silva">
-<p>Quast, Christian, Elmar Pruesse, Pelin Yilmaz, Jan Gerken, Timmy Schweer, Pablo Yarza, Jörg Peplies, and Frank Oliver Glöckner. 2012. “The Silva Ribosomal Rna Gene Database Project: Improved Data Processing and Web-Based Tools.” <em>Nucleic Acids Research</em>. Oxford Univ Press, gks1219.</p>
+<p>Quast, Christian, Elmar Pruesse, Pelin Yilmaz, Jan Gerken, Timmy Schweer, Pablo Yarza, Jörg Peplies, and Frank Oliver Glöckner. 2012. “The Silva Ribosomal Rna Gene Database Project: Improved Data Processing and Web-Based Tools.” <em>Nucleic Acids Research</em>, gks1219.</p>
 </div>
 </div>
 </div>
@@ -460,7 +578,7 @@ ggplot2<span class="op">::</span><span class="kw">ggsave</span>(output_path, com
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -468,6 +586,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -33,7 +33,7 @@ load("parsed_data.Rdata")
 
 ## Subsetting tabular data
 
-The `r gloss$add('function', shown = 'functions')` to subset taxonomic information in `taxmap` objects (the format our example data is in) provided by the `taxa` package are modeled after functions in the `dplyr` package for manipulating tabular data (@wickham2015dplyr).
+The `r gloss$add('function', shown = 'functions')` to subset taxonomic information in `taxmap` objects (the format our example data is in) provided by the `metacoder` package are modeled after functions in the `dplyr` package for manipulating tabular data (@wickham2015dplyr).
 These `dplyr` functions are alternatives to the standard R subsetting (e.g. `[`, `[[`, and `$`) designed to be be more intuitive and consistent.
 Since an understanding of these functions will help with the analogous (and more complicated) functions for taxonomic data, we will start by practicing these. 
 Fortunately, we have a tabular data set in need of some subsetting: our sample data.
@@ -68,7 +68,7 @@ For example, the following will not work:
 is_ecotype <- Experiment == "ecotypes"
 ```
 
-Most `dplyr` functions work this way and so do the analogous functions in `taxa` for manipulating taxonomic data.
+Most `dplyr` functions work this way and so do the analogous functions in `metacoder` for manipulating taxonomic data.
 If we have multiple filtering criteria, we can simply add more arguments to the functions. 
 In the following code, we subset the table to only rows for plants from one of three site and that are 3 years old.
 
@@ -103,7 +103,7 @@ Next we will subset the abundance data to just these samples to get the dataset 
 
 ## Subsetting a taxonomy
 
-The analog to `filter` for taxonomic data is `filter_taxa` from the `taxa` package.
+The analog to `filter` for taxonomic data is `filter_taxa` from the `metacoder` package.
 This works in a similar way, but has many more options for how taxonomic relationships are used and what is done with data associated with removed taxa.
 Lets take another look at our data object:
 
@@ -116,7 +116,7 @@ These are the ones that only had  `r gloss$add('Taxonomic ranks', shown = 'rank'
 Since these do not add any information, lets remove them.
 
 ```{r}
-library(taxa)
+library(metacoder)
 obj <- filter_taxa(obj, taxon_names != "")
 print(obj)
 ```

@@ -68,7 +68,7 @@ obj <- parse_tax_data(hmp_otus,
                       class_cols = "lineage", # the column that contains taxonomic information
                       class_sep = ";", # The character used to separate taxa in the classification
                       class_regex = "^(.+)__(.+)$", # Regex identifying where the data for each taxon is
-                      class_key = c(tax_rank = "info", # A key describing each regex capture group
+                      class_key = c(tax_rank = "taxon_rank", # A key describing each regex capture group
                                     tax_name = "taxon_name"))
 ```
 

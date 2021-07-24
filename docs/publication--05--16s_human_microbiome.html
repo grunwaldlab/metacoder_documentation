@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,45 +34,103 @@
 
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-pre, code { background-color: #f8f8f8; }
-code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code > span.dt { color: #204a87; } /* DataType */
-code > span.dv { color: #0000cf; } /* DecVal */
-code > span.bn { color: #0000cf; } /* BaseN */
-code > span.fl { color: #0000cf; } /* Float */
-code > span.ch { color: #4e9a06; } /* Char */
-code > span.st { color: #4e9a06; } /* String */
-code > span.co { color: #8f5902; font-style: italic; } /* Comment */
-code > span.ot { color: #8f5902; } /* Other */
-code > span.al { color: #ef2929; } /* Alert */
-code > span.fu { color: #000000; } /* Function */
-code > span.er { color: #a40000; font-weight: bold; } /* Error */
-code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #000000; } /* SpecialChar */
-code > span.vs { color: #4e9a06; } /* VerbatimString */
-code > span.ss { color: #4e9a06; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #000000; } /* Variable */
-code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code > span.ex { } /* Extension */
-code > span.at { color: #c4a000; } /* Attribute */
-code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -106,9 +167,7 @@ h6 {
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -122,7 +181,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -132,6 +190,9 @@ img {
 }
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -147,7 +208,6 @@ body {
   padding-top: 66px;
   margin-top: -66px;
 }
-
 .section h2 {
   padding-top: 66px;
   margin-top: -66px;
@@ -167,6 +227,43 @@ body {
 .section h6 {
   padding-top: 66px;
   margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -188,19 +285,74 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -350,121 +502,122 @@ $(document).ready(function () {
 <h2>Parameters</h2>
 <div id="analysis-inputoutput" class="section level3">
 <h3>Analysis input/output</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span>
-output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span>
-output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span>
-pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span>
-revision_n &lt;-<span class="st"> </span><span class="dv">1</span>
-result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {
-  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))
-}
-save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {
-  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))
-}</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>input_folder &lt;-<span class="st"> &quot;raw_input&quot;</span> <span class="co"># Where all the large input files are. Ignored by git. </span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>output_folder &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Where plots will be saved</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>output_format &lt;-<span class="st"> &quot;pdf&quot;</span> <span class="co"># The file format of saved plots</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>pub_fig_folder &lt;-<span class="st"> &quot;publication&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>revision_n &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>result_path &lt;-<span class="st"> </span><span class="cf">function</span>(name) {</span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="kw">file.path</span>(output_folder, <span class="kw">paste0</span>(name, <span class="st">&quot;.&quot;</span>, output_format))</span>
+<span id="cb1-8"><a href="#cb1-8"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9"></a>save_publication_fig &lt;-<span class="st"> </span><span class="cf">function</span>(name, figure_number) {</span>
+<span id="cb1-10"><a href="#cb1-10"></a>  <span class="kw">file.path</span>(<span class="kw">result_path</span>(name), <span class="kw">paste0</span>(<span class="st">&quot;revision_&quot;</span>, revision_n), <span class="kw">paste0</span>(<span class="st">&quot;figure_&quot;</span>, figure_number, <span class="st">&quot;--&quot;</span>, name, <span class="st">&quot;.&quot;</span>, output_format))</span>
+<span id="cb1-11"><a href="#cb1-11"></a>}</span></code></pre></div>
 </div>
 <div id="analysis-parameters" class="section level3">
 <h3>Analysis parameters</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">matrix_plot_depth &lt;-<span class="st"> </span><span class="dv">6</span> <span class="co"># The maximum number of ranks to display</span>
-color_interval &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>) <span class="co"># The range of values (log 2 ratio of median proportion) to display</span>
-min_read_count &lt;-<span class="st"> </span><span class="dv">100</span> <span class="co"># The minium number of reads needed for a taxon to be graphed</span>
-otu_file_url =<span class="st"> &quot;http://downloads.hmpdacc.org/data/HMQCP/otu_table_psn_v35.txt.gz&quot;</span>
-mapping_file_url =<span class="st"> &quot;http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.txt.bz2&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>matrix_plot_depth &lt;-<span class="st"> </span><span class="dv">6</span> <span class="co"># The maximum number of ranks to display</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>color_interval &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>) <span class="co"># The range of values (log 2 ratio of median proportion) to display</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>min_read_count &lt;-<span class="st"> </span><span class="dv">100</span> <span class="co"># The minium number of reads needed for a taxon to be graphed</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>otu_file_url =<span class="st"> &quot;http://downloads.hmpdacc.org/data/HMQCP/otu_table_psn_v35.txt.gz&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>mapping_file_url =<span class="st"> &quot;http://downloads.hmpdacc.org/data/HMQCP/v35_map_uniquebyPSN.txt.bz2&quot;</span></span></code></pre></div>
 </div>
 </div>
 <div id="downloading-the-data" class="section level2">
 <h2>Downloading the data</h2>
 <p>This analysis used OTU abundance data from the Human Microbiome Project (HMP) <span class="citation">(Consortium and others 2012)</span>, which used 16S metabarcoding to explore the bacterial microbiome of various human body parts. First we will download the files from the HMP website.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">download_file &lt;-<span class="st"> </span><span class="cf">function</span>(path) {
-  temp_file_path &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="kw">basename</span>(path))
-  utils<span class="op">::</span><span class="kw">download.file</span>(<span class="dt">url =</span> path, <span class="dt">destfile =</span> temp_file_path, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)
-  path &lt;-<span class="st"> </span>temp_file_path
-  <span class="kw">return</span>(path)
-}
-otu_file &lt;-<span class="st"> </span><span class="kw">download_file</span>(otu_file_url)
-mapping_file &lt;-<span class="st"> </span><span class="kw">download_file</span>(mapping_file_url)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>download_file &lt;-<span class="st"> </span><span class="cf">function</span>(path) {</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  temp_file_path &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="kw">basename</span>(path))</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  utils<span class="op">::</span><span class="kw">download.file</span>(<span class="dt">url =</span> path, <span class="dt">destfile =</span> temp_file_path, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  path &lt;-<span class="st"> </span>temp_file_path</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="kw">return</span>(path)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>}</span>
+<span id="cb3-7"><a href="#cb3-7"></a>otu_file &lt;-<span class="st"> </span><span class="kw">download_file</span>(otu_file_url)</span>
+<span id="cb3-8"><a href="#cb3-8"></a>mapping_file &lt;-<span class="st"> </span><span class="kw">download_file</span>(mapping_file_url)</span></code></pre></div>
 </div>
 <div id="parsing-the-data" class="section level2">
 <h2>Parsing the data</h2>
-<p>Then we will read these files into R and tidy up the data a bit. We will use the <code>readr</code> package to read these <code>gloss$add(&quot;Tab-delimited text file&quot;, shown = &quot;TSV&quot;)</code> files.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
-otu_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(otu_file, <span class="dt">skip =</span> <span class="dv">1</span>) <span class="co"># Skip the first line, which is a comment</span></code></pre></div>
-<pre><code>## Parsed with column specification:
+<p>Then we will read these files into R and tidy up the data a bit. We will use the <code>readr</code> package to read these <code>gloss$add("Tab-delimited text file", shown = "TSV")</code> files.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(readr)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>otu_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(otu_file, <span class="dt">skip =</span> <span class="dv">1</span>) <span class="co"># Skip the first line, which is a comment</span></span></code></pre></div>
+<pre><code>## 
+## [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────────────────────────[39m
 ## cols(
 ##   .default = col_double(),
-##   `#OTU ID` = col_character(),
-##   `Consensus Lineage` = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(otu_data)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;otu_id&quot;</span> <span class="co"># make column name more R friendly</span>
-<span class="kw">print</span>(otu_data)</code></pre></div>
+##   `#OTU ID` = [31mcol_character()[39m,
+##   `Consensus Lineage` = [31mcol_character()[39m
+## )
+## [36mℹ[39m Use [38;5;235m[48;5;253m[38;5;235m[48;5;253m`spec()`[48;5;253m[38;5;235m[49m[39m for the full column specifications.</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">colnames</span>(otu_data)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;otu_id&quot;</span> <span class="co"># make column name more R friendly</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">print</span>(otu_data)</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 45,383 x 4,790</span><span>
-##    otu_id       `700114607` `700114380` `700114716` `700114798` `700114710` `700114614` `700114755`
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> OTU_97.1              0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'> 2</span><span> OTU_97.10             0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'> 3</span><span> OTU_97.100            0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'> 4</span><span> OTU_97.1000           0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'> 5</span><span> OTU_97.10000          0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'> 6</span><span> OTU_97.10001          0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'> 7</span><span> OTU_97.10002          0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'> 8</span><span> OTU_97.10003          0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'> 9</span><span> OTU_97.10004          0.          0.          0.          0.          0.          0.          0.
-## </span><span style='color: #BCBCBC;'>10</span><span> OTU_97.10005          0.          1.          5.          0.          0.          0.          0.
-## </span><span style='color: #949494;'># ... with 45,373 more rows, and 4,782 more variables: `700114715` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114706` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   `700114613` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114803` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114714` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114482` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114439` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   `700114658` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114387` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114441` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
+##    otu_id `700114607` `700114380` `700114716` `700114798` `700114710` `700114614` `700114755`
+##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+## </span><span style='color: #BCBCBC;'> 1</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'> 2</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'> 3</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'> 4</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'> 5</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'> 6</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'> 7</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'> 8</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'> 9</span><span> OTU_9…           0           0           0           0           0           0           0
+## </span><span style='color: #BCBCBC;'>10</span><span> OTU_9…           0           1           5           0           0           0           0
+## </span><span style='color: #949494;'># … with 45,373 more rows, and 4,782 more variables: `700114715` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114706` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   `700114613` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114803` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114714` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114482` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114439` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   `700114658` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114387` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `700114441` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
 </span></code></pre>
-<p>The last column “Consensus Lineage” contains the <code>gloss$add(&quot;taxonomic classification&quot;)</code>, so we will use that to convert the rest of the data into a <code>taxmap</code> object using the <a href="https://github.com/ropensci/taxa">taxa package</a>. <code>Metacoder</code> imports the <code>taxa</code> package, so we can just load it to access <code>taxa</code>’s parsers.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(metacoder)</code></pre></div>
+<p>The last column “Consensus Lineage” contains the <code>gloss$add("taxonomic classification")</code>, so we will use that to convert the rest of the data into a <code>taxmap</code> object format.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">library</span>(metacoder)</span></code></pre></div>
 <p>Since this is tabular data with an embedded taxonomic classification, we use <code>parse_tax_data</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hmp_data &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(otu_data,
-                           <span class="dt">class_cols =</span> <span class="st">&quot;Consensus Lineage&quot;</span>,
-                           <span class="dt">class_regex =</span> <span class="st">&quot;([a-z]{0,1})_{0,2}(.*)$&quot;</span>,
-                           <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="dt">hmp_rank =</span> <span class="st">&quot;taxon_rank&quot;</span>, <span class="dt">hmp_tax =</span> <span class="st">&quot;taxon_name&quot;</span>),
-                           <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>)
-hmp_data<span class="op">$</span>data<span class="op">$</span>class_data &lt;-<span class="st"> </span><span class="ot">NULL</span> <span class="co"># Delete uneeded regex match table</span>
-<span class="kw">names</span>(hmp_data<span class="op">$</span>data) &lt;-<span class="st"> &quot;otu_count&quot;</span> <span class="co"># Rename abundnace matrix to something more understandable</span>
-<span class="kw">print</span>(hmp_data)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>hmp_data &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(otu_data,</span>
+<span id="cb8-2"><a href="#cb8-2"></a>                           <span class="dt">class_cols =</span> <span class="st">&quot;Consensus Lineage&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3"></a>                           <span class="dt">class_regex =</span> <span class="st">&quot;([a-z]{0,1})_{0,2}(.*)$&quot;</span>,</span>
+<span id="cb8-4"><a href="#cb8-4"></a>                           <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="dt">hmp_rank =</span> <span class="st">&quot;taxon_rank&quot;</span>, <span class="dt">hmp_tax =</span> <span class="st">&quot;taxon_name&quot;</span>),</span>
+<span id="cb8-5"><a href="#cb8-5"></a>                           <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>hmp_data<span class="op">$</span>data<span class="op">$</span>class_data &lt;-<span class="st"> </span><span class="ot">NULL</span> <span class="co"># Delete uneeded regex match table</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="kw">names</span>(hmp_data<span class="op">$</span>data) &lt;-<span class="st"> &quot;otu_count&quot;</span> <span class="co"># Rename abundnace matrix to something more understandable</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="kw">print</span>(hmp_data)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   985 taxa: <span style='color: #00BB00;'>aab</span><span>. Root, </span><span style='color: #00BB00;'>aac</span><span>. Firmicutes, </span><span style='color: #00BB00;'>aad</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>blw</span><span>. , </span><span style='color: #00BB00;'>blx</span><span>. Dichelobacter
 ##   985 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>akc</span><span>-&gt;</span><span style='color: #00BB00;'>blv</span><span>, </span><span style='color: #00BB00;'>aqr</span><span>-&gt;</span><span style='color: #00BB00;'>blw</span><span>, </span><span style='color: #00BB00;'>amv</span><span>-&gt;</span><span style='color: #00BB00;'>blx</span><span>
 ##   1 data sets:
 ##     </span><span style='font-weight: bold;'>otu_count</span><span>:
 ## </span><span style='font-style: italic;'>      # A tibble: 45,383 x 4,791</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id     `700114607` `700114380` `700114716` `700114798` `700114710`
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span><span>
-##       1 </span><span style='color: #00BB00;'>aqs</span><span>      OTU_97.1            0.          0.          0.          0.          0.
-##       2 </span><span style='color: #00BB00;'>aqt</span><span>      OTU_97.10           0.          0.          0.          0.          0.
-##       3 </span><span style='color: #00BB00;'>aqu</span><span>      OTU_97.100          0.          0.          0.          0.          0.
-##       # ... with 4.538e+04 more rows, and 4,784 more variables: `700114614` &lt;dbl&gt;,
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id `700114607` `700114380` `700114716` `700114798` `700114710`
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>aqs</span><span>      OTU_9…           0           0           0           0           0
+##       2 </span><span style='color: #00BB00;'>aqt</span><span>      OTU_9…           0           0           0           0           0
+##       3 </span><span style='color: #00BB00;'>aqu</span><span>      OTU_9…           0           0           0           0           0
+##       # … with 45,380 more rows, and 4,784 more variables: `700114614` &lt;dbl&gt;,
 ##       #   `700114755` &lt;dbl&gt;, `700114715` &lt;dbl&gt;, `700114706` &lt;dbl&gt;, `700114613` &lt;dbl&gt;,
 ##       #   `700114803` &lt;dbl&gt;, `700114714` &lt;dbl&gt;, `700114482` &lt;dbl&gt;, `700114439` &lt;dbl&gt;,
 ##       #   `700114658` &lt;dbl&gt;, …
 ##   0 functions:
 </span></code></pre>
 <p>I will save the information on sample characteristics (e.g. body site) in a seperate table, since it is not directly assocaited with taxonomic information.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sample_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(mapping_file,
-                        <span class="dt">col_types =</span> <span class="st">&quot;ccccccccc&quot;</span>) <span class="co"># Force all columns to be character</span>
-<span class="kw">colnames</span>(sample_data) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;sample_id&quot;</span>, <span class="st">&quot;rsid&quot;</span>, <span class="st">&quot;visit_no&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;run_center&quot;</span>,
-                           <span class="st">&quot;body_site&quot;</span>, <span class="st">&quot;mislabeled&quot;</span>, <span class="st">&quot;contaminated&quot;</span>, <span class="st">&quot;description&quot;</span>)
-<span class="kw">print</span>(sample_data)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>sample_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(mapping_file,</span>
+<span id="cb9-2"><a href="#cb9-2"></a>                        <span class="dt">col_types =</span> <span class="st">&quot;ccccccccc&quot;</span>) <span class="co"># Force all columns to be character</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="kw">colnames</span>(sample_data) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;sample_id&quot;</span>, <span class="st">&quot;rsid&quot;</span>, <span class="st">&quot;visit_no&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;run_center&quot;</span>,</span>
+<span id="cb9-4"><a href="#cb9-4"></a>                           <span class="st">&quot;body_site&quot;</span>, <span class="st">&quot;mislabeled&quot;</span>, <span class="st">&quot;contaminated&quot;</span>, <span class="st">&quot;description&quot;</span>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="kw">print</span>(sample_data)</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 4,857 x 9</span><span>
-##    sample_id rsid      visit_no sex    run_center body_site  mislabeled contaminated description   
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>         
-## </span><span style='color: #BCBCBC;'> 1</span><span> 700013549 158013734 1        female BCM        Stool      </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'> 2</span><span> 700014386 158398106 1        male   BCM,BI     Stool      </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'> 3</span><span> 700014403 158398106 1        male   BCM,BI     Saliva     </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'> 4</span><span> 700014409 158398106 1        male   BCM,BI     Tongue_do… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'> 5</span><span> 700014412 158398106 1        male   BCM,BI     Hard_pala… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'> 6</span><span> 700014415 158398106 1        male   BCM,BI     Buccal_mu… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'> 7</span><span> 700014418 158398106 1        male   BCM,BI     Attached_… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'> 8</span><span> 700014421 158398106 1        male   BCM,BI     Palatine_… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'> 9</span><span> 700014424 158398106 1        male   BCM,BI     Throat     </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #BCBCBC;'>10</span><span> 700014427 158398106 1        male   BCM,BI     Supraging… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_met…
-## </span><span style='color: #949494;'># ... with 4,847 more rows</span><span>
+##    sample_id rsid   visit_no sex   run_center body_site   mislabeled contaminated description       
+##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>             
+## </span><span style='color: #BCBCBC;'> 1</span><span> 700013549 15801… 1        fema… BCM        Stool       </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'> 2</span><span> 700014386 15839… 1        male  BCM,BI     Stool       </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'> 3</span><span> 700014403 15839… 1        male  BCM,BI     Saliva      </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'> 4</span><span> 700014409 15839… 1        male  BCM,BI     Tongue_dor… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'> 5</span><span> 700014412 15839… 1        male  BCM,BI     Hard_palate </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'> 6</span><span> 700014415 15839… 1        male  BCM,BI     Buccal_muc… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'> 7</span><span> 700014418 15839… 1        male  BCM,BI     Attached_K… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'> 8</span><span> 700014421 15839… 1        male  BCM,BI     Palatine_T… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'> 9</span><span> 700014424 15839… 1        male  BCM,BI     Throat      </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #BCBCBC;'>10</span><span> 700014427 15839… 1        male  BCM,BI     Supragingi… </span><span style='color: #BB0000;'>NA</span><span>         </span><span style='color: #BB0000;'>NA</span><span>           HMP_Human_metagen…
+## </span><span style='color: #949494;'># … with 4,847 more rows</span><span>
 </span></code></pre>
 <p>In this analysis, I will be looking at just a subset of the body sites, so I will subset the sample data to just those.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;dplyr&#39;</code></pre>
 <pre><code>## The following objects are masked from &#39;package:stats&#39;:
@@ -473,19 +626,19 @@ hmp_data<span class="op">$</span>data<span class="op">$</span>class_data &lt;-<s
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sites_to_compare &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Saliva&quot;</span>, <span class="st">&quot;Tongue_dorsum&quot;</span>, <span class="st">&quot;Buccal_mucosa&quot;</span>, <span class="st">&quot;Anterior_nares&quot;</span>, <span class="st">&quot;Stool&quot;</span>)
-sample_data &lt;-<span class="st"> </span><span class="kw">filter</span>(sample_data, body_site <span class="op">%in%</span><span class="st"> </span>sites_to_compare)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>sites_to_compare &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Saliva&quot;</span>, <span class="st">&quot;Tongue_dorsum&quot;</span>, <span class="st">&quot;Buccal_mucosa&quot;</span>, <span class="st">&quot;Anterior_nares&quot;</span>, <span class="st">&quot;Stool&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>sample_data &lt;-<span class="st"> </span><span class="kw">filter</span>(sample_data, body_site <span class="op">%in%</span><span class="st"> </span>sites_to_compare)</span></code></pre></div>
 <p>Not all the samples in the sample data table appear in the abundance matrix and there are some in the abundance matrix that dont appear in the sample data and they are in a different order. Making the two correspond will probably make things easier later on. First, lets identify which columns they both share:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sample_names &lt;-<span class="st"> </span><span class="kw">intersect</span>(<span class="kw">colnames</span>(hmp_data<span class="op">$</span>data<span class="op">$</span>otu_count), sample_data<span class="op">$</span>sample_id)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>sample_names &lt;-<span class="st"> </span><span class="kw">intersect</span>(<span class="kw">colnames</span>(hmp_data<span class="op">$</span>data<span class="op">$</span>otu_count), sample_data<span class="op">$</span>sample_id)</span></code></pre></div>
 <p>We can then use <code>match</code> to order and subset the sample data based on the shared samples.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sample_data &lt;-<span class="st"> </span>sample_data[<span class="kw">match</span>(sample_names, sample_data<span class="op">$</span>sample_id), ]</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>sample_data &lt;-<span class="st"> </span>sample_data[<span class="kw">match</span>(sample_names, sample_data<span class="op">$</span>sample_id), ]</span></code></pre></div>
 <p>We can also subset the columns in the abundance matrix to just these shared samples. We also need to preserve the first two columns, the otu and taxon IDs.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hmp_data<span class="op">$</span>data<span class="op">$</span>otu_count &lt;-<span class="st"> </span>hmp_data<span class="op">$</span>data<span class="op">$</span>otu_count[ , <span class="kw">c</span>(<span class="st">&quot;taxon_id&quot;</span>, <span class="st">&quot;otu_id&quot;</span>, sample_names)]</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>hmp_data<span class="op">$</span>data<span class="op">$</span>otu_count &lt;-<span class="st"> </span>hmp_data<span class="op">$</span>data<span class="op">$</span>otu_count[ , <span class="kw">c</span>(<span class="st">&quot;taxon_id&quot;</span>, <span class="st">&quot;otu_id&quot;</span>, sample_names)]</span></code></pre></div>
 </div>
 <div id="filtering-the-taxonomy" class="section level2">
 <h2>Filtering the taxonomy</h2>
 <p>Looking at the names of the taxa in the taxonomy, there are a lot of names that appear to be codes for uncharacterized taxa:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">taxon_names</span>(hmp_data), <span class="dt">n =</span> <span class="dv">20</span>)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">head</span>(<span class="kw">taxon_names</span>(hmp_data), <span class="dt">n =</span> <span class="dv">20</span>)</span></code></pre></div>
 <pre class="r-output"><code>##               aab               aac               aad               aae               aaf 
 ##            "Root"      "Firmicutes"  "Proteobacteria"   "Bacteroidetes"   "Cyanobacteria" 
 ##               aag               aah               aai               aaj               aak 
@@ -495,133 +648,133 @@ sample_data &lt;-<span class="st"> </span><span class="kw">filter</span>(sample_
 ##               aaq               aar               aas               aat               aau 
 ##           "WPS-2" "Verrucomicrobia"  "Planctomycetes"     "Nitrospirae"   "Lentisphaerae"
 </code></pre>
-<p>Those might be relevant depending on the research question, but for this analysis I choose to remove them, since they do not mean much to me (you might want to keep such taxa in your ananlysis). We can remove taxa from a <code>taxmap</code> object using the <code>filter_taxa</code> function from the <code>taxa</code> package. I will remove them by removing any taxon whose name is not composed of only letters.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hmp_data &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(hmp_data, <span class="kw">grepl</span>(taxon_names, <span class="dt">pattern =</span>  <span class="st">&quot;^[a-zA-Z]+$&quot;</span>))
-<span class="kw">print</span>(hmp_data)</code></pre></div>
+<p>Those might be relevant depending on the research question, but for this analysis I choose to remove them, since they do not mean much to me (you might want to keep such taxa in your ananlysis). We can remove taxa from a <code>taxmap</code> object using the <code>filter_taxa</code> function. I will remove them by removing any taxon whose name is not composed of only letters.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>hmp_data &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(hmp_data, <span class="kw">grepl</span>(taxon_names, <span class="dt">pattern =</span>  <span class="st">&quot;^[a-zA-Z]+$&quot;</span>))</span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">print</span>(hmp_data)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   703 taxa: <span style='color: #00BB00;'>aab</span><span>. Root, </span><span style='color: #00BB00;'>aac</span><span>. Firmicutes ... </span><span style='color: #00BB00;'>blv</span><span>. Planifilum, </span><span style='color: #00BB00;'>blx</span><span>. Dichelobacter
 ##   703 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aab</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>adj</span><span>-&gt;</span><span style='color: #00BB00;'>blt</span><span>, </span><span style='color: #00BB00;'>akc</span><span>-&gt;</span><span style='color: #00BB00;'>blv</span><span>, </span><span style='color: #00BB00;'>amv</span><span>-&gt;</span><span style='color: #00BB00;'>blx</span><span>
 ##   1 data sets:
 ##     </span><span style='font-weight: bold;'>otu_count</span><span>:
 ## </span><span style='font-style: italic;'>      # A tibble: 45,383 x 1,508</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id     `700114554` `700114707` `700114442` `700114328` `700114223`
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;            &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span><span>
-##       1 </span><span style='color: #00BB00;'>aqs</span><span>      OTU_97.1            0.          0.          0.          0.          0.
-##       2 </span><span style='color: #00BB00;'>aqt</span><span>      OTU_97.10           0.          0.          0.          0.          0.
-##       3 </span><span style='color: #00BB00;'>aqu</span><span>      OTU_97.100          0.          0.          0.          0.          0.
-##       # ... with 4.538e+04 more rows, and 1,501 more variables: `700111749` &lt;dbl&gt;,
+##        </span><span style='color: #00BB00;'> taxon_id </span><span>otu_id `700114554` `700114707` `700114442` `700114328` `700114223`
+## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span><span>
+##       1 </span><span style='color: #00BB00;'>aqs</span><span>      OTU_9…           0           0           0           0           0
+##       2 </span><span style='color: #00BB00;'>aqt</span><span>      OTU_9…           0           0           0           0           0
+##       3 </span><span style='color: #00BB00;'>aqu</span><span>      OTU_9…           0           0           0           0           0
+##       # … with 45,380 more rows, and 1,501 more variables: `700111749` &lt;dbl&gt;,
 ##       #   `700114709` &lt;dbl&gt;, `700108534` &lt;dbl&gt;, `700114005` &lt;dbl&gt;, `700114162` &lt;dbl&gt;,
 ##       #   `700108165` &lt;dbl&gt;, `700114330` &lt;dbl&gt;, `700105883` &lt;dbl&gt;, `700114750` &lt;dbl&gt;,
 ##       #   `700114386` &lt;dbl&gt;, …
 ##   0 functions:
 </span></code></pre>
-<p>Note that we have not removed any OTUs even though there were OTUs assigned to those taxa. Those OTUs were automatically reassigned to a <code>gloss$add(&quot;supertaxon&quot;)</code> that was not filtered out. This also removed taxa with no name (<code>&quot;&quot;</code>), since the <code>+</code> in the above regex means “one or more”.</p>
+<p>Note that we have not removed any OTUs even though there were OTUs assigned to those taxa. Those OTUs were automatically reassigned to a <code>gloss$add("supertaxon")</code> that was not filtered out. This also removed taxa with no name (<code>""</code>), since the <code>+</code> in the above regex means “one or more”.</p>
 </div>
 <div id="converting-counts-to-proportions" class="section level2">
 <h2>Converting counts to proportions</h2>
 <p>We can now convert these counts to proportions and a simple alternative to rarefaction using <code>calc_obs_props</code>. This accounts for uneven numbers of sequences for each sample.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hmp_data<span class="op">$</span>data<span class="op">$</span>otu_prop &lt;-<span class="st"> </span><span class="kw">calc_obs_props</span>(hmp_data,
-                                         <span class="dt">data =</span> <span class="st">&quot;otu_count&quot;</span>,
-                                         <span class="dt">cols =</span> sample_data<span class="op">$</span>sample_id)</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>hmp_data<span class="op">$</span>data<span class="op">$</span>otu_prop &lt;-<span class="st"> </span><span class="kw">calc_obs_props</span>(hmp_data,</span>
+<span id="cb20-2"><a href="#cb20-2"></a>                                         <span class="dt">data =</span> <span class="st">&quot;otu_count&quot;</span>,</span>
+<span id="cb20-3"><a href="#cb20-3"></a>                                         <span class="dt">cols =</span> sample_data<span class="op">$</span>sample_id)</span></code></pre></div>
 <pre><code>## Calculating proportions from counts for 1506 columns for 45383 observations.</code></pre>
 </div>
 <div id="calculating-abundance-per-taxon" class="section level2">
 <h2>Calculating abundance per taxon</h2>
 <p>The input data included read abundance for each sample-OTU combination, but we need the abundances associated with each taxon for graphing. There will usually be multiple OTUs assigned to the same taxon, especailly for corase taxonomic ranks (e.g. the root will have all OTU indexes), so the abundances at those indexes are are summed to provide the total abundance for each taxon using the <code>calc_taxon_abund</code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hmp_data<span class="op">$</span>data<span class="op">$</span>tax_prop &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(hmp_data, 
-                                           <span class="dt">data =</span> <span class="st">&quot;otu_prop&quot;</span>,
-                                           <span class="dt">cols =</span> sample_data<span class="op">$</span>sample_id)</code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>hmp_data<span class="op">$</span>data<span class="op">$</span>tax_prop &lt;-<span class="st"> </span><span class="kw">calc_taxon_abund</span>(hmp_data, </span>
+<span id="cb22-2"><a href="#cb22-2"></a>                                           <span class="dt">data =</span> <span class="st">&quot;otu_prop&quot;</span>,</span>
+<span id="cb22-3"><a href="#cb22-3"></a>                                           <span class="dt">cols =</span> sample_data<span class="op">$</span>sample_id)</span></code></pre></div>
 <pre><code>## Summing per-taxon counts from 1506 columns for 703 taxa</code></pre>
 </div>
 <div id="plot-of-everything" class="section level2">
 <h2>Plot of everything</h2>
 <p>To get an idea of how the data looks overall lets make a plot showing OTU and read abundance of all the data combined. I will exclude any taxon that has less than 100 reads.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
-plot_all &lt;-<span class="st"> </span>hmp_data <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_prop&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowMeans</span>(hmp_data<span class="op">$</span>data<span class="op">$</span>tax_prop[sample_data<span class="op">$</span>sample_id])) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.001</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">!=</span><span class="st"> &quot;&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Some taxonomic levels are not named</span>
-<span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_size =</span> n_obs,
-            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.06</span>),
-            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of OTUs&quot;</span>,
-            <span class="dt">node_color =</span> abundance,
-            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Mean proportion of reads&quot;</span>,
-            <span class="dt">node_label =</span> taxon_names,
-            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;hmp--all_data&quot;</span>))
-<span class="kw">print</span>(plot_all)</code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb24-2"><a href="#cb24-2"></a>plot_all &lt;-<span class="st"> </span>hmp_data <span class="op">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_prop&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowMeans</span>(hmp_data<span class="op">$</span>data<span class="op">$</span>tax_prop[sample_data<span class="op">$</span>sample_id])) <span class="op">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.001</span>) <span class="op">%&gt;%</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="st">  </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">!=</span><span class="st"> &quot;&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Some taxonomic levels are not named</span></span>
+<span id="cb24-6"><a href="#cb24-6"></a><span class="st">  </span><span class="kw">heat_tree</span>(<span class="dt">node_size =</span> n_obs,</span>
+<span id="cb24-7"><a href="#cb24-7"></a>            <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.06</span>),</span>
+<span id="cb24-8"><a href="#cb24-8"></a>            <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of OTUs&quot;</span>,</span>
+<span id="cb24-9"><a href="#cb24-9"></a>            <span class="dt">node_color =</span> abundance,</span>
+<span id="cb24-10"><a href="#cb24-10"></a>            <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Mean proportion of reads&quot;</span>,</span>
+<span id="cb24-11"><a href="#cb24-11"></a>            <span class="dt">node_label =</span> taxon_names,</span>
+<span id="cb24-12"><a href="#cb24-12"></a>            <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;hmp--all_data&quot;</span>))</span>
+<span id="cb24-13"><a href="#cb24-13"></a><span class="kw">print</span>(plot_all)</span></code></pre></div>
 <p><img src="publication--05--16s_human_microbiome_files/figure-html/hmp_plot_all-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>Here we can see that there are realtively few abundant taxa and many rare ones. However, we dont know anything about the species level diversity since the classifications go to genus only.</p>
 </div>
 <div id="comparing-taxon-abundance-amoung-treatments" class="section level2">
 <h2>Comparing taxon abundance amoung treatments</h2>
-<p>Assuming that differences in read depth correlates with differences in taxon abundance (a controversial assumption), we can compare taxon abundance amoung treatments using the <code>compare_groups</code> function. This function assumes you have multiple samples per treatment (i.e. group). It splits the counts up based on which group the samples came from and, for each row of the data (each taxon in this case), for each pair of groups (e.g. Nose vs Saliva samples), it applies a function to generate statistics summerizing the differences in abundance. You can create a custom function to return your own set of statistics, but the default is to do a <a href ="appendix--00--glossary.html#wilcoxon_rank_sum_test_anchor">Wilcoxon Rank Sum test</a> on the differences in median abundance for the samples. See <code>?compare_groups</code> for more details.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hmp_data<span class="op">$</span>data<span class="op">$</span>diff_table &lt;-<span class="st"> </span><span class="kw">compare_groups</span>(hmp_data,
-                                           <span class="dt">data =</span> <span class="st">&quot;tax_prop&quot;</span>,
-                                           <span class="dt">cols =</span> sample_data<span class="op">$</span>sample_id,
-                                           <span class="dt">groups =</span> sample_data<span class="op">$</span>body_site)</code></pre></div>
-<p>We just did <strong>a lot</strong> (7030) of independent statistical tests, which means we probably got many false positives if we consider p &lt; 0.05 to be significant. To fix this we need to do a <a href ="appendix--00--glossary.html#multiple_comparison_corrections_anchor">correction for multiple comparisions</a> to adjust the p-values. We will also set any differences that are not significant after the correction to <code>0</code>, so that they do not show up when plotting.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hmp_data &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(hmp_data, <span class="st">&quot;diff_table&quot;</span>,
-                       <span class="dt">wilcox_p_value =</span> <span class="kw">p.adjust</span>(wilcox_p_value, <span class="dt">method =</span> <span class="st">&quot;fdr&quot;</span>),
-                       <span class="dt">log2_median_ratio =</span> <span class="kw">ifelse</span>(wilcox_p_value <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span> <span class="op">|</span><span class="st"> </span><span class="kw">is.na</span>(wilcox_p_value), log2_median_ratio, <span class="dv">0</span>))</code></pre></div>
+<p>Assuming that differences in read depth correlates with differences in taxon abundance (a controversial assumption), we can compare taxon abundance amoung treatments using the <code>compare_groups</code> function. This function assumes you have multiple samples per treatment (i.e. group). It splits the counts up based on which group the samples came from and, for each row of the data (each taxon in this case), for each pair of groups (e.g. Nose vs Saliva samples), it applies a function to generate statistics summerizing the differences in abundance. You can create a custom function to return your own set of statistics, but the default is to do a <b><a href ="appendix--00--glossary.html#wilcoxon_rank_sum_test_anchor">Wilcoxon Rank Sum test</a></b> on the differences in median abundance for the samples. See <code>?compare_groups</code> for more details.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>hmp_data<span class="op">$</span>data<span class="op">$</span>diff_table &lt;-<span class="st"> </span><span class="kw">compare_groups</span>(hmp_data,</span>
+<span id="cb25-2"><a href="#cb25-2"></a>                                           <span class="dt">data =</span> <span class="st">&quot;tax_prop&quot;</span>,</span>
+<span id="cb25-3"><a href="#cb25-3"></a>                                           <span class="dt">cols =</span> sample_data<span class="op">$</span>sample_id,</span>
+<span id="cb25-4"><a href="#cb25-4"></a>                                           <span class="dt">groups =</span> sample_data<span class="op">$</span>body_site)</span></code></pre></div>
+<p>We just did <strong>a lot</strong> (7030) of independent statistical tests, which means we probably got many false positives if we consider p &lt; 0.05 to be significant. To fix this we need to do a <b><a href ="appendix--00--glossary.html#multiple_comparison_corrections_anchor">correction for multiple comparisions</a></b> to adjust the p-values. We will also set any differences that are not significant after the correction to <code>0</code>, so that they do not show up when plotting.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>hmp_data &lt;-<span class="st"> </span><span class="kw">mutate_obs</span>(hmp_data, <span class="st">&quot;diff_table&quot;</span>,</span>
+<span id="cb26-2"><a href="#cb26-2"></a>                       <span class="dt">wilcox_p_value =</span> <span class="kw">p.adjust</span>(wilcox_p_value, <span class="dt">method =</span> <span class="st">&quot;fdr&quot;</span>),</span>
+<span id="cb26-3"><a href="#cb26-3"></a>                       <span class="dt">log2_median_ratio =</span> <span class="kw">ifelse</span>(wilcox_p_value <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span> <span class="op">|</span><span class="st"> </span><span class="kw">is.na</span>(wilcox_p_value), log2_median_ratio, <span class="dv">0</span>))</span></code></pre></div>
 <p>Now we can make a what we call a “differential heat tree matrix”, to plot the results of these tests.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hmp_data <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_prop&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowMeans</span>(hmp_data<span class="op">$</span>data<span class="op">$</span>tax_prop[sample_data<span class="op">$</span>sample_id])) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.001</span>, <span class="dt">reassign_obs =</span> <span class="kw">c</span>(<span class="dt">diff_table =</span> <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">heat_tree_matrix</span>(<span class="dt">data =</span> <span class="st">&quot;diff_table&quot;</span>,
-                   <span class="dt">node_size =</span> n_obs,
-                   <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>),
-                   <span class="dt">node_label =</span> taxon_names,
-                   <span class="dt">node_color =</span> log2_median_ratio,
-                   <span class="dt">node_color_range =</span> <span class="kw">diverging_palette</span>(),
-                   <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
-                   <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">7</span>, <span class="dv">7</span>),
-                   <span class="dt">edge_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">7</span>, <span class="dv">7</span>),
-                   <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of OTUs&quot;</span>,
-                   <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Log2 ratio median proportions&quot;</span>,
-                   <span class="co"># initial_layout = &quot;re&quot;,</span>
-                   <span class="co"># layout = &quot;da&quot;,</span>
-                   <span class="dt">key_size =</span> <span class="fl">0.7</span>,
-                   <span class="dt">seed =</span> <span class="dv">4</span>,
-                   <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;figure_3--hmp_matrix_plot&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>hmp_data <span class="op">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_prop&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowMeans</span>(hmp_data<span class="op">$</span>data<span class="op">$</span>tax_prop[sample_data<span class="op">$</span>sample_id])) <span class="op">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.001</span>, <span class="dt">reassign_obs =</span> <span class="kw">c</span>(<span class="dt">diff_table =</span> <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  </span><span class="kw">heat_tree_matrix</span>(<span class="dt">data =</span> <span class="st">&quot;diff_table&quot;</span>,</span>
+<span id="cb27-5"><a href="#cb27-5"></a>                   <span class="dt">node_size =</span> n_obs,</span>
+<span id="cb27-6"><a href="#cb27-6"></a>                   <span class="dt">node_size_range =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>),</span>
+<span id="cb27-7"><a href="#cb27-7"></a>                   <span class="dt">node_label =</span> taxon_names,</span>
+<span id="cb27-8"><a href="#cb27-8"></a>                   <span class="dt">node_color =</span> log2_median_ratio,</span>
+<span id="cb27-9"><a href="#cb27-9"></a>                   <span class="dt">node_color_range =</span> <span class="kw">diverging_palette</span>(),</span>
+<span id="cb27-10"><a href="#cb27-10"></a>                   <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,</span>
+<span id="cb27-11"><a href="#cb27-11"></a>                   <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">7</span>, <span class="dv">7</span>),</span>
+<span id="cb27-12"><a href="#cb27-12"></a>                   <span class="dt">edge_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">7</span>, <span class="dv">7</span>),</span>
+<span id="cb27-13"><a href="#cb27-13"></a>                   <span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of OTUs&quot;</span>,</span>
+<span id="cb27-14"><a href="#cb27-14"></a>                   <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Log2 ratio median proportions&quot;</span>,</span>
+<span id="cb27-15"><a href="#cb27-15"></a>                   <span class="co"># initial_layout = &quot;re&quot;,</span></span>
+<span id="cb27-16"><a href="#cb27-16"></a>                   <span class="co"># layout = &quot;da&quot;,</span></span>
+<span id="cb27-17"><a href="#cb27-17"></a>                   <span class="dt">key_size =</span> <span class="fl">0.7</span>,</span>
+<span id="cb27-18"><a href="#cb27-18"></a>                   <span class="dt">seed =</span> <span class="dv">4</span>,</span>
+<span id="cb27-19"><a href="#cb27-19"></a>                   <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="st">&quot;figure_3--hmp_matrix_plot&quot;</span>))</span></code></pre></div>
 <p><img src="publication--05--16s_human_microbiome_files/figure-html/unnamed-chunk-10-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="plot-body-site-differences" class="section level2">
 <h2>Plot body site differences</h2>
 <p>The HMP dataset is great for comparing treatments since there are many body sites with many replicates so statistical tests can be used to find correlations between body sites and taxon read abundance (the relationship between read abundance and organism abundance is more fuzzy and open to debate). The code below applies the Wilcox rank-sum test to differences in median read proportion between every pair of body sties compared. Since the data is compositional in nature (i.e. not idependent samples) we used a non-parametric test and used median instead of mean read proportion.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_body_site_diff &lt;-<span class="st"> </span><span class="cf">function</span>(site_<span class="dv">1</span>, site_<span class="dv">2</span>, output_name, <span class="dt">seed =</span> <span class="dv">1</span>) {
-  <span class="kw">set.seed</span>(seed)
-  hmp_data <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_prop&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowMeans</span>(hmp_data<span class="op">$</span>data<span class="op">$</span>tax_prop[sample_data<span class="op">$</span>sample_id])) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.001</span>, <span class="dt">reassign_obs =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">!=</span><span class="st"> &quot;&quot;</span>, <span class="dt">reassign_obs =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Some taxonomic levels are not named</span>
-<span class="st">    </span><span class="kw">filter_obs</span>(<span class="st">&quot;diff_table&quot;</span>, treatment_<span class="dv">1</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(site_<span class="dv">1</span>, site_<span class="dv">2</span>), treatment_<span class="dv">2</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(site_<span class="dv">1</span>, site_<span class="dv">2</span>)) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">heat_tree</span>(<span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of OTUs&quot;</span>,
-              <span class="dt">node_size =</span> n_obs,
-              <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Log 2 ratio of median proportions&quot;</span>,
-              <span class="dt">node_color =</span> log2_median_ratio,
-              <span class="dt">node_color_range =</span> <span class="kw">diverging_palette</span>(),
-              <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,
-              <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>),
-              <span class="dt">edge_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>),
-              <span class="dt">node_label =</span> taxon_names,
-              <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="kw">paste0</span>(output_name, <span class="st">&quot;--&quot;</span>, site_<span class="dv">1</span>, <span class="st">&quot;_vs_&quot;</span>, site_<span class="dv">2</span>)))
-}</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_body_site_diff</span>(<span class="st">&quot;Saliva&quot;</span>, <span class="st">&quot;Anterior_nares&quot;</span>, <span class="st">&quot;hmp--v35&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>plot_body_site_diff &lt;-<span class="st"> </span><span class="cf">function</span>(site_<span class="dv">1</span>, site_<span class="dv">2</span>, output_name, <span class="dt">seed =</span> <span class="dv">1</span>) {</span>
+<span id="cb28-2"><a href="#cb28-2"></a>  <span class="kw">set.seed</span>(seed)</span>
+<span id="cb28-3"><a href="#cb28-3"></a>  hmp_data <span class="op">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4"></a><span class="st">    </span><span class="kw">mutate_obs</span>(<span class="st">&quot;tax_prop&quot;</span>, <span class="dt">abundance =</span> <span class="kw">rowMeans</span>(hmp_data<span class="op">$</span>data<span class="op">$</span>tax_prop[sample_data<span class="op">$</span>sample_id])) <span class="op">%&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5"></a><span class="st">    </span><span class="kw">filter_taxa</span>(abundance <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.001</span>, <span class="dt">reassign_obs =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb28-6"><a href="#cb28-6"></a><span class="st">    </span><span class="kw">filter_taxa</span>(taxon_names <span class="op">!=</span><span class="st"> &quot;&quot;</span>, <span class="dt">reassign_obs =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Some taxonomic levels are not named</span></span>
+<span id="cb28-7"><a href="#cb28-7"></a><span class="st">    </span><span class="kw">filter_obs</span>(<span class="st">&quot;diff_table&quot;</span>, treatment_<span class="dv">1</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(site_<span class="dv">1</span>, site_<span class="dv">2</span>), treatment_<span class="dv">2</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(site_<span class="dv">1</span>, site_<span class="dv">2</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb28-8"><a href="#cb28-8"></a><span class="st">    </span><span class="kw">heat_tree</span>(<span class="dt">node_size_axis_label =</span> <span class="st">&quot;Number of OTUs&quot;</span>,</span>
+<span id="cb28-9"><a href="#cb28-9"></a>              <span class="dt">node_size =</span> n_obs,</span>
+<span id="cb28-10"><a href="#cb28-10"></a>              <span class="dt">node_color_axis_label =</span> <span class="st">&quot;Log 2 ratio of median proportions&quot;</span>,</span>
+<span id="cb28-11"><a href="#cb28-11"></a>              <span class="dt">node_color =</span> log2_median_ratio,</span>
+<span id="cb28-12"><a href="#cb28-12"></a>              <span class="dt">node_color_range =</span> <span class="kw">diverging_palette</span>(),</span>
+<span id="cb28-13"><a href="#cb28-13"></a>              <span class="dt">node_color_trans =</span> <span class="st">&quot;linear&quot;</span>,</span>
+<span id="cb28-14"><a href="#cb28-14"></a>              <span class="dt">node_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>),</span>
+<span id="cb28-15"><a href="#cb28-15"></a>              <span class="dt">edge_color_interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>),</span>
+<span id="cb28-16"><a href="#cb28-16"></a>              <span class="dt">node_label =</span> taxon_names,</span>
+<span id="cb28-17"><a href="#cb28-17"></a>              <span class="dt">output_file =</span> <span class="kw">result_path</span>(<span class="kw">paste0</span>(output_name, <span class="st">&quot;--&quot;</span>, site_<span class="dv">1</span>, <span class="st">&quot;_vs_&quot;</span>, site_<span class="dv">2</span>)))</span>
+<span id="cb28-18"><a href="#cb28-18"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">plot_body_site_diff</span>(<span class="st">&quot;Saliva&quot;</span>, <span class="st">&quot;Anterior_nares&quot;</span>, <span class="st">&quot;hmp--v35&quot;</span>)</span></code></pre></div>
 <p><img src="publication--05--16s_human_microbiome_files/figure-html/hmp_diff_plot-1.png" width="960" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_body_site_diff</span>(<span class="st">&quot;Buccal_mucosa&quot;</span>, <span class="st">&quot;Anterior_nares&quot;</span>, <span class="st">&quot;hmp--v35&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">plot_body_site_diff</span>(<span class="st">&quot;Buccal_mucosa&quot;</span>, <span class="st">&quot;Anterior_nares&quot;</span>, <span class="st">&quot;hmp--v35&quot;</span>)</span></code></pre></div>
 <p><img src="publication--05--16s_human_microbiome_files/figure-html/hmp_diff_plot-2.png" width="960" style="display: block; margin: auto;" /></p>
 <p>We call these types of graphs <strong>differential heat trees</strong> and they are great for comparing any type of data associated with two samples or treatments.</p>
 </div>
 <div id="software-and-packages-used" class="section level2">
 <h2>Software and packages used</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
-<pre class="r-output"><code>## R version 3.4.4 (2018-03-15)
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<pre class="r-output"><code>## R version 4.0.3 (2020-10-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 16.04.4 LTS
+## Running under: Pop!_OS 20.04 LTS
 ## 
 ## Matrix products: default
-## BLAS: /usr/lib/libblas/libblas.so.3.6.0
-## LAPACK: /usr/lib/lapack/liblapack.so.3.6.0
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
@@ -633,28 +786,28 @@ plot_all &lt;-<span class="st"> </span>hmp_data <span class="op">%&gt;%</span>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] bindrcpp_0.2.2      dplyr_0.7.8         metacoder_0.3.0.1   taxa_0.3.1         
-## [5] stringr_1.3.1       glossary_0.1.0      knitcitations_1.0.8 knitr_1.20         
+## [1] dplyr_1.0.2          readr_1.4.0          metacoder_0.3.5      stringr_1.4.0       
+## [5] glossary_0.1.0       knitcitations_1.0.12 knitr_1.30          
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.0       GA_3.1.1         compiler_3.4.4   pillar_1.3.0     plyr_1.8.4      
-##  [6] bindr_0.1.1      iterators_1.0.10 tools_3.4.4      ggfittext_0.6.0  digest_0.6.18   
-## [11] gtable_0.2.0     lubridate_1.7.4  jsonlite_1.5     evaluate_0.12    tibble_1.4.2    
-## [16] pkgconfig_2.0.2  rlang_0.3.0.1    foreach_1.4.4    igraph_1.2.2     bibtex_0.4.2    
-## [21] cli_1.0.1        yaml_2.2.0       RefManageR_1.2.0 httr_1.3.1       xml2_1.2.0      
-## [26] hms_0.4.2        cowplot_0.9.3    grid_3.4.4       rprojroot_1.3-2  tidyselect_0.2.5
-## [31] glue_1.3.0       R6_2.3.0         fansi_0.4.0      rmarkdown_1.10   reshape2_1.4.3  
-## [36] purrr_0.2.5      readr_1.1.1      ggplot2_3.1.0    magrittr_1.5     codetools_0.2-15
-## [41] scales_1.0.0     backports_1.1.2  htmltools_0.3.6  assertthat_0.2.0 colorspace_1.3-2
-## [46] labeling_0.3     utf8_1.1.4       stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0   
-## [51] crayon_1.3.4
+##  [1] Rcpp_1.0.5        GA_3.2            compiler_4.0.3    pillar_1.4.6      plyr_1.8.6       
+##  [6] iterators_1.0.13  tools_4.0.3       ggfittext_0.9.0   digest_0.6.27     gtable_0.3.0     
+## [11] lubridate_1.7.9   jsonlite_1.7.1    evaluate_0.14     lifecycle_0.2.0   tibble_3.0.4     
+## [16] pkgconfig_2.0.3   rlang_0.4.10      foreach_1.5.1     igraph_1.2.6      bibtex_0.4.2.3   
+## [21] cli_2.1.0         rstudioapi_0.11   yaml_2.2.1        xfun_0.19         RefManageR_1.2.12
+## [26] httr_1.4.2        xml2_1.3.2        generics_0.1.0    vctrs_0.3.4       hms_0.5.3        
+## [31] cowplot_1.1.0     grid_4.0.3        tidyselect_1.1.0  glue_1.4.2        R6_2.5.0         
+## [36] fansi_0.4.1       rmarkdown_2.5     farver_2.0.3      ggplot2_3.3.2     purrr_0.3.4      
+## [41] magrittr_2.0.1    scales_1.1.1      codetools_0.2-16  htmltools_0.5.1.1 ellipsis_0.3.1   
+## [46] assertthat_0.2.1  colorspace_1.4-1  labeling_0.4.2    utf8_1.1.4        stringi_1.5.3    
+## [51] munsell_0.5.0     lazyeval_0.2.2    crayon_1.3.4
 </code></pre>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-human2012structure">
-<p>Consortium, Human Microbiome Project, and others. 2012. “Structure, Function and Diversity of the Healthy Human Microbiome.” <em>Nature</em> 486 (7402). Nature Research: 207–14.</p>
+<p>Consortium, Human Microbiome Project, and others. 2012. “Structure, Function and Diversity of the Healthy Human Microbiome.” <em>Nature</em> 486 (7402): 207–14.</p>
 </div>
 </div>
 </div>
@@ -673,7 +826,7 @@ plot_all &lt;-<span class="st"> </span>hmp_data <span class="op">%&gt;%</span>
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -681,6 +834,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

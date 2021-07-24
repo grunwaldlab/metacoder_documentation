@@ -12,9 +12,9 @@ library(DT)
 # Reading data into the `taxmap` format
 
 Getting your data into the proper format one of the more tedious and annoying tasks in bioinformatics.
-The `taxa` package supplies generic parsers that can read almost any format of taxonomic data, but they often require some understanding of regular expressions.
+The `metacoder` package supplies generic parsers that can read almost any format of taxonomic data, but they often require some understanding of regular expressions.
 The `metacoder` package has easier-to-use functions to parse common formats, but there might not be a function for your particular formats.
-This page shows examples for how to parse specific formats, using either the dedicated `metacoder` functions or the more general `taxa` functions.
+This page shows examples for how to parse specific formats, using either the dedicated `metacoder` functions or the more general `metacoder` functions.
 
 
 ## Dada2

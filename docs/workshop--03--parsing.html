@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,12 +34,21 @@
 
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -46,14 +58,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -62,9 +76,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  { background-color: #f8f8f8; }
+  {  background-color: #f8f8f8; }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -493,10 +507,10 @@ $(document).ready(function () {
 <p><img src="images/boechera_stricta.jpg" width="375" style="display: block; margin: auto;" /></p>
 <p><span class="citation">Wagner et al. (2016)</span> released their raw data with the article and it is available <a href="http://datadryad.org/resource/doi:10.5061/dryad.g60r3">here</a> on <a href="http://datadryad.org/">dryad</a>. This is a great example of how to share your raw data!</p>
 <p>There are many <b><a href ="appendix--00--glossary.html#function_anchor">functions</a></b> commonly used to read tabular data, including the <b><a href ="appendix--00--glossary.html#base_r_anchor">base R</a></b> ones like <code>read.table</code> and <code>read.csv</code>, but we will be using functions from the new <a href="http://readr.tidyverse.org/articles/readr.html"><code>readr</code> package</a>, which returns <b><a href ="appendix--00--glossary.html#tibble_anchor">tibbles</a></b> instead of <code>data.frame</code>s (A “table” in R).</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(readr) <span class="co"># Loads the readr package so we can use `read_tsv`</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(readr) <span class="co"># Loads the readr package so we can use `read_tsv`</span></span></code></pre></div>
 <p>Tibbles are a type of <code>data.frame</code> with some fancier printing and more consistent behavior. Click <a href="otuTable97.txt.bz2" download="otuTable97.txt.bz2">here</a> to download the OTU table. Lets read in the raw OTU table first:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">otu_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;otuTable97.txt.bz2&quot;</span>) <span class="co"># You might need to change the path to the file</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">print</span>(otu_data) <span class="co"># You can also enter just `otu_data` to print it</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>otu_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;otuTable97.txt.bz2&quot;</span>) <span class="co"># You might need to change the path to the file</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">print</span>(otu_data) <span class="co"># You can also enter just `otu_data` to print it</span></span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 1,699</span><span>
 ##    OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38 M1551P90 M1551P71
 ##     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -510,14 +524,14 @@ $(document).ready(function () {
 ## </span><span style='color: #BCBCBC;'> 8</span><span>      8        840     </span><span style='text-decoration: underline;'>7</span><span>079     </span><span style='text-decoration: underline;'>3</span><span>760       22        0     </span><span style='text-decoration: underline;'>2</span><span>699       22     </span><span style='text-decoration: underline;'>2</span><span>870       32
 ## </span><span style='color: #BCBCBC;'> 9</span><span>      9         40       82       91      881        1      449     </span><span style='text-decoration: underline;'>1</span><span>121       90     </span><span style='text-decoration: underline;'>2</span><span>283
 ## </span><span style='color: #BCBCBC;'>10</span><span>     10         11       79      277     </span><span style='text-decoration: underline;'>2</span><span>879        1        0     </span><span style='text-decoration: underline;'>6</span><span>811       14      243
-## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,689 more variables: M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P88 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
+## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,689 more variables: M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P88 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
 </span></code></pre>
 <p>This is a big data set, with 47,806 rows (OTUs) and 1,699 columns (1,698 samples and an OTU ID). If your computer cannot load this file, don’t worry, we will provide a subset later for the rest of the workshop.</p>
 <p>In this data set, the taxonomic classifications for the OTUs are in a different file. This information could have been included as additional columns in the OTU table and often is in other data sets. Click <a href="taxAssignments97.txt" download="taxAssignments97.txt">here</a> to download the taxonomic classifications table.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">tax_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;taxAssignments97.txt&quot;</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">print</span>(tax_data) <span class="co"># You can also enter `tax_data` to print it</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>tax_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;taxAssignments97.txt&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">print</span>(tax_data) <span class="co"># You can also enter `tax_data` to print it</span></span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 8</span><span>
 ##    `OTU ID`  taxonomy                        Kingdom  Phylum  Class    Order    Family    Confidence
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -533,10 +547,10 @@ $(document).ready(function () {
 ## </span><span style='color: #BCBCBC;'>10</span><span> OTU_10005 Root;k__Bacteria;p__Cyanobacte… Bacteria Cyanob… 4C0d-2   MLE1-12  </span><span style='color: #BB0000;'>NA</span><span>              1   
 ## </span><span style='color: #949494;'># … with 47,796 more rows</span><span>
 </span></code></pre>
-<p>Although these data are very well-formatted compared to most, there are still a few issues. The “OTU ID” column contains a space in the name (hence the back ticks), which makes it a bit more annoying to work with in R. More importantly, the OTU IDs in the taxonomy table are prefixed with “OTU_” and those in the OTU table are not, so we have to remove that prefix to make the two match up. The functions <code>sub</code> and <code>gsub</code> are used to search and replace parts of text; <code>sub</code> replaces only the first match and <code>gsub</code> replaces all matches. Replacing with nothing (<code>&quot;&quot;</code>) effectively searches and deletes.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span> &lt;-<span class="st"> </span><span class="kw">sub</span>(tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span>, <span class="co"># ` are needed because of the space</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">                         <span class="dt">pattern =</span> <span class="st">&quot;OTU_&quot;</span>, <span class="dt">replacement =</span> <span class="st">&quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">print</span>(tax_data) </a></code></pre></div>
+<p>Although these data are very well-formatted compared to most, there are still a few issues. The “OTU ID” column contains a space in the name (hence the back ticks), which makes it a bit more annoying to work with in R. More importantly, the OTU IDs in the taxonomy table are prefixed with “OTU_” and those in the OTU table are not, so we have to remove that prefix to make the two match up. The functions <code>sub</code> and <code>gsub</code> are used to search and replace parts of text; <code>sub</code> replaces only the first match and <code>gsub</code> replaces all matches. Replacing with nothing (<code>""</code>) effectively searches and deletes.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span> &lt;-<span class="st"> </span><span class="kw">sub</span>(tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span>, <span class="co"># ` are needed because of the space</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>                         <span class="dt">pattern =</span> <span class="st">&quot;OTU_&quot;</span>, <span class="dt">replacement =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">print</span>(tax_data) </span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 8</span><span>
 ##    `OTU ID` taxonomy                        Kingdom  Phylum   Class    Order    Family    Confidence
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -553,12 +567,12 @@ $(document).ready(function () {
 ## </span><span style='color: #949494;'># … with 47,796 more rows</span><span>
 </span></code></pre>
 <p>Although we could proceed with the analysis using separate OTU and taxonomy tables, lets combine them to simplify things. Since the rows are in different order, we need to combine (aka “join”) them based on their OTU ID. We will use the <a href="https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html"><code>dplyr</code> package</a> for this.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">library</span>(dplyr) <span class="co"># Loads the dplyr package so we can use `left_join`</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span> &lt;-<span class="st"> </span><span class="kw">as.character</span>(tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span>) <span class="co"># Must be same type for join to work</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">otu_data<span class="op">$</span>OTU_ID &lt;-<span class="st"> </span><span class="kw">as.character</span>(otu_data<span class="op">$</span>OTU_ID) <span class="co"># Must be same type for join to work</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">otu_data &lt;-<span class="st"> </span><span class="kw">left_join</span>(otu_data, tax_data,</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">                      <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;OTU_ID&quot;</span> =<span class="st"> &quot;OTU ID&quot;</span>)) <span class="co"># identifies cols with shared IDs</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="kw">print</span>(otu_data)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(dplyr) <span class="co"># Loads the dplyr package so we can use `left_join`</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span> &lt;-<span class="st"> </span><span class="kw">as.character</span>(tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span>) <span class="co"># Must be same type for join to work</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>otu_data<span class="op">$</span>OTU_ID &lt;-<span class="st"> </span><span class="kw">as.character</span>(otu_data<span class="op">$</span>OTU_ID) <span class="co"># Must be same type for join to work</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>otu_data &lt;-<span class="st"> </span><span class="kw">left_join</span>(otu_data, tax_data,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>                      <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;OTU_ID&quot;</span> =<span class="st"> &quot;OTU ID&quot;</span>)) <span class="co"># identifies cols with shared IDs</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="kw">print</span>(otu_data)</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 1,706</span><span>
 ##    OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38 M1551P90 M1551P71
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -572,19 +586,19 @@ $(document).ready(function () {
 ## </span><span style='color: #BCBCBC;'> 8</span><span> 8             840     </span><span style='text-decoration: underline;'>7</span><span>079     </span><span style='text-decoration: underline;'>3</span><span>760       22        0     </span><span style='text-decoration: underline;'>2</span><span>699       22     </span><span style='text-decoration: underline;'>2</span><span>870       32
 ## </span><span style='color: #BCBCBC;'> 9</span><span> 9              40       82       91      881        1      449     </span><span style='text-decoration: underline;'>1</span><span>121       90     </span><span style='text-decoration: underline;'>2</span><span>283
 ## </span><span style='color: #BCBCBC;'>10</span><span> 10             11       79      277     </span><span style='text-decoration: underline;'>2</span><span>879        1        0     </span><span style='text-decoration: underline;'>6</span><span>811       14      243
-## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,696 more variables: M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P88 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
+## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,696 more variables: M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P88 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
 </span></code></pre>
 <p>There are so many columns that all of them are not shown in the print out, but we can verify that they are there by looking at the last 10 column names:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">tail</span>(<span class="kw">colnames</span>(otu_data), <span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># `tail` returns the last n elements</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">tail</span>(<span class="kw">colnames</span>(otu_data), <span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># `tail` returns the last n elements</span></span></code></pre></div>
 <pre class="r-output"><code>##  [1] "M1958P1043" "M1691P1526" "M1691P1557" "taxonomy"   "Kingdom"    "Phylum"     "Class"     
 ##  [8] "Order"      "Family"     "Confidence"
 </code></pre>
 <p>Next, lets load the sample data. Click <a href="SMD.txt" download="SMD.txt">here</a> to download the sample data table.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">sample_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;SMD.txt&quot;</span>,</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">                        <span class="dt">col_types =</span> <span class="st">&quot;cccccccccccccccc&quot;</span>) <span class="co"># each &quot;c&quot; means a column of &quot;character&quot;</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">print</span>(sample_data) <span class="co"># You can also enter `sample_data` to print it</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>sample_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;SMD.txt&quot;</span>,</span>
+<span id="cb7-2"><a href="#cb7-2"></a>                        <span class="dt">col_types =</span> <span class="st">&quot;cccccccccccccccc&quot;</span>) <span class="co"># each &quot;c&quot; means a column of &quot;character&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="kw">print</span>(sample_data) <span class="co"># You can also enter `sample_data` to print it</span></span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 1,698 x 16</span><span>
 ##    SampleID Name  Plant_ID Type  Experiment Cohort Harvested Age   Site  Treatment Line  Genotype
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   
@@ -598,15 +612,15 @@ $(document).ready(function () {
 ## </span><span style='color: #BCBCBC;'> 8</span><span> M1956P8… 1_A_… 1_A_4    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   par1… PAR     
 ## </span><span style='color: #BCBCBC;'> 9</span><span> M1957P9… 1_A_… 1_A_7    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   par9… PAR     
 ## </span><span style='color: #BCBCBC;'>10</span><span> M1957P9… 1_A_… 1_A_8    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   mil5… MIL     
-## </span><span style='color: #949494;'># … with 1,688 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,
-## #   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
+## </span><span style='color: #949494;'># … with 1,688 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 </span></code></pre>
 <p>Note how the number of sample columns in <code>otu_data</code> is equal to the number of rows in <code>sample_data</code> and the columns names of <code>otu_data</code> appear in the “SampleID” column. This means that the contents of <code>sample_data$SampleID</code> can be used to subset columns in the OTU table.</p>
 </div>
 <div id="converting-to-the-taxmap-format" class="section level2">
 <h2>Converting to the <code>taxmap</code> format</h2>
-<p>Although our data is now in R, it is not in a format that is specialized for community abundance data; all R knows is that you have a few big tables. Different R packages for community (e.g. microbiome) analysis expect data in different formats or <b><a href ="appendix--00--glossary.html#class_anchor">classes</a></b>. A class, in programming jargon, is a defined way to store data plus some functions designed to interact with that data. When you format a specific data set in this way, we call it an <b><a href ="appendix--00--glossary.html#object_anchor">object</a></b> or an “instance” of the class. Many R packages implement their own classes and functions to convert data to their format, whereas some packages use the classes defined in other packages. There are a few options for how to store an abundance matrix classified by a taxonomy in R (e.g. <code>phyloseq</code> objects), but we will be using classes defined in the <code>taxa</code> package here. The goal of the <code>taxa</code> package is to provide an all-purpose standard way of manipulation any type of information assigned to a taxonomy. <code>Taxa</code> provides a set of flexible <b><a href ="appendix--00--glossary.html#parsing_anchor">parsers</a></b> that should be able to read nearly any format, given the correct settings. You can read more about parsing taxonomic data with <code>taxa</code> here: <a href="https://github.com/ropensci/taxa#parsing-data" class="uri">https://github.com/ropensci/taxa#parsing-data</a>. The taxonomic data we appended to the abundance matrix has the following form:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">head</span>(otu_data<span class="op">$</span>taxonomy, <span class="dv">10</span>)</a></code></pre></div>
+<p>Although our data is now in R, it is not in a format that is specialized for community abundance data; all R knows is that you have a few big tables. Different R packages for community (e.g. microbiome) analysis expect data in different formats or <b><a href ="appendix--00--glossary.html#class_anchor">classes</a></b>. A class, in programming jargon, is a defined way to store data plus some functions designed to interact with that data. When you format a specific data set in this way, we call it an <b><a href ="appendix--00--glossary.html#object_anchor">object</a></b> or an “instance” of the class. Many R packages implement their own classes and functions to convert data to their format, whereas some packages use the classes defined in other packages. There are a few options for how to store an abundance matrix classified by a taxonomy in R (e.g. <code>phyloseq</code> objects), but we will be using classes defined in the <code>metacoder</code> package here. The goal of these classes is to provide an all-purpose standard way of manipulation any type of information assigned to a taxonomy. There are flexible <b><a href ="appendix--00--glossary.html#parsing_anchor">parsers</a></b> that should be able to read nearly any format, given the correct settings. The taxonomic data we appended to the abundance matrix has the following form:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">head</span>(otu_data<span class="op">$</span>taxonomy, <span class="dv">10</span>)</span></code></pre></div>
 <pre class="r-output"><code>##  [1] "Unassigned"                                                                                        
 ##  [2] "Root;k__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rickettsiales;f__mitochondria"        
 ##  [3] "Root;k__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales;f__Sphingomonadaceae"
@@ -620,15 +634,15 @@ $(document).ready(function () {
 </code></pre>
 <p>Note that there are some odd aspects to the format that could make it challenging to parse:</p>
 <ul>
-<li>Some taxa have <b><a href ="appendix--00--glossary.html#taxonomic_ranks_anchor">ranks</a></b> (e.g. &quot;k__Bacteria“) and some don’t (e.g.”Unassigned&quot; and “Root”).</li>
-<li>Some taxa have ranks, but no names (e.g. &quot;f__&quot;).</li>
+<li>Some taxa have <b><a href ="appendix--00--glossary.html#taxonomic_ranks_anchor">ranks</a></b> (e.g. "k__Bacteria“) and some don’t (e.g. ”Unassigned" and “Root”).</li>
+<li>Some taxa have ranks, but no names (e.g. "f__").</li>
 </ul>
 <p>If we just consider the ranks to be a part of the taxon name, then its pretty easy to parse:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">library</span>(taxa)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(otu_data,</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">                      <span class="dt">class_cols =</span> <span class="st">&quot;taxonomy&quot;</span>, <span class="co"># The column in the input table</span></a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">                      <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>) <span class="co"># What each taxon is seperated by</span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">library</span>(metacoder)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(otu_data,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>                      <span class="dt">class_cols =</span> <span class="st">&quot;taxonomy&quot;</span>, <span class="co"># The column in the input table</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>                      <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>) <span class="co"># What each taxon is seperated by</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   1558 taxa: <span style='color: #00BB00;'>aab</span><span>. Unassigned, </span><span style='color: #00BB00;'>aac</span><span>. Root ... </span><span style='color: #00BB00;'>chx</span><span>. f__Methanospirillaceae, </span><span style='color: #00BB00;'>chy</span><span>. f__
 ##   1558 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>bel</span><span>-&gt;</span><span style='color: #00BB00;'>chw</span><span>, </span><span style='color: #00BB00;'>ays</span><span>-&gt;</span><span style='color: #00BB00;'>chx</span><span>, </span><span style='color: #00BB00;'>bem</span><span>-&gt;</span><span style='color: #00BB00;'>chy</span><span>
@@ -646,7 +660,7 @@ $(document).ready(function () {
 ##   0 functions:
 </span></code></pre>
 <p>Above is the print out of a <code>taxmap</code> object. The first line tells us that the OTUs are assigned to 1,558 unique taxa and lists their IDs and names. These taxon IDs were generated automatically when converting to the <code>taxmap</code> format and were not in the original data set. The second line describes how taxa relate to each other in the tree. Note how our original data are now inside this object:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">print</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">print</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data)</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 1,707</span><span>
 ##    taxon_id OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38 M1551P90
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -660,28 +674,28 @@ $(document).ready(function () {
 ## </span><span style='color: #BCBCBC;'> 8</span><span> bes      8             840     </span><span style='text-decoration: underline;'>7</span><span>079     </span><span style='text-decoration: underline;'>3</span><span>760       22        0     </span><span style='text-decoration: underline;'>2</span><span>699       22     </span><span style='text-decoration: underline;'>2</span><span>870
 ## </span><span style='color: #BCBCBC;'> 9</span><span> bet      9              40       82       91      881        1      449     </span><span style='text-decoration: underline;'>1</span><span>121       90
 ## </span><span style='color: #BCBCBC;'>10</span><span> beu      10             11       79      277     </span><span style='text-decoration: underline;'>2</span><span>879        1        0     </span><span style='text-decoration: underline;'>6</span><span>811       14
-## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,697 more variables: M1551P71 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,
-## #   M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
+## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,697 more variables: M1551P71 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
 </span></code></pre>
-<p><code>obj$data</code> is a list of arbitrary, user-defined data sets. These data sets can be named anything and can be any R object, such as <b><a href ="appendix--00--glossary.html#list_anchor">lists</a></b>, or <b><a href ="appendix--00--glossary.html#vector_anchor">vectors</a></b>, or tables. This is different than <code>phyloseq</code> objects, which have a fixed number of data sets in pre-defined formats, since the focus of <code>taxa</code> is taxonomic data in general and the focus of <code>phyloseq</code> is microbiome data in particular. Note that our data set now has a “taxon_id” column, which associates rows in the table to a taxa in the taxonomy. This column is essential for the manipulation functions of <code>taxa</code> to know how to handle these data sets, as we will demonstrate later.</p>
+<p><code>obj$data</code> is a list of arbitrary, user-defined data sets. These data sets can be named anything and can be any R object, such as <b><a href ="appendix--00--glossary.html#list_anchor">lists</a></b>, or <b><a href ="appendix--00--glossary.html#vector_anchor">vectors</a></b>, or tables. This is different than <code>phyloseq</code> objects, which have a fixed number of data sets in pre-defined formats, since the focus of the <code>metacoder</code> classes is taxonomic data in general and the focus of <code>phyloseq</code> is microbiome data in particular. Note that our data set now has a “taxon_id” column, which associates rows in the table to a taxa in the taxonomy. This column is essential for the manipulation functions of <code>metacoder</code> to know how to handle these data sets, as we will demonstrate later.</p>
 <p>If we want to split out the rank information while parsing, we can use <b><a href ="appendix--00--glossary.html#regular_expressions_anchor">regular expressions</a></b> (a.k.a “regex”) to specify which part of each taxon is a rank and which part is a name. If you are not familiar with using regular expressions, this might be challenging to understand at first, but it is a very useful skill to have, so it is worth learning. Most regular expressions are composed of a series of “what to match” followed by “how many times to match”. One regular expression that matches the pattern of taxon names is <code>^[a-z]{0,1}_{0,2}.*$</code>. This might look intimidating, but we can break it down into understandable parts:</p>
 <ul>
 <li>The <code>^</code> and <code>$</code> represent the start and end of the text respectively. If these were not there, then the pattern could match just a part of the text.</li>
-<li>The square brackets (e.g. <code>[a-z]</code>) specify a range of characters that can be matched. Likewise the <code>.</code> means match any character.</li>
-<li>The contents of the curly braces (e.g. <code>{0,1}</code>) indicate the number of time the preceding pattern can match. Likewise, the <code>*</code> means 0 or more matches. For example the part of the regex <code>^[a-z]{0,1}</code> means “match a character <code>a</code> through <code>z</code> that occurs at the start of the string either zero or one times”.</li>
+<li>The square brackets (e.g. <code>[a-z]</code>) specify a range of characters that can be matched. Likewise the <code>.</code> means match any character.</li>
+<li>The contents of the curly braces (e.g. <code>{0,1}</code>) indicate the number of time the preceding pattern can match. Likewise, the <code>*</code> means 0 or more matches. For example the part of the regex <code>^[a-z]{0,1}</code> means “match a character <code>a</code> through <code>z</code> that occurs at the start of the string either zero or one times”.</li>
 <li>Any text that is not a special regex character (e.g., <code>[</code> and <code>.</code>) matches itself, so the <code>_</code> matches a <code>_</code> in the text. To match characters like <code>[</code> in the text you “escape” them with <code>\\</code> (e.g., <code>\\[</code>).</li>
 </ul>
 <p>The whole regex means the following in common English:</p>
-<p>“From the start of the string, (<code>^</code>) match any character between”a&quot; and “z” (<code>[a-z]</code>) zero or one times (<code>{0,1}</code>) followed by an underscore (<code>_</code>) occurring between zero and 2 times (<code>{0,2}</code>), followed by any character (<code>.</code>) occurring zero or more times (<code>*</code>), followed by the end of the text (<code>$</code>).&quot;</p>
+<p>“From the start of the string, (<code>^</code>) match any character between”a" and “z” (<code>[a-z]</code>) zero or one times (<code>{0,1}</code>) followed by an underscore (<code>_</code>) occurring between zero and 2 times (<code>{0,2}</code>), followed by any character (<code>.</code>) occurring zero or more times (<code>*</code>), followed by the end of the text (<code>$</code>)."</p>
 <p>We can add parentheses that specify which parts of the pattern go together; these are called <b><a href ="appendix--00--glossary.html#capture_groups_anchor">capture groups</a></b> in regex jargon. These do not change what will be matched; they just define different parts of the pattern. In this case, we are interested in the taxon rank (matched by <code>([a-z]{0,1})</code>) and the taxon name (matched by <code>(.*)</code>).</p>
-<p>The <code>parse_tax_data</code> function from the <code>taxa</code> package uses regular expressions with capture groups to isolate the pieces of information we want. For each capture group in the regular expression (aka “regex”), a value is given to the <code>class_key</code> option specifying what the group is (e.g. taxon name). Putting this all together, we can read the data like so:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(otu_data,</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">                      <span class="dt">class_cols =</span> <span class="st">&quot;taxonomy&quot;</span>,</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">                      <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>,</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">                      <span class="dt">class_regex =</span> <span class="st">&quot;^([a-z]{0,1})_{0,2}(.*)$&quot;</span>,</a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">                      <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="st">&quot;tax_rank&quot;</span> =<span class="st"> &quot;taxon_rank&quot;</span>, <span class="st">&quot;name&quot;</span> =<span class="st"> &quot;taxon_name&quot;</span>))</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="kw">print</span>(obj)</a></code></pre></div>
+<p>The <code>parse_tax_data</code> function from the <code>metacoder</code> package uses regular expressions with capture groups to isolate the pieces of information we want. For each capture group in the regular expression (aka “regex”), a value is given to the <code>class_key</code> option specifying what the group is (e.g. taxon name). Putting this all together, we can read the data like so:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(otu_data,</span>
+<span id="cb11-2"><a href="#cb11-2"></a>                      <span class="dt">class_cols =</span> <span class="st">&quot;taxonomy&quot;</span>,</span>
+<span id="cb11-3"><a href="#cb11-3"></a>                      <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4"></a>                      <span class="dt">class_regex =</span> <span class="st">&quot;^([a-z]{0,1})_{0,2}(.*)$&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5"></a>                      <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="st">&quot;tax_rank&quot;</span> =<span class="st"> &quot;taxon_rank&quot;</span>, <span class="st">&quot;name&quot;</span> =<span class="st"> &quot;taxon_name&quot;</span>))</span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   1558 taxa: <span style='color: #00BB00;'>aab</span><span>. Unassigned, </span><span style='color: #00BB00;'>aac</span><span>. Root ... </span><span style='color: #00BB00;'>chx</span><span>. Methanospirillaceae, </span><span style='color: #00BB00;'>chy</span><span>. 
 ##   1558 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>bel</span><span>-&gt;</span><span style='color: #00BB00;'>chw</span><span>, </span><span style='color: #00BB00;'>ays</span><span>-&gt;</span><span style='color: #00BB00;'>chx</span><span>, </span><span style='color: #00BB00;'>bem</span><span>-&gt;</span><span style='color: #00BB00;'>chy</span><span>
@@ -707,14 +721,14 @@ $(document).ready(function () {
 ##   0 functions:
 </span></code></pre>
 <p>Note how the taxon names do not have the rank information anymore:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">taxon_names</span>(obj))</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">head</span>(<span class="kw">taxon_names</span>(obj))</span></code></pre></div>
 <pre class="r-output"><code>##              aab              aac              aad              aae              aaf 
 ##     "Unassigned"           "Root"       "Bacteria"        "Archaea" "Proteobacteria" 
 ##              aag 
 ## "Actinobacteria"
 </code></pre>
 <p>Instead, the rank information (and any other capture group content) is in a separate data set:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">obj<span class="op">$</span>data<span class="op">$</span>class_data</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>obj<span class="op">$</span>data<span class="op">$</span>class_data</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 216,417 x 5</span><span>
 ##    taxon_id input_index tax_rank name                regex_match           
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                 
@@ -731,15 +745,15 @@ $(document).ready(function () {
 ## </span><span style='color: #949494;'># … with 216,407 more rows</span><span>
 </span></code></pre>
 <p>However, ranks can also be accessed using the <code>taxon_ranks</code> function:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">taxon_ranks</span>(obj))</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">head</span>(<span class="kw">taxon_ranks</span>(obj))</span></code></pre></div>
 <pre class="r-output"><code>## aab aac aad aae aaf aag 
 ##  ""  "" "k" "k" "p" "p"
 </code></pre>
 <p>So we don’t really need the “class_data” table, so lets get rid of it:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">obj<span class="op">$</span>data<span class="op">$</span>class_data &lt;-<span class="st"> </span><span class="ot">NULL</span></a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>obj<span class="op">$</span>data<span class="op">$</span>class_data &lt;-<span class="st"> </span><span class="ot">NULL</span></span></code></pre></div>
 <p>Lets also rename the “tax_data” table to something more informative:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">names</span>(obj<span class="op">$</span>data) &lt;-<span class="st"> &quot;otu_counts&quot;</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">names</span>(obj<span class="op">$</span>data) &lt;-<span class="st"> &quot;otu_counts&quot;</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   1558 taxa: <span style='color: #00BB00;'>aab</span><span>. Unassigned, </span><span style='color: #00BB00;'>aac</span><span>. Root ... </span><span style='color: #00BB00;'>chx</span><span>. Methanospirillaceae, </span><span style='color: #00BB00;'>chy</span><span>. 
 ##   1558 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>bel</span><span>-&gt;</span><span style='color: #00BB00;'>chw</span><span>, </span><span style='color: #00BB00;'>ays</span><span>-&gt;</span><span style='color: #00BB00;'>chx</span><span>, </span><span style='color: #00BB00;'>bem</span><span>-&gt;</span><span style='color: #00BB00;'>chy</span><span>
@@ -768,7 +782,7 @@ $(document).ready(function () {
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-20" class="collapse">
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">table_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>table_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span></code></pre></div>
 </div>
 <p><br /></p>
 <p><strong>3)</strong> Now try reading the same file using the <code>read_tsv</code> function from the <code>readr</code> package. Type <code>?read_tsv</code> to see the documentation for this function.</p>
@@ -776,9 +790,10 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-21" class="collapse">
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">library</span>(readr)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>)</a></code></pre></div>
-<pre><code>## Parsed with column specification:
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">library</span>(readr)</span>
+<span id="cb18-2"><a href="#cb18-2"></a>table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────────────────────────[39m
 ## cols(
 ##   common_name = [31mcol_character()[39m,
 ##   ncbi_seq_id = [31mcol_character()[39m,
@@ -792,14 +807,14 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-22" class="collapse">
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">str</span>(table_<span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">str</span>(table_<span class="dv">1</span>)</span></code></pre></div>
 <pre class="r-output"><code>## 'data.frame':    3 obs. of  4 variables:
-##  $ common_name  : Factor w/ 3 levels "Bears","Lions",..: 2 3 1
-##  $ ncbi_seq_id  : Factor w/ 3 levels "FJ712037","HW243304",..: 1 3 2
+##  $ common_name  : chr  "Lions" "Tigers" "Bears"
+##  $ ncbi_seq_id  : chr  "FJ712037" "KC879292" "HW243304"
 ##  $ itis_taxon_id: int  183803 183806 180544
-##  $ my_taxonomy  : Factor w/ 3 levels "mammalia, felidae, panthera, leo",..: 1 2 3
+##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 </code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">str</span>(table_<span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">str</span>(table_<span class="dv">2</span>)</span></code></pre></div>
 <pre class="r-output"><code>## tibble [3 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##  $ common_name  : chr [1:3] "Lions" "Tigers" "Bears"
 ##  $ ncbi_seq_id  : chr [1:3] "FJ712037" "KC879292" "HW243304"
@@ -820,17 +835,17 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-23" class="collapse">
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">table_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>,</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2">                      <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">colClasses =</span> <span class="st">&quot;character&quot;</span>)</a>
-<a class="sourceLine" id="cb22-3" data-line-number="3">table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>, <span class="dt">col_types =</span> <span class="st">&quot;cccc&quot;</span>)</a>
-<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="kw">str</span>(table_<span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>table_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>,</span>
+<span id="cb22-2"><a href="#cb22-2"></a>                      <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">colClasses =</span> <span class="st">&quot;character&quot;</span>)</span>
+<span id="cb22-3"><a href="#cb22-3"></a>table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>, <span class="dt">col_types =</span> <span class="st">&quot;cccc&quot;</span>)</span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="kw">str</span>(table_<span class="dv">1</span>)</span></code></pre></div>
 <pre class="r-output"><code>## 'data.frame':    3 obs. of  4 variables:
 ##  $ common_name  : chr  "Lions" "Tigers" "Bears"
 ##  $ ncbi_seq_id  : chr  "FJ712037" "KC879292" "HW243304"
 ##  $ itis_taxon_id: chr  "183803" "183806" "180544"
 ##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 </code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">str</span>(table_<span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">str</span>(table_<span class="dv">2</span>)</span></code></pre></div>
 <pre class="r-output"><code>## tibble [3 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##  $ common_name  : chr [1:3] "Lions" "Tigers" "Bears"
 ##  $ ncbi_seq_id  : chr [1:3] "FJ712037" "KC879292" "HW243304"
@@ -850,15 +865,16 @@ Show solution
 <div id="reading-taxonomic-data" class="section level3">
 <h3>Reading taxonomic data</h3>
 <p>In this exercise we will be converting the table from the previous exercise to a <code>taxmap</code> object.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">my_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>)</a></code></pre></div>
-<pre><code>## Parsed with column specification:
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>my_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────────────────────────[39m
 ## cols(
 ##   common_name = [31mcol_character()[39m,
 ##   ncbi_seq_id = [31mcol_character()[39m,
 ##   itis_taxon_id = [32mcol_double()[39m,
 ##   my_taxonomy = [31mcol_character()[39m
 ## )</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">print</span>(my_data)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">print</span>(my_data)</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 3 x 4</span><span>
 ##   common_name ncbi_seq_id itis_taxon_id my_taxonomy                         
 ##   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                               
@@ -871,9 +887,9 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-25" class="collapse">
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">library</span>(taxa)</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2">?parse_tax_data</a>
-<a class="sourceLine" id="cb27-3" data-line-number="3">?lookup_tax_data</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">library</span>(metacoder)</span>
+<span id="cb27-2"><a href="#cb27-2"></a>?parse_tax_data</span>
+<span id="cb27-3"><a href="#cb27-3"></a>?lookup_tax_data</span></code></pre></div>
 </div>
 <p><br /></p>
 <p><strong>7)</strong> Try using <code>parse_tax_data</code> to convert the table to a <code>taxmap</code> object, using the <code>my_taxonomy</code> column for the taxonomic information. You should get a taxonomy with “mammalia” at the root. How does the table included in the output differ from the input table?</p>
@@ -881,7 +897,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-26" class="collapse">
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">parse_tax_data</span>(my_data, <span class="dt">class_cols =</span> <span class="st">&quot;my_taxonomy&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;, &quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">parse_tax_data</span>(my_data, <span class="dt">class_cols =</span> <span class="st">&quot;my_taxonomy&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;, &quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   8 taxa: <span style='color: #00BB00;'>b</span><span>. mammalia, </span><span style='color: #00BB00;'>c</span><span>. felidae, </span><span style='color: #00BB00;'>d</span><span>. ursidae ... </span><span style='color: #00BB00;'>g</span><span>. leo, </span><span style='color: #00BB00;'>h</span><span>. tigris, </span><span style='color: #00BB00;'>i</span><span>. americanus
 ##   8 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>b</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>c</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>d</span><span>, </span><span style='color: #00BB00;'>c</span><span>-&gt;</span><span style='color: #00BB00;'>e</span><span>, </span><span style='color: #00BB00;'>d</span><span>-&gt;</span><span style='color: #00BB00;'>f</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>g</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>h</span><span>, </span><span style='color: #00BB00;'>f</span><span>-&gt;</span><span style='color: #00BB00;'>i</span><span>
@@ -902,7 +918,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-28" class="collapse">
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">lookup_tax_data</span>(my_data, <span class="dt">type =</span> <span class="st">&quot;seq_id&quot;</span>, <span class="dt">column =</span> <span class="st">&quot;ncbi_seq_id&quot;</span>, <span class="dt">database =</span> <span class="st">&quot;ncbi&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">lookup_tax_data</span>(my_data, <span class="dt">type =</span> <span class="st">&quot;seq_id&quot;</span>, <span class="dt">column =</span> <span class="st">&quot;ncbi_seq_id&quot;</span>, <span class="dt">database =</span> <span class="st">&quot;ncbi&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   33 taxa: <span style='color: #00BB00;'>131567</span><span>. cellular organisms, </span><span style='color: #00BB00;'>2759</span><span>. Eukaryota ... </span><span style='color: #00BB00;'>9694</span><span>. Panthera tigris
 ##   33 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>131567</span><span>, </span><span style='color: #00BB00;'>131567</span><span>-&gt;</span><span style='color: #00BB00;'>2759</span><span>, </span><span style='color: #00BB00;'>2759</span><span>-&gt;</span><span style='color: #00BB00;'>33154</span><span> ... </span><span style='color: #00BB00;'>9688</span><span>-&gt;</span><span style='color: #00BB00;'>9689</span><span>, </span><span style='color: #00BB00;'>9688</span><span>-&gt;</span><span style='color: #00BB00;'>9694</span><span>
@@ -913,7 +929,7 @@ Show solution
 ## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;  </span><span>
 ##       1 </span><span style='color: #00BB00;'>131567</span><span>   cellular organisms no rank      131567 
 ##       2 </span><span style='color: #00BB00;'>2759</span><span>     Eukaryota          superkingdom 2759   
-##       3 </span><span style='color: #00BB00;'>33154</span><span>    Opisthokonta       no rank      33154  
+##       3 </span><span style='color: #00BB00;'>33154</span><span>    Opisthokonta       clade        33154  
 ##       # … with 30 more rows
 ##     </span><span style='font-weight: bold;'>query_data</span><span>:
 ## </span><span style='font-style: italic;'>      # A tibble: 3 x 5</span><span>
@@ -931,7 +947,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-29" class="collapse">
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">lookup_tax_data</span>(my_data, <span class="dt">type =</span> <span class="st">&quot;taxon_id&quot;</span>, <span class="dt">column =</span> <span class="st">&quot;itis_taxon_id&quot;</span>, <span class="dt">database =</span> <span class="st">&quot;itis&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">lookup_tax_data</span>(my_data, <span class="dt">type =</span> <span class="st">&quot;taxon_id&quot;</span>, <span class="dt">column =</span> <span class="st">&quot;itis_taxon_id&quot;</span>, <span class="dt">database =</span> <span class="st">&quot;itis&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   22 taxa: <span style='color: #00BB00;'>202423</span><span>. Animalia, </span><span style='color: #00BB00;'>914154</span><span>. Bilateria ... </span><span style='color: #00BB00;'>183806</span><span>. Panthera tigris tigris
 ##   22 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>202423</span><span>, </span><span style='color: #00BB00;'>202423</span><span>-&gt;</span><span style='color: #00BB00;'>914154</span><span> ... </span><span style='color: #00BB00;'>180592</span><span>-&gt;</span><span style='color: #00BB00;'>183805</span><span>, </span><span style='color: #00BB00;'>183805</span><span>-&gt;</span><span style='color: #00BB00;'>183806</span><span>
@@ -980,14 +996,14 @@ Show Answer
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-31" class="collapse">
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">library</span>(ape)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">library</span>(ape)</span></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;ape&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:metacoder&#39;:
 ## 
 ##     complement</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">seqs &lt;-<span class="st"> </span><span class="kw">read.FASTA</span>(<span class="st">&quot;example_data_2.fa&quot;</span>)</a>
-<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="kw">print</span>(seqs)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>seqs &lt;-<span class="st"> </span><span class="kw">read.FASTA</span>(<span class="st">&quot;example_data_2.fa&quot;</span>)</span>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="kw">print</span>(seqs)</span></code></pre></div>
 <pre class="r-output"><code>## 3 DNA sequences in binary format stored in a list.
 ## 
 ## Mean sequence length: 455.667 
@@ -1011,23 +1027,23 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-32" class="collapse">
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">headers &lt;-<span class="st"> </span><span class="kw">names</span>(seqs)</a>
-<a class="sourceLine" id="cb35-2" data-line-number="2"><span class="kw">print</span>(headers)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>headers &lt;-<span class="st"> </span><span class="kw">names</span>(seqs)</span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="kw">print</span>(headers)</span></code></pre></div>
 <pre class="r-output"><code>## [1] "FJ712037::class_mammalia;family_felidae;genus_panthera;species_leo"    
 ## [2] "KC879292::class_mammalia;family_felidae;genus_panthera;species_tigris" 
 ## [3] "HW243304::class_mammalia;family_ursidae;genus_ursus;species_americanus"
 </code></pre>
 </div>
 <p><br /></p>
-<p><strong>13)</strong> Look at the documentation for <code>extract_tax_data</code> from the <code>taxa</code> package by typing <code>?extract_tax_data</code>.</p>
-<p><strong>14)</strong> Use the <code>extract_tax_data</code> function to convert the headers to a <code>taxmap</code> object, using the NCBI accession number. The classification can be ignored (i.e. not given a capture group and key value) or stored as <code>&quot;info&quot;</code>.</p>
+<p><strong>13)</strong> Look at the documentation for <code>extract_tax_data</code> from the <code>metacoder</code> package by typing <code>?extract_tax_data</code>.</p>
+<p><strong>14)</strong> Use the <code>extract_tax_data</code> function to convert the headers to a <code>taxmap</code> object, using the NCBI accession number. The classification can be ignored (i.e. not given a capture group and key value) or stored as <code>"info"</code>.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-33">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-33" class="collapse">
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">extract_tax_data</span>(headers,</a>
-<a class="sourceLine" id="cb36-2" data-line-number="2">                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">my_acc_no =</span> <span class="st">&quot;seq_id&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;info&quot;</span>),</a>
-<a class="sourceLine" id="cb36-3" data-line-number="3">                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">extract_tax_data</span>(headers,</span>
+<span id="cb36-2"><a href="#cb36-2"></a>                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">my_acc_no =</span> <span class="st">&quot;seq_id&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;info&quot;</span>),</span>
+<span id="cb36-3"><a href="#cb36-3"></a>                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   33 taxa: <span style='color: #00BB00;'>131567</span><span>. cellular organisms, </span><span style='color: #00BB00;'>2759</span><span>. Eukaryota ... </span><span style='color: #00BB00;'>9694</span><span>. Panthera tigris
 ##   33 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>131567</span><span>, </span><span style='color: #00BB00;'>131567</span><span>-&gt;</span><span style='color: #00BB00;'>2759</span><span>, </span><span style='color: #00BB00;'>2759</span><span>-&gt;</span><span style='color: #00BB00;'>33154</span><span> ... </span><span style='color: #00BB00;'>9688</span><span>-&gt;</span><span style='color: #00BB00;'>9689</span><span>, </span><span style='color: #00BB00;'>9688</span><span>-&gt;</span><span style='color: #00BB00;'>9694</span><span>
@@ -1038,7 +1054,7 @@ Show solution
 ## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;  </span><span>
 ##       1 </span><span style='color: #00BB00;'>131567</span><span>   cellular organisms no rank      131567 
 ##       2 </span><span style='color: #00BB00;'>2759</span><span>     Eukaryota          superkingdom 2759   
-##       3 </span><span style='color: #00BB00;'>33154</span><span>    Opisthokonta       no rank      33154  
+##       3 </span><span style='color: #00BB00;'>33154</span><span>    Opisthokonta       clade        33154  
 ##       # … with 30 more rows
 ##     </span><span style='font-weight: bold;'>query_data</span><span>:
 ## </span><span style='font-style: italic;'>      # A tibble: 3 x 4</span><span>
@@ -1051,15 +1067,15 @@ Show solution
 </span></code></pre>
 </div>
 <p><br /></p>
-<p><strong>15)</strong> Now use the classification instead of the accession numbers. The accession number can be ignored or stored as <code>&quot;info&quot;</code>. Consider the rank as part of the taxon name for now.</p>
+<p><strong>15)</strong> Now use the classification instead of the accession numbers. The accession number can be ignored or stored as <code>"info"</code>. Consider the rank as part of the taxon name for now.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-34">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-34" class="collapse">
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw">extract_tax_data</span>(headers,</a>
-<a class="sourceLine" id="cb37-2" data-line-number="2">                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">my_acc_no =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;class&quot;</span>),</a>
-<a class="sourceLine" id="cb37-3" data-line-number="3">                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>,</a>
-<a class="sourceLine" id="cb37-4" data-line-number="4">                 <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">extract_tax_data</span>(headers,</span>
+<span id="cb37-2"><a href="#cb37-2"></a>                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">my_acc_no =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;class&quot;</span>),</span>
+<span id="cb37-3"><a href="#cb37-3"></a>                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>,</span>
+<span id="cb37-4"><a href="#cb37-4"></a>                 <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   8 taxa: <span style='color: #00BB00;'>b</span><span>. class_mammalia, </span><span style='color: #00BB00;'>c</span><span>. family_felidae ... </span><span style='color: #00BB00;'>i</span><span>. species_americanus
 ##   8 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>b</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>c</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>d</span><span>, </span><span style='color: #00BB00;'>c</span><span>-&gt;</span><span style='color: #00BB00;'>e</span><span>, </span><span style='color: #00BB00;'>d</span><span>-&gt;</span><span style='color: #00BB00;'>f</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>g</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>h</span><span>, </span><span style='color: #00BB00;'>f</span><span>-&gt;</span><span style='color: #00BB00;'>i</span><span>
@@ -1075,17 +1091,17 @@ Show solution
 </span></code></pre>
 </div>
 <p><br /></p>
-<p><strong>16)</strong> Now try to split out the rank information from the taxon name. You will need to use the <code>class_key</code> and <code>class_regex</code> options. The ranks can be stored as <code>&quot;info&quot;</code> or <code>&quot;taxon_rank</code>“. Using <code>&quot;taxon_rank</code>” allows the ranks to be accessed with the <code>taxon_ranks</code> function.</p>
+<p><strong>16)</strong> Now try to split out the rank information from the taxon name. You will need to use the <code>class_key</code> and <code>class_regex</code> options. The ranks can be stored as <code>"info"</code> or <code>"taxon_rank</code>“. Using <code>"taxon_rank</code>” allows the ranks to be accessed with the <code>taxon_ranks</code> function.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-35">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-35" class="collapse">
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">extract_tax_data</span>(headers,</a>
-<a class="sourceLine" id="cb38-2" data-line-number="2">                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">acc_no =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;class&quot;</span>),</a>
-<a class="sourceLine" id="cb38-3" data-line-number="3">                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>,</a>
-<a class="sourceLine" id="cb38-4" data-line-number="4">                 <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>,</a>
-<a class="sourceLine" id="cb38-5" data-line-number="5">                 <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="dt">tax_rank =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;taxon_name&quot;</span>),</a>
-<a class="sourceLine" id="cb38-6" data-line-number="6">                 <span class="dt">class_regex =</span> <span class="st">&quot;^(.+)_(.+)$&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">extract_tax_data</span>(headers,</span>
+<span id="cb38-2"><a href="#cb38-2"></a>                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">acc_no =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;class&quot;</span>),</span>
+<span id="cb38-3"><a href="#cb38-3"></a>                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>,</span>
+<span id="cb38-4"><a href="#cb38-4"></a>                 <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>,</span>
+<span id="cb38-5"><a href="#cb38-5"></a>                 <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="dt">tax_rank =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;taxon_name&quot;</span>),</span>
+<span id="cb38-6"><a href="#cb38-6"></a>                 <span class="dt">class_regex =</span> <span class="st">&quot;^(.+)_(.+)$&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   8 taxa: <span style='color: #00BB00;'>b</span><span>. mammalia, </span><span style='color: #00BB00;'>c</span><span>. felidae, </span><span style='color: #00BB00;'>d</span><span>. ursidae ... </span><span style='color: #00BB00;'>g</span><span>. leo, </span><span style='color: #00BB00;'>h</span><span>. tigris, </span><span style='color: #00BB00;'>i</span><span>. americanus
 ##   8 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>b</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>c</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>d</span><span>, </span><span style='color: #00BB00;'>c</span><span>-&gt;</span><span style='color: #00BB00;'>e</span><span>, </span><span style='color: #00BB00;'>d</span><span>-&gt;</span><span style='color: #00BB00;'>f</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>g</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>h</span><span>, </span><span style='color: #00BB00;'>f</span><span>-&gt;</span><span style='color: #00BB00;'>i</span><span>
@@ -1123,10 +1139,10 @@ Using the included classification does not require communicating with online dat
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-wagner2016host">
-<p>Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery L Dangl, and Thomas Mitchell-Olds. 2016. “Host Genotype and Age Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.” <em>Nature Communications</em> 7. Nature Publishing Group: 12151. <a href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.</p>
+<p>Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery L Dangl, and Thomas Mitchell-Olds. 2016. “Host Genotype and Age Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.” <em>Nature Communications</em> 7: 12151. <a href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.</p>
 </div>
 <div id="ref-zeeberg2004mistaken">
-<p>Zeeberg, Barry R, Joseph Riss, David W Kane, Kimberly J Bussey, Edward Uchio, W Marston Linehan, J Carl Barrett, and John N Weinstein. 2004. “Mistaken Identifiers: Gene Name Errors Can Be Introduced Inadvertently When Using Excel in Bioinformatics.” <em>BMC Bioinformatics</em> 5 (1). BioMed Central: 80. <a href="https://doi.org/10.1186/1471-2105-5-80">https://doi.org/10.1186/1471-2105-5-80</a>.</p>
+<p>Zeeberg, Barry R, Joseph Riss, David W Kane, Kimberly J Bussey, Edward Uchio, W Marston Linehan, J Carl Barrett, and John N Weinstein. 2004. “Mistaken Identifiers: Gene Name Errors Can Be Introduced Inadvertently When Using Excel in Bioinformatics.” <em>BMC Bioinformatics</em> 5 (1): 80. <a href="https://doi.org/10.1186/1471-2105-5-80">https://doi.org/10.1186/1471-2105-5-80</a>.</p>
 </div>
 </div>
 </div>
@@ -1146,7 +1162,7 @@ Using the included classification does not require communicating with online dat
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

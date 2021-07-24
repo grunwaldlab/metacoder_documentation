@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -30,6 +33,15 @@
   ga('send', 'pageview');
 
 </script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 
@@ -412,7 +424,7 @@ $(document).ready(function () {
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-wagner2016host">
-<p>Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery L Dangl, and Thomas Mitchell-Olds. 2016. “Host Genotype and Age Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.” <em>Nature Communications</em> 7. Nature Publishing Group: 12151. <a href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.</p>
+<p>Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery L Dangl, and Thomas Mitchell-Olds. 2016. “Host Genotype and Age Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.” <em>Nature Communications</em> 7: 12151. <a href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.</p>
 </div>
 </div>
 </div>
@@ -432,7 +444,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
-<title></title>
+<title>appendix--00--intro_to_rstudio.utf8</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -30,6 +33,15 @@
   ga('send', 'pageview');
 
 </script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 
@@ -63,9 +75,7 @@ h6 {
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -79,7 +89,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -89,6 +98,9 @@ img {
 }
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -104,7 +116,6 @@ body {
   padding-top: 66px;
   margin-top: -66px;
 }
-
 .section h2 {
   padding-top: 66px;
   margin-top: -66px;
@@ -124,6 +135,43 @@ body {
 .section h6 {
   padding-top: 66px;
   margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -145,19 +193,74 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -311,50 +414,35 @@ $(document).ready(function () {
 <p>When you open RStudio, you will notice a lot of different windows, each with some tabs. This can be overwhelming at first, but you only need to use a few to be productive and the ones you need are similar to other computer programs you probably already use.</p>
 <div id="the-r-console-tab" class="section level3">
 <h3>The R console tab</h3>
-<div class="figure">
-<img src="images/rstudio_console.png" />
-
-</div>
-<p>The <a href ="appendix--00--glossary.html#r_console_anchor">R console</a> is where you give R commands and is the lower left window in RStudio. It is the same way you would interact with R on the command line or terminal. In other words, the “Console” tab in the lower left window is the only part of RStudio that is actually R itself; everything else is optional tools.</p>
+<p><img src="images/rstudio_console.png" /></p>
+<p>The <b><a href ="appendix--00--glossary.html#r_console_anchor">R console</a></b> is where you give R commands and is the lower left window in RStudio. It is the same way you would interact with R on the command line or terminal. In other words, the “Console” tab in the lower left window is the only part of RStudio that is actually R itself; everything else is optional tools.</p>
 </div>
 <div id="the-text-editor" class="section level3">
 <h3>The text editor</h3>
-<div class="figure">
-<img src="images/rstudio_text_editor.png" />
-
-</div>
-<p>The upper left window is a <a href ="appendix--00--glossary.html#plain_text_anchor">plain text</a> editor, like Notepad or TextEdit. “Plain text” means no fonts, formatting etc, unlike program like Microsoft Word. You can have multiple files open at once and they appear in tabs. Depending on the type of the file being edited (i.e. its file extension), there will be different tools and behavior, but its all plain text.</p>
+<p><img src="images/rstudio_text_editor.png" /></p>
+<p>The upper left window is a <b><a href ="appendix--00--glossary.html#plain_text_anchor">plain text</a></b> editor, like Notepad or TextEdit. “Plain text” means no fonts, formatting etc, unlike program like Microsoft Word. You can have multiple files open at once and they appear in tabs. Depending on the type of the file being edited (i.e. its file extension), there will be different tools and behavior, but its all plain text.</p>
 </div>
 <div id="the-file-browser-tab" class="section level3">
 <h3>The file browser tab</h3>
-<div class="figure">
-<img src="images/rstudio_file_browser.png" />
-
-</div>
+<p><img src="images/rstudio_file_browser.png" /></p>
 <p>The default tab in the lower right window is a basic file browser. You can open, delete, and rename files there. Its not as well-developed as your operating system’s file browser and is mostly there so you don’t have to switch applications to manage files. You can ignore the rest of the tabs there for now (Plots, Packages, Help, and Viewer), since they are usually automatically opened when they are relevant.</p>
 </div>
 <div id="the-environment-tab" class="section level3">
 <h3>The “Environment” tab</h3>
-<div class="figure">
-<img src="images/rstudio_envrionment.png" />
-
-</div>
-<p>The “Environment” tab in the top right window lists the <a href ="appendix--00--glossary.html#variable_anchor">variables</a> and <a href ="appendix--00--glossary.html#function_anchor">functions</a> present in the current R session. It does not include the function/data in loaded packages however (unless you select a package from the drop down menu that says “Global Environment”). When you ask “what have I created so far”, the answer is in the environment tab.</p>
+<p><img src="images/rstudio_envrionment.png" /></p>
+<p>The “Environment” tab in the top right window lists the <b><a href ="appendix--00--glossary.html#variable_anchor">variables</a></b> and <b><a href ="appendix--00--glossary.html#function_anchor">functions</a></b> present in the current R session. It does not include the function/data in loaded packages however (unless you select a package from the drop down menu that says “Global Environment”). When you ask “what have I created so far”, the answer is in the environment tab.</p>
 </div>
 </div>
 <div id="r-projects" class="section level2">
 <h2>R projects</h2>
-<p><a href ="appendix--00--glossary.html#r_project_anchor">R projects</a> are an RStudio concept and are integral to many people’s workflow and organization. An R project is just a folder that has a file in it ending in “.Rproj”. This file is created by RStudio when you create a new project. Although R projects are not needed, we highly recommend using them for the following reasons:</p>
+<p><b><a href ="appendix--00--glossary.html#r_project_anchor">R projects</a></b> are an RStudio concept and are integral to many people’s workflow and organization. An R project is just a folder that has a file in it ending in “.Rproj”. This file is created by RStudio when you create a new project. Although R projects are not needed, we highly recommend using them for the following reasons:</p>
 <ul>
 <li>They help with organization, since they encourage you to put all the code and data for a project in a single directory.</li>
 <li>They help standardize your current working directory. Each time a project is opened, your current working directory is automatically switched to the project directory.</li>
 <li>They store where you left off when you last closed RStudio. Depending on how you set things up, its as if you never closed RStudio at all. All the variables and files will be where you last left them. Even unsaved files. NOTE: It is recommended that you do not rely on restoring variables between sessions, although RStudio will offer.</li>
 </ul>
 <p>Whenever you start something in R that you want to save, we recommend using an R project. You can make a new project by clicking on the upper right drop-down menu or “File &gt; New Project”.</p>
-<div class="figure">
-<img src="images/rstudio_project.png" />
-
-</div>
+<p><img src="images/rstudio_project.png" /></p>
 </div>
 <div id="console-tricks" class="section level2">
 <h2>Console tricks</h2>
@@ -392,7 +480,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -400,6 +488,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

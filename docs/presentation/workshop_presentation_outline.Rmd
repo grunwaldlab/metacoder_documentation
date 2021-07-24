@@ -1,0 +1,287 @@
+
+## What
+
+### Techniques in quantitative ecology
+
+#### Counting by hand
+
+* What many methods were designed for
+* When the acutal number is known, familar stats can be used
+
+(Pictures of quatrats and wind river plot map)
+
+#### Shotgun metagenomics
+
+* Same sequencing technique as standard genomics, but on a mixture of organisms
+* Random set of sequences
+* May be assembled or not
+
+(try to find diagram from review)
+
+#### Metabarcoding
+
+(show metabarcoding figure)
+
+* mentions how it compars to shorgun metagenomics
+
+### Abundance
+
+#### Abundance of what?
+
+* Individules
+* Cells
+* Mass
+* DNA
+* Gene copies
+
+#### How abundance is encoded
+
+* Unique sequences
+* ASVs
+* OTUs
+* Phylotypes
+
+#### Why abundnance in metabarcoding is suspect
+
+* Copy number variation
+* DNA extraction bias
+* PCR bias
+* Sequencing bias
+
+(Look for paper from OSU presentation)
+(Different taq paper)
+
+#### Typical measures
+
+* Proportions
+* Counts
+* Rarefied counts
+* Mean vs Median
+
+#### How the data is stored
+
+* Abundance matrix
+* Orientation
+* Sample IDs 
+* ASV/OTU/Taxon IDs
+
+#### How they are plotted
+
+* Pie chart
+* Stacked bar chart
+* heat trees
+* circos plots
+* nested rectangle ones
+
+
+### Comparing abundance
+
+#### What is being compared?
+
+The same (ASV/OTU/Taxon) in multiple (Treatments/Hosts/Sites/etc)
+
+#### Absolute vs relative abundance
+
+* Absolute abundance is not known for metabarcoding and shotgun metagenomics
+* Relative abundance can be approximated 
+* Differences in relative abundance should not be confused with differences in absolute abundance
+
+#### Typical measures
+
+* Difference in absolute counts does not make sense
+
+Difference in (mean/median) (rarefied counts/proportions) of (ASVs/OTUs/Taxa) between (treatments)
+
+#### How the data is stored
+
+(diff table example)
+
+#### How they are plotted
+
+* Paired box plot of largest differences
+* Barchart of ranked difference? 
+* Differential heat tree
+* Differential heat tree matrix
+
+
+### Alpha diversity
+
+#### What is being measured?
+
+* The "diversity" of a single sample/community
+* "diveristy" could be the number of species or encorperate the abundance of each
+
+(figure with different community examples)
+
+#### Typical measures
+
+* Richness, Shannon, Simpson
+
+#### Hill numbers
+
+(show hill number table from paper)
+
+#### Phylogenetic measures
+
+
+#### How the data is stored
+
+* It is a per sample value, so makes sense to be part of the sample data table
+
+#### How they are plotted
+
+* Box plots
+* Violin plots
+
+#### Statistical tests
+
+* T-test or Wilcoxon rank sum for 2 groups
+* ANOVA followed by Tukeys HSD or Kruskal Wallis followed by Dunn? for more than two groups
+
+### Beta diversity
+
+#### What is being measured?
+
+* The difference in community composition between samples
+
+#### Typical measures
+
+* Some use abundance info, some do not
+* Some use phylogenetic similarity, and some do not
+* Bray-curtis and sorension?
+
+(table of abundance vs phylogenetic)
+
+#### How the data is stored
+
+* Triangular pairwise matrix
+* Long format?
+
+#### How they are plotted
+
+* Ordination like NMDS
+* Box plots for each experimental factor?
+
+(show examples of plots)
+
+#### Statistical tests
+
+* PERMANOVA
+* Tries to tell how much each experimental factor correlates with differences in diveristy
+
+(show examples of results)
+
+
+## How
+
+### R 
+
+#### Short history
+
+* Relationship to S
+* A stats programming languange
+* Who organizes it (CRAN)
+
+#### Strengths and weaknesses
+
+* Relativly slow
+* Unusual syntax
+* Inconsistent style
+* Vectorization
+* informal
+* Usually good documentation
+* free and open source
+* Easy pacakge installation
+* Often writen by researchers
+* CRAN
+
+#### R packages
+
+* Easy to install from CRAN or Github
+* Many of them
+* Somewhat "easy" to make
+* Highly specialzed
+* Often written by researchers
+
+### Rstudio
+
+#### How it differs from R
+
+* Is not the same as R
+* Is not needed to use R
+* IDE aka fancy text editor
+
+#### What is does
+
+* Text editor
+* R console
+* Terminal
+* Interface to Git (version control)
+* Envrionemnt pane
+* Displays help/plots
+* File browser
+
+(Demonstrate difference between R and Rstudio)
+
+#### R projects
+
+* Special folders used by Rstudio
+* Control current working directory
+* Use them, one for each project
+* Makes code more sharable
+* Put all code and data needed in the folder if possible
+
+(Show how to make an R project and an example of one of mine)
+
+
+### Ecology R pacakges
+
+#### vegan
+
+* Relativly old and widely used
+* Designed for all types of community ecology
+* Community ecology statistics; alpha and beta diversity
+* Many statistical tests
+
+#### phyloseq
+
+* Designed for metabarcoding studies
+* Makes vegan easier to use
+* Some automated plots and analyses
+
+#### metacoder and taxa
+
+* Designed for community abundance data assigned to a taxonomy
+* Implements commonly needed operations in metabarcoding research
+* Has a different data structure than phyloseq
+* Heat trees and heat tree matrixes
+
+### General use R packages
+
+#### ggplot2
+
+* An alternative to base R graphics
+* Makes graphics more concept-based
+* Very popular and powerful
+* Is both easy and confusing
+* Stack overflow is your friend
+
+(show ggplot2 vs base graphics)
+
+#### dplyr
+
+* An alternative to standard R subsetting and table manipulation
+* Easier for interacvie use
+* Harder to use for programming or some complicated tasks
+* More consistent
+
+(Show dply vs base R subsetting)
+
+#### rmarkdown
+
+* Combines notes with code and the results of code
+* Make a record of an analysis
+* Very useful for reproducible research
+* Can be used to make websites, presentations, and other things
+
+(demonatrate if there is time)

@@ -21,21 +21,21 @@ if (! is.null(current_input())) { # if knitr is being used
 
 Metacoder is an R package for `r gloss$add("parsing")`, plotting, and manipulating large `r gloss$add("taxonomy", shown = "taxonomic")` data sets, like those generated from modern high-throughput sequencing, like metabarcoding (i.e. amplification metagenomics, 16S metagenomics, etc).
 It provides a tree-based visualization called "heat trees" used to depict statistics for every taxon in a taxonomy using color and size.
-It also provides various functions to do common tasks in microbiome bioinformatics on data in the `taxmap` format defined by the `taxa` package, such as:
+It also provides various functions to do common tasks in microbiome bioinformatics on data in the `taxmap` format defined by the `metacoder` package, such as:
 
 * Summing read counts/abundance per taxon
 * Converting counts to proportions and `r gloss$add("rarefaction")` of counts using `vegan`
 * Comparing the abundance (or other characteristics) of groups of samples (e.g., experimental treatments) per taxon
 * Combining data for groups of samples
 * Simulated PCR, via EMBOSS primersearch, for testing primer specificity and coverage of taxonomic groups
-* Converting common microbiome formats for data and reference databases into the objects defined by the `taxa` package.
-* Converting to and from the `phyloseq` format and the `taxa` format
+* Converting common microbiome formats for data and reference databases into the objects defined by the `metacoder` package.
+* Converting to and from the `phyloseq` format and the `metacoder` format
 
 ## Relationship with other packages
 
 Many of these operations can be done using other packages like `phyloseq`, which also provides tools for diversity analysis.
-The main strength of `metacoder` is that its functions use the flexible data types defined by `taxa`, which has powerful parsing and subsetting abilities that take into account the hierarchical relationship between taxa and user-defined data.
-In general, `metacoder` and `taxa` are more of an abstracted tool kit, whereas `phyloseq` has more specialized functions for community diversity data, but they both can do similar things.
+The main strength of `metacoder` is that its functions use the flexible data types defined by `metacoder`, which has powerful parsing and subsetting abilities that take into account the hierarchical relationship between taxa and user-defined data.
+In general, `metacoder` is more of an abstracted tool kit, whereas `phyloseq` has more specialized functions for community diversity data, but they both can do similar things.
 I encourage you to try both to see which fits your needs and style best.
 You can also combine the two in a single analysis by converting between the two data types when needed using the `parse_phyloseq` and `as_phyloseq` functions.
 
@@ -77,7 +77,7 @@ To see the details of what is being worked on, check out the [issues](https://gi
 
 ## Acknowledgements
 
-Metacoder's major dependencies are `taxa`, `taxize`, `vegan`, `igraph`, `dplyr`, and `ggplot2`.
+Metacoder's major dependencies are `taxize`, `vegan`, `igraph`, `dplyr`, and `ggplot2`.
 
 
 ## Feedback and contributions

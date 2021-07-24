@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -31,12 +34,21 @@
 
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -46,14 +58,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -62,9 +76,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  { background-color: #f8f8f8; }
+  {  background-color: #f8f8f8; }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -482,17 +496,17 @@ $(document).ready(function () {
 <div id="manipulating-taxonomic-data" class="section level1">
 <h1>Manipulating taxonomic data</h1>
 <p>Tabular data is relatively straight forward to manipulate if you know some R already, but taxonomic data is hierarchical, making it much harder to work with. It gets even more complicated when there are other data associated with the taxonomy.</p>
-<p>For example, if we want to remove a bacterial phylum from the data, do we also remove all of the taxa within that phylum? If so, how do we identify which taxa are in that phylum? Depending on the format the data is in, this might be hard. If other data (e.g. <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">OTU</a></b> counts) are associated with taxa within that phylum, do we also remove those too? After all, even if the phylum and the taxa within it are removed, we still know that all the associated data are bacterial, so do we reassign them to the Bacteria taxon, or just throw those data out? The answer to these kind of questions will depend on our data and what we want to do with it.</p>
+<p>For example, if we want to remove a bacterial phylum from the data, do we also remove all of the taxa within that phylum? If so, how do we identify which taxa are in that phylum? Depending on the format the data is in, this might be hard. If other data (e.g. <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">OTU</a></b> counts) are associated with taxa within that phylum, do we also remove those too? After all, even if the phylum and the taxa within it are removed, we still know that all the associated data are bacterial, so do we reassign them to the Bacteria taxon, or just throw those data out? The answer to these kind of questions will depend on our data and what we want to do with it.</p>
 <div id="load-example-data" class="section level2">
 <h2>Load example data</h2>
 <p>If you are starting the workshop at this section, or had problems running code in a previous section, use the following to load the data used in this section. You can download the “parsed_data.Rdata” file <a href="parsed_data.Rdata" download="parsed_data.Rdata">here</a>. If you have just done the previous section, you can ignore this and proceed.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">load</span>(<span class="st">&quot;parsed_data.Rdata&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">load</span>(<span class="st">&quot;parsed_data.Rdata&quot;</span>)</span></code></pre></div>
 </div>
 <div id="subsetting-tabular-data" class="section level2">
 <h2>Subsetting tabular data</h2>
-<p>The <b><a href ="appendix--00--glossary.html#function_anchor">functions</a></b> to subset taxonomic information in <code>taxmap</code> objects (the format our example data is in) provided by the <code>taxa</code> package are modeled after functions in the <code>dplyr</code> package for manipulating tabular data (<span class="citation">Wickham and Francois (2015)</span>). These <code>dplyr</code> functions are alternatives to the standard R subsetting (e.g. <code>[</code>, <code>[[</code>, and <code>$</code>) designed to be be more intuitive and consistent. Since an understanding of these functions will help with the analogous (and more complicated) functions for taxonomic data, we will start by practicing these. Fortunately, we have a tabular data set in need of some subsetting: our sample data.</p>
+<p>The <b><a href ="appendix--00--glossary.html#function_anchor">functions</a></b> to subset taxonomic information in <code>taxmap</code> objects (the format our example data is in) provided by the <code>metacoder</code> package are modeled after functions in the <code>dplyr</code> package for manipulating tabular data (<span class="citation">Wickham and Francois (2015)</span>). These <code>dplyr</code> functions are alternatives to the standard R subsetting (e.g. <code>[</code>, <code>[[</code>, and <code>$</code>) designed to be be more intuitive and consistent. Since an understanding of these functions will help with the analogous (and more complicated) functions for taxonomic data, we will start by practicing these. Fortunately, we have a tabular data set in need of some subsetting: our sample data.</p>
 <p>First, lets take another look at our sample data:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">print</span>(sample_data)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">print</span>(sample_data)</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 1,698 x 16</span><span>
 ##    SampleID Name  Plant_ID Type  Experiment Cohort Harvested Age   Site  Treatment Line  Genotype
 ##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   
@@ -506,32 +520,32 @@ $(document).ready(function () {
 ## </span><span style='color: #BCBCBC;'> 8</span><span> M1956P8… 1_A_… 1_A_4    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   par1… PAR     
 ## </span><span style='color: #BCBCBC;'> 9</span><span> M1957P9… 1_A_… 1_A_7    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   par9… PAR     
 ## </span><span style='color: #BCBCBC;'>10</span><span> M1957P9… 1_A_… 1_A_8    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   mil5… MIL     
-## </span><span style='color: #949494;'># … with 1,688 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,
-## #   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
+## </span><span style='color: #949494;'># … with 1,688 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 </span></code></pre>
 <p>This is a large data set and not all the 1698 samples are used in the main publication of <span class="citation">Wagner et al. (2016)</span>. Only the samples in the “ecotypes” experiment are part of the main study. Using standard R subsetting we could get just those rows like so:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">sample_data &lt;-<span class="st"> </span>sample_data[sample_data<span class="op">$</span>Experiment <span class="op">==</span><span class="st"> &quot;ecotypes&quot;</span>, ]</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>sample_data &lt;-<span class="st"> </span>sample_data[sample_data<span class="op">$</span>Experiment <span class="op">==</span><span class="st"> &quot;ecotypes&quot;</span>, ]</span></code></pre></div>
 <p>Using the <code>dplyr</code> functions, the same operation would be:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">sample_data &lt;-<span class="st"> </span><span class="kw">filter</span>(sample_data, Experiment <span class="op">==</span><span class="st"> &quot;ecotypes&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>sample_data &lt;-<span class="st"> </span><span class="kw">filter</span>(sample_data, Experiment <span class="op">==</span><span class="st"> &quot;ecotypes&quot;</span>)</span></code></pre></div>
 <p>Note how we could use the <code>Experiment</code> column on its own within the <code>filter</code> functions. That is a special property of the <code>filter</code> function and many others in <code>dplyr</code> known as <b><a href ="appendix--00--glossary.html#non-standard_evaluation_(nse)_anchor">Non-standard evaluation (NSE)</a></b>. If we tried that outside of the function, we would get an error. For example, the following will not work:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">is_ecotype &lt;-<span class="st"> </span>Experiment <span class="op">==</span><span class="st"> &quot;ecotypes&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>is_ecotype &lt;-<span class="st"> </span>Experiment <span class="op">==</span><span class="st"> &quot;ecotypes&quot;</span></span></code></pre></div>
 <pre><code>## Error in eval(expr, envir, enclos): object &#39;Experiment&#39; not found</code></pre>
-<p>Most <code>dplyr</code> functions work this way and so do the analogous functions in <code>taxa</code> for manipulating taxonomic data. If we have multiple filtering criteria, we can simply add more arguments to the functions. In the following code, we subset the table to only rows for plants from one of three site and that are 3 years old.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">sample_data &lt;-<span class="st"> </span><span class="kw">filter</span>(sample_data,</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">                      Site <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Mah&quot;</span>, <span class="st">&quot;Jam&quot;</span>, <span class="st">&quot;Sil&quot;</span>),</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">                      Age <span class="op">==</span><span class="st"> </span><span class="dv">3</span>)</a></code></pre></div>
+<p>Most <code>dplyr</code> functions work this way and so do the analogous functions in <code>metacoder</code> for manipulating taxonomic data. If we have multiple filtering criteria, we can simply add more arguments to the functions. In the following code, we subset the table to only rows for plants from one of three site and that are 3 years old.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>sample_data &lt;-<span class="st"> </span><span class="kw">filter</span>(sample_data,</span>
+<span id="cb7-2"><a href="#cb7-2"></a>                      Site <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Mah&quot;</span>, <span class="st">&quot;Jam&quot;</span>, <span class="st">&quot;Sil&quot;</span>),</span>
+<span id="cb7-3"><a href="#cb7-3"></a>                      Age <span class="op">==</span><span class="st"> </span><span class="dv">3</span>)</span></code></pre></div>
 <p>This is usually equivalent to combining multiple conditions with <code>&amp;</code> in normal subsetting, but is faster for large data sets. It also will not return values for which conditions evaluate to <code>NA</code>, unlike <b><a href ="appendix--00--glossary.html#base_r_anchor">base R</a></b> subsetting.</p>
 <p>Up until now, everything we have done using <code>filter</code> can be easily done with base R subsetting as well, but <code>dplyr</code> introduces a few more advanced features that can save time/typing. We wont go into these in detail, but its good to know they exist. One is the concept of “grouping”. When rows are “grouped” by the values in one column, the rows corresponding to each unique value in that column are treated as a unit in some functions. <code>n()</code> is one such function that counts the number of items in each group. We can use this to filter out any plants that don’t have both root and leaf samples by counting the number of times each “Plant_ID” shows up:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">sample_data &lt;-<span class="st"> </span>sample_data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(Plant_ID) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">n</span>() <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>sample_data &lt;-<span class="st"> </span>sample_data <span class="op">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">group_by</span>(Plant_ID) <span class="op">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">n</span>() <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</span></code></pre></div>
 <p>This leaves us with 292 samples. Note the use of the <code>%&gt;%</code> “piping” operator. This takes the result of the function that comes before and uses it as the first argument to function that comes after. For example, <code>seq(1:10) %&gt;% length()</code> is the same as <code>length(seq(1:10))</code>. This allows for chaining many commands together in a readable way. Next we will subset the abundance data to just these samples to get the dataset down to a manageable size for a standard personal computer.</p>
 </div>
 <div id="subsetting-a-taxonomy" class="section level2">
 <h2>Subsetting a taxonomy</h2>
-<p>The analog to <code>filter</code> for taxonomic data is <code>filter_taxa</code> from the <code>taxa</code> package. This works in a similar way, but has many more options for how taxonomic relationships are used and what is done with data associated with removed taxa. Lets take another look at our data object:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">print</span>(obj)</a></code></pre></div>
+<p>The analog to <code>filter</code> for taxonomic data is <code>filter_taxa</code> from the <code>metacoder</code> package. This works in a similar way, but has many more options for how taxonomic relationships are used and what is done with data associated with removed taxa. Lets take another look at our data object:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   1558 taxa: <span style='color: #00BB00;'>aab</span><span>. Unassigned, </span><span style='color: #00BB00;'>aac</span><span>. Root ... </span><span style='color: #00BB00;'>chx</span><span>. Methanospirillaceae, </span><span style='color: #00BB00;'>chy</span><span>. 
 ##   1558 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>bel</span><span>-&gt;</span><span style='color: #00BB00;'>chw</span><span>, </span><span style='color: #00BB00;'>ays</span><span>-&gt;</span><span style='color: #00BB00;'>chx</span><span>, </span><span style='color: #00BB00;'>bem</span><span>-&gt;</span><span style='color: #00BB00;'>chy</span><span>
@@ -548,10 +562,10 @@ $(document).ready(function () {
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##   0 functions:
 </span></code></pre>
-<p>If we look at the second line, we can see that some taxa do not have names (the taxon with the ID “chy”). These are the ones that only had <b><a href ="appendix--00--glossary.html#taxonomic_ranks_anchor">rank</a></b> information in the classification we parsed in the last section (e.g. <code>o__</code> in <code>&quot;Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__&quot;</code>). Since these do not add any information, lets remove them.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">library</span>(taxa)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">obj &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">!=</span><span class="st"> &quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">print</span>(obj)</a></code></pre></div>
+<p>If we look at the second line, we can see that some taxa do not have names (the taxon with the ID “chy”). These are the ones that only had <b><a href ="appendix--00--glossary.html#taxonomic_ranks_anchor">rank</a></b> information in the classification we parsed in the last section (e.g. <code>o__</code> in <code>"Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__"</code>). Since these do not add any information, lets remove them.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">library</span>(metacoder)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>obj &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">!=</span><span class="st"> &quot;&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   959 taxa: <span style='color: #00BB00;'>aab</span><span>. Unassigned, </span><span style='color: #00BB00;'>aac</span><span>. Root ... </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae, </span><span style='color: #00BB00;'>chx</span><span>. Methanospirillaceae
 ##   959 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>anq</span><span>-&gt;</span><span style='color: #00BB00;'>cho</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>, </span><span style='color: #00BB00;'>ays</span><span>-&gt;</span><span style='color: #00BB00;'>chx</span><span>
@@ -568,16 +582,16 @@ $(document).ready(function () {
 ##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
 ##   0 functions:
 </span></code></pre>
-<p>There were OTUs associated with the nameless taxa, but no OTUs were filtered out, so what happened to them? By default, they are reassigned to the closest supertaxon that passes the filter. For example, for the <b><a href ="appendix--00--glossary.html#taxonomic_classifications_anchor">classification</a></b> <code>&quot;Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__&quot;</code>, the OTU would be reassigned to the class “SJA-28” and the taxon ID for that OTU would be changed to the taxon ID for “SJA-28”.</p>
+<p>There were OTUs associated with the nameless taxa, but no OTUs were filtered out, so what happened to them? By default, they are reassigned to the closest supertaxon that passes the filter. For example, for the <b><a href ="appendix--00--glossary.html#taxonomic_classifications_anchor">classification</a></b> <code>"Root;k__Bacteria;p__Chlorobi;c__SJA-28;o__;f__"</code>, the OTU would be reassigned to the class “SJA-28” and the taxon ID for that OTU would be changed to the taxon ID for “SJA-28”.</p>
 <p>Like <code>filter</code>, <code>filter_taxa</code> can use variables contained in the input objects as if they were independent variables. In this case, <code>taxon_names</code> is actually a function that is called when referenced in this way.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">taxon_names</span>(obj))</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">head</span>(<span class="kw">taxon_names</span>(obj))</span></code></pre></div>
 <pre class="r-output"><code>##              aab              aac              aad              aae              aaf 
 ##     "Unassigned"           "Root"       "Bacteria"        "Archaea" "Proteobacteria" 
 ##              aag 
 ## "Actinobacteria"
 </code></pre>
 <p>Other values that can be used this way include columns in tables and <b><a href ="appendix--00--glossary.html#list_anchor">lists</a></b>/<b><a href ="appendix--00--glossary.html#vector_anchor">vectors</a></b> stored in the <code>obj$data</code> list in <code>taxmap</code> objects. Since <code>taxmap</code> objects can store any number of lists, vectors, or tables mapped to a taxonomy, there can be many variables that can be referenced by name. The <code>all_names</code> function returns the name and location of variables that can be used this way:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">all_names</span>(obj), <span class="dv">20</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">head</span>(<span class="kw">all_names</span>(obj), <span class="dv">20</span>)</span></code></pre></div>
 <pre class="r-output"><code>##                          taxon_names                            taxon_ids 
 ##                        "taxon_names"                          "taxon_ids" 
 ##                        taxon_indexes                      classifications 
@@ -599,12 +613,12 @@ $(document).ready(function () {
 ##     data[['otu_counts']][['OTU_ID']] data[['otu_counts']][['M1024P1833']] 
 ##                             "OTU_ID"                         "M1024P1833"
 </code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">length</span>(<span class="kw">all_names</span>(obj))</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">length</span>(<span class="kw">all_names</span>(obj))</span></code></pre></div>
 <pre class="r-output"><code>## [1] 1724
 </code></pre>
 <p>Next, lets also filter out anything not in Bacteria, since the focus of the study was Bacteria.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">obj &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Bacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>obj &lt;-<span class="st"> </span><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Bacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   898 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cho</span><span>. wb1_P06, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   898 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>bea</span><span>-&gt;</span><span style='color: #00BB00;'>chi</span><span>, </span><span style='color: #00BB00;'>anq</span><span>-&gt;</span><span style='color: #00BB00;'>cho</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -622,7 +636,7 @@ $(document).ready(function () {
 ##   0 functions:
 </span></code></pre>
 <p>Note the use of the <code>subtaxa = TRUE</code>; this means that all the subtaxa of taxa that pass the filter should also be preserved. If we left this option off, we would would have only a single taxon with all OTUs assigned to it:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Bacteria&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Bacteria&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   1 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria
 ##   1 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>
@@ -640,9 +654,9 @@ $(document).ready(function () {
 ##   0 functions:
 </span></code></pre>
 <p>Note how the taxon IDs for OTUs change when taxa are filtered. Next, lets remove the columns from the abundance matrix that were removed from the sample data at the start of the section.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">obj<span class="op">$</span>data<span class="op">$</span>otu_counts &lt;-<span class="st"> </span>obj<span class="op">$</span>data<span class="op">$</span>otu_counts[<span class="kw">c</span>(<span class="st">&quot;taxon_id&quot;</span>, <span class="st">&quot;OTU_ID&quot;</span>, sample_data<span class="op">$</span>SampleID)]</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>obj<span class="op">$</span>data<span class="op">$</span>otu_counts &lt;-<span class="st"> </span>obj<span class="op">$</span>data<span class="op">$</span>otu_counts[<span class="kw">c</span>(<span class="st">&quot;taxon_id&quot;</span>, <span class="st">&quot;OTU_ID&quot;</span>, sample_data<span class="op">$</span>SampleID)]</span></code></pre></div>
 <p>This leaves us with a data set of 33,641 OTUs in 292 samples, classified by 898 taxa:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   898 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cho</span><span>. wb1_P06, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   898 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>bea</span><span>-&gt;</span><span style='color: #00BB00;'>chi</span><span>, </span><span style='color: #00BB00;'>anq</span><span>-&gt;</span><span style='color: #00BB00;'>cho</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -665,13 +679,13 @@ $(document).ready(function () {
 <h2>Subsetting data classified by a taxonomy</h2>
 <p>In the previous section we subset the taxonomy in a <code>taxmap</code> object using <code>filter_taxa</code>. By default, when taxa are removed, the OTUs assigned to them were reassigned to a supertaxon or removed as well. We can also subset the OTU table directly and remove any taxa that are no longer needed using the function <code>filter_obs</code>. The “obs” in the function name stands for “observations”. Unlike <code>filter</code>, which you used previously to subset tables, <code>filter_obs</code> works on a data set in a <code>taxmap</code> object, like our OTU table.</p>
 <p>In the last section we removed samples (i.e. columns in the OTU table) that did not appear in the <span class="citation">Wagner et al. (2016)</span> publication. This probably means that some of the OTUs only existed in those samples and now have no reads in the remaining samples. Lets remove those to make the data set more manageable. First we need to find which OTUs (i.e. rows) no have no reads. We can do that by using the function <code>rowSums</code> to get the number of reads in all samples for each OTU.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">has_no_reads &lt;-<span class="st"> </span><span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, sample_data<span class="op">$</span>SampleID]) <span class="op">==</span><span class="st"> </span><span class="dv">0</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>has_no_reads &lt;-<span class="st"> </span><span class="kw">rowSums</span>(obj<span class="op">$</span>data<span class="op">$</span>otu_counts[, sample_data<span class="op">$</span>SampleID]) <span class="op">==</span><span class="st"> </span><span class="dv">0</span></span></code></pre></div>
 <p>Since the table <code>otu_counts</code> also has the taxon ID and OTU ID columns we need to subset the columns to just the samples before using <code>rowSums</code>. The command above results in a <code>logical</code> vector, which is a series of <code>TRUE</code>/<code>FALSE</code> values that can be used to subset things. We can use <code>sum</code> to count the number of <code>TRUE</code> values and hence the number of OTUs without reads.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">sum</span>(has_no_reads)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">sum</span>(has_no_reads)</span></code></pre></div>
 <pre class="r-output"><code>## [1] 11957
 </code></pre>
 <p>There are 11,957 of 33,641 OTUs that now have no reads. Now that we know which they are, we can remove them using <code>filter_obs</code>.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="op">!</span><span class="st"> </span>has_no_reads) <span class="co"># note the ! negation operator</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="op">!</span><span class="st"> </span>has_no_reads) <span class="co"># note the ! negation operator</span></span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   898 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cho</span><span>. wb1_P06, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   898 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>bea</span><span>-&gt;</span><span style='color: #00BB00;'>chi</span><span>, </span><span style='color: #00BB00;'>anq</span><span>-&gt;</span><span style='color: #00BB00;'>cho</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -690,8 +704,8 @@ $(document).ready(function () {
 ##   0 functions:
 </span></code></pre>
 <p>Note how this removed rows in the “otu_counts” table but did not remove any taxa. To remove taxa that are no longer observed in any OTUs, we need to add the <code>drop_taxa</code> option:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">obj &lt;-<span class="st"> </span><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="op">!</span><span class="st"> </span>has_no_reads, <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">print</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>obj &lt;-<span class="st"> </span><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, <span class="op">!</span><span class="st"> </span>has_no_reads, <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="kw">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -714,15 +728,15 @@ $(document).ready(function () {
 <div id="exercises" class="section level2">
 <h2>Exercises</h2>
 <p>In these exercises, we will be using <code>obj</code> and <code>sample_data</code> from the analysis above. If you did not run the code above or had problems, run the following code to get the objects used. You can download the “filtered_data.Rdata” file <a href="filtered_data.Rdata" download="filtered_data.Rdata">here</a>.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">load</span>(<span class="st">&quot;filtered_data.Rdata&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">load</span>(<span class="st">&quot;filtered_data.Rdata&quot;</span>)</span></code></pre></div>
 <div id="subsetting-tabular-data-1" class="section level3">
 <h3>Subsetting tabular data</h3>
-<p><strong>1)</strong> Try to subset <code>sample_data</code> to just “leaf” samples using standard R subsetting (e.g. <code>my_table[rows, columns]</code>).</p>
+<p><strong>1)</strong> Try to subset <code>sample_data</code> to just “leaf” samples using standard R subsetting (e.g. <code>my_table[rows, columns]</code>).</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-22">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-22" class="collapse">
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">sample_data[sample_data<span class="op">$</span>Type <span class="op">==</span><span class="st"> &quot;leaf&quot;</span>, ]</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>sample_data[sample_data<span class="op">$</span>Type <span class="op">==</span><span class="st"> &quot;leaf&quot;</span>, ]</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 146 x 16</span><span>
 ## </span><span style='color: #949494;'># Groups:   Plant_ID [146]</span><span>
 ##    SampleID Name  Plant_ID Type  Experiment Cohort Harvested Age   Site  Treatment Line  Genotype
@@ -737,8 +751,8 @@ Show solution
 ## </span><span style='color: #BCBCBC;'> 8</span><span> M1980P4… 8_01… 8_0158   leaf  ecotypes   2008   2011      3     Jam   field     JAM.… JAM     
 ## </span><span style='color: #BCBCBC;'> 9</span><span> M1982P6… 8_01… 8_0167   leaf  ecotypes   2008   2011      3     Jam   field     PAR.… PAR     
 ## </span><span style='color: #BCBCBC;'>10</span><span> M1981P6… 8_01… 8_0174   leaf  ecotypes   2008   2011      3     Jam   field     MAH.… MAH     
-## </span><span style='color: #949494;'># … with 136 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,
-## #   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
+## </span><span style='color: #949494;'># … with 136 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 </span></code></pre>
 </div>
 <p><br /></p>
@@ -747,7 +761,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-23" class="collapse">
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">filter</span>(sample_data, Type <span class="op">==</span><span class="st"> &quot;leaf&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">filter</span>(sample_data, Type <span class="op">==</span><span class="st"> &quot;leaf&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 146 x 16</span><span>
 ## </span><span style='color: #949494;'># Groups:   Plant_ID [146]</span><span>
 ##    SampleID Name  Plant_ID Type  Experiment Cohort Harvested Age   Site  Treatment Line  Genotype
@@ -762,8 +776,8 @@ Show solution
 ## </span><span style='color: #BCBCBC;'> 8</span><span> M1980P4… 8_01… 8_0158   leaf  ecotypes   2008   2011      3     Jam   field     JAM.… JAM     
 ## </span><span style='color: #BCBCBC;'> 9</span><span> M1982P6… 8_01… 8_0167   leaf  ecotypes   2008   2011      3     Jam   field     PAR.… PAR     
 ## </span><span style='color: #BCBCBC;'>10</span><span> M1981P6… 8_01… 8_0174   leaf  ecotypes   2008   2011      3     Jam   field     MAH.… MAH     
-## </span><span style='color: #949494;'># … with 136 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,
-## #   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
+## </span><span style='color: #949494;'># … with 136 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
+## </span><span style='color: #949494;'>#   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 </span></code></pre>
 </div>
 <p><br /></p>
@@ -772,10 +786,10 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-24" class="collapse">
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">filter</span>(sample_data,</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2">       Type <span class="op">==</span><span class="st"> &quot;leaf&quot;</span>,</a>
-<a class="sourceLine" id="cb25-3" data-line-number="3">       Site <span class="op">==</span><span class="st"> &quot;Jam&quot;</span>,</a>
-<a class="sourceLine" id="cb25-4" data-line-number="4">       Genotype <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;SIL&quot;</span>, <span class="st">&quot;MIL&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">filter</span>(sample_data,</span>
+<span id="cb25-2"><a href="#cb25-2"></a>       Type <span class="op">==</span><span class="st"> &quot;leaf&quot;</span>,</span>
+<span id="cb25-3"><a href="#cb25-3"></a>       Site <span class="op">==</span><span class="st"> &quot;Jam&quot;</span>,</span>
+<span id="cb25-4"><a href="#cb25-4"></a>       Genotype <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;SIL&quot;</span>, <span class="st">&quot;MIL&quot;</span>))</span></code></pre></div>
 <pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 14 x 16</span><span>
 ## </span><span style='color: #949494;'># Groups:   Plant_ID [14]</span><span>
 ##    SampleID Name  Plant_ID Type  Experiment Cohort Harvested Age   Site  Treatment Line  Genotype
@@ -807,7 +821,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-25" class="collapse">
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">n_obs</span>(obj)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">n_obs</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>##   aad   aaf   aag   aah   aai   aaj   aak   aal   aam   aan   aao   aap   aaq   aar   aas   aau 
 ## 21684  7771  1781   443  1721   501   867  1150   417  1110  2367   106   382    68   719    20 
 ##   aav   aaw   aax   aay   aaz   aba   abb   abc   abd   abe   abf   abg   abi   abj   abk   abl 
@@ -904,7 +918,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-26" class="collapse">
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">filter_taxa</span>(obj, n_obs <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">filter_taxa</span>(obj, n_obs <span class="op">&gt;=</span><span class="st"> </span><span class="dv">100</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   122 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>bmk</span><span>. Legionellaceae
 ##   122 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>aoj</span><span>-&gt;</span><span style='color: #00BB00;'>bln</span><span>, </span><span style='color: #00BB00;'>aqj</span><span>-&gt;</span><span style='color: #00BB00;'>blr</span><span>, </span><span style='color: #00BB00;'>ano</span><span>-&gt;</span><span style='color: #00BB00;'>bmk</span><span>
@@ -929,7 +943,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-27" class="collapse">
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Actinobacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Actinobacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   72 taxa: <span style='color: #00BB00;'>aag</span><span>. Actinobacteria, </span><span style='color: #00BB00;'>ade</span><span>. Actinobacteria ... </span><span style='color: #00BB00;'>cfp</span><span>. Dermacoccaceae
 ##   72 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aag</span><span>-&gt;</span><span style='color: #00BB00;'>ade</span><span>, </span><span style='color: #00BB00;'>aag</span><span>-&gt;</span><span style='color: #00BB00;'>ado</span><span>, </span><span style='color: #00BB00;'>aag</span><span>-&gt;</span><span style='color: #00BB00;'>ady</span><span> ... </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>cbz</span><span>, </span><span style='color: #00BB00;'>anq</span><span>-&gt;</span><span style='color: #00BB00;'>cfe</span><span>, </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>cfp</span><span>
@@ -961,7 +975,7 @@ Because the OTUs assinged to taxa besides <em>Actinobacteria</em> or one of its 
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-29" class="collapse">
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Actinobacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>, <span class="dt">drop_obs =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Actinobacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>, <span class="dt">drop_obs =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   72 taxa: <span style='color: #00BB00;'>aag</span><span>. Actinobacteria, </span><span style='color: #00BB00;'>ade</span><span>. Actinobacteria ... </span><span style='color: #00BB00;'>cfp</span><span>. Dermacoccaceae
 ##   72 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aag</span><span>-&gt;</span><span style='color: #00BB00;'>ade</span><span>, </span><span style='color: #00BB00;'>aag</span><span>-&gt;</span><span style='color: #00BB00;'>ado</span><span>, </span><span style='color: #00BB00;'>aag</span><span>-&gt;</span><span style='color: #00BB00;'>ady</span><span> ... </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>cbz</span><span>, </span><span style='color: #00BB00;'>anq</span><span>-&gt;</span><span style='color: #00BB00;'>cfe</span><span>, </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>cfp</span><span>
@@ -994,7 +1008,7 @@ The OTUs not in Actinobacteria were assinged a taxon ID of <code>NA</code> becau
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-31" class="collapse">
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">filter_taxa</span>(obj, taxon_ranks <span class="op">==</span><span class="st"> &quot;p&quot;</span>, <span class="dt">supertaxa =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">filter_taxa</span>(obj, taxon_ranks <span class="op">==</span><span class="st"> &quot;p&quot;</span>, <span class="dt">supertaxa =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   50 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>acu</span><span>. GAL15, </span><span style='color: #00BB00;'>acx</span><span>. Kazan-3B-28
 ##   50 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>act</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>acu</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>acx</span><span>
@@ -1027,7 +1041,7 @@ No, because they were reassigned to the phyla.
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-33" class="collapse">
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Actinobacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Actinobacteria&quot;</span>, <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>, <span class="dt">invert =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   632 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   632 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aai</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1060,10 +1074,10 @@ Because the OTUs that were assigned to “Actinobacteria” were reassigned to �
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-35" class="collapse">
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Actinobacteria&quot;</span>,</a>
-<a class="sourceLine" id="cb32-2" data-line-number="2">            <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb32-3" data-line-number="3">            <span class="dt">invert =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb32-4" data-line-number="4">            <span class="dt">reassign_obs =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="kw">filter_taxa</span>(obj, taxon_names <span class="op">==</span><span class="st"> &quot;Actinobacteria&quot;</span>,</span>
+<span id="cb32-2"><a href="#cb32-2"></a>            <span class="dt">subtaxa =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb32-3"><a href="#cb32-3"></a>            <span class="dt">invert =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb32-4"><a href="#cb32-4"></a>            <span class="dt">reassign_obs =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   632 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   632 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aai</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1092,7 +1106,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-36" class="collapse">
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, M1981P563 <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, M1981P563 <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1109,7 +1123,7 @@ Show solution
 ##       #   M1980P462 &lt;dbl&gt;, M1555P221 &lt;dbl&gt;, M1980P471 &lt;dbl&gt;, M1979P422 &lt;dbl&gt;, …
 ##   0 functions:
 </span></code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co"># Also works: filter_obs(obj, &quot;otu_counts&quot;, obj$data$otu_counts$M1981P563 &gt; 5)</span></a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="co"># Also works: filter_obs(obj, &quot;otu_counts&quot;, obj$data$otu_counts$M1981P563 &gt; 5)</span></span></code></pre></div>
 </div>
 <p><br /></p>
 <p><strong>9b)</strong> Modify the previous command to remove taxa as well as rows in the table.</p>
@@ -1117,7 +1131,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-37" class="collapse">
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, M1981P563 <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>, <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">filter_obs</span>(obj, <span class="st">&quot;otu_counts&quot;</span>, M1981P563 <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>, <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   101 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>btg</span><span>. Bogoriellaceae
 ##   101 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>aor</span><span>-&gt;</span><span style='color: #00BB00;'>bkv</span><span>, </span><span style='color: #00BB00;'>aoj</span><span>-&gt;</span><span style='color: #00BB00;'>bln</span><span>, </span><span style='color: #00BB00;'>amj</span><span>-&gt;</span><span style='color: #00BB00;'>btg</span><span>
@@ -1137,8 +1151,8 @@ Show solution
 </div>
 <p><br /></p>
 <p><strong>10a)</strong> The function <code>calc_n_samples</code> from the <code>metacoder</code> package returns the number of samples each OTU appears in (i.e. has a non-zero count):</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">library</span>(metacoder)</a>
-<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="kw">calc_n_samples</span>(obj, <span class="dt">data =</span> <span class="st">&quot;otu_counts&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">library</span>(metacoder)</span>
+<span id="cb36-2"><a href="#cb36-2"></a><span class="kw">calc_n_samples</span>(obj, <span class="dt">data =</span> <span class="st">&quot;otu_counts&quot;</span>)</span></code></pre></div>
 <pre><code>## NOTE: Using the &quot;groups&quot; option without the &quot;cols&quot; option can yeild incorrect results if the column order is different from the group order.</code></pre>
 <pre><code>## No `cols` specified, so using all numeric columns:
 ##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
@@ -1159,7 +1173,7 @@ Show solution
 ## </span><span style='color: #949494;'># … with 21,674 more rows</span><span>
 </span></code></pre>
 <p>Using the <code>groups</code> option, it can do the calculation on columns grouped by treatment:</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">calc_n_samples</span>(obj, <span class="dt">data =</span> <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">groups =</span> sample_data<span class="op">$</span>Type)</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">calc_n_samples</span>(obj, <span class="dt">data =</span> <span class="st">&quot;otu_counts&quot;</span>, <span class="dt">groups =</span> sample_data<span class="op">$</span>Type)</span></code></pre></div>
 <pre><code>## NOTE: Using the &quot;groups&quot; option without the &quot;cols&quot; option can yeild incorrect results if the column order is different from the group order.</code></pre>
 <pre><code>## No `cols` specified, so using all numeric columns:
 ##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
@@ -1180,16 +1194,16 @@ Show solution
 ## </span><span style='color: #949494;'># … with 21,674 more rows</span><span>
 </span></code></pre>
 <p>Run the following code to add this as a table to a copy of your <code>taxmap</code> object:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1">obj2 &lt;-<span class="st"> </span>obj<span class="op">$</span><span class="kw">clone</span>(<span class="dt">deep =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb44-2" data-line-number="2">obj2<span class="op">$</span>data<span class="op">$</span>sample_counts &lt;-<span class="st"> </span><span class="kw">calc_n_samples</span>(obj,</a>
-<a class="sourceLine" id="cb44-3" data-line-number="3">                                         <span class="dt">data =</span> <span class="st">&quot;otu_counts&quot;</span>,</a>
-<a class="sourceLine" id="cb44-4" data-line-number="4">                                         <span class="dt">groups =</span> sample_data<span class="op">$</span>Type,</a>
-<a class="sourceLine" id="cb44-5" data-line-number="5">                                         <span class="dt">other_cols =</span> <span class="st">&quot;OTU_ID&quot;</span>) <span class="co"># Preserves OTU_ID column</span></a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>obj2 &lt;-<span class="st"> </span>obj<span class="op">$</span><span class="kw">clone</span>(<span class="dt">deep =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb44-2"><a href="#cb44-2"></a>obj2<span class="op">$</span>data<span class="op">$</span>sample_counts &lt;-<span class="st"> </span><span class="kw">calc_n_samples</span>(obj,</span>
+<span id="cb44-3"><a href="#cb44-3"></a>                                         <span class="dt">data =</span> <span class="st">&quot;otu_counts&quot;</span>,</span>
+<span id="cb44-4"><a href="#cb44-4"></a>                                         <span class="dt">groups =</span> sample_data<span class="op">$</span>Type,</span>
+<span id="cb44-5"><a href="#cb44-5"></a>                                         <span class="dt">other_cols =</span> <span class="st">&quot;OTU_ID&quot;</span>) <span class="co"># Preserves OTU_ID column</span></span></code></pre></div>
 <pre><code>## NOTE: Using the &quot;groups&quot; option without the &quot;cols&quot; option can yeild incorrect results if the column order is different from the group order.</code></pre>
 <pre><code>## No `cols` specified, so using all numeric columns:
 ##    M1981P563, M1977P1709, M1980P502, M1981P606 ... M1955P747, M1978P342, M1955P778</code></pre>
 <pre><code>## Calculating number of samples with a value greater than 0 for 292 columns in 2 groups for 21684 observations</code></pre>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw">print</span>(obj2)</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="kw">print</span>(obj2)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1220,7 +1234,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-41" class="collapse">
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">filter_obs</span>(obj2, <span class="st">&quot;otu_counts&quot;</span>, leaf <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, root <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>, <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a><span class="kw">filter_obs</span>(obj2, <span class="st">&quot;otu_counts&quot;</span>, leaf <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, root <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>, <span class="dt">drop_taxa =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   73 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>bln</span><span>. Isosphaeraceae, </span><span style='color: #00BB00;'>blx</span><span>. Hyphomonadaceae
 ##   73 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aai</span><span> ... </span><span style='color: #00BB00;'>aoo</span><span>-&gt;</span><span style='color: #00BB00;'>blb</span><span>, </span><span style='color: #00BB00;'>aoj</span><span>-&gt;</span><span style='color: #00BB00;'>bln</span><span>, </span><span style='color: #00BB00;'>apj</span><span>-&gt;</span><span style='color: #00BB00;'>blx</span><span>
@@ -1248,7 +1262,7 @@ Show solution
 </div>
 <p><br /></p>
 <p><strong>10b)</strong> The function <code>arrange_obs</code> sorts tables in <code>taxmap</code> object. For example, you can sort the OTU table in <code>obj</code> by the number of reads in sample “M1981P563” like so:</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="kw">arrange_obs</span>(obj2, <span class="st">&quot;otu_counts&quot;</span>, M1981P563)</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="kw">arrange_obs</span>(obj2, <span class="st">&quot;otu_counts&quot;</span>, M1981P563)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1275,7 +1289,7 @@ Show solution
 ##   0 functions:
 </span></code></pre>
 <p>To sort in descending order wrap the sorting parameter in <code>desc()</code>:</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw">arrange_obs</span>(obj2, <span class="st">&quot;otu_counts&quot;</span>, <span class="kw">desc</span>(M1981P563))</a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">arrange_obs</span>(obj2, <span class="st">&quot;otu_counts&quot;</span>, <span class="kw">desc</span>(M1981P563))</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1306,7 +1320,7 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-44" class="collapse">
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="kw">arrange_obs</span>(obj2, <span class="st">&quot;sample_counts&quot;</span>, leaf <span class="op">-</span><span class="st"> </span>root)</a></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">arrange_obs</span>(obj2, <span class="st">&quot;sample_counts&quot;</span>, leaf <span class="op">-</span><span class="st"> </span>root)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1347,7 +1361,7 @@ Show Answer
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-46" class="collapse">
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="kw">mutate_obs</span>(obj2, <span class="st">&quot;sample_counts&quot;</span>, <span class="dt">class =</span> <span class="kw">classifications</span>(obj2)[obj2<span class="op">$</span>data<span class="op">$</span>sample_counts<span class="op">$</span>taxon_id])</a></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">mutate_obs</span>(obj2, <span class="st">&quot;sample_counts&quot;</span>, <span class="dt">class =</span> <span class="kw">classifications</span>(obj2)[obj2<span class="op">$</span>data<span class="op">$</span>sample_counts<span class="op">$</span>taxon_id])</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1380,9 +1394,9 @@ Show solution
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-47" class="collapse">
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1">obj2 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;sample_counts&quot;</span>, <span class="dt">class =</span> <span class="kw">classifications</span>(obj2)[obj2<span class="op">$</span>data<span class="op">$</span>sample_counts<span class="op">$</span>taxon_id]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange_obs</span>(<span class="st">&quot;sample_counts&quot;</span>, leaf <span class="op">-</span><span class="st"> </span>root)</a></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>obj2 <span class="op">%&gt;%</span></span>
+<span id="cb54-2"><a href="#cb54-2"></a><span class="st">  </span><span class="kw">mutate_obs</span>(<span class="st">&quot;sample_counts&quot;</span>, <span class="dt">class =</span> <span class="kw">classifications</span>(obj2)[obj2<span class="op">$</span>data<span class="op">$</span>sample_counts<span class="op">$</span>taxon_id]) <span class="op">%&gt;%</span></span>
+<span id="cb54-3"><a href="#cb54-3"></a><span class="st">  </span><span class="kw">arrange_obs</span>(<span class="st">&quot;sample_counts&quot;</span>, leaf <span class="op">-</span><span class="st"> </span>root)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
 ##   704 taxa: <span style='color: #00BB00;'>aad</span><span>. Bacteria, </span><span style='color: #00BB00;'>aaf</span><span>. Proteobacteria ... </span><span style='color: #00BB00;'>cgz</span><span>. S24-7, </span><span style='color: #00BB00;'>chs</span><span>. Alcanivoracaceae
 ##   704 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aaf</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aag</span><span>, </span><span style='color: #00BB00;'>aad</span><span>-&gt;</span><span style='color: #00BB00;'>aah</span><span> ... </span><span style='color: #00BB00;'>amg</span><span>-&gt;</span><span style='color: #00BB00;'>cgf</span><span>, </span><span style='color: #00BB00;'>arh</span><span>-&gt;</span><span style='color: #00BB00;'>cgz</span><span>, </span><span style='color: #00BB00;'>apt</span><span>-&gt;</span><span style='color: #00BB00;'>chs</span><span>
@@ -1424,7 +1438,7 @@ Hyphomicrobiaceae, Paenibacillaceae, and Gemmataceae
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-wagner2016host">
-<p>Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery L Dangl, and Thomas Mitchell-Olds. 2016. “Host Genotype and Age Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.” <em>Nature Communications</em> 7. Nature Publishing Group: 12151. <a href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.</p>
+<p>Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery L Dangl, and Thomas Mitchell-Olds. 2016. “Host Genotype and Age Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.” <em>Nature Communications</em> 7: 12151. <a href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.</p>
 </div>
 <div id="ref-wickham2015dplyr">
 <p>Wickham, Hadley, and Romain Francois. 2015. “Dplyr: A Grammar of Data Manipulation.” <em>R Package Version 0.4</em> 3.</p>
@@ -1447,7 +1461,7 @@ Hyphomicrobiaceae, Paenibacillaceae, and Gemmataceae
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

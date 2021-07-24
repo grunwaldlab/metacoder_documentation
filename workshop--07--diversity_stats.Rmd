@@ -179,7 +179,7 @@ Now we can use these per-taxon abundances to make heat trees of the primary taxa
 ```{r fig.width = 10, fig.height = 10}
 set.seed(2)
 obj %>%
-  taxa::filter_taxa(leaf > 0.001) %>% # taxa:: needed because of phyloseq::filter_taxa
+  metacoder::filter_taxa(leaf > 0.001) %>% # metacoder:: needed because of phyloseq::filter_taxa
   heat_tree(node_label = taxon_names,
             node_size = leaf, 
             node_color = leaf, 
@@ -190,7 +190,7 @@ obj %>%
 ```{r fig.width = 10, fig.height = 10}
 set.seed(3)
 obj %>%
-  taxa::filter_taxa(root > 0.001) %>% # taxa:: needed because of phyloseq::filter_taxa
+  metacoder::filter_taxa(root > 0.001) %>% # metacoder:: needed because of phyloseq::filter_taxa
   heat_tree(node_label = taxon_names,
             node_size = root, 
             node_color = root, 
@@ -198,7 +198,7 @@ obj %>%
             title = "Taxa in roots")
 ```
 
-Note that we needed to qualify `filter_taxa` with `taxa::`.
+Note that we needed to qualify `filter_taxa` with `metacoder::`.
 This is because `phyloseq` is loaded and it also has a function called `filter_taxa`.
 When two functions from different packages have the same name, the function from the package that was loaded last is called, unless `package_name::` is added. 
 
@@ -359,7 +359,7 @@ Here `mutate_obs` is used to add a temporary variable to the taxmap object that 
 set.seed(1)
 obj %>%
   mutate_obs("cleaned_names", gsub(taxon_names, pattern = "\\[|\\]", replacement = "")) %>%
-  taxa::filter_taxa(grepl(cleaned_names, pattern = "^[a-zA-Z]+$")) %>%
+  metacoder::filter_taxa(grepl(cleaned_names, pattern = "^[a-zA-Z]+$")) %>%
   heat_tree(node_label = cleaned_names,
             node_size = n_obs, # number of OTUs
             node_color = log2_median_ratio, # difference between groups
@@ -401,9 +401,9 @@ Finally we call the `heat_tree_matrix` command with the same options that would 
 
 ```{r fig.width = 10, fig.height = 10}
 obj %>%
-  taxa::filter_taxa(taxon_ranks == "o", supertaxa = TRUE, reassign_obs = FALSE) %>%
+  metacoder::filter_taxa(taxon_ranks == "o", supertaxa = TRUE, reassign_obs = FALSE) %>%
   mutate_obs("cleaned_names", gsub(taxon_names, pattern = "\\[|\\]", replacement = "")) %>%
-  taxa::filter_taxa(grepl(cleaned_names, pattern = "^[a-zA-Z]+$"), reassign_obs = FALSE) %>%
+  metacoder::filter_taxa(grepl(cleaned_names, pattern = "^[a-zA-Z]+$"), reassign_obs = FALSE) %>%
   heat_tree_matrix(data = "diff_table",
                    node_label = cleaned_names,
                    node_size = n_obs, # number of OTUs
@@ -466,7 +466,7 @@ obj$data$site_abund <- calc_group_mean(obj, "tax_abund",
                                        groups = sample_data$Site)
 
 obj %>%
-  taxa::filter_taxa(Jam > 0) %>% # taxa:: needed because of phyloseq::filter_taxa
+  metacoder::filter_taxa(Jam > 0) %>% # metacoder:: needed because of phyloseq::filter_taxa
   heat_tree(node_label = taxon_names,
             node_size = Jam, 
             node_color = Jam, 

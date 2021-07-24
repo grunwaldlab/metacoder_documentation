@@ -32,7 +32,7 @@ Use the installers in "software/rstudio/mac, "software/rstudio/windows" or "soft
 The following packages are used in this workshop:
 
 ```{r include = FALSE}
-needed_packages <- c("vegan", "metacoder", "taxa", "ggplot2", "dplyr", "readr", "stringr", "agricolae", "ape", "phyloseq")
+needed_packages <- c("vegan", "metacoder", "ggplot2", "dplyr", "readr", "stringr", "agricolae", "ape", "phyloseq")
 ```
 
 ```{r echo=FALSE}

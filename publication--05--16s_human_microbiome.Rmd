@@ -66,8 +66,7 @@ colnames(otu_data)[1] <- "otu_id" # make column name more R friendly
 print(otu_data)
 ```
 
-The last column "Consensus Lineage" contains the `gloss$add("taxonomic classification")`, so we will use that to convert the rest of the data into a `taxmap` object using the [taxa package](https://github.com/ropensci/taxa).
-`Metacoder` imports the `taxa` package, so we can just load it to access `taxa`'s parsers.
+The last column "Consensus Lineage" contains the `gloss$add("taxonomic classification")`, so we will use that to convert the rest of the data into a `taxmap` object format.
 
 ```{r}
 library(metacoder)
@@ -137,7 +136,7 @@ head(taxon_names(hmp_data), n = 20)
 ```
 
 Those might be relevant depending on the research question, but for this analysis I choose to remove them, since they do not mean much to me (you might want to keep such taxa in your ananlysis).
-We can remove taxa from a `taxmap` object using the `filter_taxa` function from the `taxa` package.
+We can remove taxa from a `taxmap` object using the `filter_taxa` function.
 I will remove them by removing any taxon whose name is not composed of only letters.
 
 ```{r, cache = TRUE}

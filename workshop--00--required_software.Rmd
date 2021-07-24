@@ -38,7 +38,6 @@ Clicking of their name will lead to documentation (perhaps unofficial) for the p
 
 1. [vegan](http://cc.oulu.fi/~jarioksa/opetus/metodi/vegantutor.pdf): Implements many standard statistical techniques used in ecological research. Is used extensively by packages like `phyloseq` and `metacoder`. [@dixon2003vegan]
 1. [metacoder](https://github.com/grunwaldlab/metacoder#an-r-package-for-metabarcoding-research-planning-and-analysis): Manipulation and visualization of taxonomic data, particularly those from amplicon metagenomics research. [@foster2017metacoder]
-1. [taxa](https://github.com/ropensci/taxa#taxa): defines taxonomic `r gloss$add('class', shown = 'classes')` and functions to manipulate them. The goal is to use these classes as low level fundamental taxonomic classes that other R packages can build on and use. This is used by `metacoder`. [@foster2018taxa]
 1. [phyloseq](https://joey711.github.io/phyloseq/index.html): Popular package with tools for analysis and visualization of microbiome data [@mcmurdie2013phyloseq].
 1. [ggplot2](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html): Awesome graphing package. [@wickham2009ggplot2]
 1. [dplyr](http://stat545.com/block009_dplyr-intro.html): A package for manipulating tabular data with a cohesive and intuitive set of commands. A popular alternative to base R methods. [@wickham2015dplyr]
@@ -47,8 +46,7 @@ Clicking of their name will lead to documentation (perhaps unofficial) for the p
 1. [agricolae](https://cran.r-project.org/web/packages/agricolae/vignettes/tutorial.pdf): Used for the design and analysis of experiments, especially plant-related experiments.
 1. [ape](http://ape-package.ird.fr/): A popular package for DNA sequence analysis and phylogenetics.
 
-We wrote and actively maintain `metacoder` [@foster2017metacoder] and `taxa` [@foster2018taxa] so they
-are heavily relied upon in this primer.
+We wrote and actively maintain `metacoder` [@foster2017metacoder] so it is heavily relied upon in this primer.
 
 More R resources useful for microbiome data analysis can be found here:
 
@@ -63,12 +61,12 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("phyloseq")
 
 # Install the rest of the packages from CRAN
-install.packages(c("vegan", "metacoder", "taxa", "ggplot2", "dplyr", "readr", "stringr", "agricolae", "ape"),
+install.packages(c("vegan", "metacoder", "ggplot2", "dplyr", "readr", "stringr", "agricolae", "ape"),
                  repos = "http://cran.rstudio.com",
                  dependencies = TRUE)
 ```
 
-If the installation does not work, try installing the packages one at a time (e.g., `install.packages("taxa")`) and look for error messages.
+If the installation does not work, try installing the packages one at a time (e.g., `install.packages("vegan")`) and look for error messages.
 Usually the problem is that there is a non-R dependency that needs to be installed and how you install it will depend on your operating system.
 Copying the error messages into Google will usually help you figure it out.
 If a package has installed correctly, you should be able to load it with `library` (e.g., `library(phyloseq)`).

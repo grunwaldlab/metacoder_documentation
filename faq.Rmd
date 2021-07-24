@@ -21,8 +21,8 @@ if (! is.null(current_input())) { # if knitr is being used
 ### Error: otu_table slot is empty
 
 This happens when you have `phyloseq` loaded after `metacoder`. 
-There is also a `filter_taxa` in `phyloseq`, so the one from the `taxa` package is masked.
-Try prefixing `filter_taxa` with `taxa::` or loading `metacoder` after `phyloseq`.
+There is also a `filter_taxa` in `phyloseq`, so the one from the `metacoder` package is masked.
+Try prefixing `filter_taxa` with `metacoder::` or loading `metacoder` after `phyloseq`.
 
 ### The labels are too small!
 
@@ -116,9 +116,7 @@ my_taxmap %>%
 
 ### How do I get my data into metacoder?
 
-That depends on your data's format. For some formats, there are easy to user "parsers". All of them start with `parse_`, so you can type (after loading `metacoder`) `parse_` and hit tab and see what are available. If you format is not one of those, you can very likely use one of the all-purpose parsers supplied by the `taxa` package. You can read about those here:
-
-https://github.com/ropensci/taxa#parsing-data
+That depends on your data's format. For some formats, there are easy to user "parsers". All of them start with `parse_`, so you can type (after loading `metacoder`) `parse_` and hit tab and see what are available. If you format is not one of those, you can very likely use one of the all-purpose parsers supplied by the `metacoder` package.
 
 
 ### Does this work with phyloseq?
@@ -237,10 +235,31 @@ heat_tree(
   node_label = ifelse(taxon_names %in% dont_print, "", taxon_names),
   ...
 )
-
 ```
 
+If you more complex selection criteria and listing them is not practical, you can use a custom function that takes taxon names and returns the inputted name for labels you want printed and `""` or `NA` for labels you want to hide:
 
+```{r eval=FALSE}
+name_filter <- function(my_names) {
+  ... # Your fancy code, probably using regular expressions
+}
+
+heat_tree(
+  ...,
+  node_label = name_filter(taxon_names),
+  ...
+)
+```
+
+If you specifically want to remove taxa with ambiguous names like "unknown", you can use the `is_ambiguous` function:
+
+```{r eval=FALSE}
+heat_tree(
+  ...,
+  node_label = ifelse(is_ambiguous(taxon_names), "", taxon_names),
+  ...
+)
+```
 
 
 ### Is there a reccomended protocol or best practices guide? 
@@ -251,7 +270,7 @@ Even the tutorials in this documentation are not meant to be used as is or consi
 Best practices are a moving target, so we have focused on developing more abstract tools that should useful for many purposes.
 We try to make [hammers and screwdrivers, not assembly lines](https://en.wikipedia.org/wiki/Unix_philosophy#Do_One_Thing_and_Do_It_Well).
 Also, every dataset and study are different and something that might make sense for one might completely invalidate another.
-**I highly reccomend against copying large sections of code in this documentation and using it for your analysis without understanding what the code is doing.**
+**I highly recommend against copying large sections of code in this documentation and using it for your analysis without understanding what the code is doing.**
 On the other hand, if you do understand what an example analysis is doing, I welcome you to use it however you want!
 
 
