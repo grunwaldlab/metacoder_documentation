@@ -13,7 +13,8 @@
 
 <title>workshop--00--introduction.knit</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -29,7 +30,6 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -55,6 +55,29 @@
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 
 
@@ -79,6 +102,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -136,11 +162,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -231,7 +261,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -244,7 +274,7 @@ $(document).ready(function () {
   <a href="example.html">Example</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Workshop
      
     <span class="caret"></span>
@@ -277,7 +307,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Publication
      
     <span class="caret"></span>
@@ -313,7 +343,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Appendices
      
     <span class="caret"></span>
@@ -364,75 +394,150 @@ $(document).ready(function () {
 </div>
 
 
-<div id="analysis-of-microbiome-community-data-in-r" class="section level1">
+<div id="analysis-of-microbiome-community-data-in-r"
+class="section level1">
 <h1>Analysis of Microbiome Community Data in R</h1>
-<p>Welcome! This primer provides a concise introduction to conducting applied analyses of microbiome data in R. While this primer does not require extensive knowledge of programming in R, the user is expected to install R and all packages required for this primer.</p>
-<p><strong>Please install the required <a href="00--required_software.html">software</a> and download the <a href="00--required_data.html">example data</a> before coming to the workshop.</strong></p>
+<p>Welcome! This primer provides a concise introduction to conducting
+applied analyses of microbiome data in R. While this primer does not
+require extensive knowledge of programming in R, the user is expected to
+install R and all packages required for this primer.</p>
+<p><strong>Please install the required <a
+href="00--required_software.html">software</a> and download the <a
+href="00--required_data.html">example data</a> before coming to the
+workshop.</strong></p>
 <div id="what-is-covered" class="section level2">
 <h2>What is covered</h2>
-<p>This primer provides a concise introduction to conducting the statistical analyses and visualize microbiome data in R based on metabarcoding and high throughput sequencing (HTS). This primer does not cover “shotgun” metagenomic analysis, which is very different in nature. The reader is expected to have a very basic understanding of ecological diversity theory and some experience with R. The techniques presented here assume the raw sequences have been converted to <b><a href ="appendix--00--glossary.html#amplicon_sequence_variants_(asvs)_anchor">amplicon sequence variants (ASVs)</a></b> or <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">operational Taxonomic Units (OTUs)</a></b> and <b><a href ="appendix--00--glossary.html#taxonomic_classifications_anchor">classified</a></b> (i.e., assigned a taxonomy) using tools such as QIIME, mothur, or dada2 <span class="citation">(Schloss et al. 2009; Caporaso et al. 2010; Callahan et al. 2016)</span>.</p>
+<p>This primer provides a concise introduction to conducting the
+statistical analyses and visualize microbiome data in R based on
+metabarcoding and high throughput sequencing (HTS). This primer does not
+cover “shotgun” metagenomic analysis, which is very different in nature.
+The reader is expected to have a very basic understanding of ecological
+diversity theory and some experience with R. The techniques presented
+here assume the raw sequences have been converted to
+<b><a href ="appendix--00--glossary.html#amplicon_sequence_variants_(asvs)_anchor">amplicon
+sequence variants (ASVs)</a></b> or
+<b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">operational
+Taxonomic Units (OTUs)</a></b> and
+<b><a href ="appendix--00--glossary.html#taxonomic_classifications_anchor">classified</a></b>
+(i.e., assigned a taxonomy) using tools such as QIIME, mothur, or dada2
+<span class="citation">(Schloss et al. 2009; Caporaso et al. 2010;
+Callahan et al. 2016)</span>.</p>
 </div>
 <div id="why-use-r" class="section level2">
 <h2>Why use R?</h2>
-<p>R is an open source (free) statistical programming and graphing language that includes tools for analysis of statistical, ecological diversity and community data, among many other things. R provides a cohesive environment to analyze data using modular “toolboxes” called <b><a href ="appendix--00--glossary.html#r_package_anchor">R packages</a></b>. R runs on all major operating systems including Microsoft Windows, Linux (e.g., Ubuntu), and Apple’s OS X. The general type of analyses done in this workshop could be done in python, Perl, or using command line tools. We like R for the following reasons:</p>
+<p>R is an open source (free) statistical programming and graphing
+language that includes tools for analysis of statistical, ecological
+diversity and community data, among many other things. R provides a
+cohesive environment to analyze data using modular “toolboxes” called
+<b><a href ="appendix--00--glossary.html#r_package_anchor">R
+packages</a></b>. R runs on all major operating systems including
+Microsoft Windows, Linux (e.g., Ubuntu), and Apple’s OS X. The general
+type of analyses done in this workshop could be done in python, Perl, or
+using command line tools. We like R for the following reasons:</p>
 <ul>
 <li>We use it (i.e., we are biased).</li>
 <li>R packages are easy to install and not too hard to make.</li>
-<li>The R community is very active and growing. Packages are updated frequently.</li>
-<li>Repositories such as <b><a href ="appendix--00--glossary.html#the_comprehensive_r_archive_network_(cran)_anchor">the Comprehensive R Archive Network (CRAN)</a></b> and Bioconductor provide some quality control of packages and make them easy to install.</li>
-<li><b><a href ="appendix--00--glossary.html#rstudio_anchor">RStudio</a></b> is a great, free graphics user interface.</li>
-<li>R Markdown is well supported, allowing R code to be embedded in documents and output to diverse formats. This website is the output of a set of R Markdown documents. Thus, R markdown can be used as an electronic notebook facilitating for reproducible research <a href="http://grunwaldlab.github.io/Reproducible-science-in-R/">link</a>.</li>
+<li>The R community is very active and growing. Packages are updated
+frequently.</li>
+<li>Repositories such as
+<b><a href ="appendix--00--glossary.html#the_comprehensive_r_archive_network_(cran)_anchor">the
+Comprehensive R Archive Network (CRAN)</a></b> and Bioconductor provide
+some quality control of packages and make them easy to install.</li>
+<li><b><a href ="appendix--00--glossary.html#rstudio_anchor">RStudio</a></b>
+is a great, free graphics user interface.</li>
+<li>R Markdown is well supported, allowing R code to be embedded in
+documents and output to diverse formats. This website is the output of a
+set of R Markdown documents. Thus, R markdown can be used as an
+electronic notebook facilitating for reproducible research <a
+href="http://grunwaldlab.github.io/Reproducible-science-in-R/">link</a>.</li>
 <li>R has strong graphing and statistical capabilities.</li>
 <li>You can produce publication ready graphics</li>
-<li>R is designed to be an interactive language, providing a natural fit for statistical analyses rather than writing programs.</li>
+<li>R is designed to be an interactive language, providing a natural fit
+for statistical analyses rather than writing programs.</li>
 </ul>
 </div>
 <div id="the-kind-of-data-used-in-this-workshop" class="section level2">
 <h2>The kind of data used in this workshop</h2>
-<p>This workshop will not start with the raw reads, since the first steps in a metabarcoding workflow are typically done using command line tools such as QIIME or mothur (dada2 is an exception) in the cloud. Data that can be analysed using techniques presented here is typically the result of the following steps <span class="citation">(Comeau, Douglas, and Langille 2017)</span>:</p>
+<p>This workshop will not start with the raw reads, since the first
+steps in a metabarcoding workflow are typically done using command line
+tools such as QIIME or mothur (dada2 is an exception) in the cloud. Data
+that can be analysed using techniques presented here is typically the
+result of the following steps <span class="citation">(Comeau, Douglas,
+and Langille 2017)</span>:</p>
 <ol style="list-style-type: decimal">
 <li>Sample environments/soil/tissue/water and extract DNA.</li>
 <li>Perform PCR using standard primers.</li>
-<li>Sequence using a high-throughput sequencing platform such as the Illumina MiSeq.</li>
-<li>Call OTUs/ASVs and assign a taxonomic classification by comparing them to a reference database, such as Greengenes.</li>
-<li>Construct an abundance matrix of read counts for each OTU in each sample.</li>
+<li>Sequence using a high-throughput sequencing platform such as the
+Illumina MiSeq.</li>
+<li>Call OTUs/ASVs and assign a taxonomic classification by comparing
+them to a reference database, such as Greengenes.</li>
+<li>Construct an abundance matrix of read counts for each OTU in each
+sample.</li>
 </ol>
-<p>Here we focus on the statistical analysis and visualizations following OTU calling that include:</p>
+<p>Here we focus on the statistical analysis and visualizations
+following OTU calling that include:</p>
 <ul>
 <li>Reading files into R</li>
 <li>Manipulating tabular and taxonomic data</li>
-<li>Heat trees <span class="citation">(Foster, Sharpton, and Grünwald 2017)</span>, stacked bar charts and related visualizations</li>
+<li>Heat trees <span class="citation">(Foster, Sharpton, and Grünwald
+2017)</span>, stacked bar charts and related visualizations</li>
 <li>Alpha and beta diversity</li>
 <li>Ordination methods</li>
 </ul>
 </div>
 <div id="help-us-improve-this-resource" class="section level2">
 <h2>Help us improve this resource</h2>
-<p>We hope you enjoy this primer. Please provide us feedback on any errors you might find or suggestions for improvement.</p>
+<p>We hope you enjoy this primer. Please provide us feedback on any
+errors you might find or suggestions for improvement.</p>
 </div>
 <div id="citing-this-primer" class="section level2">
 <h2>Citing this primer</h2>
-<p>Please cite this primer if you find it useful for your research as: ZSL Foster and NJ Grünwald. 2018. Analysis of Microbiome Community Data in R. DOI: XXX.</p>
-<p><em>Niklaus J. Grünwald</em> <a href="https://orcid.org/0000-0003-1656-7602" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">orcid.org/0000-0003-1656-7602</a> and <em>Zach S. L. Foster</em> <a href="https://orcid.org/0000-0002-5075-0948" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">orcid.org/0000-0002-5075-0948</a></p>
+<p>Please cite this primer if you find it useful for your research as:
+ZSL Foster and NJ Grünwald. 2018. Analysis of Microbiome Community Data
+in R. DOI: XXX.</p>
+<p><em>Niklaus J. Grünwald</em>
+<a href="https://orcid.org/0000-0003-1656-7602" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">orcid.org/0000-0003-1656-7602</a>
+and <em>Zach S. L. Foster</em>
+<a href="https://orcid.org/0000-0002-5075-0948" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">orcid.org/0000-0002-5075-0948</a></p>
 <p>© 2018, Corvallis, Oregon, USA</p>
 </div>
 <div id="references" class="section level2 unnumbered">
-<h2>References</h2>
-<div id="refs" class="references">
-<div id="ref-callahan2016dada2">
-<p>Callahan, Benjamin J, Paul J McMurdie, Michael J Rosen, Andrew W Han, Amy Jo A Johnson, and Susan P Holmes. 2016. “DADA2: High-Resolution Sample Inference from Illumina Amplicon Data.” <em>Nature Methods</em> 13 (7): 581.</p>
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-callahan2016dada2" class="csl-entry">
+Callahan, Benjamin J, Paul J McMurdie, Michael J Rosen, Andrew W Han,
+Amy Jo A Johnson, and Susan P Holmes. 2016. <span>“Dada2:
+High-Resolution Sample Inference from Illumina Amplicon Data.”</span>
+<em>Nature Methods</em> 13 (7): 581.
 </div>
-<div id="ref-caporaso2010qiime">
-<p>Caporaso, J Gregory, Justin Kuczynski, Jesse Stombaugh, Kyle Bittinger, Frederic D Bushman, Elizabeth K Costello, Noah Fierer, et al. 2010. “QIIME Allows Analysis of High-Throughput Community Sequencing Data.” <em>Nature Methods</em> 7 (5): 335–36. <a href="https://www.nature.com/articles/nmeth.f.303">https://www.nature.com/articles/nmeth.f.303</a>.</p>
+<div id="ref-caporaso2010qiime" class="csl-entry">
+Caporaso, J Gregory, Justin Kuczynski, Jesse Stombaugh, Kyle Bittinger,
+Frederic D Bushman, Elizabeth K Costello, Noah Fierer, et al. 2010.
+<span>“QIIME Allows Analysis of High-Throughput Community Sequencing
+Data.”</span> <em>Nature Methods</em> 7 (5): 335–36. <a
+href="https://www.nature.com/articles/nmeth.f.303">https://www.nature.com/articles/nmeth.f.303</a>.
 </div>
-<div id="ref-comeau2017microbiome">
-<p>Comeau, André M, Gavin M Douglas, and Morgan GI Langille. 2017. “Microbiome Helper: A Custom and Streamlined Workflow for Microbiome Research.” <em>mSystems</em> 2 (1): e00127–16. <a href="http://msystems.asm.org/content/2/1/e00127-16">http://msystems.asm.org/content/2/1/e00127-16</a>.</p>
+<div id="ref-comeau2017microbiome" class="csl-entry">
+Comeau, André M, Gavin M Douglas, and Morgan GI Langille. 2017.
+<span>“Microbiome Helper: A Custom and Streamlined Workflow for
+Microbiome Research.”</span> <em>mSystems</em> 2 (1): e00127–16. <a
+href="http://msystems.asm.org/content/2/1/e00127-16">http://msystems.asm.org/content/2/1/e00127-16</a>.
 </div>
-<div id="ref-foster2017metacoder">
-<p>Foster, Zachary SL, Thomas J Sharpton, and Niklaus J Grünwald. 2017. “Metacoder: An R Package for Visualization and Manipulation of Community Taxonomic Diversity Data.” <em>PLoS Computational Biology</em> 13 (2): e1005404. <a href="https://doi.org/10.1371/journal.pcbi.1005404">https://doi.org/10.1371/journal.pcbi.1005404</a>.</p>
+<div id="ref-foster2017metacoder" class="csl-entry">
+Foster, Zachary SL, Thomas J Sharpton, and Niklaus J Grünwald. 2017.
+<span>“Metacoder: An r Package for Visualization and Manipulation of
+Community Taxonomic Diversity Data.”</span> <em>PLoS Computational
+Biology</em> 13 (2): e1005404. <a
+href="https://doi.org/10.1371/journal.pcbi.1005404">https://doi.org/10.1371/journal.pcbi.1005404</a>.
 </div>
-<div id="ref-schloss2009introducing">
-<p>Schloss, Patrick D, Sarah L Westcott, Thomas Ryabin, Justine R Hall, Martin Hartmann, Emily B Hollister, Ryan A Lesniewski, et al. 2009. “Introducing Mothur: Open-Source, Platform-Independent, Community-Supported Software for Describing and Comparing Microbial Communities.” <em>Applied and Environmental Microbiology</em> 75 (23): 7537–41. <a href="http://aem.asm.org/cgi/pmidlookup?view=long&amp;pmid=19801464">http://aem.asm.org/cgi/pmidlookup?view=long&amp;pmid=19801464</a>.</p>
+<div id="ref-schloss2009introducing" class="csl-entry">
+Schloss, Patrick D, Sarah L Westcott, Thomas Ryabin, Justine R Hall,
+Martin Hartmann, Emily B Hollister, Ryan A Lesniewski, et al. 2009.
+<span>“Introducing Mothur: Open-Source, Platform-Independent,
+Community-Supported Software for Describing and Comparing Microbial
+Communities.”</span> <em>Applied and Environmental Microbiology</em> 75
+(23): 7537–41. <a
+href="http://aem.asm.org/cgi/pmidlookup?view=long&amp;pmid=19801464">http://aem.asm.org/cgi/pmidlookup?view=long&amp;pmid=19801464</a>.
 </div>
 </div>
 </div>

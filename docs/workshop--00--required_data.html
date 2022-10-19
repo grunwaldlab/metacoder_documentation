@@ -11,18 +11,25 @@
 
 
 
-<title>workshop--00--required_data.utf8</title>
+<title>workshop--00--required_data.knit</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -46,30 +53,28 @@
 
 
 
+
+
 <style type="text/css">
-h1 {
-  font-size: 34px;
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
 }
-h1.title {
-  font-size: 38px;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-h2 {
-  font-size: 30px;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-h3 {
-  font-size: 24px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
+div.csl-indent {
+  margin-left: 2em;
 }
 </style>
 
@@ -82,10 +87,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -102,40 +103,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 61px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h2 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h3 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h4 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h5 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h6 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -163,7 +140,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -175,7 +152,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -185,11 +162,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -201,7 +195,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -268,7 +261,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -281,7 +274,7 @@ $(document).ready(function () {
   <a href="example.html">Example</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Workshop
      
     <span class="caret"></span>
@@ -314,7 +307,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Publication
      
     <span class="caret"></span>
@@ -350,7 +343,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Appendices
      
     <span class="caret"></span>
@@ -393,7 +386,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -403,28 +396,50 @@ $(document).ready(function () {
 
 <div id="datasets-used-in-this-workshop" class="section level1">
 <h1>Datasets used in this workshop</h1>
-<p>In this workshop, we will be using data from <span class="citation">Wagner et al. (2016)</span>, a study on the effects of plant age, genotype, and environment on the bacterial microbiome of <a href="https://en.wikipedia.org/wiki/Boechera_stricta"><em>Boechera stricta</em></a>, a perennial herb in the mustard family. <span class="citation">Wagner et al. (2016)</span> released their raw data with the article and it is available <a href="http://datadryad.org/resource/doi:10.5061/dryad.g60r3">here</a> on <a href="http://datadryad.org/">dryad</a>. This is a great example of how to share your raw data!</p>
-<p>A copy of this data is included in this site and can be downloaded from links below.</p>
+<p>In this workshop, we will be using data from <span
+class="citation">Wagner et al. (2016)</span>, a study on the effects of
+plant age, genotype, and environment on the bacterial microbiome of <a
+href="https://en.wikipedia.org/wiki/Boechera_stricta"><em>Boechera
+stricta</em></a>, a perennial herb in the mustard family. <span
+class="citation">Wagner et al. (2016)</span> released their raw data
+with the article and it is available <a
+href="http://datadryad.org/resource/doi:10.5061/dryad.g60r3">here</a> on
+<a href="http://datadryad.org/">dryad</a>. This is a great example of
+how to share your raw data!</p>
+<p>A copy of this data is included in this site and can be downloaded
+from links below.</p>
 <div id="sample-metadata" class="section level2">
 <h2>Sample metadata</h2>
-<p>A table with a sample in each row and info about the samples in each column, such as plant genotype and field site. It is a 170Kb <b><a href ="appendix--00--glossary.html#tab-delimited_text_file_anchor">tab-delimited text file</a></b>.</p>
+<p>A table with a sample in each row and info about the samples in each
+column, such as plant genotype and field site. It is a 170Kb
+<b><a href ="appendix--00--glossary.html#tab-delimited_text_file_anchor">tab-delimited
+text file</a></b>.</p>
 <p><a href="SMD.txt" download="SMD.txt">SMD.txt</a></p>
 </div>
 <div id="the-otu-abundance-table" class="section level2">
 <h2>The OTU abundance table</h2>
-<p>This has the number of reads associated with each <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">OTU</a></b> in each sample. It is a 6Mb compressed tab-delimited text file.</p>
+<p>This has the number of reads associated with each
+<b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">OTU</a></b>
+in each sample. It is a 6Mb compressed tab-delimited text file.</p>
 <p><a href="otuTable97.txt.bz2" download="otuTable97.txt.bz2">otuTable97.txt.bz2</a></p>
 </div>
 <div id="the-otu-taxonomy-file" class="section level2">
 <h2>The OTU taxonomy file</h2>
-<p>This has the <b><a href ="appendix--00--glossary.html#taxonomic_classifications_anchor">taxonomic classifications</a></b> for each OTU. It is a 6Mb tab-delimited text file.</p>
+<p>This has the
+<b><a href ="appendix--00--glossary.html#taxonomic_classifications_anchor">taxonomic
+classifications</a></b> for each OTU. It is a 6Mb tab-delimited text
+file.</p>
 <p><a href="taxAssignments97.txt" download="taxAssignments97.txt">taxAssignments97.txt</a></p>
 </div>
 <div id="references" class="section level2 unnumbered">
-<h2>References</h2>
-<div id="refs" class="references">
-<div id="ref-wagner2016host">
-<p>Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery L Dangl, and Thomas Mitchell-Olds. 2016. “Host Genotype and Age Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.” <em>Nature Communications</em> 7: 12151. <a href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.</p>
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-wagner2016host" class="csl-entry">
+Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery
+L Dangl, and Thomas Mitchell-Olds. 2016. <span>“Host Genotype and Age
+Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.”</span>
+<em>Nature Communications</em> 7: 12151. <a
+href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.
 </div>
 </div>
 </div>
@@ -462,7 +477,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>

@@ -11,18 +11,25 @@
 
 
 
-<title>workshop--00--required_software.utf8</title>
+<title>workshop--00--required_software.knit</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -44,21 +51,29 @@
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -78,7 +93,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {  background-color: #f8f8f8; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -117,13 +132,20 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -131,37 +153,29 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+
 
 
 <style type="text/css">
-h1 {
-  font-size: 34px;
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
 }
-h1.title {
-  font-size: 38px;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-h2 {
-  font-size: 30px;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-h3 {
-  font-size: 24px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
+div.csl-indent {
+  margin-left: 2em;
 }
 </style>
 
@@ -174,10 +188,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -194,40 +204,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 61px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h2 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h3 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h4 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h5 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h6 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -255,7 +241,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -267,7 +253,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -277,11 +263,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -293,7 +296,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -360,7 +362,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -373,7 +375,7 @@ $(document).ready(function () {
   <a href="example.html">Example</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Workshop
      
     <span class="caret"></span>
@@ -406,7 +408,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Publication
      
     <span class="caret"></span>
@@ -442,7 +444,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Appendices
      
     <span class="caret"></span>
@@ -485,7 +487,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -497,76 +499,148 @@ $(document).ready(function () {
 <h1>Installing required software</h1>
 <div id="installing-r" class="section level2">
 <h2>Installing R</h2>
-<p>R is a computer language that focuses on statistics, data science, and visualization. It can be installed on all common operating systems. R can be downloaded here:</p>
-<p><a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></p>
+<p>R is a computer language that focuses on statistics, data science,
+and visualization. It can be installed on all common operating systems.
+R can be downloaded here:</p>
+<p><a href="https://cran.r-project.org/"
+class="uri">https://cran.r-project.org/</a></p>
 </div>
 <div id="installing-rstudio" class="section level2">
 <h2>Installing RStudio</h2>
-<p><b><a href ="appendix--00--glossary.html#rstudio_anchor">RStudio</a></b> is an “Integrated Development Environment” (IDE) which is a fancy way of saying “text editor with extra programming-related tools”. RStudio makes it easier to use R, but is not needed to use R. Most R users seem to use RStudio, so we are recommending it for this workshop. The main version of RStudio, which is free and open source, can be downloaded here:</p>
-<p><a href="https://www.rstudio.com/products/rstudio/download/#download" class="uri">https://www.rstudio.com/products/rstudio/download/#download</a></p>
+<p><b><a href ="appendix--00--glossary.html#rstudio_anchor">RStudio</a></b>
+is an “Integrated Development Environment” (IDE) which is a fancy way of
+saying “text editor with extra programming-related tools”. RStudio makes
+it easier to use R, but is not needed to use R. Most R users seem to use
+RStudio, so we are recommending it for this workshop. The main version
+of RStudio, which is free and open source, can be downloaded here:</p>
+<p><a href="https://www.rstudio.com/products/rstudio/download/#download"
+class="uri">https://www.rstudio.com/products/rstudio/download/#download</a></p>
 </div>
 <div id="installing-the-required-r-packages" class="section level2">
 <h2>Installing the required R packages</h2>
-<p>In addition to tools included with every R installation, it is common to install <b><a href ="appendix--00--glossary.html#r_package_anchor">R packages</a></b>, which are sets of tools bundled together in a standardize way, making them easy to install. In fact, most functionality used in R is from R packages, not <b><a href ="appendix--00--glossary.html#base_r_anchor">base R</a></b>. The following packages are used in this primer. Clicking of their name will lead to documentation (perhaps unofficial) for the package.</p>
+<p>In addition to tools included with every R installation, it is common
+to install <b><a href ="appendix--00--glossary.html#r_package_anchor">R
+packages</a></b>, which are sets of tools bundled together in a
+standardize way, making them easy to install. In fact, most
+functionality used in R is from R packages, not
+<b><a href ="appendix--00--glossary.html#base_r_anchor">base R</a></b>.
+The following packages are used in this primer. Clicking of their name
+will lead to documentation (perhaps unofficial) for the package.</p>
 <ol style="list-style-type: decimal">
-<li><a href="http://cc.oulu.fi/~jarioksa/opetus/metodi/vegantutor.pdf">vegan</a>: Implements many standard statistical techniques used in ecological research. Is used extensively by packages like <code>phyloseq</code> and <code>metacoder</code>. <span class="citation">(Dixon 2003)</span></li>
-<li><a href="https://github.com/grunwaldlab/metacoder#an-r-package-for-metabarcoding-research-planning-and-analysis">metacoder</a>: Manipulation and visualization of taxonomic data, particularly those from amplicon metagenomics research. <span class="citation">(Foster, Sharpton, and Grünwald 2017)</span></li>
-<li><a href="https://joey711.github.io/phyloseq/index.html">phyloseq</a>: Popular package with tools for analysis and visualization of microbiome data <span class="citation">(McMurdie and Holmes 2013)</span>.</li>
-<li><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html">ggplot2</a>: Awesome graphing package. <span class="citation">(Wickham 2009)</span></li>
-<li><a href="http://stat545.com/block009_dplyr-intro.html">dplyr</a>: A package for manipulating tabular data with a cohesive and intuitive set of commands. A popular alternative to base R methods. <span class="citation">(Wickham and Francois 2015)</span></li>
-<li><a href="https://cran.r-project.org/web/packages/readr/vignettes/readr.html">readr</a>: Makes reading tabular data from files easier.</li>
-<li><a href="https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html">stringr</a>: Functions for text manipulation.</li>
-<li><a href="https://cran.r-project.org/web/packages/agricolae/vignettes/tutorial.pdf">agricolae</a>: Used for the design and analysis of experiments, especially plant-related experiments.</li>
-<li><a href="http://ape-package.ird.fr/">ape</a>: A popular package for DNA sequence analysis and phylogenetics.</li>
+<li><a
+href="http://cc.oulu.fi/~jarioksa/opetus/metodi/vegantutor.pdf">vegan</a>:
+Implements many standard statistical techniques used in ecological
+research. Is used extensively by packages like <code>phyloseq</code> and
+<code>metacoder</code>. <span class="citation">(Dixon 2003)</span></li>
+<li><a
+href="https://github.com/grunwaldlab/metacoder#an-r-package-for-metabarcoding-research-planning-and-analysis">metacoder</a>:
+Manipulation and visualization of taxonomic data, particularly those
+from amplicon metagenomics research. <span class="citation">(Foster,
+Sharpton, and Grünwald 2017)</span></li>
+<li><a
+href="https://joey711.github.io/phyloseq/index.html">phyloseq</a>:
+Popular package with tools for analysis and visualization of microbiome
+data <span class="citation">(McMurdie and Holmes 2013)</span>.</li>
+<li><a
+href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html">ggplot2</a>:
+Awesome graphing package. <span class="citation">(Wickham
+2009)</span></li>
+<li><a href="http://stat545.com/block009_dplyr-intro.html">dplyr</a>: A
+package for manipulating tabular data with a cohesive and intuitive set
+of commands. A popular alternative to base R methods. <span
+class="citation">(Wickham and Francois 2015)</span></li>
+<li><a
+href="https://cran.r-project.org/web/packages/readr/vignettes/readr.html">readr</a>:
+Makes reading tabular data from files easier.</li>
+<li><a
+href="https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html">stringr</a>:
+Functions for text manipulation.</li>
+<li><a
+href="https://cran.r-project.org/web/packages/agricolae/vignettes/tutorial.pdf">agricolae</a>:
+Used for the design and analysis of experiments, especially
+plant-related experiments.</li>
+<li><a href="http://ape-package.ird.fr/">ape</a>: A popular package for
+DNA sequence analysis and phylogenetics.</li>
 </ol>
-<p>We wrote and actively maintain <code>metacoder</code> <span class="citation">(Foster, Sharpton, and Grünwald 2017)</span> so it is heavily relied upon in this primer.</p>
-<p>More R resources useful for microbiome data analysis can be found here:</p>
-<p><a href="https://microsud.github.io/Tools-Microbiome-Analysis/" class="uri">https://microsud.github.io/Tools-Microbiome-Analysis/</a></p>
-<p>You can enter the following script in the R console to install these packages:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Install phyloseq from Bioconductor</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb1-3"><a href="#cb1-3"></a>    <span class="kw">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
-<span id="cb1-4"><a href="#cb1-4"></a>BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;phyloseq&quot;</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Install the rest of the packages from CRAN</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">&quot;vegan&quot;</span>, <span class="st">&quot;metacoder&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;stringr&quot;</span>, <span class="st">&quot;agricolae&quot;</span>, <span class="st">&quot;ape&quot;</span>),</span>
-<span id="cb1-8"><a href="#cb1-8"></a>                 <span class="dt">repos =</span> <span class="st">&quot;http://cran.rstudio.com&quot;</span>,</span>
-<span id="cb1-9"><a href="#cb1-9"></a>                 <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<p>If the installation does not work, try installing the packages one at a time (e.g., <code>install.packages("vegan")</code>) and look for error messages. Usually the problem is that there is a non-R dependency that needs to be installed and how you install it will depend on your operating system. Copying the error messages into Google will usually help you figure it out. If a package has installed correctly, you should be able to load it with <code>library</code> (e.g., <code>library(phyloseq)</code>).</p>
+<p>We wrote and actively maintain <code>metacoder</code> <span
+class="citation">(Foster, Sharpton, and Grünwald 2017)</span> so it is
+heavily relied upon in this primer.</p>
+<p>More R resources useful for microbiome data analysis can be found
+here:</p>
+<p><a href="https://microsud.github.io/Tools-Microbiome-Analysis/"
+class="uri">https://microsud.github.io/Tools-Microbiome-Analysis/</a></p>
+<p>You can enter the following script in the R console to install these
+packages:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install phyloseq from Bioconductor</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;phyloseq&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Install the rest of the packages from CRAN</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">&quot;vegan&quot;</span>, <span class="st">&quot;metacoder&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;stringr&quot;</span>, <span class="st">&quot;agricolae&quot;</span>, <span class="st">&quot;ape&quot;</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">repos =</span> <span class="st">&quot;http://cran.rstudio.com&quot;</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>If the installation does not work, try installing the packages one at
+a time (e.g., <code>install.packages("vegan")</code>) and look for error
+messages. Usually the problem is that there is a non-R dependency that
+needs to be installed and how you install it will depend on your
+operating system. Copying the error messages into Google will usually
+help you figure it out. If a package has installed correctly, you should
+be able to load it with <code>library</code> (e.g.,
+<code>library(phyloseq)</code>).</p>
 </div>
 <div id="testing-if-software-is-installed" class="section level2">
 <h2>Testing if software is installed</h2>
-<p>You can test if the software is installed correctly by opening RStudio and running the following code. Look at the appendices if you need help using R or RStudio.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(metacoder)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>x =<span class="st"> </span><span class="kw">parse_tax_data</span>(hmp_otus, <span class="dt">class_cols =</span> <span class="st">&quot;lineage&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>,</span>
-<span id="cb2-3"><a href="#cb2-3"></a>                   <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="dt">tax_rank =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">tax_name =</span> <span class="st">&quot;taxon_name&quot;</span>),</span>
-<span id="cb2-4"><a href="#cb2-4"></a>                   <span class="dt">class_regex =</span> <span class="st">&quot;^(.+)__(.+)$&quot;</span>)</span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="kw">heat_tree</span>(x, <span class="dt">node_label =</span> taxon_names, <span class="dt">node_size =</span> n_obs, <span class="dt">node_color =</span> n_obs)</span></code></pre></div>
+<p>You can test if the software is installed correctly by opening
+RStudio and running the following code. Look at the appendices if you
+need help using R or RStudio.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metacoder)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">parse_tax_data</span>(hmp_otus, <span class="at">class_cols =</span> <span class="st">&quot;lineage&quot;</span>, <span class="at">class_sep =</span> <span class="st">&quot;;&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">class_key =</span> <span class="fu">c</span>(<span class="at">tax_rank =</span> <span class="st">&quot;info&quot;</span>, <span class="at">tax_name =</span> <span class="st">&quot;taxon_name&quot;</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">class_regex =</span> <span class="st">&quot;^(.+)__(.+)$&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">heat_tree</span>(x, <span class="at">node_label =</span> taxon_names, <span class="at">node_size =</span> n_obs, <span class="at">node_color =</span> n_obs)</span></code></pre></div>
 <p><img src="workshop--00--required_software_files/figure-html/unnamed-chunk-2-1.png" width="960" style="display: block; margin: auto;" /></p>
-<p>If you see the above graph, then congratulations! You should now be all set for using R in this workshop. If you do not see the graph, then email us the result of the following code to help us troubleshoot the problem.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">sessionInfo</span>()</span></code></pre></div>
+<p>If you see the above graph, then congratulations! You should now be
+all set for using R in this workshop. If you do not see the graph, then
+email us the result of the following code to help us troubleshoot the
+problem.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 </div>
 <div id="installing-software-offline" class="section level2">
 <h2>Installing software offline</h2>
-<p>If you are in a workshop with no internet conection <a href="appendix--00--no_internet_install.html">click here</a> for how to install software offline.</p>
+<p>If you are in a workshop with no internet conection <a
+href="appendix--00--no_internet_install.html">click here</a> for how to
+install software offline.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
-<h2>References</h2>
-<div id="refs" class="references">
-<div id="ref-dixon2003vegan">
-<p>Dixon, Philip. 2003. “VEGAN, a Package of R Functions for Community Ecology.” <em>Journal of Vegetation Science</em> 14 (6): 927–30.</p>
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-dixon2003vegan" class="csl-entry">
+Dixon, Philip. 2003. <span>“VEGAN, a Package of r Functions for
+Community Ecology.”</span> <em>Journal of Vegetation Science</em> 14
+(6): 927–30.
 </div>
-<div id="ref-foster2017metacoder">
-<p>Foster, Zachary SL, Thomas J Sharpton, and Niklaus J Grünwald. 2017. “Metacoder: An R Package for Visualization and Manipulation of Community Taxonomic Diversity Data.” <em>PLoS Computational Biology</em> 13 (2): e1005404. <a href="https://doi.org/10.1371/journal.pcbi.1005404">https://doi.org/10.1371/journal.pcbi.1005404</a>.</p>
+<div id="ref-foster2017metacoder" class="csl-entry">
+Foster, Zachary SL, Thomas J Sharpton, and Niklaus J Grünwald. 2017.
+<span>“Metacoder: An r Package for Visualization and Manipulation of
+Community Taxonomic Diversity Data.”</span> <em>PLoS Computational
+Biology</em> 13 (2): e1005404. <a
+href="https://doi.org/10.1371/journal.pcbi.1005404">https://doi.org/10.1371/journal.pcbi.1005404</a>.
 </div>
-<div id="ref-mcmurdie2013phyloseq">
-<p>McMurdie, Paul J, and Susan Holmes. 2013. “Phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data.” <em>PloS One</em> 8 (4): e61217. <a href="https://doi.org/10.1371/journal.pone.0061217">https://doi.org/10.1371/journal.pone.0061217</a>.</p>
+<div id="ref-mcmurdie2013phyloseq" class="csl-entry">
+McMurdie, Paul J, and Susan Holmes. 2013. <span>“Phyloseq: An r Package
+for Reproducible Interactive Analysis and Graphics of Microbiome Census
+Data.”</span> <em>PloS One</em> 8 (4): e61217. <a
+href="https://doi.org/10.1371/journal.pone.0061217">https://doi.org/10.1371/journal.pone.0061217</a>.
 </div>
-<div id="ref-wickham2009ggplot2">
-<p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org">http://ggplot2.org</a>.</p>
+<div id="ref-wickham2009ggplot2" class="csl-entry">
+Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data
+Analysis</em>. Springer-Verlag New York. <a
+href="http://ggplot2.org">http://ggplot2.org</a>.
 </div>
-<div id="ref-wickham2015dplyr">
-<p>Wickham, Hadley, and Romain Francois. 2015. “Dplyr: A Grammar of Data Manipulation.” <em>R Package Version 0.4</em> 3.</p>
+<div id="ref-wickham2015dplyr" class="csl-entry">
+Wickham, Hadley, and Romain Francois. 2015. <span>“Dplyr: A Grammar of
+Data Manipulation.”</span> <em>R Package Version 0.4</em> 3.
 </div>
 </div>
 </div>
@@ -604,7 +678,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>

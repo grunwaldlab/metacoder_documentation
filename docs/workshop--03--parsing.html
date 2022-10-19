@@ -11,18 +11,25 @@
 
 
 
-<title>workshop--03--parsing.utf8</title>
+<title>workshop--03--parsing.knit</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -44,21 +51,29 @@
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -78,7 +93,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {  background-color: #f8f8f8; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -117,13 +132,20 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -131,37 +153,29 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+
 
 
 <style type="text/css">
-h1 {
-  font-size: 34px;
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
 }
-h1.title {
-  font-size: 38px;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-h2 {
-  font-size: 30px;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-h3 {
-  font-size: 24px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
+div.csl-indent {
+  margin-left: 2em;
 }
 </style>
 
@@ -174,10 +188,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -194,40 +204,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 61px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h2 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h3 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h4 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h5 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
-.section h6 {
-  padding-top: 66px;
-  margin-top: -66px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -255,7 +241,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -267,7 +253,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -277,11 +263,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -293,7 +296,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -360,7 +362,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -373,7 +375,7 @@ $(document).ready(function () {
   <a href="example.html">Example</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Workshop
      
     <span class="caret"></span>
@@ -406,7 +408,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Publication
      
     <span class="caret"></span>
@@ -442,7 +444,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Appendices
      
     <span class="caret"></span>
@@ -485,7 +487,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -497,130 +499,240 @@ $(document).ready(function () {
 <h1>Getting data into R</h1>
 <div id="typical-format-for-microbiome-data" class="section level2">
 <h2>Typical format for microbiome data</h2>
-<p>Most <b><a href ="appendix--00--glossary.html#pipelines_anchor">pipelines</a></b> for processing high-throughput <b><a href ="appendix--00--glossary.html#amplicon_anchor">amplicon</a></b> data, such as mothur, QIIME, and dada2, result in a matrix of read counts. One dimension of this matrix (i.e. the rows or the columns) consists of <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">Operational Taxonomic Units (OTUs)</a></b>, <b><a href ="appendix--00--glossary.html#phylotypes_anchor">phylotypes</a></b>, or <b><a href ="appendix--00--glossary.html#amplicon_sequence_variants_(asvs)_anchor">amplicon sequence variants (ASVs)</a></b> (all ways to “bin” similar read sequences). The other dimension consists of samples. Different tools will expect/output different orientations of the matrix, but, in our case, columns are samples and rows are OTUs. Sometimes the <b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">OTU</a></b> data and the abundance matrix are two separate tables. There is usually another table with sample information in rows. This makes it easy to add lots of additional sample data columns that can be used to subset the data. Each sample and OTU will have an unique ID.</p>
+<p>Most
+<b><a href ="appendix--00--glossary.html#pipelines_anchor">pipelines</a></b>
+for processing high-throughput
+<b><a href ="appendix--00--glossary.html#amplicon_anchor">amplicon</a></b>
+data, such as mothur, QIIME, and dada2, result in a matrix of read
+counts. One dimension of this matrix (i.e. the rows or the columns)
+consists of
+<b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">Operational
+Taxonomic Units (OTUs)</a></b>,
+<b><a href ="appendix--00--glossary.html#phylotypes_anchor">phylotypes</a></b>,
+or
+<b><a href ="appendix--00--glossary.html#amplicon_sequence_variants_(asvs)_anchor">amplicon
+sequence variants (ASVs)</a></b> (all ways to “bin” similar read
+sequences). The other dimension consists of samples. Different tools
+will expect/output different orientations of the matrix, but, in our
+case, columns are samples and rows are OTUs. Sometimes the
+<b><a href ="appendix--00--glossary.html#operational_taxonomic_units_(otus)_anchor">OTU</a></b>
+data and the abundance matrix are two separate tables. There is usually
+another table with sample information in rows. This makes it easy to add
+lots of additional sample data columns that can be used to subset the
+data. Each sample and OTU will have an unique ID.</p>
 <p><img src="figure_sources/typical_input_format.png" width="780" style="display: block; margin: auto;" /></p>
 </div>
 <div id="importing-data-into-r" class="section level2">
 <h2>Importing data into R</h2>
-<p>Importing data into R can be quite easy if the data is formatted well, but can be a very frustrating experience otherwise. An example of well-formatted data is <b><a href ="appendix--00--glossary.html#comma-delimited_text_file_anchor">.csv (comma-separated value)</a></b> or <b><a href ="appendix--00--glossary.html#tab-delimited_text_file_anchor">.tsv (tab-separated value)</a></b> files, each with a single table and no additional comments or formatting (e.g. merged cells). Either of these formats might also have a .txt extension (the extension does not really matter; its for humans, not computers). For more information on correct data formatting, see the <a href="http://grunwaldlab.github.io/Reproducible-science-in-R/03--Data_formatting.html">data formating section</a> of our <a href="http://grunwaldlab.github.io/Reproducible-science-in-R/index.html">guide for reporducible research</a>. You should always import the raw output data whenever possible and avoid any “manual” (i.e. non-scripted) modification of the data, especially in programs like Excel, which are known to mangle data from time to time (<span class="citation">Zeeberg et al. (2004)</span>).</p>
-<p>Throughout this workshop, we will be using data from <span class="citation">Wagner et al. (2016)</span>, a study on the effects of plant age, genotype, and environment on the bacterial microbiome of <a href="https://en.wikipedia.org/wiki/Boechera_stricta"><em>Boechera stricta</em></a>, a perennial herb in the mustard family. Here is a photo of <em>Boechera stricta</em> taken by Mary Ellen Harte:</p>
+<p>Importing data into R can be quite easy if the data is formatted
+well, but can be a very frustrating experience otherwise. An example of
+well-formatted data is
+<b><a href ="appendix--00--glossary.html#comma-delimited_text_file_anchor">.csv
+(comma-separated value)</a></b> or
+<b><a href ="appendix--00--glossary.html#tab-delimited_text_file_anchor">.tsv
+(tab-separated value)</a></b> files, each with a single table and no
+additional comments or formatting (e.g. merged cells). Either of these
+formats might also have a .txt extension (the extension does not really
+matter; its for humans, not computers). For more information on correct
+data formatting, see the <a
+href="http://grunwaldlab.github.io/Reproducible-science-in-R/03--Data_formatting.html">data
+formating section</a> of our <a
+href="http://grunwaldlab.github.io/Reproducible-science-in-R/index.html">guide
+for reporducible research</a>. You should always import the raw output
+data whenever possible and avoid any “manual” (i.e. non-scripted)
+modification of the data, especially in programs like Excel, which are
+known to mangle data from time to time (<span class="citation">Zeeberg
+et al. (2004)</span>).</p>
+<p>Throughout this workshop, we will be using data from <span
+class="citation">Wagner et al. (2016)</span>, a study on the effects of
+plant age, genotype, and environment on the bacterial microbiome of <a
+href="https://en.wikipedia.org/wiki/Boechera_stricta"><em>Boechera
+stricta</em></a>, a perennial herb in the mustard family. Here is a
+photo of <em>Boechera stricta</em> taken by Mary Ellen Harte:</p>
 <p><img src="images/boechera_stricta.jpg" width="375" style="display: block; margin: auto;" /></p>
-<p><span class="citation">Wagner et al. (2016)</span> released their raw data with the article and it is available <a href="http://datadryad.org/resource/doi:10.5061/dryad.g60r3">here</a> on <a href="http://datadryad.org/">dryad</a>. This is a great example of how to share your raw data!</p>
-<p>There are many <b><a href ="appendix--00--glossary.html#function_anchor">functions</a></b> commonly used to read tabular data, including the <b><a href ="appendix--00--glossary.html#base_r_anchor">base R</a></b> ones like <code>read.table</code> and <code>read.csv</code>, but we will be using functions from the new <a href="http://readr.tidyverse.org/articles/readr.html"><code>readr</code> package</a>, which returns <b><a href ="appendix--00--glossary.html#tibble_anchor">tibbles</a></b> instead of <code>data.frame</code>s (A “table” in R).</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(readr) <span class="co"># Loads the readr package so we can use `read_tsv`</span></span></code></pre></div>
-<p>Tibbles are a type of <code>data.frame</code> with some fancier printing and more consistent behavior. Click <a href="otuTable97.txt.bz2" download="otuTable97.txt.bz2">here</a> to download the OTU table. Lets read in the raw OTU table first:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>otu_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;otuTable97.txt.bz2&quot;</span>) <span class="co"># You might need to change the path to the file</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">print</span>(otu_data) <span class="co"># You can also enter just `otu_data` to print it</span></span></code></pre></div>
-<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 1,699</span><span>
-##    OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38 M1551P90 M1551P71
-##     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span>      1          0        0        0        0        0        0        0        0        0
-## </span><span style='color: #BCBCBC;'> 2</span><span>      2         41       22        4      726   </span><span style='text-decoration: underline;'>112</span><span>492        2      413        2        1
-## </span><span style='color: #BCBCBC;'> 3</span><span>      3         67       65       12    </span><span style='text-decoration: underline;'>13</span><span>514        1        4    </span><span style='text-decoration: underline;'>13</span><span>314       70     </span><span style='text-decoration: underline;'>5</span><span>929
-## </span><span style='color: #BCBCBC;'> 4</span><span>      4       </span><span style='text-decoration: underline;'>3</span><span>229    </span><span style='text-decoration: underline;'>13</span><span>679     </span><span style='text-decoration: underline;'>1</span><span>832      951      113     </span><span style='text-decoration: underline;'>2</span><span>496      567     </span><span style='text-decoration: underline;'>2</span><span>428     </span><span style='text-decoration: underline;'>2</span><span>156
-## </span><span style='color: #BCBCBC;'> 5</span><span>      5       </span><span style='text-decoration: underline;'>1</span><span>200       92     </span><span style='text-decoration: underline;'>3</span><span>530     </span><span style='text-decoration: underline;'>2</span><span>008        0      183     </span><span style='text-decoration: underline;'>2</span><span>087      292     </span><span style='text-decoration: underline;'>1</span><span>058
-## </span><span style='color: #BCBCBC;'> 6</span><span>      6        219     </span><span style='text-decoration: underline;'>1</span><span>980     </span><span style='text-decoration: underline;'>1</span><span>200      499        1      781      214     </span><span style='text-decoration: underline;'>2</span><span>273      171
-## </span><span style='color: #BCBCBC;'> 7</span><span>      7        485     </span><span style='text-decoration: underline;'>5</span><span>123      755     </span><span style='text-decoration: underline;'>4</span><span>080      443     </span><span style='text-decoration: underline;'>1</span><span>278     </span><span style='text-decoration: underline;'>2</span><span>193      401     </span><span style='text-decoration: underline;'>5</span><span>320
-## </span><span style='color: #BCBCBC;'> 8</span><span>      8        840     </span><span style='text-decoration: underline;'>7</span><span>079     </span><span style='text-decoration: underline;'>3</span><span>760       22        0     </span><span style='text-decoration: underline;'>2</span><span>699       22     </span><span style='text-decoration: underline;'>2</span><span>870       32
-## </span><span style='color: #BCBCBC;'> 9</span><span>      9         40       82       91      881        1      449     </span><span style='text-decoration: underline;'>1</span><span>121       90     </span><span style='text-decoration: underline;'>2</span><span>283
-## </span><span style='color: #BCBCBC;'>10</span><span>     10         11       79      277     </span><span style='text-decoration: underline;'>2</span><span>879        1        0     </span><span style='text-decoration: underline;'>6</span><span>811       14      243
-## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,689 more variables: M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-## </span><span style='color: #949494;'>#   M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-## </span><span style='color: #949494;'>#   M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P88 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
-</span></code></pre>
-<p>This is a big data set, with 47,806 rows (OTUs) and 1,699 columns (1,698 samples and an OTU ID). If your computer cannot load this file, don’t worry, we will provide a subset later for the rest of the workshop.</p>
-<p>In this data set, the taxonomic classifications for the OTUs are in a different file. This information could have been included as additional columns in the OTU table and often is in other data sets. Click <a href="taxAssignments97.txt" download="taxAssignments97.txt">here</a> to download the taxonomic classifications table.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>tax_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;taxAssignments97.txt&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">print</span>(tax_data) <span class="co"># You can also enter `tax_data` to print it</span></span></code></pre></div>
-<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 8</span><span>
-##    `OTU ID`  taxonomy                        Kingdom  Phylum  Class    Order    Family    Confidence
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> OTU_1     Unassigned                      Unassig… Unassi… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 2</span><span> OTU_10    Root;k__Bacteria;p__Bacteroide… Bacteria Bacter… Sphingo… Sphingo… Sphingob…       1   
-## </span><span style='color: #BCBCBC;'> 3</span><span> OTU_100   Root;k__Bacteria;p__Cyanobacte… Bacteria Cyanob… Chlorop… Chlorop… </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #BCBCBC;'> 4</span><span> OTU_1000  Root;k__Bacteria;p__Actinobact… Bacteria Actino… Actinob… Actinom… Actinosy…       0.67
-## </span><span style='color: #BCBCBC;'> 5</span><span> OTU_10000 Unassigned                      Unassig… Unassi… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 6</span><span> OTU_10001 Root;k__Bacteria;p__Chlamydiae… Bacteria Chlamy… Chlamyd… Chlamyd… Parachla…       1   
-## </span><span style='color: #BCBCBC;'> 7</span><span> OTU_10002 Root;k__Bacteria;p__Proteobact… Bacteria Proteo… Alphapr… </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #BCBCBC;'> 8</span><span> OTU_10003 Unassigned                      Unassig… Unassi… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 9</span><span> OTU_10004 Unassigned                      Unassig… Unassi… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'>10</span><span> OTU_10005 Root;k__Bacteria;p__Cyanobacte… Bacteria Cyanob… 4C0d-2   MLE1-12  </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #949494;'># … with 47,796 more rows</span><span>
-</span></code></pre>
-<p>Although these data are very well-formatted compared to most, there are still a few issues. The “OTU ID” column contains a space in the name (hence the back ticks), which makes it a bit more annoying to work with in R. More importantly, the OTU IDs in the taxonomy table are prefixed with “OTU_” and those in the OTU table are not, so we have to remove that prefix to make the two match up. The functions <code>sub</code> and <code>gsub</code> are used to search and replace parts of text; <code>sub</code> replaces only the first match and <code>gsub</code> replaces all matches. Replacing with nothing (<code>""</code>) effectively searches and deletes.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span> &lt;-<span class="st"> </span><span class="kw">sub</span>(tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span>, <span class="co"># ` are needed because of the space</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>                         <span class="dt">pattern =</span> <span class="st">&quot;OTU_&quot;</span>, <span class="dt">replacement =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">print</span>(tax_data) </span></code></pre></div>
-<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 8</span><span>
-##    `OTU ID` taxonomy                        Kingdom  Phylum   Class    Order    Family    Confidence
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> 1        Unassigned                      Unassig… Unassig… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 2</span><span> 10       Root;k__Bacteria;p__Bacteroide… Bacteria Bactero… Sphingo… Sphingo… Sphingob…       1   
-## </span><span style='color: #BCBCBC;'> 3</span><span> 100      Root;k__Bacteria;p__Cyanobacte… Bacteria Cyanoba… Chlorop… Chlorop… </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #BCBCBC;'> 4</span><span> 1000     Root;k__Bacteria;p__Actinobact… Bacteria Actinob… Actinob… Actinom… Actinosy…       0.67
-## </span><span style='color: #BCBCBC;'> 5</span><span> 10000    Unassigned                      Unassig… Unassig… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 6</span><span> 10001    Root;k__Bacteria;p__Chlamydiae… Bacteria Chlamyd… Chlamyd… Chlamyd… Parachla…       1   
-## </span><span style='color: #BCBCBC;'> 7</span><span> 10002    Root;k__Bacteria;p__Proteobact… Bacteria Proteob… Alphapr… </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #BCBCBC;'> 8</span><span> 10003    Unassigned                      Unassig… Unassig… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'> 9</span><span> 10004    Unassigned                      Unassig… Unassig… Unassig… Unassig… Unassign…       1   
-## </span><span style='color: #BCBCBC;'>10</span><span> 10005    Root;k__Bacteria;p__Cyanobacte… Bacteria Cyanoba… 4C0d-2   MLE1-12  </span><span style='color: #BB0000;'>NA</span><span>              1   
-## </span><span style='color: #949494;'># … with 47,796 more rows</span><span>
-</span></code></pre>
-<p>Although we could proceed with the analysis using separate OTU and taxonomy tables, lets combine them to simplify things. Since the rows are in different order, we need to combine (aka “join”) them based on their OTU ID. We will use the <a href="https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html"><code>dplyr</code> package</a> for this.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(dplyr) <span class="co"># Loads the dplyr package so we can use `left_join`</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span> &lt;-<span class="st"> </span><span class="kw">as.character</span>(tax_data<span class="op">$</span><span class="st">`</span><span class="dt">OTU ID</span><span class="st">`</span>) <span class="co"># Must be same type for join to work</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>otu_data<span class="op">$</span>OTU_ID &lt;-<span class="st"> </span><span class="kw">as.character</span>(otu_data<span class="op">$</span>OTU_ID) <span class="co"># Must be same type for join to work</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a>otu_data &lt;-<span class="st"> </span><span class="kw">left_join</span>(otu_data, tax_data,</span>
-<span id="cb5-5"><a href="#cb5-5"></a>                      <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;OTU_ID&quot;</span> =<span class="st"> &quot;OTU ID&quot;</span>)) <span class="co"># identifies cols with shared IDs</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="kw">print</span>(otu_data)</span></code></pre></div>
-<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 1,706</span><span>
-##    OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38 M1551P90 M1551P71
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> 1               0        0        0        0        0        0        0        0        0
-## </span><span style='color: #BCBCBC;'> 2</span><span> 2              41       22        4      726   </span><span style='text-decoration: underline;'>112</span><span>492        2      413        2        1
-## </span><span style='color: #BCBCBC;'> 3</span><span> 3              67       65       12    </span><span style='text-decoration: underline;'>13</span><span>514        1        4    </span><span style='text-decoration: underline;'>13</span><span>314       70     </span><span style='text-decoration: underline;'>5</span><span>929
-## </span><span style='color: #BCBCBC;'> 4</span><span> 4            </span><span style='text-decoration: underline;'>3</span><span>229    </span><span style='text-decoration: underline;'>13</span><span>679     </span><span style='text-decoration: underline;'>1</span><span>832      951      113     </span><span style='text-decoration: underline;'>2</span><span>496      567     </span><span style='text-decoration: underline;'>2</span><span>428     </span><span style='text-decoration: underline;'>2</span><span>156
-## </span><span style='color: #BCBCBC;'> 5</span><span> 5            </span><span style='text-decoration: underline;'>1</span><span>200       92     </span><span style='text-decoration: underline;'>3</span><span>530     </span><span style='text-decoration: underline;'>2</span><span>008        0      183     </span><span style='text-decoration: underline;'>2</span><span>087      292     </span><span style='text-decoration: underline;'>1</span><span>058
-## </span><span style='color: #BCBCBC;'> 6</span><span> 6             219     </span><span style='text-decoration: underline;'>1</span><span>980     </span><span style='text-decoration: underline;'>1</span><span>200      499        1      781      214     </span><span style='text-decoration: underline;'>2</span><span>273      171
-## </span><span style='color: #BCBCBC;'> 7</span><span> 7             485     </span><span style='text-decoration: underline;'>5</span><span>123      755     </span><span style='text-decoration: underline;'>4</span><span>080      443     </span><span style='text-decoration: underline;'>1</span><span>278     </span><span style='text-decoration: underline;'>2</span><span>193      401     </span><span style='text-decoration: underline;'>5</span><span>320
-## </span><span style='color: #BCBCBC;'> 8</span><span> 8             840     </span><span style='text-decoration: underline;'>7</span><span>079     </span><span style='text-decoration: underline;'>3</span><span>760       22        0     </span><span style='text-decoration: underline;'>2</span><span>699       22     </span><span style='text-decoration: underline;'>2</span><span>870       32
-## </span><span style='color: #BCBCBC;'> 9</span><span> 9              40       82       91      881        1      449     </span><span style='text-decoration: underline;'>1</span><span>121       90     </span><span style='text-decoration: underline;'>2</span><span>283
-## </span><span style='color: #BCBCBC;'>10</span><span> 10             11       79      277     </span><span style='text-decoration: underline;'>2</span><span>879        1        0     </span><span style='text-decoration: underline;'>6</span><span>811       14      243
-## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,696 more variables: M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-## </span><span style='color: #949494;'>#   M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-## </span><span style='color: #949494;'>#   M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P88 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
-</span></code></pre>
-<p>There are so many columns that all of them are not shown in the print out, but we can verify that they are there by looking at the last 10 column names:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">tail</span>(<span class="kw">colnames</span>(otu_data), <span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># `tail` returns the last n elements</span></span></code></pre></div>
+<p><span class="citation">Wagner et al. (2016)</span> released their raw
+data with the article and it is available <a
+href="http://datadryad.org/resource/doi:10.5061/dryad.g60r3">here</a> on
+<a href="http://datadryad.org/">dryad</a>. This is a great example of
+how to share your raw data!</p>
+<p>There are many
+<b><a href ="appendix--00--glossary.html#function_anchor">functions</a></b>
+commonly used to read tabular data, including the
+<b><a href ="appendix--00--glossary.html#base_r_anchor">base R</a></b>
+ones like <code>read.table</code> and <code>read.csv</code>, but we will
+be using functions from the new <a
+href="http://readr.tidyverse.org/articles/readr.html"><code>readr</code>
+package</a>, which returns
+<b><a href ="appendix--00--glossary.html#tibble_anchor">tibbles</a></b>
+instead of <code>data.frame</code>s (A “table” in R).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr) <span class="co"># Loads the readr package so we can use `read_tsv`</span></span></code></pre></div>
+<p>Tibbles are a type of <code>data.frame</code> with some fancier
+printing and more consistent behavior. Click
+<a href="otuTable97.txt.bz2" download="otuTable97.txt.bz2">here</a> to
+download the OTU table. Lets read in the raw OTU table first:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>otu_data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">&quot;otuTable97.txt.bz2&quot;</span>) <span class="co"># You might need to change the path to the file</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(otu_data) <span class="co"># You can also enter just `otu_data` to print it</span></span></code></pre></div>
+<pre class="r-output"><code>## <span style='color: #555555;'># A tibble: 47,806 × 1,699</span>
+##    OTU_ID M1024P1833 M1551…¹ M1551…² M1551…³ M1551…⁴ M1551…⁵ M1551…⁶ M1551…⁷ M1551…⁸ M1551…⁹ M1551…˟
+##     <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>      <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>
+## <span style='color: #555555;'> 1</span>      1          0       0       0       0       0       0       0       0       0       0       0
+## <span style='color: #555555;'> 2</span>      2         41      22       4     726  <span style='text-decoration: underline;'>112</span>492       2     413       2       1      65       2
+## <span style='color: #555555;'> 3</span>      3         67      65      12   <span style='text-decoration: underline;'>13</span>514       1       4   <span style='text-decoration: underline;'>13</span>314      70    <span style='text-decoration: underline;'>5</span>929   <span style='text-decoration: underline;'>13</span>893   <span style='text-decoration: underline;'>11</span>023
+## <span style='color: #555555;'> 4</span>      4       <span style='text-decoration: underline;'>3</span>229   <span style='text-decoration: underline;'>13</span>679    <span style='text-decoration: underline;'>1</span>832     951     113    <span style='text-decoration: underline;'>2</span>496     567    <span style='text-decoration: underline;'>2</span>428    <span style='text-decoration: underline;'>2</span>156     948     647
+## <span style='color: #555555;'> 5</span>      5       <span style='text-decoration: underline;'>1</span>200      92    <span style='text-decoration: underline;'>3</span>530    <span style='text-decoration: underline;'>2</span>008       0     183    <span style='text-decoration: underline;'>2</span>087     292    <span style='text-decoration: underline;'>1</span>058    <span style='text-decoration: underline;'>1</span>334     819
+## <span style='color: #555555;'> 6</span>      6        219    <span style='text-decoration: underline;'>1</span>980    <span style='text-decoration: underline;'>1</span>200     499       1     781     214    <span style='text-decoration: underline;'>2</span>273     171     427      74
+## <span style='color: #555555;'> 7</span>      7        485    <span style='text-decoration: underline;'>5</span>123     755    <span style='text-decoration: underline;'>4</span>080     443    <span style='text-decoration: underline;'>1</span>278    <span style='text-decoration: underline;'>2</span>193     401    <span style='text-decoration: underline;'>5</span>320    <span style='text-decoration: underline;'>2</span>491    <span style='text-decoration: underline;'>2</span>408
+## <span style='color: #555555;'> 8</span>      8        840    <span style='text-decoration: underline;'>7</span>079    <span style='text-decoration: underline;'>3</span>760      22       0    <span style='text-decoration: underline;'>2</span>699      22    <span style='text-decoration: underline;'>2</span>870      32      21      35
+## <span style='color: #555555;'> 9</span>      9         40      82      91     881       1     449    <span style='text-decoration: underline;'>1</span>121      90    <span style='text-decoration: underline;'>2</span>283     146     941
+## <span style='color: #555555;'>10</span>     10         11      79     277    <span style='text-decoration: underline;'>2</span>879       1       0    <span style='text-decoration: underline;'>6</span>811      14     243    <span style='text-decoration: underline;'>2</span>726     334
+## <span style='color: #555555;'># … with 47,796 more rows, 1,687 more variables: M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;, M1551P52 &lt;dbl&gt;,</span>
+## <span style='color: #555555;'>#   M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, M1551P75 &lt;dbl&gt;, M1551P88 &lt;dbl&gt;, M1551P47 &lt;dbl&gt;,</span>
+## <span style='color: #555555;'>#   M1551P77 &lt;dbl&gt;, …, and abbreviated variable names ¹​M1551P81, ²​M1551P57, ³​M1551P85, ⁴​M1551P28,</span>
+## <span style='color: #555555;'>#   ⁵​M1551P29, ⁶​M1551P38, ⁷​M1551P90, ⁸​M1551P71, ⁹​M1551P12, ˟​M1551P84</span>
+</code></pre>
+<p>This is a big data set, with 47,806 rows (OTUs) and 1,699 columns
+(1,698 samples and an OTU ID). If your computer cannot load this file,
+don’t worry, we will provide a subset later for the rest of the
+workshop.</p>
+<p>In this data set, the taxonomic classifications for the OTUs are in a
+different file. This information could have been included as additional
+columns in the OTU table and often is in other data sets. Click
+<a href="taxAssignments97.txt" download="taxAssignments97.txt">here</a>
+to download the taxonomic classifications table.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tax_data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">&quot;taxAssignments97.txt&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tax_data) <span class="co"># You can also enter `tax_data` to print it</span></span></code></pre></div>
+<pre class="r-output"><code>## <span style='color: #555555;'># A tibble: 47,806 × 8</span>
+##    `OTU ID`  taxonomy                                      Kingdom Phylum Class Order Family Confi…¹
+##    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>                                         <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>
+## <span style='color: #555555;'> 1</span> OTU_1     Unassigned                                    Unassi… Unass… Unas… Unas… Unass…    1   
+## <span style='color: #555555;'> 2</span> OTU_10    Root;k__Bacteria;p__Bacteroidetes;c__Sphingo… Bacter… Bacte… Sphi… Sphi… Sphin…    1   
+## <span style='color: #555555;'> 3</span> OTU_100   Root;k__Bacteria;p__Cyanobacteria;c__Chlorop… Bacter… Cyano… Chlo… Chlo… <span style='color: #BB0000;'>NA</span>        1   
+## <span style='color: #555555;'> 4</span> OTU_1000  Root;k__Bacteria;p__Actinobacteria;c__Actino… Bacter… Actin… Acti… Acti… Actin…    0.67
+## <span style='color: #555555;'> 5</span> OTU_10000 Unassigned                                    Unassi… Unass… Unas… Unas… Unass…    1   
+## <span style='color: #555555;'> 6</span> OTU_10001 Root;k__Bacteria;p__Chlamydiae;c__Chlamydiia… Bacter… Chlam… Chla… Chla… Parac…    1   
+## <span style='color: #555555;'> 7</span> OTU_10002 Root;k__Bacteria;p__Proteobacteria;c__Alphap… Bacter… Prote… Alph… <span style='color: #BB0000;'>NA</span>    <span style='color: #BB0000;'>NA</span>        1   
+## <span style='color: #555555;'> 8</span> OTU_10003 Unassigned                                    Unassi… Unass… Unas… Unas… Unass…    1   
+## <span style='color: #555555;'> 9</span> OTU_10004 Unassigned                                    Unassi… Unass… Unas… Unas… Unass…    1   
+## <span style='color: #555555;'>10</span> OTU_10005 Root;k__Bacteria;p__Cyanobacteria;c__4C0d-2;… Bacter… Cyano… 4C0d… MLE1… <span style='color: #BB0000;'>NA</span>        1   
+## <span style='color: #555555;'># … with 47,796 more rows, and abbreviated variable name ¹​Confidence</span>
+</code></pre>
+<p>Although these data are very well-formatted compared to most, there
+are still a few issues. The “OTU ID” column contains a space in the name
+(hence the back ticks), which makes it a bit more annoying to work with
+in R. More importantly, the OTU IDs in the taxonomy table are prefixed
+with “OTU_” and those in the OTU table are not, so we have to remove
+that prefix to make the two match up. The functions <code>sub</code> and
+<code>gsub</code> are used to search and replace parts of text;
+<code>sub</code> replaces only the first match and <code>gsub</code>
+replaces all matches. Replacing with nothing (<code>""</code>)
+effectively searches and deletes.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tax_data<span class="sc">$</span><span class="st">`</span><span class="at">OTU ID</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">sub</span>(tax_data<span class="sc">$</span><span class="st">`</span><span class="at">OTU ID</span><span class="st">`</span>, <span class="co"># ` are needed because of the space</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">pattern =</span> <span class="st">&quot;OTU_&quot;</span>, <span class="at">replacement =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tax_data) </span></code></pre></div>
+<pre class="r-output"><code>## <span style='color: #555555;'># A tibble: 47,806 × 8</span>
+##    `OTU ID` taxonomy                                       Kingdom Phylum Class Order Family Confi…¹
+##    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>                                          <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>
+## <span style='color: #555555;'> 1</span> 1        Unassigned                                     Unassi… Unass… Unas… Unas… Unass…    1   
+## <span style='color: #555555;'> 2</span> 10       Root;k__Bacteria;p__Bacteroidetes;c__Sphingob… Bacter… Bacte… Sphi… Sphi… Sphin…    1   
+## <span style='color: #555555;'> 3</span> 100      Root;k__Bacteria;p__Cyanobacteria;c__Chloropl… Bacter… Cyano… Chlo… Chlo… <span style='color: #BB0000;'>NA</span>        1   
+## <span style='color: #555555;'> 4</span> 1000     Root;k__Bacteria;p__Actinobacteria;c__Actinob… Bacter… Actin… Acti… Acti… Actin…    0.67
+## <span style='color: #555555;'> 5</span> 10000    Unassigned                                     Unassi… Unass… Unas… Unas… Unass…    1   
+## <span style='color: #555555;'> 6</span> 10001    Root;k__Bacteria;p__Chlamydiae;c__Chlamydiia;… Bacter… Chlam… Chla… Chla… Parac…    1   
+## <span style='color: #555555;'> 7</span> 10002    Root;k__Bacteria;p__Proteobacteria;c__Alphapr… Bacter… Prote… Alph… <span style='color: #BB0000;'>NA</span>    <span style='color: #BB0000;'>NA</span>        1   
+## <span style='color: #555555;'> 8</span> 10003    Unassigned                                     Unassi… Unass… Unas… Unas… Unass…    1   
+## <span style='color: #555555;'> 9</span> 10004    Unassigned                                     Unassi… Unass… Unas… Unas… Unass…    1   
+## <span style='color: #555555;'>10</span> 10005    Root;k__Bacteria;p__Cyanobacteria;c__4C0d-2;o… Bacter… Cyano… 4C0d… MLE1… <span style='color: #BB0000;'>NA</span>        1   
+## <span style='color: #555555;'># … with 47,796 more rows, and abbreviated variable name ¹​Confidence</span>
+</code></pre>
+<p>Although we could proceed with the analysis using separate OTU and
+taxonomy tables, lets combine them to simplify things. Since the rows
+are in different order, we need to combine (aka “join”) them based on
+their OTU ID. We will use the <a
+href="https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html"><code>dplyr</code>
+package</a> for this.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># Loads the dplyr package so we can use `left_join`</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tax_data<span class="sc">$</span><span class="st">`</span><span class="at">OTU ID</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.character</span>(tax_data<span class="sc">$</span><span class="st">`</span><span class="at">OTU ID</span><span class="st">`</span>) <span class="co"># Must be same type for join to work</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>otu_data<span class="sc">$</span>OTU_ID <span class="ot">&lt;-</span> <span class="fu">as.character</span>(otu_data<span class="sc">$</span>OTU_ID) <span class="co"># Must be same type for join to work</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>otu_data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(otu_data, tax_data,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;OTU_ID&quot;</span> <span class="ot">=</span> <span class="st">&quot;OTU ID&quot;</span>)) <span class="co"># identifies cols with shared IDs</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(otu_data)</span></code></pre></div>
+<pre class="r-output"><code>## <span style='color: #555555;'># A tibble: 47,806 × 1,706</span>
+##    OTU_ID M1024P1833 M1551…¹ M1551…² M1551…³ M1551…⁴ M1551…⁵ M1551…⁶ M1551…⁷ M1551…⁸ M1551…⁹ M1551…˟
+##    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>
+## <span style='color: #555555;'> 1</span> 1               0       0       0       0       0       0       0       0       0       0       0
+## <span style='color: #555555;'> 2</span> 2              41      22       4     726  <span style='text-decoration: underline;'>112</span>492       2     413       2       1      65       2
+## <span style='color: #555555;'> 3</span> 3              67      65      12   <span style='text-decoration: underline;'>13</span>514       1       4   <span style='text-decoration: underline;'>13</span>314      70    <span style='text-decoration: underline;'>5</span>929   <span style='text-decoration: underline;'>13</span>893   <span style='text-decoration: underline;'>11</span>023
+## <span style='color: #555555;'> 4</span> 4            <span style='text-decoration: underline;'>3</span>229   <span style='text-decoration: underline;'>13</span>679    <span style='text-decoration: underline;'>1</span>832     951     113    <span style='text-decoration: underline;'>2</span>496     567    <span style='text-decoration: underline;'>2</span>428    <span style='text-decoration: underline;'>2</span>156     948     647
+## <span style='color: #555555;'> 5</span> 5            <span style='text-decoration: underline;'>1</span>200      92    <span style='text-decoration: underline;'>3</span>530    <span style='text-decoration: underline;'>2</span>008       0     183    <span style='text-decoration: underline;'>2</span>087     292    <span style='text-decoration: underline;'>1</span>058    <span style='text-decoration: underline;'>1</span>334     819
+## <span style='color: #555555;'> 6</span> 6             219    <span style='text-decoration: underline;'>1</span>980    <span style='text-decoration: underline;'>1</span>200     499       1     781     214    <span style='text-decoration: underline;'>2</span>273     171     427      74
+## <span style='color: #555555;'> 7</span> 7             485    <span style='text-decoration: underline;'>5</span>123     755    <span style='text-decoration: underline;'>4</span>080     443    <span style='text-decoration: underline;'>1</span>278    <span style='text-decoration: underline;'>2</span>193     401    <span style='text-decoration: underline;'>5</span>320    <span style='text-decoration: underline;'>2</span>491    <span style='text-decoration: underline;'>2</span>408
+## <span style='color: #555555;'> 8</span> 8             840    <span style='text-decoration: underline;'>7</span>079    <span style='text-decoration: underline;'>3</span>760      22       0    <span style='text-decoration: underline;'>2</span>699      22    <span style='text-decoration: underline;'>2</span>870      32      21      35
+## <span style='color: #555555;'> 9</span> 9              40      82      91     881       1     449    <span style='text-decoration: underline;'>1</span>121      90    <span style='text-decoration: underline;'>2</span>283     146     941
+## <span style='color: #555555;'>10</span> 10             11      79     277    <span style='text-decoration: underline;'>2</span>879       1       0    <span style='text-decoration: underline;'>6</span>811      14     243    <span style='text-decoration: underline;'>2</span>726     334
+## <span style='color: #555555;'># … with 47,796 more rows, 1,694 more variables: M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;, M1551P52 &lt;dbl&gt;,</span>
+## <span style='color: #555555;'>#   M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, M1551P75 &lt;dbl&gt;, M1551P88 &lt;dbl&gt;, M1551P47 &lt;dbl&gt;,</span>
+## <span style='color: #555555;'>#   M1551P77 &lt;dbl&gt;, …, and abbreviated variable names ¹​M1551P81, ²​M1551P57, ³​M1551P85, ⁴​M1551P28,</span>
+## <span style='color: #555555;'>#   ⁵​M1551P29, ⁶​M1551P38, ⁷​M1551P90, ⁸​M1551P71, ⁹​M1551P12, ˟​M1551P84</span>
+</code></pre>
+<p>There are so many columns that all of them are not shown in the print
+out, but we can verify that they are there by looking at the last 10
+column names:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(<span class="fu">colnames</span>(otu_data), <span class="at">n =</span> <span class="dv">10</span>) <span class="co"># `tail` returns the last n elements</span></span></code></pre></div>
 <pre class="r-output"><code>##  [1] "M1958P1043" "M1691P1526" "M1691P1557" "taxonomy"   "Kingdom"    "Phylum"     "Class"     
 ##  [8] "Order"      "Family"     "Confidence"
 </code></pre>
-<p>Next, lets load the sample data. Click <a href="SMD.txt" download="SMD.txt">here</a> to download the sample data table.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>sample_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;SMD.txt&quot;</span>,</span>
-<span id="cb7-2"><a href="#cb7-2"></a>                        <span class="dt">col_types =</span> <span class="st">&quot;cccccccccccccccc&quot;</span>) <span class="co"># each &quot;c&quot; means a column of &quot;character&quot;</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="kw">print</span>(sample_data) <span class="co"># You can also enter `sample_data` to print it</span></span></code></pre></div>
-<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 1,698 x 16</span><span>
-##    SampleID Name  Plant_ID Type  Experiment Cohort Harvested Age   Site  Treatment Line  Genotype
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   
-## </span><span style='color: #BCBCBC;'> 1</span><span> M1024P1… R_02… R_026    root  fieldBCMA  2008   2011      3     LTM   field     26    ril     
-## </span><span style='color: #BCBCBC;'> 2</span><span> M1024P1… R_07… R_073    root  fieldBCMA  2008   2011      3     LTM   field     73    ril     
-## </span><span style='color: #BCBCBC;'> 3</span><span> M1024P1… R_08… R_088    root  fieldBCMA  2009   2011      2     LTM   field     88    ril     
-## </span><span style='color: #BCBCBC;'> 4</span><span> M1024P1… R_15… R_156    root  fieldBCMA  2009   2011      2     LTM   field     156   ril     
-## </span><span style='color: #BCBCBC;'> 5</span><span> M1955P8… 1_A_… 1_A_1    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   par1… PAR     
-## </span><span style='color: #BCBCBC;'> 6</span><span> M1956P8… 1_A_… 1_A_12   root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   mah3… MAH     
-## </span><span style='color: #BCBCBC;'> 7</span><span> M1957P9… 1_A_… 1_A_3    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   silL… SIL     
-## </span><span style='color: #BCBCBC;'> 8</span><span> M1956P8… 1_A_… 1_A_4    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   par1… PAR     
-## </span><span style='color: #BCBCBC;'> 9</span><span> M1957P9… 1_A_… 1_A_7    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   par9… PAR     
-## </span><span style='color: #BCBCBC;'>10</span><span> M1957P9… 1_A_… 1_A_8    root  ecoGH      </span><span style='color: #BB0000;'>NA</span><span>     2011      </span><span style='color: #BB0000;'>NA</span><span>    Duke  MAHsoil   mil5… MIL     
-## </span><span style='color: #949494;'># … with 1,688 more rows, and 4 more variables: Block </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, oldPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, newPlate </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
-## </span><span style='color: #949494;'>#   Analysis </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
-</span></code></pre>
-<p>Note how the number of sample columns in <code>otu_data</code> is equal to the number of rows in <code>sample_data</code> and the columns names of <code>otu_data</code> appear in the “SampleID” column. This means that the contents of <code>sample_data$SampleID</code> can be used to subset columns in the OTU table.</p>
+<p>Next, lets load the sample data. Click
+<a href="SMD.txt" download="SMD.txt">here</a> to download the sample
+data table.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sample_data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">&quot;SMD.txt&quot;</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">col_types =</span> <span class="st">&quot;cccccccccccccccc&quot;</span>) <span class="co"># each &quot;c&quot; means a column of &quot;character&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sample_data) <span class="co"># You can also enter `sample_data` to print it</span></span></code></pre></div>
+<pre class="r-output"><code>## <span style='color: #555555;'># A tibble: 1,698 × 16</span>
+##    SampleID   Name      Plant…¹ Type  Exper…² Cohort Harve…³ Age   Site  Treat…⁴ Line  Genot…⁵ Block
+##    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>
+## <span style='color: #555555;'> 1</span> M1024P1788 R_026.ro… R_026   root  fieldB… 2008   2011    3     LTM   field   26    ril     <span style='color: #BB0000;'>NA</span>   
+## <span style='color: #555555;'> 2</span> M1024P1791 R_073.ro… R_073   root  fieldB… 2008   2011    3     LTM   field   73    ril     <span style='color: #BB0000;'>NA</span>   
+## <span style='color: #555555;'> 3</span> M1024P1795 R_088.ro… R_088   root  fieldB… 2009   2011    2     LTM   field   88    ril     <span style='color: #BB0000;'>NA</span>   
+## <span style='color: #555555;'> 4</span> M1024P1807 R_156.ro… R_156   root  fieldB… 2009   2011    2     LTM   field   156   ril     <span style='color: #BB0000;'>NA</span>   
+## <span style='color: #555555;'> 5</span> M1955P804  1_A_1.ro… 1_A_1   root  ecoGH   <span style='color: #BB0000;'>NA</span>     2011    <span style='color: #BB0000;'>NA</span>    Duke  MAHsoil par1… PAR     b01  
+## <span style='color: #555555;'> 6</span> M1956P837  1_A_12.r… 1_A_12  root  ecoGH   <span style='color: #BB0000;'>NA</span>     2011    <span style='color: #BB0000;'>NA</span>    Duke  MAHsoil mah3… MAH     b01  
+## <span style='color: #555555;'> 7</span> M1957P983  1_A_3.ro… 1_A_3   root  ecoGH   <span style='color: #BB0000;'>NA</span>     2011    <span style='color: #BB0000;'>NA</span>    Duke  MAHsoil silL… SIL     b01  
+## <span style='color: #555555;'> 8</span> M1956P845  1_A_4.ro… 1_A_4   root  ecoGH   <span style='color: #BB0000;'>NA</span>     2011    <span style='color: #BB0000;'>NA</span>    Duke  MAHsoil par1… PAR     b01  
+## <span style='color: #555555;'> 9</span> M1957P987  1_A_7.ro… 1_A_7   root  ecoGH   <span style='color: #BB0000;'>NA</span>     2011    <span style='color: #BB0000;'>NA</span>    Duke  MAHsoil par9… PAR     b01  
+## <span style='color: #555555;'>10</span> M1957P923  1_A_8.ro… 1_A_8   root  ecoGH   <span style='color: #BB0000;'>NA</span>     2011    <span style='color: #BB0000;'>NA</span>    Duke  MAHsoil mil5… MIL     b01  
+## <span style='color: #555555;'># … with 1,688 more rows, 3 more variables: oldPlate &lt;chr&gt;, newPlate &lt;chr&gt;, Analysis &lt;chr&gt;, and</span>
+## <span style='color: #555555;'>#   abbreviated variable names ¹​Plant_ID, ²​Experiment, ³​Harvested, ⁴​Treatment, ⁵​Genotype</span>
+</code></pre>
+<p>Note how the number of sample columns in <code>otu_data</code> is
+equal to the number of rows in <code>sample_data</code> and the columns
+names of <code>otu_data</code> appear in the “SampleID” column. This
+means that the contents of <code>sample_data$SampleID</code> can be used
+to subset columns in the OTU table.</p>
 </div>
 <div id="converting-to-the-taxmap-format" class="section level2">
 <h2>Converting to the <code>taxmap</code> format</h2>
-<p>Although our data is now in R, it is not in a format that is specialized for community abundance data; all R knows is that you have a few big tables. Different R packages for community (e.g. microbiome) analysis expect data in different formats or <b><a href ="appendix--00--glossary.html#class_anchor">classes</a></b>. A class, in programming jargon, is a defined way to store data plus some functions designed to interact with that data. When you format a specific data set in this way, we call it an <b><a href ="appendix--00--glossary.html#object_anchor">object</a></b> or an “instance” of the class. Many R packages implement their own classes and functions to convert data to their format, whereas some packages use the classes defined in other packages. There are a few options for how to store an abundance matrix classified by a taxonomy in R (e.g. <code>phyloseq</code> objects), but we will be using classes defined in the <code>metacoder</code> package here. The goal of these classes is to provide an all-purpose standard way of manipulation any type of information assigned to a taxonomy. There are flexible <b><a href ="appendix--00--glossary.html#parsing_anchor">parsers</a></b> that should be able to read nearly any format, given the correct settings. The taxonomic data we appended to the abundance matrix has the following form:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">head</span>(otu_data<span class="op">$</span>taxonomy, <span class="dv">10</span>)</span></code></pre></div>
+<p>Although our data is now in R, it is not in a format that is
+specialized for community abundance data; all R knows is that you have a
+few big tables. Different R packages for community (e.g. microbiome)
+analysis expect data in different formats or
+<b><a href ="appendix--00--glossary.html#class_anchor">classes</a></b>.
+A class, in programming jargon, is a defined way to store data plus some
+functions designed to interact with that data. When you format a
+specific data set in this way, we call it an
+<b><a href ="appendix--00--glossary.html#object_anchor">object</a></b>
+or an “instance” of the class. Many R packages implement their own
+classes and functions to convert data to their format, whereas some
+packages use the classes defined in other packages. There are a few
+options for how to store an abundance matrix classified by a taxonomy in
+R (e.g. <code>phyloseq</code> objects), but we will be using classes
+defined in the <code>metacoder</code> package here. The goal of these
+classes is to provide an all-purpose standard way of manipulation any
+type of information assigned to a taxonomy. There are flexible
+<b><a href ="appendix--00--glossary.html#parsing_anchor">parsers</a></b>
+that should be able to read nearly any format, given the correct
+settings. The taxonomic data we appended to the abundance matrix has the
+following form:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(otu_data<span class="sc">$</span>taxonomy, <span class="dv">10</span>)</span></code></pre></div>
 <pre class="r-output"><code>##  [1] "Unassigned"                                                                                        
 ##  [2] "Root;k__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rickettsiales;f__mitochondria"        
 ##  [3] "Root;k__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Sphingomonadales;f__Sphingomonadaceae"
@@ -632,378 +744,493 @@ $(document).ready(function () {
 ##  [9] "Root;k__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Pseudomonadales;f__Pseudomonadaceae"  
 ## [10] "Root;k__Bacteria;p__Bacteroidetes;c__Sphingobacteriia;o__Sphingobacteriales;f__Sphingobacteriaceae"
 </code></pre>
-<p>Note that there are some odd aspects to the format that could make it challenging to parse:</p>
+<p>Note that there are some odd aspects to the format that could make it
+challenging to parse:</p>
 <ul>
-<li>Some taxa have <b><a href ="appendix--00--glossary.html#taxonomic_ranks_anchor">ranks</a></b> (e.g. "k__Bacteria“) and some don’t (e.g. ”Unassigned" and “Root”).</li>
-<li>Some taxa have ranks, but no names (e.g. "f__").</li>
+<li>Some taxa have
+<b><a href ="appendix--00--glossary.html#taxonomic_ranks_anchor">ranks</a></b>
+(e.g. “k__Bacteria”) and some don’t (e.g. “Unassigned” and “Root”).</li>
+<li>Some taxa have ranks, but no names (e.g. “f__“).</li>
 </ul>
-<p>If we just consider the ranks to be a part of the taxon name, then its pretty easy to parse:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">library</span>(metacoder)</span>
-<span id="cb9-2"><a href="#cb9-2"></a>obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(otu_data,</span>
-<span id="cb9-3"><a href="#cb9-3"></a>                      <span class="dt">class_cols =</span> <span class="st">&quot;taxonomy&quot;</span>, <span class="co"># The column in the input table</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>                      <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>) <span class="co"># What each taxon is seperated by</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="kw">print</span>(obj)</span></code></pre></div>
+<p>If we just consider the ranks to be a part of the taxon name, then
+its pretty easy to parse:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metacoder)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">parse_tax_data</span>(otu_data,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">class_cols =</span> <span class="st">&quot;taxonomy&quot;</span>, <span class="co"># The column in the input table</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">class_sep =</span> <span class="st">&quot;;&quot;</span>) <span class="co"># What each taxon is seperated by</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   1558 taxa: <span style='color: #00BB00;'>aab</span><span>. Unassigned, </span><span style='color: #00BB00;'>aac</span><span>. Root ... </span><span style='color: #00BB00;'>chx</span><span>. f__Methanospirillaceae, </span><span style='color: #00BB00;'>chy</span><span>. f__
-##   1558 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>bel</span><span>-&gt;</span><span style='color: #00BB00;'>chw</span><span>, </span><span style='color: #00BB00;'>ays</span><span>-&gt;</span><span style='color: #00BB00;'>chx</span><span>, </span><span style='color: #00BB00;'>bem</span><span>-&gt;</span><span style='color: #00BB00;'>chy</span><span>
+##   1558 taxa: <span style='color: #00BB00;'>aab</span><span style='color: #555555;'>. </span>Unassigned<span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>. </span>Root<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>chx</span><span style='color: #555555;'>. </span>f__Methanospirillaceae<span style='color: #555555;'>, </span><span style='color: #00BB00;'>chy</span><span style='color: #555555;'>. </span>f__
+##   1558 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aab</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aad</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aae</span><span style='color: #555555;'> ... </span><span style='color: #00BB00;'>bel</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chw</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>ays</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chx</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>bem</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chy</span>
 ##   1 data sets:
-##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 47,806 x 1,707</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span><span>
-##       1 </span><span style='color: #00BB00;'>aab</span><span>      1               0        0        0        0        0        0        0
-##       2 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
-##       3 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
-##       # … with 47,803 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
-##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
-##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
+##     <span style='font-weight: bold;'>tax_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 47,806 × 1,707</span>
+##        <span style='color: #00BB00;'> taxon_id </span>OTU_ID M1024P1833 M1551…¹ M1551…² M1551…³ M1551…⁴ M1551…⁵ M1551…⁶ M1551…⁷
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span>
+##       1 <span style='color: #00BB00;'>aab</span>      1               0       0       0       0       0       0       0       0
+##       2 <span style='color: #00BB00;'>ben</span>      2              41      22       4     726  112492       2     413       2
+##       3 <span style='color: #00BB00;'>beo</span>      3              67      65      12   13514       1       4   13314      70
+##       # … with 47,803 more rows, 1,697 more variables: M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;,
+##       #   M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;, M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;,
+##       #   M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, M1551P75 &lt;dbl&gt;, …, and abbreviated variable
+##       #   names ¹​M1551P81, ²​M1551P57, ³​M1551P85, ⁴​M1551P28, ⁵​M1551P29, ⁶​M1551P38,
+##       #   ⁷​M1551P90
 ##   0 functions:
-</span></code></pre>
-<p>Above is the print out of a <code>taxmap</code> object. The first line tells us that the OTUs are assigned to 1,558 unique taxa and lists their IDs and names. These taxon IDs were generated automatically when converting to the <code>taxmap</code> format and were not in the original data set. The second line describes how taxa relate to each other in the tree. Note how our original data are now inside this object:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">print</span>(obj<span class="op">$</span>data<span class="op">$</span>tax_data)</span></code></pre></div>
-<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 47,806 x 1,707</span><span>
-##    taxon_id OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38 M1551P90
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-## </span><span style='color: #BCBCBC;'> 1</span><span> aab      1               0        0        0        0        0        0        0        0
-## </span><span style='color: #BCBCBC;'> 2</span><span> ben      2              41       22        4      726   </span><span style='text-decoration: underline;'>112</span><span>492        2      413        2
-## </span><span style='color: #BCBCBC;'> 3</span><span> beo      3              67       65       12    </span><span style='text-decoration: underline;'>13</span><span>514        1        4    </span><span style='text-decoration: underline;'>13</span><span>314       70
-## </span><span style='color: #BCBCBC;'> 4</span><span> ben      4            </span><span style='text-decoration: underline;'>3</span><span>229    </span><span style='text-decoration: underline;'>13</span><span>679     </span><span style='text-decoration: underline;'>1</span><span>832      951      113     </span><span style='text-decoration: underline;'>2</span><span>496      567     </span><span style='text-decoration: underline;'>2</span><span>428
-## </span><span style='color: #BCBCBC;'> 5</span><span> bep      5            </span><span style='text-decoration: underline;'>1</span><span>200       92     </span><span style='text-decoration: underline;'>3</span><span>530     </span><span style='text-decoration: underline;'>2</span><span>008        0      183     </span><span style='text-decoration: underline;'>2</span><span>087      292
-## </span><span style='color: #BCBCBC;'> 6</span><span> beq      6             219     </span><span style='text-decoration: underline;'>1</span><span>980     </span><span style='text-decoration: underline;'>1</span><span>200      499        1      781      214     </span><span style='text-decoration: underline;'>2</span><span>273
-## </span><span style='color: #BCBCBC;'> 7</span><span> ber      7             485     </span><span style='text-decoration: underline;'>5</span><span>123      755     </span><span style='text-decoration: underline;'>4</span><span>080      443     </span><span style='text-decoration: underline;'>1</span><span>278     </span><span style='text-decoration: underline;'>2</span><span>193      401
-## </span><span style='color: #BCBCBC;'> 8</span><span> bes      8             840     </span><span style='text-decoration: underline;'>7</span><span>079     </span><span style='text-decoration: underline;'>3</span><span>760       22        0     </span><span style='text-decoration: underline;'>2</span><span>699       22     </span><span style='text-decoration: underline;'>2</span><span>870
-## </span><span style='color: #BCBCBC;'> 9</span><span> bet      9              40       82       91      881        1      449     </span><span style='text-decoration: underline;'>1</span><span>121       90
-## </span><span style='color: #BCBCBC;'>10</span><span> beu      10             11       79      277     </span><span style='text-decoration: underline;'>2</span><span>879        1        0     </span><span style='text-decoration: underline;'>6</span><span>811       14
-## </span><span style='color: #949494;'># … with 47,796 more rows, and 1,697 more variables: M1551P71 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P12 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-## </span><span style='color: #949494;'>#   M1551P84 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P48 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P4 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P52 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P3 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P15 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-## </span><span style='color: #949494;'>#   M1551P31 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, M1551P75 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, …</span><span>
-</span></code></pre>
-<p><code>obj$data</code> is a list of arbitrary, user-defined data sets. These data sets can be named anything and can be any R object, such as <b><a href ="appendix--00--glossary.html#list_anchor">lists</a></b>, or <b><a href ="appendix--00--glossary.html#vector_anchor">vectors</a></b>, or tables. This is different than <code>phyloseq</code> objects, which have a fixed number of data sets in pre-defined formats, since the focus of the <code>metacoder</code> classes is taxonomic data in general and the focus of <code>phyloseq</code> is microbiome data in particular. Note that our data set now has a “taxon_id” column, which associates rows in the table to a taxa in the taxonomy. This column is essential for the manipulation functions of <code>metacoder</code> to know how to handle these data sets, as we will demonstrate later.</p>
-<p>If we want to split out the rank information while parsing, we can use <b><a href ="appendix--00--glossary.html#regular_expressions_anchor">regular expressions</a></b> (a.k.a “regex”) to specify which part of each taxon is a rank and which part is a name. If you are not familiar with using regular expressions, this might be challenging to understand at first, but it is a very useful skill to have, so it is worth learning. Most regular expressions are composed of a series of “what to match” followed by “how many times to match”. One regular expression that matches the pattern of taxon names is <code>^[a-z]{0,1}_{0,2}.*$</code>. This might look intimidating, but we can break it down into understandable parts:</p>
+</code></pre>
+<p>Above is the print out of a <code>taxmap</code> object. The first
+line tells us that the OTUs are assigned to 1,558 unique taxa and lists
+their IDs and names. These taxon IDs were generated automatically when
+converting to the <code>taxmap</code> format and were not in the
+original data set. The second line describes how taxa relate to each
+other in the tree. Note how our original data are now inside this
+object:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(obj<span class="sc">$</span>data<span class="sc">$</span>tax_data)</span></code></pre></div>
+<pre class="r-output"><code>## <span style='color: #555555;'># A tibble: 47,806 × 1,707</span>
+##    taxon_id OTU_ID M1024P1…¹ M1551…² M1551…³ M1551…⁴ M1551…⁵ M1551…⁶ M1551…⁷ M1551…⁸ M1551…⁹ M1551…˟
+##    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span>
+## <span style='color: #555555;'> 1</span> aab      1              0       0       0       0       0       0       0       0       0       0
+## <span style='color: #555555;'> 2</span> ben      2             41      22       4     726  <span style='text-decoration: underline;'>112</span>492       2     413       2       1      65
+## <span style='color: #555555;'> 3</span> beo      3             67      65      12   <span style='text-decoration: underline;'>13</span>514       1       4   <span style='text-decoration: underline;'>13</span>314      70    <span style='text-decoration: underline;'>5</span>929   <span style='text-decoration: underline;'>13</span>893
+## <span style='color: #555555;'> 4</span> ben      4           <span style='text-decoration: underline;'>3</span>229   <span style='text-decoration: underline;'>13</span>679    <span style='text-decoration: underline;'>1</span>832     951     113    <span style='text-decoration: underline;'>2</span>496     567    <span style='text-decoration: underline;'>2</span>428    <span style='text-decoration: underline;'>2</span>156     948
+## <span style='color: #555555;'> 5</span> bep      5           <span style='text-decoration: underline;'>1</span>200      92    <span style='text-decoration: underline;'>3</span>530    <span style='text-decoration: underline;'>2</span>008       0     183    <span style='text-decoration: underline;'>2</span>087     292    <span style='text-decoration: underline;'>1</span>058    <span style='text-decoration: underline;'>1</span>334
+## <span style='color: #555555;'> 6</span> beq      6            219    <span style='text-decoration: underline;'>1</span>980    <span style='text-decoration: underline;'>1</span>200     499       1     781     214    <span style='text-decoration: underline;'>2</span>273     171     427
+## <span style='color: #555555;'> 7</span> ber      7            485    <span style='text-decoration: underline;'>5</span>123     755    <span style='text-decoration: underline;'>4</span>080     443    <span style='text-decoration: underline;'>1</span>278    <span style='text-decoration: underline;'>2</span>193     401    <span style='text-decoration: underline;'>5</span>320    <span style='text-decoration: underline;'>2</span>491
+## <span style='color: #555555;'> 8</span> bes      8            840    <span style='text-decoration: underline;'>7</span>079    <span style='text-decoration: underline;'>3</span>760      22       0    <span style='text-decoration: underline;'>2</span>699      22    <span style='text-decoration: underline;'>2</span>870      32      21
+## <span style='color: #555555;'> 9</span> bet      9             40      82      91     881       1     449    <span style='text-decoration: underline;'>1</span>121      90    <span style='text-decoration: underline;'>2</span>283     146
+## <span style='color: #555555;'>10</span> beu      10            11      79     277    <span style='text-decoration: underline;'>2</span>879       1       0    <span style='text-decoration: underline;'>6</span>811      14     243    <span style='text-decoration: underline;'>2</span>726
+## <span style='color: #555555;'># … with 47,796 more rows, 1,695 more variables: M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,</span>
+## <span style='color: #555555;'>#   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, M1551P75 &lt;dbl&gt;, M1551P88 &lt;dbl&gt;,</span>
+## <span style='color: #555555;'>#   M1551P47 &lt;dbl&gt;, …, and abbreviated variable names ¹​M1024P1833, ²​M1551P81, ³​M1551P57, ⁴​M1551P85,</span>
+## <span style='color: #555555;'>#   ⁵​M1551P28, ⁶​M1551P29, ⁷​M1551P38, ⁸​M1551P90, ⁹​M1551P71, ˟​M1551P12</span>
+</code></pre>
+<p><code>obj$data</code> is a list of arbitrary, user-defined data sets.
+These data sets can be named anything and can be any R object, such as
+<b><a href ="appendix--00--glossary.html#list_anchor">lists</a></b>, or
+<b><a href ="appendix--00--glossary.html#vector_anchor">vectors</a></b>,
+or tables. This is different than <code>phyloseq</code> objects, which
+have a fixed number of data sets in pre-defined formats, since the focus
+of the <code>metacoder</code> classes is taxonomic data in general and
+the focus of <code>phyloseq</code> is microbiome data in particular.
+Note that our data set now has a “taxon_id” column, which associates
+rows in the table to a taxa in the taxonomy. This column is essential
+for the manipulation functions of <code>metacoder</code> to know how to
+handle these data sets, as we will demonstrate later.</p>
+<p>If we want to split out the rank information while parsing, we can
+use
+<b><a href ="appendix--00--glossary.html#regular_expressions_anchor">regular
+expressions</a></b> (a.k.a “regex”) to specify which part of each taxon
+is a rank and which part is a name. If you are not familiar with using
+regular expressions, this might be challenging to understand at first,
+but it is a very useful skill to have, so it is worth learning. Most
+regular expressions are composed of a series of “what to match” followed
+by “how many times to match”. One regular expression that matches the
+pattern of taxon names is <code>^[a-z]{0,1}_{0,2}.*$</code>. This might
+look intimidating, but we can break it down into understandable
+parts:</p>
 <ul>
-<li>The <code>^</code> and <code>$</code> represent the start and end of the text respectively. If these were not there, then the pattern could match just a part of the text.</li>
-<li>The square brackets (e.g. <code>[a-z]</code>) specify a range of characters that can be matched. Likewise the <code>.</code> means match any character.</li>
-<li>The contents of the curly braces (e.g. <code>{0,1}</code>) indicate the number of time the preceding pattern can match. Likewise, the <code>*</code> means 0 or more matches. For example the part of the regex <code>^[a-z]{0,1}</code> means “match a character <code>a</code> through <code>z</code> that occurs at the start of the string either zero or one times”.</li>
-<li>Any text that is not a special regex character (e.g., <code>[</code> and <code>.</code>) matches itself, so the <code>_</code> matches a <code>_</code> in the text. To match characters like <code>[</code> in the text you “escape” them with <code>\\</code> (e.g., <code>\\[</code>).</li>
+<li>The <code>^</code> and <code>$</code> represent the start and end of
+the text respectively. If these were not there, then the pattern could
+match just a part of the text.</li>
+<li>The square brackets (e.g. <code>[a-z]</code>) specify a range of
+characters that can be matched. Likewise the <code>.</code> means match
+any character.</li>
+<li>The contents of the curly braces (e.g. <code>{0,1}</code>) indicate
+the number of time the preceding pattern can match. Likewise, the
+<code>*</code> means 0 or more matches. For example the part of the
+regex <code>^[a-z]{0,1}</code> means “match a character <code>a</code>
+through <code>z</code> that occurs at the start of the string either
+zero or one times”.</li>
+<li>Any text that is not a special regex character (e.g., <code>[</code>
+and <code>.</code>) matches itself, so the <code>_</code> matches a
+<code>_</code> in the text. To match characters like <code>[</code> in
+the text you “escape” them with <code>\\</code> (e.g.,
+<code>\\[</code>).</li>
 </ul>
 <p>The whole regex means the following in common English:</p>
-<p>“From the start of the string, (<code>^</code>) match any character between”a" and “z” (<code>[a-z]</code>) zero or one times (<code>{0,1}</code>) followed by an underscore (<code>_</code>) occurring between zero and 2 times (<code>{0,2}</code>), followed by any character (<code>.</code>) occurring zero or more times (<code>*</code>), followed by the end of the text (<code>$</code>)."</p>
-<p>We can add parentheses that specify which parts of the pattern go together; these are called <b><a href ="appendix--00--glossary.html#capture_groups_anchor">capture groups</a></b> in regex jargon. These do not change what will be matched; they just define different parts of the pattern. In this case, we are interested in the taxon rank (matched by <code>([a-z]{0,1})</code>) and the taxon name (matched by <code>(.*)</code>).</p>
-<p>The <code>parse_tax_data</code> function from the <code>metacoder</code> package uses regular expressions with capture groups to isolate the pieces of information we want. For each capture group in the regular expression (aka “regex”), a value is given to the <code>class_key</code> option specifying what the group is (e.g. taxon name). Putting this all together, we can read the data like so:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>obj &lt;-<span class="st"> </span><span class="kw">parse_tax_data</span>(otu_data,</span>
-<span id="cb11-2"><a href="#cb11-2"></a>                      <span class="dt">class_cols =</span> <span class="st">&quot;taxonomy&quot;</span>,</span>
-<span id="cb11-3"><a href="#cb11-3"></a>                      <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>                      <span class="dt">class_regex =</span> <span class="st">&quot;^([a-z]{0,1})_{0,2}(.*)$&quot;</span>,</span>
-<span id="cb11-5"><a href="#cb11-5"></a>                      <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="st">&quot;tax_rank&quot;</span> =<span class="st"> &quot;taxon_rank&quot;</span>, <span class="st">&quot;name&quot;</span> =<span class="st"> &quot;taxon_name&quot;</span>))</span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="kw">print</span>(obj)</span></code></pre></div>
+<p>“From the start of the string, (<code>^</code>) match any character
+between”a” and “z” (<code>[a-z]</code>) zero or one times
+(<code>{0,1}</code>) followed by an underscore (<code>_</code>)
+occurring between zero and 2 times (<code>{0,2}</code>), followed by any
+character (<code>.</code>) occurring zero or more times
+(<code>*</code>), followed by the end of the text (<code>$</code>).”</p>
+<p>We can add parentheses that specify which parts of the pattern go
+together; these are called
+<b><a href ="appendix--00--glossary.html#capture_groups_anchor">capture
+groups</a></b> in regex jargon. These do not change what will be
+matched; they just define different parts of the pattern. In this case,
+we are interested in the taxon rank (matched by
+<code>([a-z]{0,1})</code>) and the taxon name (matched by
+<code>(.*)</code>).</p>
+<p>The <code>parse_tax_data</code> function from the
+<code>metacoder</code> package uses regular expressions with capture
+groups to isolate the pieces of information we want. For each capture
+group in the regular expression (aka “regex”), a value is given to the
+<code>class_key</code> option specifying what the group is (e.g. taxon
+name). Putting this all together, we can read the data like so:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">parse_tax_data</span>(otu_data,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">class_cols =</span> <span class="st">&quot;taxonomy&quot;</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">class_sep =</span> <span class="st">&quot;;&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">class_regex =</span> <span class="st">&quot;^([a-z]{0,1})_{0,2}(.*)$&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">class_key =</span> <span class="fu">c</span>(<span class="st">&quot;tax_rank&quot;</span> <span class="ot">=</span> <span class="st">&quot;taxon_rank&quot;</span>, <span class="st">&quot;name&quot;</span> <span class="ot">=</span> <span class="st">&quot;taxon_name&quot;</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   1558 taxa: <span style='color: #00BB00;'>aab</span><span>. Unassigned, </span><span style='color: #00BB00;'>aac</span><span>. Root ... </span><span style='color: #00BB00;'>chx</span><span>. Methanospirillaceae, </span><span style='color: #00BB00;'>chy</span><span>. 
-##   1558 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>bel</span><span>-&gt;</span><span style='color: #00BB00;'>chw</span><span>, </span><span style='color: #00BB00;'>ays</span><span>-&gt;</span><span style='color: #00BB00;'>chx</span><span>, </span><span style='color: #00BB00;'>bem</span><span>-&gt;</span><span style='color: #00BB00;'>chy</span><span>
+##   1558 taxa: <span style='color: #00BB00;'>aab</span><span style='color: #555555;'>. </span>Unassigned<span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>. </span>Root<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>chx</span><span style='color: #555555;'>. </span>Methanospirillaceae<span style='color: #555555;'>, </span><span style='color: #00BB00;'>chy</span><span style='color: #555555;'>. </span>
+##   1558 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aab</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aad</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aae</span><span style='color: #555555;'> ... </span><span style='color: #00BB00;'>bel</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chw</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>ays</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chx</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>bem</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chy</span>
 ##   2 data sets:
-##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 47,806 x 1,707</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span><span>
-##       1 </span><span style='color: #00BB00;'>aab</span><span>      1               0        0        0        0        0        0        0
-##       2 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
-##       3 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
-##       # … with 47,803 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
-##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
-##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
-##     </span><span style='font-weight: bold;'>class_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 216,417 x 5</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>input_index tax_rank name       regex_match
-## </span><span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;      </span><span>
-##       1 </span><span style='color: #00BB00;'>aab</span><span>                1 ""       Unassigned Unassigned 
-##       2 </span><span style='color: #00BB00;'>aac</span><span>                2 ""       Root       Root       
-##       3 </span><span style='color: #00BB00;'>aad</span><span>                2 "k"      Bacteria   k__Bacteria
+##     <span style='font-weight: bold;'>tax_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 47,806 × 1,707</span>
+##        <span style='color: #00BB00;'> taxon_id </span>OTU_ID M1024P1833 M1551…¹ M1551…² M1551…³ M1551…⁴ M1551…⁵ M1551…⁶ M1551…⁷
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span>
+##       1 <span style='color: #00BB00;'>aab</span>      1               0       0       0       0       0       0       0       0
+##       2 <span style='color: #00BB00;'>ben</span>      2              41      22       4     726  112492       2     413       2
+##       3 <span style='color: #00BB00;'>beo</span>      3              67      65      12   13514       1       4   13314      70
+##       # … with 47,803 more rows, 1,697 more variables: M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;,
+##       #   M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;, M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;,
+##       #   M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, M1551P75 &lt;dbl&gt;, …, and abbreviated variable
+##       #   names ¹​M1551P81, ²​M1551P57, ³​M1551P85, ⁴​M1551P28, ⁵​M1551P29, ⁶​M1551P38,
+##       #   ⁷​M1551P90
+##     <span style='font-weight: bold;'>class_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 216,417 × 5</span>
+##        <span style='color: #00BB00;'> taxon_id </span>input_index tax_rank name       regex_match
+## <span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;      </span>
+##       1 <span style='color: #00BB00;'>aab</span>                1 ""       Unassigned Unassigned 
+##       2 <span style='color: #00BB00;'>aac</span>                2 ""       Root       Root       
+##       3 <span style='color: #00BB00;'>aad</span>                2 "k"      Bacteria   k__Bacteria
 ##       # … with 216,414 more rows
 ##   0 functions:
-</span></code></pre>
-<p>Note how the taxon names do not have the rank information anymore:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">head</span>(<span class="kw">taxon_names</span>(obj))</span></code></pre></div>
+</code></pre>
+<p>Note how the taxon names do not have the rank information
+anymore:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">taxon_names</span>(obj))</span></code></pre></div>
 <pre class="r-output"><code>##              aab              aac              aad              aae              aaf 
 ##     "Unassigned"           "Root"       "Bacteria"        "Archaea" "Proteobacteria" 
 ##              aag 
 ## "Actinobacteria"
 </code></pre>
-<p>Instead, the rank information (and any other capture group content) is in a separate data set:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>obj<span class="op">$</span>data<span class="op">$</span>class_data</span></code></pre></div>
-<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 216,417 x 5</span><span>
+<p>Instead, the rank information (and any other capture group content)
+is in a separate data set:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>obj<span class="sc">$</span>data<span class="sc">$</span>class_data</span></code></pre></div>
+<pre class="r-output"><code>## <span style='color: #555555;'># A tibble: 216,417 × 5</span>
 ##    taxon_id input_index tax_rank name                regex_match           
-##    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                 
-## </span><span style='color: #BCBCBC;'> 1</span><span> aab                1 </span><span style='color: #949494;'>""</span><span>       Unassigned          Unassigned            
-## </span><span style='color: #BCBCBC;'> 2</span><span> aac                2 </span><span style='color: #949494;'>""</span><span>       Root                Root                  
-## </span><span style='color: #BCBCBC;'> 3</span><span> aad                2 </span><span style='color: #949494;'>"</span><span>k</span><span style='color: #949494;'>"</span><span>      Bacteria            k__Bacteria           
-## </span><span style='color: #BCBCBC;'> 4</span><span> aaf                2 </span><span style='color: #949494;'>"</span><span>p</span><span style='color: #949494;'>"</span><span>      Proteobacteria      p__Proteobacteria     
-## </span><span style='color: #BCBCBC;'> 5</span><span> add                2 </span><span style='color: #949494;'>"</span><span>c</span><span style='color: #949494;'>"</span><span>      Alphaproteobacteria c__Alphaproteobacteria
-## </span><span style='color: #BCBCBC;'> 6</span><span> amg                2 </span><span style='color: #949494;'>"</span><span>o</span><span style='color: #949494;'>"</span><span>      Rickettsiales       o__Rickettsiales      
-## </span><span style='color: #BCBCBC;'> 7</span><span> ben                2 </span><span style='color: #949494;'>"</span><span>f</span><span style='color: #949494;'>"</span><span>      mitochondria        f__mitochondria       
-## </span><span style='color: #BCBCBC;'> 8</span><span> aac                3 </span><span style='color: #949494;'>""</span><span>       Root                Root                  
-## </span><span style='color: #BCBCBC;'> 9</span><span> aad                3 </span><span style='color: #949494;'>"</span><span>k</span><span style='color: #949494;'>"</span><span>      Bacteria            k__Bacteria           
-## </span><span style='color: #BCBCBC;'>10</span><span> aaf                3 </span><span style='color: #949494;'>"</span><span>p</span><span style='color: #949494;'>"</span><span>      Proteobacteria      p__Proteobacteria     
-## </span><span style='color: #949494;'># … with 216,407 more rows</span><span>
-</span></code></pre>
-<p>However, ranks can also be accessed using the <code>taxon_ranks</code> function:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">head</span>(<span class="kw">taxon_ranks</span>(obj))</span></code></pre></div>
+##    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>          <span style='color: #555555; font-style: italic;'>&lt;int&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>               <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>                 
+## <span style='color: #555555;'> 1</span> aab                1 <span style='color: #555555;'>""</span>       Unassigned          Unassigned            
+## <span style='color: #555555;'> 2</span> aac                2 <span style='color: #555555;'>""</span>       Root                Root                  
+## <span style='color: #555555;'> 3</span> aad                2 <span style='color: #555555;'>"</span>k<span style='color: #555555;'>"</span>      Bacteria            k__Bacteria           
+## <span style='color: #555555;'> 4</span> aaf                2 <span style='color: #555555;'>"</span>p<span style='color: #555555;'>"</span>      Proteobacteria      p__Proteobacteria     
+## <span style='color: #555555;'> 5</span> add                2 <span style='color: #555555;'>"</span>c<span style='color: #555555;'>"</span>      Alphaproteobacteria c__Alphaproteobacteria
+## <span style='color: #555555;'> 6</span> amg                2 <span style='color: #555555;'>"</span>o<span style='color: #555555;'>"</span>      Rickettsiales       o__Rickettsiales      
+## <span style='color: #555555;'> 7</span> ben                2 <span style='color: #555555;'>"</span>f<span style='color: #555555;'>"</span>      mitochondria        f__mitochondria       
+## <span style='color: #555555;'> 8</span> aac                3 <span style='color: #555555;'>""</span>       Root                Root                  
+## <span style='color: #555555;'> 9</span> aad                3 <span style='color: #555555;'>"</span>k<span style='color: #555555;'>"</span>      Bacteria            k__Bacteria           
+## <span style='color: #555555;'>10</span> aaf                3 <span style='color: #555555;'>"</span>p<span style='color: #555555;'>"</span>      Proteobacteria      p__Proteobacteria     
+## <span style='color: #555555;'># … with 216,407 more rows</span>
+</code></pre>
+<p>However, ranks can also be accessed using the
+<code>taxon_ranks</code> function:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">taxon_ranks</span>(obj))</span></code></pre></div>
 <pre class="r-output"><code>## aab aac aad aae aaf aag 
 ##  ""  "" "k" "k" "p" "p"
 </code></pre>
-<p>So we don’t really need the “class_data” table, so lets get rid of it:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>obj<span class="op">$</span>data<span class="op">$</span>class_data &lt;-<span class="st"> </span><span class="ot">NULL</span></span></code></pre></div>
-<p>Lets also rename the “tax_data” table to something more informative:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">names</span>(obj<span class="op">$</span>data) &lt;-<span class="st"> &quot;otu_counts&quot;</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">print</span>(obj)</span></code></pre></div>
+<p>So we don’t really need the “class_data” table, so lets get rid of
+it:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>obj<span class="sc">$</span>data<span class="sc">$</span>class_data <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code></pre></div>
+<p>Lets also rename the “tax_data” table to something more
+informative:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">$</span>data) <span class="ot">&lt;-</span> <span class="st">&quot;otu_counts&quot;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(obj)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   1558 taxa: <span style='color: #00BB00;'>aab</span><span>. Unassigned, </span><span style='color: #00BB00;'>aac</span><span>. Root ... </span><span style='color: #00BB00;'>chx</span><span>. Methanospirillaceae, </span><span style='color: #00BB00;'>chy</span><span>. 
-##   1558 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aab</span><span>, </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>aac</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aad</span><span>, </span><span style='color: #00BB00;'>aac</span><span>-&gt;</span><span style='color: #00BB00;'>aae</span><span> ... </span><span style='color: #00BB00;'>bel</span><span>-&gt;</span><span style='color: #00BB00;'>chw</span><span>, </span><span style='color: #00BB00;'>ays</span><span>-&gt;</span><span style='color: #00BB00;'>chx</span><span>, </span><span style='color: #00BB00;'>bem</span><span>-&gt;</span><span style='color: #00BB00;'>chy</span><span>
+##   1558 taxa: <span style='color: #00BB00;'>aab</span><span style='color: #555555;'>. </span>Unassigned<span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>. </span>Root<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>chx</span><span style='color: #555555;'>. </span>Methanospirillaceae<span style='color: #555555;'>, </span><span style='color: #00BB00;'>chy</span><span style='color: #555555;'>. </span>
+##   1558 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aab</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aad</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>aac</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>aae</span><span style='color: #555555;'> ... </span><span style='color: #00BB00;'>bel</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chw</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>ays</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chx</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>bem</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>chy</span>
 ##   1 data sets:
-##     </span><span style='font-weight: bold;'>otu_counts</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 47,806 x 1,707</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>OTU_ID M1024P1833 M1551P81 M1551P57 M1551P85 M1551P28 M1551P29 M1551P38
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span><span>
-##       1 </span><span style='color: #00BB00;'>aab</span><span>      1               0        0        0        0        0        0        0
-##       2 </span><span style='color: #00BB00;'>ben</span><span>      2              41       22        4      726   112492        2      413
-##       3 </span><span style='color: #00BB00;'>beo</span><span>      3              67       65       12    13514        1        4    13314
-##       # … with 47,803 more rows, and 1,698 more variables: M1551P90 &lt;dbl&gt;,
-##       #   M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;, M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;,
-##       #   M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;, M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, …
+##     <span style='font-weight: bold;'>otu_counts</span>:
+## <span style='font-style: italic;'>      # A tibble: 47,806 × 1,707</span>
+##        <span style='color: #00BB00;'> taxon_id </span>OTU_ID M1024P1833 M1551…¹ M1551…² M1551…³ M1551…⁴ M1551…⁵ M1551…⁶ M1551…⁷
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span>
+##       1 <span style='color: #00BB00;'>aab</span>      1               0       0       0       0       0       0       0       0
+##       2 <span style='color: #00BB00;'>ben</span>      2              41      22       4     726  112492       2     413       2
+##       3 <span style='color: #00BB00;'>beo</span>      3              67      65      12   13514       1       4   13314      70
+##       # … with 47,803 more rows, 1,697 more variables: M1551P71 &lt;dbl&gt;, M1551P12 &lt;dbl&gt;,
+##       #   M1551P84 &lt;dbl&gt;, M1551P48 &lt;dbl&gt;, M1551P4 &lt;dbl&gt;, M1551P52 &lt;dbl&gt;, M1551P3 &lt;dbl&gt;,
+##       #   M1551P15 &lt;dbl&gt;, M1551P31 &lt;dbl&gt;, M1551P75 &lt;dbl&gt;, …, and abbreviated variable
+##       #   names ¹​M1551P81, ²​M1551P57, ³​M1551P85, ⁴​M1551P28, ⁵​M1551P29, ⁶​M1551P38,
+##       #   ⁷​M1551P90
 ##   0 functions:
-</span></code></pre>
-<p>We can name the tables or other info in <code>obj$data</code> whatever we want. <code>obj$data</code> is a standard <code>list</code>, which means any number of things of any type can be put in it.</p>
+</code></pre>
+<p>We can name the tables or other info in <code>obj$data</code>
+whatever we want. <code>obj$data</code> is a standard <code>list</code>,
+which means any number of things of any type can be put in it.</p>
 </div>
 <div id="exercises" class="section level2">
 <h2>Exercises</h2>
 <div id="reading-tabular-data" class="section level3">
 <h3>Reading tabular data</h3>
-<p><strong>1)</strong> Take a look at the file <a href="example_data_1.tsv">example_data_1.tsv</a> (click to download).</p>
-<p><strong>2)</strong> Try reading the file using the base R function <code>read.table</code>. You might need to change some of the options. Type <code>?read.table</code> to see the documentation for this function. Hint: what does the <code>.tsv</code> extension mean?</p>
+<p><strong>1)</strong> Take a look at the file <a
+href="example_data_1.tsv">example_data_1.tsv</a> (click to
+download).</p>
+<p><strong>2)</strong> Try reading the file using the base R function
+<code>read.table</code>. You might need to change some of the options.
+Type <code>?read.table</code> to see the documentation for this
+function. Hint: what does the <code>.tsv</code> extension mean?</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-20">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-20" class="collapse">
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>table_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>table_1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>)</span></code></pre></div>
 </div>
 <p><br /></p>
-<p><strong>3)</strong> Now try reading the same file using the <code>read_tsv</code> function from the <code>readr</code> package. Type <code>?read_tsv</code> to see the documentation for this function.</p>
+<p><strong>3)</strong> Now try reading the same file using the
+<code>read_tsv</code> function from the <code>readr</code> package. Type
+<code>?read_tsv</code> to see the documentation for this function.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-21">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-21" class="collapse">
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">library</span>(readr)</span>
-<span id="cb18-2"><a href="#cb18-2"></a>table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>)</span></code></pre></div>
-<pre><code>## 
-## [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────────────────────────[39m
-## cols(
-##   common_name = [31mcol_character()[39m,
-##   ncbi_seq_id = [31mcol_character()[39m,
-##   itis_taxon_id = [32mcol_double()[39m,
-##   my_taxonomy = [31mcol_character()[39m
-## )</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>table_2 <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>)</span></code></pre></div>
+<pre><code>## [1mRows: [22m[34m3[39m [1mColumns: [22m[34m4[39m
+## [36m──[39m [1mColumn specification[22m [36m────────────────────────────────────────────────────────────────────────────[39m
+## [1mDelimiter:[22m &quot;\t&quot;
+## [31mchr[39m (3): common_name, ncbi_seq_id, my_taxonomy
+## [32mdbl[39m (1): itis_taxon_id
+## 
+## [36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+## [36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 <p><br /></p>
-<p><strong>4)</strong> Compare the two results. What is different about them? Try using the <code>str</code> function on each result to see the details about how they are formatted.</p>
+<p><strong>4)</strong> Compare the two results. What is different about
+them? Try using the <code>str</code> function on each result to see the
+details about how they are formatted.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-22">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-22" class="collapse">
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">str</span>(table_<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(table_1)</span></code></pre></div>
 <pre class="r-output"><code>## 'data.frame':    3 obs. of  4 variables:
 ##  $ common_name  : chr  "Lions" "Tigers" "Bears"
 ##  $ ncbi_seq_id  : chr  "FJ712037" "KC879292" "HW243304"
 ##  $ itis_taxon_id: int  183803 183806 180544
 ##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 </code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">str</span>(table_<span class="dv">2</span>)</span></code></pre></div>
-<pre class="r-output"><code>## tibble [3 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(table_2)</span></code></pre></div>
+<pre class="r-output"><code>## spec_tbl_df [3 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##  $ common_name  : chr [1:3] "Lions" "Tigers" "Bears"
 ##  $ ncbi_seq_id  : chr [1:3] "FJ712037" "KC879292" "HW243304"
 ##  $ itis_taxon_id: num [1:3] 183803 183806 180544
 ##  $ my_taxonomy  : chr [1:3] "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 ##  - attr(*, "spec")=
 ##   .. cols(
-##   ..   common_name = <span style='color: #BB0000;'>col_character()</span><span>,
-##   ..   ncbi_seq_id = </span><span style='color: #BB0000;'>col_character()</span><span>,
-##   ..   itis_taxon_id = </span><span style='color: #00BB00;'>col_double()</span><span>,
-##   ..   my_taxonomy = </span><span style='color: #BB0000;'>col_character()</span><span>
+##   ..   common_name = <span style='color: #BB0000;'>col_character()</span>,
+##   ..   ncbi_seq_id = <span style='color: #BB0000;'>col_character()</span>,
+##   ..   itis_taxon_id = <span style='color: #00BB00;'>col_double()</span>,
+##   ..   my_taxonomy = <span style='color: #BB0000;'>col_character()</span>
 ##   .. )
-</span></code></pre>
+##  - attr(*, "problems")=&lt;externalptr&gt;
+</code></pre>
 </div>
 <p><br /></p>
-<p><strong>5)</strong> Try to change the input parameters of both functions so that all columns are of type <code>character</code> (“chr” in the <code>str</code> output).</p>
+<p><strong>5)</strong> Try to change the input parameters of both
+functions so that all columns are of type <code>character</code> (“chr”
+in the <code>str</code> output).</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-23">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-23" class="collapse">
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>table_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>,</span>
-<span id="cb22-2"><a href="#cb22-2"></a>                      <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">colClasses =</span> <span class="st">&quot;character&quot;</span>)</span>
-<span id="cb22-3"><a href="#cb22-3"></a>table_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>, <span class="dt">col_types =</span> <span class="st">&quot;cccc&quot;</span>)</span>
-<span id="cb22-4"><a href="#cb22-4"></a><span class="kw">str</span>(table_<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>table_1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">colClasses =</span> <span class="st">&quot;character&quot;</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>table_2 <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>, <span class="at">col_types =</span> <span class="st">&quot;cccc&quot;</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(table_1)</span></code></pre></div>
 <pre class="r-output"><code>## 'data.frame':    3 obs. of  4 variables:
 ##  $ common_name  : chr  "Lions" "Tigers" "Bears"
 ##  $ ncbi_seq_id  : chr  "FJ712037" "KC879292" "HW243304"
 ##  $ itis_taxon_id: chr  "183803" "183806" "180544"
 ##  $ my_taxonomy  : chr  "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 </code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">str</span>(table_<span class="dv">2</span>)</span></code></pre></div>
-<pre class="r-output"><code>## tibble [3 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(table_2)</span></code></pre></div>
+<pre class="r-output"><code>## spec_tbl_df [3 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
 ##  $ common_name  : chr [1:3] "Lions" "Tigers" "Bears"
 ##  $ ncbi_seq_id  : chr [1:3] "FJ712037" "KC879292" "HW243304"
 ##  $ itis_taxon_id: chr [1:3] "183803" "183806" "180544"
 ##  $ my_taxonomy  : chr [1:3] "mammalia, felidae, panthera, leo" "mammalia, felidae, panthera, tigris" "mammalia, ursidae, ursus, americanus"
 ##  - attr(*, "spec")=
 ##   .. cols(
-##   ..   common_name = <span style='color: #BB0000;'>col_character()</span><span>,
-##   ..   ncbi_seq_id = </span><span style='color: #BB0000;'>col_character()</span><span>,
-##   ..   itis_taxon_id = </span><span style='color: #BB0000;'>col_character()</span><span>,
-##   ..   my_taxonomy = </span><span style='color: #BB0000;'>col_character()</span><span>
+##   ..   common_name = <span style='color: #BB0000;'>col_character()</span>,
+##   ..   ncbi_seq_id = <span style='color: #BB0000;'>col_character()</span>,
+##   ..   itis_taxon_id = <span style='color: #BB0000;'>col_character()</span>,
+##   ..   my_taxonomy = <span style='color: #BB0000;'>col_character()</span>
 ##   .. )
-</span></code></pre>
+##  - attr(*, "problems")=&lt;externalptr&gt;
+</code></pre>
 </div>
 <p><br /></p>
 </div>
 <div id="reading-taxonomic-data" class="section level3">
 <h3>Reading taxonomic data</h3>
-<p>In this exercise we will be converting the table from the previous exercise to a <code>taxmap</code> object.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>my_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>)</span></code></pre></div>
-<pre><code>## 
-## [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────────────────────────[39m
-## cols(
-##   common_name = [31mcol_character()[39m,
-##   ncbi_seq_id = [31mcol_character()[39m,
-##   itis_taxon_id = [32mcol_double()[39m,
-##   my_taxonomy = [31mcol_character()[39m
-## )</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">print</span>(my_data)</span></code></pre></div>
-<pre class="r-output"><code>## <span style='color: #949494;'># A tibble: 3 x 4</span><span>
+<p>In this exercise we will be converting the table from the previous
+exercise to a <code>taxmap</code> object.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">&quot;example_data_1.tsv&quot;</span>)</span></code></pre></div>
+<pre><code>## [1mRows: [22m[34m3[39m [1mColumns: [22m[34m4[39m
+## [36m──[39m [1mColumn specification[22m [36m────────────────────────────────────────────────────────────────────────────[39m
+## [1mDelimiter:[22m &quot;\t&quot;
+## [31mchr[39m (3): common_name, ncbi_seq_id, my_taxonomy
+## [32mdbl[39m (1): itis_taxon_id
+## 
+## [36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+## [36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_data)</span></code></pre></div>
+<pre class="r-output"><code>## <span style='color: #555555;'># A tibble: 3 × 4</span>
 ##   common_name ncbi_seq_id itis_taxon_id my_taxonomy                         
-##   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>               </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                               
-## </span><span style='color: #BCBCBC;'>1</span><span> Lions       FJ712037           </span><span style='text-decoration: underline;'>183</span><span>803 mammalia, felidae, panthera, leo    
-## </span><span style='color: #BCBCBC;'>2</span><span> Tigers      KC879292           </span><span style='text-decoration: underline;'>183</span><span>806 mammalia, felidae, panthera, tigris 
-## </span><span style='color: #BCBCBC;'>3</span><span> Bears       HW243304           </span><span style='text-decoration: underline;'>180</span><span>544 mammalia, ursidae, ursus, americanus
-</span></code></pre>
-<p><strong>6)</strong> Look at the documentation for <code>parse_tax_data</code> and <code>lookup_tax_data</code>. The examples at the bottom of the documentation should be helpful.</p>
+##   <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>               <span style='color: #555555; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #555555; font-style: italic;'>&lt;chr&gt;</span>                               
+## <span style='color: #555555;'>1</span> Lions       FJ712037           <span style='text-decoration: underline;'>183</span>803 mammalia, felidae, panthera, leo    
+## <span style='color: #555555;'>2</span> Tigers      KC879292           <span style='text-decoration: underline;'>183</span>806 mammalia, felidae, panthera, tigris 
+## <span style='color: #555555;'>3</span> Bears       HW243304           <span style='text-decoration: underline;'>180</span>544 mammalia, ursidae, ursus, americanus
+</code></pre>
+<p><strong>6)</strong> Look at the documentation for
+<code>parse_tax_data</code> and <code>lookup_tax_data</code>. The
+examples at the bottom of the documentation should be helpful.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-25">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-25" class="collapse">
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">library</span>(metacoder)</span>
-<span id="cb27-2"><a href="#cb27-2"></a>?parse_tax_data</span>
-<span id="cb27-3"><a href="#cb27-3"></a>?lookup_tax_data</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metacoder)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>?parse_tax_data</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>?lookup_tax_data</span></code></pre></div>
 </div>
 <p><br /></p>
-<p><strong>7)</strong> Try using <code>parse_tax_data</code> to convert the table to a <code>taxmap</code> object, using the <code>my_taxonomy</code> column for the taxonomic information. You should get a taxonomy with “mammalia” at the root. How does the table included in the output differ from the input table?</p>
+<p><strong>7)</strong> Try using <code>parse_tax_data</code> to convert
+the table to a <code>taxmap</code> object, using the
+<code>my_taxonomy</code> column for the taxonomic information. You
+should get a taxonomy with “mammalia” at the root. How does the table
+included in the output differ from the input table?</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-26">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-26" class="collapse">
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">parse_tax_data</span>(my_data, <span class="dt">class_cols =</span> <span class="st">&quot;my_taxonomy&quot;</span>, <span class="dt">class_sep =</span> <span class="st">&quot;, &quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parse_tax_data</span>(my_data, <span class="at">class_cols =</span> <span class="st">&quot;my_taxonomy&quot;</span>, <span class="at">class_sep =</span> <span class="st">&quot;, &quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   8 taxa: <span style='color: #00BB00;'>b</span><span>. mammalia, </span><span style='color: #00BB00;'>c</span><span>. felidae, </span><span style='color: #00BB00;'>d</span><span>. ursidae ... </span><span style='color: #00BB00;'>g</span><span>. leo, </span><span style='color: #00BB00;'>h</span><span>. tigris, </span><span style='color: #00BB00;'>i</span><span>. americanus
-##   8 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>b</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>c</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>d</span><span>, </span><span style='color: #00BB00;'>c</span><span>-&gt;</span><span style='color: #00BB00;'>e</span><span>, </span><span style='color: #00BB00;'>d</span><span>-&gt;</span><span style='color: #00BB00;'>f</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>g</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>h</span><span>, </span><span style='color: #00BB00;'>f</span><span>-&gt;</span><span style='color: #00BB00;'>i</span><span>
+##   8 taxa: <span style='color: #00BB00;'>b</span><span style='color: #555555;'>. </span>mammalia<span style='color: #555555;'>, </span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>. </span>felidae<span style='color: #555555;'>, </span><span style='color: #00BB00;'>d</span><span style='color: #555555;'>. </span>ursidae<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>g</span><span style='color: #555555;'>. </span>leo<span style='color: #555555;'>, </span><span style='color: #00BB00;'>h</span><span style='color: #555555;'>. </span>tigris<span style='color: #555555;'>, </span><span style='color: #00BB00;'>i</span><span style='color: #555555;'>. </span>americanus
+##   8 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>d</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>d</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>f</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>g</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>h</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>f</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>i</span>
 ##   1 data sets:
-##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 3 x 5</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                        
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                              </span><span>
-##       1 </span><span style='color: #00BB00;'>g</span><span>        Lions       FJ712037           183803 mammalia, felidae, panthera, leo   
-##       2 </span><span style='color: #00BB00;'>h</span><span>        Tigers      KC879292           183806 mammalia, felidae, panthera, tigris
-##       3 </span><span style='color: #00BB00;'>i</span><span>        Bears       HW243304           180544 mammalia, ursidae, ursus, american…
+##     <span style='font-weight: bold;'>tax_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 3 × 5</span>
+##        <span style='color: #00BB00;'> taxon_id </span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                        
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                              </span>
+##       1 <span style='color: #00BB00;'>g</span>        Lions       FJ712037           183803 mammalia, felidae, panthera, leo   
+##       2 <span style='color: #00BB00;'>h</span>        Tigers      KC879292           183806 mammalia, felidae, panthera, tigris
+##       3 <span style='color: #00BB00;'>i</span>        Bears       HW243304           180544 mammalia, ursidae, ursus, american…
 ##   0 functions:
-</span></code></pre>
+</code></pre>
 </div>
 <p><br /></p>
-<p><strong>8)</strong> Try using <code>lookup_tax_data</code> to convert the table to a <code>taxmap</code> object, using the <code>ncbi_seq_id</code> column to look up the taxonomy associated with these Genbank accession numbers. NOTE: This requires an internet connection.</p>
+<p><strong>8)</strong> Try using <code>lookup_tax_data</code> to convert
+the table to a <code>taxmap</code> object, using the
+<code>ncbi_seq_id</code> column to look up the taxonomy associated with
+these Genbank accession numbers. NOTE: This requires an internet
+connection.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-28">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-28" class="collapse">
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">lookup_tax_data</span>(my_data, <span class="dt">type =</span> <span class="st">&quot;seq_id&quot;</span>, <span class="dt">column =</span> <span class="st">&quot;ncbi_seq_id&quot;</span>, <span class="dt">database =</span> <span class="st">&quot;ncbi&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lookup_tax_data</span>(my_data, <span class="at">type =</span> <span class="st">&quot;seq_id&quot;</span>, <span class="at">column =</span> <span class="st">&quot;ncbi_seq_id&quot;</span>, <span class="at">database =</span> <span class="st">&quot;ncbi&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   33 taxa: <span style='color: #00BB00;'>131567</span><span>. cellular organisms, </span><span style='color: #00BB00;'>2759</span><span>. Eukaryota ... </span><span style='color: #00BB00;'>9694</span><span>. Panthera tigris
-##   33 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>131567</span><span>, </span><span style='color: #00BB00;'>131567</span><span>-&gt;</span><span style='color: #00BB00;'>2759</span><span>, </span><span style='color: #00BB00;'>2759</span><span>-&gt;</span><span style='color: #00BB00;'>33154</span><span> ... </span><span style='color: #00BB00;'>9688</span><span>-&gt;</span><span style='color: #00BB00;'>9689</span><span>, </span><span style='color: #00BB00;'>9688</span><span>-&gt;</span><span style='color: #00BB00;'>9694</span><span>
+##   33 taxa: <span style='color: #00BB00;'>131567</span><span style='color: #555555;'>. </span>cellular organisms<span style='color: #555555;'>, </span><span style='color: #00BB00;'>2759</span><span style='color: #555555;'>. </span>Eukaryota<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>9694</span><span style='color: #555555;'>. </span>Panthera tigris
+##   33 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>131567</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>131567</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>2759</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>2759</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>33154</span><span style='color: #555555;'> ... </span><span style='color: #00BB00;'>9688</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>9689</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>9688</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>9694</span>
 ##   2 data sets:
-##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 33 x 4</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>ncbi_name          ncbi_rank    ncbi_id
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;  </span><span>
-##       1 </span><span style='color: #00BB00;'>131567</span><span>   cellular organisms no rank      131567 
-##       2 </span><span style='color: #00BB00;'>2759</span><span>     Eukaryota          superkingdom 2759   
-##       3 </span><span style='color: #00BB00;'>33154</span><span>    Opisthokonta       clade        33154  
+##     <span style='font-weight: bold;'>tax_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 33 × 4</span>
+##        <span style='color: #00BB00;'> taxon_id </span>ncbi_name          ncbi_rank    ncbi_id
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;  </span>
+##       1 <span style='color: #00BB00;'>131567</span>   cellular organisms no rank      131567 
+##       2 <span style='color: #00BB00;'>2759</span>     Eukaryota          superkingdom 2759   
+##       3 <span style='color: #00BB00;'>33154</span>    Opisthokonta       clade        33154  
 ##       # … with 30 more rows
-##     </span><span style='font-weight: bold;'>query_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 3 x 5</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                        
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                              </span><span>
-##       1 </span><span style='color: #00BB00;'>9689</span><span>     Lions       FJ712037           183803 mammalia, felidae, panthera, leo   
-##       2 </span><span style='color: #00BB00;'>9694</span><span>     Tigers      KC879292           183806 mammalia, felidae, panthera, tigris
-##       3 </span><span style='color: #00BB00;'>9643</span><span>     Bears       HW243304           180544 mammalia, ursidae, ursus, american…
+##     <span style='font-weight: bold;'>query_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 3 × 5</span>
+##        <span style='color: #00BB00;'> taxon_id </span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                        
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                              </span>
+##       1 <span style='color: #00BB00;'>9689</span>     Lions       FJ712037           183803 mammalia, felidae, panthera, leo   
+##       2 <span style='color: #00BB00;'>9694</span>     Tigers      KC879292           183806 mammalia, felidae, panthera, tigris
+##       3 <span style='color: #00BB00;'>9643</span>     Bears       HW243304           180544 mammalia, ursidae, ursus, american…
 ##   0 functions:
-</span></code></pre>
+</code></pre>
 </div>
 <p><br /></p>
-<p><strong>9)</strong> Try using <code>lookup_tax_data</code> to convert the table to a <code>taxmap</code> object, using the <code>itis_taxon_id</code> column to look up the taxonomic classifications from the Integrated Taxonomic Information System (ITIS) for these taxon IDs. NOTE: This requires an internet connection.</p>
+<p><strong>9)</strong> Try using <code>lookup_tax_data</code> to convert
+the table to a <code>taxmap</code> object, using the
+<code>itis_taxon_id</code> column to look up the taxonomic
+classifications from the Integrated Taxonomic Information System (ITIS)
+for these taxon IDs. NOTE: This requires an internet connection.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-29">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-29" class="collapse">
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">lookup_tax_data</span>(my_data, <span class="dt">type =</span> <span class="st">&quot;taxon_id&quot;</span>, <span class="dt">column =</span> <span class="st">&quot;itis_taxon_id&quot;</span>, <span class="dt">database =</span> <span class="st">&quot;itis&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lookup_tax_data</span>(my_data, <span class="at">type =</span> <span class="st">&quot;taxon_id&quot;</span>, <span class="at">column =</span> <span class="st">&quot;itis_taxon_id&quot;</span>, <span class="at">database =</span> <span class="st">&quot;itis&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   22 taxa: <span style='color: #00BB00;'>202423</span><span>. Animalia, </span><span style='color: #00BB00;'>914154</span><span>. Bilateria ... </span><span style='color: #00BB00;'>183806</span><span>. Panthera tigris tigris
-##   22 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>202423</span><span>, </span><span style='color: #00BB00;'>202423</span><span>-&gt;</span><span style='color: #00BB00;'>914154</span><span> ... </span><span style='color: #00BB00;'>180592</span><span>-&gt;</span><span style='color: #00BB00;'>183805</span><span>, </span><span style='color: #00BB00;'>183805</span><span>-&gt;</span><span style='color: #00BB00;'>183806</span><span>
+##   22 taxa: <span style='color: #00BB00;'>202423</span><span style='color: #555555;'>. </span>Animalia<span style='color: #555555;'>, </span><span style='color: #00BB00;'>914154</span><span style='color: #555555;'>. </span>Bilateria<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>183806</span><span style='color: #555555;'>. </span>Panthera tigris tigris
+##   22 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>202423</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>202423</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>914154</span><span style='color: #555555;'> ... </span><span style='color: #00BB00;'>180592</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>183805</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>183805</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>183806</span>
 ##   2 data sets:
-##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 22 x 4</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>itis_name     itis_rank    itis_id
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;  </span><span>
-##       1 </span><span style='color: #00BB00;'>202423</span><span>   Animalia      kingdom      202423 
-##       2 </span><span style='color: #00BB00;'>914154</span><span>   Bilateria     subkingdom   914154 
-##       3 </span><span style='color: #00BB00;'>914156</span><span>   Deuterostomia infrakingdom 914156 
+##     <span style='font-weight: bold;'>tax_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 22 × 4</span>
+##        <span style='color: #00BB00;'> taxon_id </span>itis_name     itis_rank    itis_id
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;  </span>
+##       1 <span style='color: #00BB00;'>202423</span>   Animalia      kingdom      202423 
+##       2 <span style='color: #00BB00;'>914154</span>   Bilateria     subkingdom   914154 
+##       3 <span style='color: #00BB00;'>914156</span>   Deuterostomia infrakingdom 914156 
 ##       # … with 19 more rows
-##     </span><span style='font-weight: bold;'>query_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 3 x 5</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                        
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                              </span><span>
-##       1 </span><span style='color: #00BB00;'>183803</span><span>   Lions       FJ712037           183803 mammalia, felidae, panthera, leo   
-##       2 </span><span style='color: #00BB00;'>183806</span><span>   Tigers      KC879292           183806 mammalia, felidae, panthera, tigris
-##       3 </span><span style='color: #00BB00;'>180544</span><span>   Bears       HW243304           180544 mammalia, ursidae, ursus, american…
+##     <span style='font-weight: bold;'>query_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 3 × 5</span>
+##        <span style='color: #00BB00;'> taxon_id </span>common_name ncbi_seq_id itis_taxon_id my_taxonomy                        
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                              </span>
+##       1 <span style='color: #00BB00;'>183803</span>   Lions       FJ712037           183803 mammalia, felidae, panthera, leo   
+##       2 <span style='color: #00BB00;'>183806</span>   Tigers      KC879292           183806 mammalia, felidae, panthera, tigris
+##       3 <span style='color: #00BB00;'>180544</span>   Bears       HW243304           180544 mammalia, ursidae, ursus, american…
 ##   0 functions:
-</span></code></pre>
+</code></pre>
 </div>
 <p><br /></p>
-<p><strong>10)</strong> Compare the results of the three sources of taxonomic information. What is different? What is the same?</p>
+<p><strong>10)</strong> Compare the results of the three sources of
+taxonomic information. What is different? What is the same?</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-30">
 Show Answer
 </button>
 <div id="hide_buttonunnamed-chunk-30" class="collapse">
 <ul>
-<li>The number and name of taxa are different since each source has a different taxonomy.</li>
-<li>The taxon IDs are different. When an online database is queried, the taxon IDs from that database are used.</li>
-<li>The input data stored in ‘tax_data’ is the same, except for the taxon ID column.
+<li>The number and name of taxa are different since each source has a
+different taxonomy.</li>
+<li>The taxon IDs are different. When an online database is queried, the
+taxon IDs from that database are used.</li>
+<li>The input data stored in ‘tax_data’ is the same, except for the
+taxon ID column.
 </div>
 <br /></li>
 </ul>
 </div>
-<div id="reading-taxonomic-data-from-complex-formats" class="section level3">
+<div id="reading-taxonomic-data-from-complex-formats"
+class="section level3">
 <h3>Reading taxonomic data from complex formats</h3>
-<p>Sometimes taxonomic data can be embedded in complex text, like FASTA headers. Look at the file <a href="example_data_2.fa">example_data_2.fa</a> (click to download) which contains headers with two sources of taxonomic information:</p>
+<p>Sometimes taxonomic data can be embedded in complex text, like FASTA
+headers. Look at the file <a
+href="example_data_2.fa">example_data_2.fa</a> (click to download) which
+contains headers with two sources of taxonomic information:</p>
 <ul>
 <li>The Genbank accession number</li>
 <li>The taxonomic classification</li>
 </ul>
-<p><strong>11)</strong> Read the FASTA file <a href="example_data_2.fa">example_data_2.fa</a> using the <code>read.FASTA</code> function from the <code>ape</code> package and store the result in a variable.</p>
+<p><strong>11)</strong> Read the FASTA file <a
+href="example_data_2.fa">example_data_2.fa</a> using the
+<code>read.FASTA</code> function from the <code>ape</code> package and
+store the result in a variable.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-31">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-31" class="collapse">
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">library</span>(ape)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ape)</span></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;ape&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:metacoder&#39;:
 ## 
 ##     complement</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>seqs &lt;-<span class="st"> </span><span class="kw">read.FASTA</span>(<span class="st">&quot;example_data_2.fa&quot;</span>)</span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="kw">print</span>(seqs)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>seqs <span class="ot">&lt;-</span> <span class="fu">read.FASTA</span>(<span class="st">&quot;example_data_2.fa&quot;</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(seqs)</span></code></pre></div>
 <pre class="r-output"><code>## 3 DNA sequences in binary format stored in a list.
 ## 
 ## Mean sequence length: 455.667 
@@ -1022,127 +1249,154 @@ Show solution
 </code></pre>
 </div>
 <p><br /></p>
-<p><strong>12)</strong> Use the <code>names</code> function to get the headers and stores those in another variable.</p>
+<p><strong>12)</strong> Use the <code>names</code> function to get the
+headers and stores those in another variable.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-32">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-32" class="collapse">
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>headers &lt;-<span class="st"> </span><span class="kw">names</span>(seqs)</span>
-<span id="cb35-2"><a href="#cb35-2"></a><span class="kw">print</span>(headers)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>headers <span class="ot">&lt;-</span> <span class="fu">names</span>(seqs)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(headers)</span></code></pre></div>
 <pre class="r-output"><code>## [1] "FJ712037::class_mammalia;family_felidae;genus_panthera;species_leo"    
 ## [2] "KC879292::class_mammalia;family_felidae;genus_panthera;species_tigris" 
 ## [3] "HW243304::class_mammalia;family_ursidae;genus_ursus;species_americanus"
 </code></pre>
 </div>
 <p><br /></p>
-<p><strong>13)</strong> Look at the documentation for <code>extract_tax_data</code> from the <code>metacoder</code> package by typing <code>?extract_tax_data</code>.</p>
-<p><strong>14)</strong> Use the <code>extract_tax_data</code> function to convert the headers to a <code>taxmap</code> object, using the NCBI accession number. The classification can be ignored (i.e. not given a capture group and key value) or stored as <code>"info"</code>.</p>
+<p><strong>13)</strong> Look at the documentation for
+<code>extract_tax_data</code> from the <code>metacoder</code> package by
+typing <code>?extract_tax_data</code>.</p>
+<p><strong>14)</strong> Use the <code>extract_tax_data</code> function
+to convert the headers to a <code>taxmap</code> object, using the NCBI
+accession number. The classification can be ignored (i.e. not given a
+capture group and key value) or stored as <code>"info"</code>.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-33">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-33" class="collapse">
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">extract_tax_data</span>(headers,</span>
-<span id="cb36-2"><a href="#cb36-2"></a>                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">my_acc_no =</span> <span class="st">&quot;seq_id&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;info&quot;</span>),</span>
-<span id="cb36-3"><a href="#cb36-3"></a>                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extract_tax_data</span>(headers,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">key =</span> <span class="fu">c</span>(<span class="at">my_acc_no =</span> <span class="st">&quot;seq_id&quot;</span>, <span class="at">my_class =</span> <span class="st">&quot;info&quot;</span>),</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   33 taxa: <span style='color: #00BB00;'>131567</span><span>. cellular organisms, </span><span style='color: #00BB00;'>2759</span><span>. Eukaryota ... </span><span style='color: #00BB00;'>9694</span><span>. Panthera tigris
-##   33 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>131567</span><span>, </span><span style='color: #00BB00;'>131567</span><span>-&gt;</span><span style='color: #00BB00;'>2759</span><span>, </span><span style='color: #00BB00;'>2759</span><span>-&gt;</span><span style='color: #00BB00;'>33154</span><span> ... </span><span style='color: #00BB00;'>9688</span><span>-&gt;</span><span style='color: #00BB00;'>9689</span><span>, </span><span style='color: #00BB00;'>9688</span><span>-&gt;</span><span style='color: #00BB00;'>9694</span><span>
+##   33 taxa: <span style='color: #00BB00;'>131567</span><span style='color: #555555;'>. </span>cellular organisms<span style='color: #555555;'>, </span><span style='color: #00BB00;'>2759</span><span style='color: #555555;'>. </span>Eukaryota<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>9694</span><span style='color: #555555;'>. </span>Panthera tigris
+##   33 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>131567</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>131567</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>2759</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>2759</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>33154</span><span style='color: #555555;'> ... </span><span style='color: #00BB00;'>9688</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>9689</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>9688</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>9694</span>
 ##   2 data sets:
-##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 33 x 4</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>ncbi_name          ncbi_rank    ncbi_id
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;  </span><span>
-##       1 </span><span style='color: #00BB00;'>131567</span><span>   cellular organisms no rank      131567 
-##       2 </span><span style='color: #00BB00;'>2759</span><span>     Eukaryota          superkingdom 2759   
-##       3 </span><span style='color: #00BB00;'>33154</span><span>    Opisthokonta       clade        33154  
+##     <span style='font-weight: bold;'>tax_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 33 × 4</span>
+##        <span style='color: #00BB00;'> taxon_id </span>ncbi_name          ncbi_rank    ncbi_id
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;              &lt;chr&gt;        &lt;chr&gt;  </span>
+##       1 <span style='color: #00BB00;'>131567</span>   cellular organisms no rank      131567 
+##       2 <span style='color: #00BB00;'>2759</span>     Eukaryota          superkingdom 2759   
+##       3 <span style='color: #00BB00;'>33154</span>    Opisthokonta       clade        33154  
 ##       # … with 30 more rows
-##     </span><span style='font-weight: bold;'>query_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 3 x 4</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>my_acc_no my_class                       input                           
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;                          &lt;chr&gt;                           </span><span>
-##       1 </span><span style='color: #00BB00;'>9689</span><span>     FJ712037  class_mammalia;family_felidae… FJ712037::class_mammalia;family…
-##       2 </span><span style='color: #00BB00;'>9694</span><span>     KC879292  class_mammalia;family_felidae… KC879292::class_mammalia;family…
-##       3 </span><span style='color: #00BB00;'>9643</span><span>     HW243304  class_mammalia;family_ursidae… HW243304::class_mammalia;family…
+##     <span style='font-weight: bold;'>query_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 3 × 4</span>
+##        <span style='color: #00BB00;'> taxon_id </span>my_acc_no my_class                                                  input
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;                                                     &lt;chr&gt;</span>
+##       1 <span style='color: #00BB00;'>9689</span>     FJ712037  class_mammalia;family_felidae;genus_panthera;species_leo  FJ71…
+##       2 <span style='color: #00BB00;'>9694</span>     KC879292  class_mammalia;family_felidae;genus_panthera;species_tig… KC87…
+##       3 <span style='color: #00BB00;'>9643</span>     HW243304  class_mammalia;family_ursidae;genus_ursus;species_americ… HW24…
 ##   0 functions:
-</span></code></pre>
+</code></pre>
 </div>
 <p><br /></p>
-<p><strong>15)</strong> Now use the classification instead of the accession numbers. The accession number can be ignored or stored as <code>"info"</code>. Consider the rank as part of the taxon name for now.</p>
+<p><strong>15)</strong> Now use the classification instead of the
+accession numbers. The accession number can be ignored or stored as
+<code>"info"</code>. Consider the rank as part of the taxon name for
+now.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-34">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-34" class="collapse">
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">extract_tax_data</span>(headers,</span>
-<span id="cb37-2"><a href="#cb37-2"></a>                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">my_acc_no =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;class&quot;</span>),</span>
-<span id="cb37-3"><a href="#cb37-3"></a>                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>,</span>
-<span id="cb37-4"><a href="#cb37-4"></a>                 <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extract_tax_data</span>(headers,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">key =</span> <span class="fu">c</span>(<span class="at">my_acc_no =</span> <span class="st">&quot;info&quot;</span>, <span class="at">my_class =</span> <span class="st">&quot;class&quot;</span>),</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">class_sep =</span> <span class="st">&quot;;&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   8 taxa: <span style='color: #00BB00;'>b</span><span>. class_mammalia, </span><span style='color: #00BB00;'>c</span><span>. family_felidae ... </span><span style='color: #00BB00;'>i</span><span>. species_americanus
-##   8 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>b</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>c</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>d</span><span>, </span><span style='color: #00BB00;'>c</span><span>-&gt;</span><span style='color: #00BB00;'>e</span><span>, </span><span style='color: #00BB00;'>d</span><span>-&gt;</span><span style='color: #00BB00;'>f</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>g</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>h</span><span>, </span><span style='color: #00BB00;'>f</span><span>-&gt;</span><span style='color: #00BB00;'>i</span><span>
+##   8 taxa: <span style='color: #00BB00;'>b</span><span style='color: #555555;'>. </span>class_mammalia<span style='color: #555555;'>, </span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>. </span>family_felidae<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>i</span><span style='color: #555555;'>. </span>species_americanus
+##   8 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>d</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>d</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>f</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>g</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>h</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>f</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>i</span>
 ##   1 data sets:
-##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 3 x 3</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>my_acc_no input                                                          
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;                                                          </span><span>
-##       1 </span><span style='color: #00BB00;'>g</span><span>        FJ712037  FJ712037::class_mammalia;family_felidae;genus_panthera;species…
-##       2 </span><span style='color: #00BB00;'>h</span><span>        KC879292  KC879292::class_mammalia;family_felidae;genus_panthera;species…
-##       3 </span><span style='color: #00BB00;'>i</span><span>        HW243304  HW243304::class_mammalia;family_ursidae;genus_ursus;species_am…
+##     <span style='font-weight: bold;'>tax_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 3 × 3</span>
+##        <span style='color: #00BB00;'> taxon_id </span>my_acc_no input                                                          
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;                                                          </span>
+##       1 <span style='color: #00BB00;'>g</span>        FJ712037  FJ712037::class_mammalia;family_felidae;genus_panthera;species…
+##       2 <span style='color: #00BB00;'>h</span>        KC879292  KC879292::class_mammalia;family_felidae;genus_panthera;species…
+##       3 <span style='color: #00BB00;'>i</span>        HW243304  HW243304::class_mammalia;family_ursidae;genus_ursus;species_am…
 ##   0 functions:
-</span></code></pre>
+</code></pre>
 </div>
 <p><br /></p>
-<p><strong>16)</strong> Now try to split out the rank information from the taxon name. You will need to use the <code>class_key</code> and <code>class_regex</code> options. The ranks can be stored as <code>"info"</code> or <code>"taxon_rank</code>“. Using <code>"taxon_rank</code>” allows the ranks to be accessed with the <code>taxon_ranks</code> function.</p>
+<p><strong>16)</strong> Now try to split out the rank information from
+the taxon name. You will need to use the <code>class_key</code> and
+<code>class_regex</code> options. The ranks can be stored as
+<code>"info"</code> or <code>"taxon_rank</code>“. Using
+<code>"taxon_rank</code>” allows the ranks to be accessed with the
+<code>taxon_ranks</code> function.</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-35">
 Show solution
 </button>
 <div id="hide_buttonunnamed-chunk-35" class="collapse">
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">extract_tax_data</span>(headers,</span>
-<span id="cb38-2"><a href="#cb38-2"></a>                 <span class="dt">key =</span> <span class="kw">c</span>(<span class="dt">acc_no =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">my_class =</span> <span class="st">&quot;class&quot;</span>),</span>
-<span id="cb38-3"><a href="#cb38-3"></a>                 <span class="dt">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>,</span>
-<span id="cb38-4"><a href="#cb38-4"></a>                 <span class="dt">class_sep =</span> <span class="st">&quot;;&quot;</span>,</span>
-<span id="cb38-5"><a href="#cb38-5"></a>                 <span class="dt">class_key =</span> <span class="kw">c</span>(<span class="dt">tax_rank =</span> <span class="st">&quot;info&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;taxon_name&quot;</span>),</span>
-<span id="cb38-6"><a href="#cb38-6"></a>                 <span class="dt">class_regex =</span> <span class="st">&quot;^(.+)_(.+)$&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extract_tax_data</span>(headers,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">key =</span> <span class="fu">c</span>(<span class="at">acc_no =</span> <span class="st">&quot;info&quot;</span>, <span class="at">my_class =</span> <span class="st">&quot;class&quot;</span>),</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">regex =</span> <span class="st">&quot;^(.+)::(.+)$&quot;</span>,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">class_sep =</span> <span class="st">&quot;;&quot;</span>,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">class_key =</span> <span class="fu">c</span>(<span class="at">tax_rank =</span> <span class="st">&quot;info&quot;</span>, <span class="at">name =</span> <span class="st">&quot;taxon_name&quot;</span>),</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">class_regex =</span> <span class="st">&quot;^(.+)_(.+)$&quot;</span>)</span></code></pre></div>
 <pre class="r-output"><code>## &lt;Taxmap&gt;
-##   8 taxa: <span style='color: #00BB00;'>b</span><span>. mammalia, </span><span style='color: #00BB00;'>c</span><span>. felidae, </span><span style='color: #00BB00;'>d</span><span>. ursidae ... </span><span style='color: #00BB00;'>g</span><span>. leo, </span><span style='color: #00BB00;'>h</span><span>. tigris, </span><span style='color: #00BB00;'>i</span><span>. americanus
-##   8 edges: </span><span style='color: #00BB00;'>NA</span><span>-&gt;</span><span style='color: #00BB00;'>b</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>c</span><span>, </span><span style='color: #00BB00;'>b</span><span>-&gt;</span><span style='color: #00BB00;'>d</span><span>, </span><span style='color: #00BB00;'>c</span><span>-&gt;</span><span style='color: #00BB00;'>e</span><span>, </span><span style='color: #00BB00;'>d</span><span>-&gt;</span><span style='color: #00BB00;'>f</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>g</span><span>, </span><span style='color: #00BB00;'>e</span><span>-&gt;</span><span style='color: #00BB00;'>h</span><span>, </span><span style='color: #00BB00;'>f</span><span>-&gt;</span><span style='color: #00BB00;'>i</span><span>
+##   8 taxa: <span style='color: #00BB00;'>b</span><span style='color: #555555;'>. </span>mammalia<span style='color: #555555;'>, </span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>. </span>felidae<span style='color: #555555;'>, </span><span style='color: #00BB00;'>d</span><span style='color: #555555;'>. </span>ursidae<span style='color: #555555;'> ... </span><span style='color: #00BB00;'>g</span><span style='color: #555555;'>. </span>leo<span style='color: #555555;'>, </span><span style='color: #00BB00;'>h</span><span style='color: #555555;'>. </span>tigris<span style='color: #555555;'>, </span><span style='color: #00BB00;'>i</span><span style='color: #555555;'>. </span>americanus
+##   8 edges: <span style='color: #00BB00;'>NA</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>b</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>d</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>c</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>d</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>f</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>g</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>e</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>h</span><span style='color: #555555;'>, </span><span style='color: #00BB00;'>f</span><span style='color: #555555;'>-&gt;</span><span style='color: #00BB00;'>i</span>
 ##   2 data sets:
-##     </span><span style='font-weight: bold;'>tax_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 3 x 3</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>acc_no   input                                                           
-## </span><span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                                                           </span><span>
-##       1 </span><span style='color: #00BB00;'>g</span><span>        FJ712037 FJ712037::class_mammalia;family_felidae;genus_panthera;species_…
-##       2 </span><span style='color: #00BB00;'>h</span><span>        KC879292 KC879292::class_mammalia;family_felidae;genus_panthera;species_…
-##       3 </span><span style='color: #00BB00;'>i</span><span>        HW243304 HW243304::class_mammalia;family_ursidae;genus_ursus;species_ame…
-##     </span><span style='font-weight: bold;'>class_data</span><span>:
-## </span><span style='font-style: italic;'>      # A tibble: 12 x 4</span><span>
-##        </span><span style='color: #00BB00;'> taxon_id </span><span>input_index tax_rank name    
-## </span><span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;   </span><span>
-##       1 </span><span style='color: #00BB00;'>b</span><span>                  1 class    mammalia
-##       2 </span><span style='color: #00BB00;'>c</span><span>                  1 family   felidae 
-##       3 </span><span style='color: #00BB00;'>e</span><span>                  1 genus    panthera
+##     <span style='font-weight: bold;'>tax_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 3 × 3</span>
+##        <span style='color: #00BB00;'> taxon_id </span>acc_no   input                                                           
+## <span style='font-style: italic;'>        &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                                                           </span>
+##       1 <span style='color: #00BB00;'>g</span>        FJ712037 FJ712037::class_mammalia;family_felidae;genus_panthera;species_…
+##       2 <span style='color: #00BB00;'>h</span>        KC879292 KC879292::class_mammalia;family_felidae;genus_panthera;species_…
+##       3 <span style='color: #00BB00;'>i</span>        HW243304 HW243304::class_mammalia;family_ursidae;genus_ursus;species_ame…
+##     <span style='font-weight: bold;'>class_data</span>:
+## <span style='font-style: italic;'>      # A tibble: 12 × 4</span>
+##        <span style='color: #00BB00;'> taxon_id </span>input_index tax_rank name    
+## <span style='font-style: italic;'>        &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;   </span>
+##       1 <span style='color: #00BB00;'>b</span>                  1 class    mammalia
+##       2 <span style='color: #00BB00;'>c</span>                  1 family   felidae 
+##       3 <span style='color: #00BB00;'>e</span>                  1 genus    panthera
 ##       # … with 9 more rows
 ##   0 functions:
-</span></code></pre>
+</code></pre>
 </div>
 <p><br /></p>
-<p><strong>17)</strong> Sometimes you will have the option to use more than one source of taxonomic information, like in this exercise. What are the benefits of using the embedded classification information instead of a Genbank accession number or taxon ID?</p>
+<p><strong>17)</strong> Sometimes you will have the option to use more
+than one source of taxonomic information, like in this exercise. What
+are the benefits of using the embedded classification information
+instead of a Genbank accession number or taxon ID?</p>
 <button class="btn btn-danger" data-toggle="collapse" data-target="#hide_buttonunnamed-chunk-36">
 Show Answer
 </button>
 <div id="hide_buttonunnamed-chunk-36" class="collapse">
-Using the included classification does not require communicating with online databases, so is much faster and more reliable.
+Using the included classification does not require communicating with
+online databases, so is much faster and more reliable.
 </div>
 <p><br /></p>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">
-<h2>References</h2>
-<div id="refs" class="references">
-<div id="ref-wagner2016host">
-<p>Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery L Dangl, and Thomas Mitchell-Olds. 2016. “Host Genotype and Age Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.” <em>Nature Communications</em> 7: 12151. <a href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.</p>
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-wagner2016host" class="csl-entry">
+Wagner, Maggie R, Derek S Lundberg, G Tijana, Susannah G Tringe, Jeffery
+L Dangl, and Thomas Mitchell-Olds. 2016. <span>“Host Genotype and Age
+Shape the Leaf and Root Microbiomes of a Wild Perennial Plant.”</span>
+<em>Nature Communications</em> 7: 12151. <a
+href="https://doi.org/10.1038/ncomms12151">https://doi.org/10.1038/ncomms12151</a>.
 </div>
-<div id="ref-zeeberg2004mistaken">
-<p>Zeeberg, Barry R, Joseph Riss, David W Kane, Kimberly J Bussey, Edward Uchio, W Marston Linehan, J Carl Barrett, and John N Weinstein. 2004. “Mistaken Identifiers: Gene Name Errors Can Be Introduced Inadvertently When Using Excel in Bioinformatics.” <em>BMC Bioinformatics</em> 5 (1): 80. <a href="https://doi.org/10.1186/1471-2105-5-80">https://doi.org/10.1186/1471-2105-5-80</a>.</p>
+<div id="ref-zeeberg2004mistaken" class="csl-entry">
+Zeeberg, Barry R, Joseph Riss, David W Kane, Kimberly J Bussey, Edward
+Uchio, W Marston Linehan, J Carl Barrett, and John N Weinstein. 2004.
+<span>“Mistaken Identifiers: Gene Name Errors Can Be Introduced
+Inadvertently When Using Excel in Bioinformatics.”</span> <em>BMC
+Bioinformatics</em> 5 (1): 80. <a
+href="https://doi.org/10.1186/1471-2105-5-80">https://doi.org/10.1186/1471-2105-5-80</a>.
 </div>
 </div>
 </div>
@@ -1180,7 +1434,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
