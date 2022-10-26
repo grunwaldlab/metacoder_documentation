@@ -675,12 +675,13 @@ function. First we need to convert the <code>taxmap</code> object to a
 <code>phyloseq</code> object, since all of the <code>phyloseq</code>
 functions expect <code>phyloseq</code> objects.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(phyloseq)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ps_obj <span class="ot">&lt;-</span> <span class="fu">as_phyloseq</span>(obj,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">otu_table =</span> <span class="st">&quot;otu_rarefied&quot;</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">otu_id_col =</span> <span class="st">&quot;OTU_ID&quot;</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sample_data =</span> sample_data,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sample_id_col =</span> <span class="st">&quot;SampleID&quot;</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_richness</span>(ps_obj, <span class="at">color =</span> <span class="st">&quot;Type&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Site&quot;</span>)</span></code></pre></div>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metacoder)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ps_obj <span class="ot">&lt;-</span> <span class="fu">as_phyloseq</span>(obj,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">otu_table =</span> <span class="st">&quot;otu_rarefied&quot;</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">otu_id_col =</span> <span class="st">&quot;OTU_ID&quot;</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sample_data =</span> sample_data,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sample_id_col =</span> <span class="st">&quot;SampleID&quot;</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_richness</span>(ps_obj, <span class="at">color =</span> <span class="st">&quot;Type&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Site&quot;</span>)</span></code></pre></div>
 <p><img src="workshop--07--diversity_stats_files/figure-html/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>Each dot is a sample and the error bars in some of the indexes are
 the standard error.</p>

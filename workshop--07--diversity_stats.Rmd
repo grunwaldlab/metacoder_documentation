@@ -146,6 +146,7 @@ First we need to convert the `taxmap` object to a `phyloseq` object, since all o
 
 ```{r message=FALSE, fig.width=10, fig.height=5}
 library(phyloseq)
+library(metacoder)
 ps_obj <- as_phyloseq(obj,
                       otu_table = "otu_rarefied",
                       otu_id_col = "OTU_ID",
